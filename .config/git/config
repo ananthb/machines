@@ -1,0 +1,32 @@
+[user]
+    name = Ananth Bhaskararaman
+    email = ananth@usc.ltd
+
+[includeIf "gitdir:~/src/bitbucket.flatironssolutions.com/"]
+  path = ~/.config/git/work.config
+
+[includeIf "gitdir:~/src/github.com/ananthb/"]
+  path = ~/.config/git/me.config
+
+[color]
+    ui = true
+    diff = auto
+    status = auto
+    branch = auto
+
+[push]
+    default = matching
+
+[advice]
+    pushNonFastForward = false
+    statusHints = false
+    commitBeforeMerge = false
+    resolveConflict = false
+    implicitIdentity = false
+    detachedHead = false
+
+[core]
+	autocrlf = input
+
+[http]
+	postBuffer = 524288000

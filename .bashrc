@@ -1,0 +1,120 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+[[ -f /google/devshell/bashrc.google ]] && source /google/devshell/bashrc.google
+
+# Editor
+export VISUAL=$(which vim)
+export EDITOR=$VISUAL
+
+# Android SDK
+if [ -d "~/Android/Sdk" ]; then
+  export ANDROID_SDK=~/Android/Sdk
+  export PATH=~/Android/Sdk/emulator:~Android/Sdk/tools:$PATH
+fi
+
+# Dart
+[[ -d /usr/lib/dart/bin ]] && export PATH=/usr/lib/dart/bin:$PATH
+[[ -d ~/.pub-cache/bin ]] && export PATH=~/.pub-cache/bin:$PATH
+
+# Flutter
+[[ -d ~/flutter/bin ]] && export PATH=~/flutter/bin:$PATH
+
+# localbin
+[[ -d ~/.local/bin ]] && export PATH=~/.local/bin:$PATH
+
+
+# node modules bin
+[[ -d ~/.local/lib/node_modules/bin ]] && export PATH=~/.local/lib/node_modules/bin:$PATH
+
+# readline
+export INPUTRC=~/.config/inputrc
+
+# XDG Directories
+# System
+export XDG_DATA_DIRS=$PREFIX/usr/share:$PREFIX/usr/local/share
+export XDG_CONFIG_DIRS=$PREFIX/etc/xdg
+# User
+export XDG_CACHE_HOME=~/.cache
+export XDG_CONFIG_HOME=~/.config
+export XDG_DATA_HOME=~/.local/share
+export XDG_DESKTOP_DIR=~/Desktop
+export XDG_DOWNLOAD_DIR=~/Downloads
+export XDG_DOCUMENTS_DIR=~/Documents
+export XDG_MUSIC_DIR=~/Music
+export XDG_PICTURES_DIR=~/Pictures
+export XDG_VIDEOS_DIR=~/Videos
+
+
+# Machine specific configuration goes in a folder named after the
+# machine's hostname in the $XDG_CONFIG_HOME/bash directory 
+HOSTNAME=$(hostname)
+[[ -f ~/.config/$HOSTNAME.sh ]] && source ~/.config/$HOSTNAME.sh
