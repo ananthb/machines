@@ -1,0 +1,5 @@
+[includeIf "gitdir:~/src/Work/"]
+  path = ./fsi
+
+[includeIf "gitdir:~/src/"]
+  path = ./me
