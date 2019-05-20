@@ -1,4 +1,4 @@
-[includeIf "gitdir:~/src/Work/"]
+[includeIf "gitdir:~/Work/src/"]
   path = ./fsi
 
 [includeIf "gitdir:~/src/"]
