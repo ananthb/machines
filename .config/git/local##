@@ -1,2 +1,2 @@
-[core]
-    include = ./me
+[include]
+    path = ./me
