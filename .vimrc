@@ -14,6 +14,9 @@ silent! if plug#begin()
   Plug 'airblade/vim-gitgutter'
   Plug 'w0rp/ale'
 
+  " LANGUAGE PLUGINS
+  Plug 'python-mode/python-mode', { 'for': 'python' }
+
   call plug#end()
 endif
 
@@ -35,4 +38,3 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 
 " Close vim if only the NERDTree window is left open.
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
