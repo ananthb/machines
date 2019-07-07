@@ -16,6 +16,7 @@ silent! if plug#begin()
 
   " LANGUAGE PLUGINS
   Plug 'python-mode/python-mode', { 'for': 'python' }
+  Plug 'ElmCast/elm-vim', { 'for': 'elm' }
 
   call plug#end()
 endif
