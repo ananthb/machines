@@ -1,3 +1,7 @@
 [user]
     name = Ananth Bhaskararaman
     email = antsub@gmail.com
+    signingkey = 66A20525398E18D7
+
+[commit]
+    gpgsign = true
