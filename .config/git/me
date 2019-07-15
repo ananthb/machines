@@ -3,9 +3,6 @@
     email = antsub@gmail.com
     signingkey = 66A20525398E18D7
 
-[commit]
-    gpgsign = true
-
 [sendemail]
   smtpserver = smtp.gmail.com
   smtpserverport = 587
