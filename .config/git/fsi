@@ -1,3 +1,7 @@
 [user]
     name = Ananth Bhaskararaman
     email = Ananth.Bhaskararaman@FlatironsSolutions.com
+    signingkey = FC1DDE100595608A
+
+[commit]
+    gpgsign = true

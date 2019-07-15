@@ -1,7 +1,7 @@
-[includeIf "gitdir:~/Work/src/"]
+[includeIf "gitdir/i:~/Work/src/"]
   path = ./fsi
 
-[includeIf "gitdir:~/src/"]
+[includeIf "gitdir/i:~/src/"]
   path = ./me
 
 [gpg]
