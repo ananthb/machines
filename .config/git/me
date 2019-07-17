@@ -1,10 +1,4 @@
 [user]
     name = Ananth Bhaskararaman
-    email = antsub@gmail.com
-    signingkey = 66A20525398E18D7
-
-[sendemail]
-  smtpserver = smtp.gmail.com
-  smtpserverport = 587
-  smtpencryption = tls
-  smtpuser = antsub@gmail.com
+    email = ananth@usc.ltd
+    signingkey = 81BFF14CE259BBF8
