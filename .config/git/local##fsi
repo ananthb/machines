@@ -8,7 +8,8 @@
   program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe
 
 [sendemail]
-  smtpserver = smtp.gmail.com
-  smtpserverport = 587
-  smtpencryption = tls
-  smtpuser = antsub@gmail.com
+  smtpserver = 127.0.0.1
+  smtpserverport = 1025
+  smtpencryption = none
+  smtpUser = ananth@usc.ltd
+  smtpPass = 5gY2qlaj_ZQbHT4dK5b47A
