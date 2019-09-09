@@ -1,8 +1,5 @@
-[includeIf "gitdir/i:~/Work/src/"]
+[include]
   path = ./fsi
-
-[includeIf "gitdir/i:~/src/"]
-  path = ./me
 
 [gpg]
   program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe
