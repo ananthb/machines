@@ -39,3 +39,9 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 
 " Close vim if only the NERDTree window is left open.
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+
+" -----------
+"  VIM CONFIG
+" -----------
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
