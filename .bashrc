@@ -72,7 +72,7 @@ fi
 [[ -f /google/devshell/bashrc.google ]] && source /google/devshell/bashrc.google
 
 # Editor
-export VISUAL=$(which vim)
+export VISUAL=/usr/bin/vim
 export EDITOR=$VISUAL
 
 # Android SDK
@@ -97,24 +97,3 @@ fi
 
 # readline
 export INPUTRC=~/.config/inputrc
-
-# XDG Directories
-# System
-export XDG_DATA_DIRS=$PREFIX/usr/share:$PREFIX/usr/local/share
-export XDG_CONFIG_DIRS=$PREFIX/etc/xdg
-# User
-export XDG_CACHE_HOME=~/.cache
-export XDG_CONFIG_HOME=~/.config
-export XDG_DATA_HOME=~/.local/share
-export XDG_DESKTOP_DIR=~/Desktop
-export XDG_DOWNLOAD_DIR=~/Downloads
-export XDG_DOCUMENTS_DIR=~/Documents
-export XDG_MUSIC_DIR=~/Music
-export XDG_PICTURES_DIR=~/Pictures
-export XDG_VIDEOS_DIR=~/Videos
-
-
-# Machine specific configuration goes in a folder named after the
-# machine's hostname in the $XDG_CONFIG_HOME/bash directory 
-HOSTNAME=$(hostname)
-[[ -f ~/.config/$HOSTNAME.sh ]] && source ~/.config/$HOSTNAME.sh
