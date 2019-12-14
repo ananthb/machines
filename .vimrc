@@ -12,11 +12,12 @@ silent! if plug#begin()
   Plug 'tpope/vim-surround'
   Plug 'editorconfig/editorconfig-vim'
   Plug 'airblade/vim-gitgutter'
-  Plug 'w0rp/ale'
+  Plug 'dense-analysis/ale'
 
   " LANGUAGE PLUGINS
   Plug 'python-mode/python-mode', { 'for': 'python' }
   Plug 'ElmCast/elm-vim', { 'for': 'elm' }
+  Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 
   call plug#end()
 endif
@@ -39,6 +40,9 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 
 " Close vim if only the NERDTree window is left open.
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" ALE
+let g:ale_completion_enabled = 1
 
 
 " -----------
