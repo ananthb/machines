@@ -69,10 +69,12 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Google cloud shell
 [[ -f /google/devshell/bashrc.google ]] && source /google/devshell/bashrc.google
 
 # Editor
-export VISUAL=/usr/bin/vim
+export VISUAL=/usr/bin/nvim
 export EDITOR=$VISUAL
 
 # Android SDK
@@ -81,19 +83,15 @@ if [ -d "~/Android/Sdk" ]; then
   export PATH=~/Android/Sdk/emulator:~Android/Sdk/tools:$PATH
 fi
 
-# Dart
-[[ -d /usr/lib/dart/bin ]] && export PATH=/usr/lib/dart/bin:$PATH
-[[ -d ~/.pub-cache/bin ]] && export PATH=~/.pub-cache/bin:$PATH
-
-# Flutter
-[[ -d ~/flutter/bin ]] && export PATH=~/flutter/bin:$PATH
-
-# localbin
+# local bin
 [[ -d ~/.local/bin ]] && export PATH=~/.local/bin:$PATH
-
 
 # node modules bin
 [[ -d ~/.local/lib/node_modules/bin ]] && export PATH=~/.local/lib/node_modules/bin:$PATH
 
 # readline
 export INPUTRC=~/.config/inputrc
+
+# esp-idf
+export IDF_TOOLS_PATH=~/esp/idftools
+source ~/esp/esp-idf/export.sh
