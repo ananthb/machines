@@ -1,4 +1,2 @@
-[user]
-    name = Ananth Bhaskararaman
-    email = ananth@usc.ltd
-    signingkey = 81BFF14CE259BBF8
+[include]
+    path = id/me

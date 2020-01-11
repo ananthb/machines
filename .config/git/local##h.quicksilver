@@ -1,8 +1,0 @@
-[include]
-    path = ./me
-
-[sendmail]
-    smtpserver = 127.0.0.1
-    smtpuser = ananth@usc.ltd
-    smtppass = 6rqIN-yAhAhbc98HgQkw8Q
-    smtpserverport = 1025

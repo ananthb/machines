@@ -16,7 +16,7 @@
 	autocrlf = input
 
 [include]
-    path = ./local
+    path = local
 
 [http]
 	postBuffer = 524288000
