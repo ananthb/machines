@@ -93,5 +93,5 @@ fi
 export INPUTRC=~/.config/inputrc
 
 # esp-idf
-export IDF_TOOLS_PATH=~/esp/idftools
-source ~/esp/esp-idf/export.sh
+export IDF_TOOLS_PATH=~/.local/share/idftools
+[[ -d ~/src/esp-idf ]] && source ~/src/esp-idf/export.sh
