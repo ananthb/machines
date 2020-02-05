@@ -19,6 +19,7 @@ silent! if plug#begin()
   Plug 'ElmCast/elm-vim', { 'for': 'elm' }
   Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+  Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 
   call plug#end()
 endif
