@@ -100,3 +100,7 @@ export IDF_TOOLS_PATH=~/.local/share/idftools
 export RUSTUP_HOME=~/.local/share/rustup
 export CARGO_HOME=~/.local/share/cargo
 export PATH="$CARGO_HOME/bin":$PATH
+
+# haskell
+export GHCUP_INSTALL_BASE_PREFIX=~/.local/share
+export PATH="$HOME/.cabal/bin:$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin:$PATH"

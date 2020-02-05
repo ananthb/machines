@@ -32,6 +32,9 @@ endif
 " NERDTREE
 map <C-n> :NERDTreeToggle<CR>
 
+" Syntastic checkers
+let g:syntastic_sh_checkers = ['sh', 'shellcheck']
+
 " Open NERDTree when vim is opened without any files or directories.
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
