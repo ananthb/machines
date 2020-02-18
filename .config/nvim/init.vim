@@ -4,6 +4,7 @@
 
 silent! if plug#begin()
 
+  Plug 'lifepillar/vim-solarized8'
   Plug 'airblade/vim-gitgutter'
   Plug 'vim-syntastic/syntastic'
   Plug 'scrooloose/nerdtree'
@@ -20,6 +21,7 @@ silent! if plug#begin()
   Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
   Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+  Plug 'martinda/Jenkinsfile-vim-syntax', { 'for': 'Jenkinsfile' }
 
   call plug#end()
 endif
@@ -28,6 +30,11 @@ endif
 " --------------------
 " PLUGIN CONFIGURATION
 " --------------------
+
+" colorscheme
+set background=dark
+colorscheme solarized8
+	
 
 " NERDTREE
 map <C-n> :NERDTreeToggle<CR>
