@@ -22,6 +22,7 @@ silent! if plug#begin()
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
   Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
   Plug 'martinda/Jenkinsfile-vim-syntax', { 'for': 'Jenkinsfile' }
+  Plug 'ziglang/zig.vim', { 'for': 'zig' }
 
   call plug#end()
 endif

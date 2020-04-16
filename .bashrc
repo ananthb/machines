@@ -94,7 +94,7 @@ export INPUTRC=~/.config/inputrc
 
 # esp-idf
 export IDF_TOOLS_PATH=~/.local/share/idftools
-[[ -d ~/src/esp-idf ]] && source ~/src/esp-idf/export.sh
+[[ -d ~/src/me/esp-idf ]] && source ~/src/me/esp-idf/export.sh
 
 # rustup
 export RUSTUP_HOME=~/.local/share/rustup
