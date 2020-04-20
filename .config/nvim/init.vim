@@ -35,7 +35,9 @@ endif
 " colorscheme
 set background=dark
 colorscheme solarized8
-	
+
+" line numbering
+set number
 
 " NERDTREE
 map <C-n> :NERDTreeToggle<CR>
