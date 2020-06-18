@@ -1,2 +1,5 @@
 [include]
     path = id/me
+
+[includeIf "gitdir:~/src/qube/"]
+    path = id/qube
