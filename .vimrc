@@ -1,5 +1,5 @@
 " colorscheme
-set background=dark
+set background=light
 
 " line numbering
 set number

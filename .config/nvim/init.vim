@@ -4,7 +4,7 @@
 
 silent! if plug#begin()
 
-  Plug 'lifepillar/vim-solarized8'
+  Plug 'arzg/vim-colors-xcode'
   Plug 'airblade/vim-gitgutter'
   Plug 'vim-syntastic/syntastic'
   Plug 'scrooloose/nerdtree'
@@ -33,8 +33,8 @@ endif
 " --------------------
 
 " colorscheme
-set background=dark
-colorscheme solarized8
+set background=light
+colorscheme xcodelight
 
 " line numbering
 set number
