@@ -33,8 +33,8 @@ endif
 " --------------------
 
 " colorscheme
-set background=light
-colorscheme xcodelight
+set background=dark
+colorscheme xcodedark
 
 " line numbering
 set number
