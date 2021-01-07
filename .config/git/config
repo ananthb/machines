@@ -19,16 +19,11 @@
 	autocrlf = input
 
 [include]
-    path = local
+    path = id
+    path = gh_ssh_urls
 
 [http]
 	postBuffer = 524288000
-
-[commit]
-	gpgsign = true
-
-[url "ssh://git@github.com/"]
-        insteadOf = https://github.com/
 
 [pull]
         ff = only

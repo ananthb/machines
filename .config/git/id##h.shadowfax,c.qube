@@ -1,5 +1,8 @@
+[commit]
+	gpgsign = true
+
 [include]
-    path = id/me
+    path = keys/antsub
 
 [includeIf "gitdir:~/src/qube/"]
     path = id/qube

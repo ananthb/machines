@@ -1,5 +1,0 @@
-[include]
-    path = id/qube
-
-[includeIf "gitdir:~/src/me/"]
-    path = id/me
