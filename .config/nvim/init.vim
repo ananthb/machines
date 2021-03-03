@@ -4,7 +4,7 @@
 
 silent! if plug#begin()
 
-  Plug 'arzg/vim-colors-xcode'
+  Plug 'sts10/vim-pink-moon'
   Plug 'airblade/vim-gitgutter'
   Plug 'vim-syntastic/syntastic'
   Plug 'scrooloose/nerdtree'
@@ -34,7 +34,7 @@ endif
 
 " colorscheme
 set background=dark
-colorscheme xcodedark
+colorscheme pink-moon
 
 " line numbering
 set number
