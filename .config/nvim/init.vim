@@ -32,6 +32,9 @@ endif
 " PLUGIN CONFIGURATION
 " --------------------
 
+" shut up coc
+let g:coc_disable_startup_warning = 1
+
 " colorscheme
 set background=dark
 colorscheme pink-moon
