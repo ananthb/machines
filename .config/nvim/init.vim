@@ -13,7 +13,7 @@ silent! if plug#begin()
   Plug 'tpope/vim-surround'
   Plug 'airblade/vim-gitgutter'
   Plug 'jiangmiao/auto-pairs'
-  Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
   " LANGUAGE PLUGINS
   Plug 'python-mode/python-mode', { 'for': 'python' }
