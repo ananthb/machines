@@ -73,7 +73,7 @@ fi
 # Google cloud shell
 [[ -f /google/devshell/bashrc.google ]] && source /google/devshell/bashrc.google
 
-# Editor
+# editor
 export VISUAL=/usr/bin/nvim
 export EDITOR=$VISUAL
 
@@ -92,14 +92,11 @@ fi
 # readline
 export INPUTRC=~/.config/inputrc
 
-# esp-idf
-export IDF_TOOLS_PATH=~/.local/share/idftools
-[[ -d ~/src/me/esp-idf ]] && source ~/src/me/esp-idf/export.sh
-
-# rustup
+# rust
 export RUSTUP_HOME=~/.local/share/rustup
 export CARGO_HOME=~/.local/share/cargo
 export PATH="$CARGO_HOME/bin":$PATH
+. "$CARGO_HOME/env"
 
 # haskell
 export GHCUP_INSTALL_BASE_PREFIX=~/.local/share

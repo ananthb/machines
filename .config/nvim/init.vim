@@ -45,8 +45,9 @@ set number
 " NERDTREE
 map <C-n> :NERDTreeToggle<CR>
 
-" Syntastic checkers
-let g:syntastic_sh_checkers = ['sh', 'shellcheck']
+" Syntastic
+let g:syntastic_check_on_open=1
+let g:syntastic_enable_signs=1
 
 " Open NERDTree when vim is opened without any files or directories.
 autocmd StdinReadPre * let s:std_in=1

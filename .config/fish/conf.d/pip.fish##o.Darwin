@@ -1,6 +1,6 @@
 if test -d /Users/ananth/Library/Python/2.7/bin
-  set -gx PATH /Users/ananth/Library/Python/2.7/bin $PATH
+  fish_add_path /Users/ananth/Library/Python/2.7/bin
 end
 if test -d /Users/ananth/Library/Python/3.7/bin
-  set -gx PATH /Users/ananth/Library/Python/3.7/bin $PATH
+  fish_add_path /Users/ananth/Library/Python/3.7/bin
 end
