@@ -1,6 +1,10 @@
-if test -d /Users/ananth/Library/Python/2.7/bin
-  fish_add_path /Users/ananth/Library/Python/2.7/bin
+set python2_bin ~/Library/Python/2.7/bin
+set python3_bin ~/Library/Python/3.7/bin
+if test -d $python2_bin
+ contains $python2_bin $fish_user_paths; or set -Ua fish_user_paths $python2_bin
+  # fish 3.2.0: fish_add_path $python2_bin
 end
-if test -d /Users/ananth/Library/Python/3.7/bin
-  fish_add_path /Users/ananth/Library/Python/3.7/bin
+if test -d $python3_bin
+  contains $python3_bin $fish_user_paths; or set -Ua fish_user_paths $pytho3_bin
+  # fish 3.2.0: fish_add_path $python3_bin
 end
