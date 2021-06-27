@@ -96,7 +96,6 @@ export INPUTRC=~/.config/inputrc
 export RUSTUP_HOME=~/.local/share/rustup
 export CARGO_HOME=~/.local/share/cargo
 export PATH="$CARGO_HOME/bin":$PATH
-. "$CARGO_HOME/env"
 
 # haskell
 export GHCUP_INSTALL_BASE_PREFIX=~/.local/share
