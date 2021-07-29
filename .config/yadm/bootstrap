@@ -8,3 +8,8 @@ if command -v nvim >/dev/null 2>&1; then
   echo "Bootstraping Neovim"
   nvim '+PlugUpdate' '+PlugClean!' '+PlugUpdate' '+qall'
 fi
+
+if command -v tmux >/dev/null 2>&1; then
+  echo "Downloading tpm for tmux"
+  git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+fi
