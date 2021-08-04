@@ -25,9 +25,6 @@
     path = id
     path = gh_ssh_urls
 
-[http]
-    postBuffer = 524288000
-
 [pull]
     ff = only
 
