@@ -19,8 +19,8 @@ principals=("${principals[@]}" "${more_principals[@]}")
 echo "List of principals: ${principals[*]}"
 
 echo 'Fetch ssh host certificate'
-mkdir -p /etc/step/ssh
-pushd /etc/step/ssh
+mkdir -p /var/lib/step/ssh
+pushd /var/lib/step/ssh
 env STEPPATH=/var/lib/step step ssh certificate --insecure --no-password --host "${principals[@]/#/--principal=}" ${HOSTNAME} ssh_host_ecdsa_key
 popd
 
@@ -33,8 +33,8 @@ echo 'Add host and user certificates to sshd config'
 if ! grep -qxF '# ca.subhamho.me Step CA' /etc/ssh/sshd_config; then 
   tee /etc/ssh/sshd_config <<-EOF
     # ca.subhamho.me Step CA
-    HostKey /etc/step/ssh/ssh_host_ecdsa_key
-    HostCertificate /etc/step/ssh/ssh_host_ecdsa_key-cert.pub
+    HostKey /var/lib/step/ssh/ssh_host_ecdsa_key
+    HostCertificate /var/lib/step/ssh/ssh_host_ecdsa_key-cert.pub
     TrustedUserCAKeys /etc/ssh/ssh_user_key.pub
   EOF
 fi
@@ -50,10 +50,8 @@ Requires=tailscaled.service
 [Service]
 Type=oneshot
 DynamicUser=true
-ConfigurationDirectory=step/ssh
 StateDirectory=step
-ExecStartPre=chown ${CONFIGURATION_DIRECTORY}/ssh_host_ecdsa_key*
-ExecStart=env HOME=${STATE_DIRECTORY} STEPPATH=${STATE_DIRECTORY} step ssh renew ${CONFIGURATION_DIRECTORY}/ssh_host_ecdsa_key-cert.pub ${CONFIGURATION_DIRECTORY}/ssh_host_ecdsa_key --force
+ExecStart=env HOME=${STATE_DIRECTORY} STEPPATH=${STATE_DIRECTORY} step ssh renew ${STATE_DIRECTORY}/ssh/ssh_host_ecdsa_key-cert.pub ${STATE_DIRECTORY}/ssh/ssh_host_ecdsa_key --force
 ExecStartPost=+systemctl reload sshd
 EOF
 
