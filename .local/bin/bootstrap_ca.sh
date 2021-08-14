@@ -9,17 +9,8 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-echo 'Create step user and group'
-useradd --comment "Step CA Client" --home /var/lib/step --create-home --system -s /usr/sbin/nologin --user-group
-
-echo 'Give step group permission to reload sshd'
-tee /etc/sudoers.d/10-step <<EOF
-# Allow step to reload sshd
-%step ALL = (root) NOPASSWD: /usr/bin/systemctl reload sshd
-EOF
-
 echo 'Bootstrap ca'
-env STEPPATH=/var/lib/step sudo -Eu step ca bootstrap --ca-url https://ca.subhamho.me --fingerprint 39e64b7a3e385708d1ff230a2d0d6349f050cf60279069a06a3be1696af016a0
+env STEPPATH=/var/lib/step step ca bootstrap --ca-url https://ca.subhamho.me --fingerprint 39e64b7a3e385708d1ff230a2d0d6349f050cf60279069a06a3be1696af016a0
 
 # ssh host certificate hostname and principals
 echo "Fetching SSH Host certificate for hostname ${HOSTNAME} with principals: ${principals[*]}"
@@ -28,8 +19,9 @@ principals=("${principals[@]}" "${more_principals[@]}")
 echo "List of principals: ${principals[*]}"
 
 echo 'Fetch ssh host certificate'
-pushd /etc/ssh
-env STEPPATH=/var/lib/step sudo -Eu step ssh certificate --insecure --no-password --host "${principals[@]/#/--principal=}" ${HOSTNAME} ssh_host_ecdsa_key
+mkdir -p /etc/step/ssh
+pushd /etc/step/ssh
+env STEPPATH=/var/lib/step step ssh certificate --insecure --no-password --host "${principals[@]/#/--principal=}" ${HOSTNAME} ssh_host_ecdsa_key
 popd
 
 echo 'Install SSH user certificate'
@@ -41,8 +33,8 @@ echo 'Add host and user certificates to sshd config'
 if ! grep -qxF '# ca.subhamho.me Step CA' /etc/ssh/sshd_config; then 
   tee /etc/ssh/sshd_config <<-EOF
     # ca.subhamho.me Step CA
-    HostKey /etc/ssh/ssh_host_ecdsa_key
-    HostCertificate /etc/ssh/ssh_host_ecdsa_key-cert.pub
+    HostKey /etc/step/ssh/ssh_host_ecdsa_key
+    HostCertificate /etc/step/ssh/ssh_host_ecdsa_key-cert.pub
     TrustedUserCAKeys /etc/ssh/ssh_user_key.pub
   EOF
 fi
@@ -57,12 +49,12 @@ Requires=tailscaled.service
 
 [Service]
 Type=oneshot
-User=step
-Group=step
-Environment=STEPPATH=/var/lib/step
-WorkingDirectory=/etc/ssh
-ExecStart=step ssh renew ssh_host_ecdsa_key-cert.pub ssh_host_ecdsa_key --force
-ExecStartPost=sudo systemctl reload sshd
+DynamicUser=true
+ConfigurationDirectory=step/ssh
+StateDirectory=step
+ExecStartPre=chown ${CONFIGURATION_DIRECTORY}/ssh_host_ecdsa_key*
+ExecStart=env HOME=${STATE_DIRECTORY} STEPPATH=${STATE_DIRECTORY} step ssh renew ${CONFIGURATION_DIRECTORY}/ssh_host_ecdsa_key-cert.pub ${CONFIGURATION_DIRECTORY}/ssh_host_ecdsa_key --force
+ExecStartPost=+systemctl reload sshd
 EOF
 
 tee /etc/systemd/system/step-ssh-renew.timer <<EOF
