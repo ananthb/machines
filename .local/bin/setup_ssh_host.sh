@@ -1,35 +1,44 @@
 #!/bin/bash
 
-echo Bootstrap ca.subhamho.me with ssh host certificate and timer based renewal
-
 set -eou pipefail
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
-   exit 1
+  exec sudo /bin/bash "$0" "$@"
 fi
 
-echo 'Bootstrap ca'
-env STEPPATH=/var/lib/step step ca bootstrap --ca-url https://ca.subhamho.me --fingerprint 39e64b7a3e385708d1ff230a2d0d6349f050cf60279069a06a3be1696af016a0
+echo setting up SSH host certificates
+
+step_bin="${STEP:-step}"
+if ! [ -x "$(command -v $step_bin)" ]; then
+  if [ -x "$(command -v step-cli)" ]; then
+    step_bin=step-cli
+  else
+    echo "ensure step cli is in PATH or set $STEP env var pointing to step cli"
+    exit 1
+  fi
+fi
+
+echo 'bootstrap ca'
+env STEPPATH=/var/lib/step $step_bin ca bootstrap --ca-url https://ca.subhamho.me --fingerprint 39e64b7a3e385708d1ff230a2d0d6349f050cf60279069a06a3be1696af016a0
 
 # ssh host certificate hostname and principals
-echo "Fetching SSH Host certificate for hostname ${HOSTNAME} with principals: ${principals[*]}"
+principals=("${HOSTNAME}")
+echo "fetching SSH Host certificate for hostname ${HOSTNAME} with principals: ${principals[*]}"
 read -r -a more_principals -p "Enter additional certificate principals: "
 principals=("${principals[@]}" "${more_principals[@]}")
-echo "List of principals: ${principals[*]}"
+echo "final list of principals: ${principals[*]}"
 
-echo 'Fetch ssh host certificate'
 mkdir -p /var/lib/step/ssh
 pushd /var/lib/step/ssh
-env STEPPATH=/var/lib/step step ssh certificate --insecure --no-password --host "${principals[@]/#/--principal=}" ${HOSTNAME} ssh_host_ecdsa_key
+env STEPPATH=/var/lib/step $step_bin ssh certificate --insecure --no-password --host "${principals[@]/#/--principal=}" ${HOSTNAME} ssh_host_ecdsa_key
 popd
 
-echo 'Install SSH user certificate'
+echo 'installing SSH user certificate'
 tee /etc/ssh/ssh_user_key.pub <<EOF
 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLGZzWhmsdhtW/tSy72/GT929lQT3WDPO6L91mDhikHAjLIsycPRL+SX0JMdK8rAKqj7CBW49Vu8Eg5D+U1lScg=
 EOF
 
-echo 'Add host and user certificates to sshd config'
+echo 'adding host and user certificates to sshd config'
 if ! grep -qxF '# ca.subhamho.me Step CA' /etc/ssh/sshd_config; then 
   tee /etc/ssh/sshd_config <<-EOF
     # ca.subhamho.me Step CA
@@ -39,7 +48,7 @@ if ! grep -qxF '# ca.subhamho.me Step CA' /etc/ssh/sshd_config; then
   EOF
 fi
 
-echo 'Install systemd service and timer to renew certificates'
+echo 'installing systemd service and timer to renew certificates'
 tee /etc/systemd/system/step-ssh-renew.service <<EOF
 [Unit]
 Description=Step SSH Host Certificate renewal service
@@ -67,4 +76,6 @@ Persistent=true
 WantedBy=timers.target
 EOF
 
+systemctl daemon-reload
+systemctl enable step-ssh-renew.timer
 systemctl reload sshd
