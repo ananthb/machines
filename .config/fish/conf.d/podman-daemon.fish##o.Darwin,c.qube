@@ -1,2 +1,2 @@
 # remote podman daemon config
-set -gx CONTAINER_HOST=tcp://podman.internal:8080
+set -gx CONTAINER_HOST tcp://podman.internal:8080
