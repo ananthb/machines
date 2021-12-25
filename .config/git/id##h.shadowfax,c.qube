@@ -1,5 +1,0 @@
-[include]
-    path = keys/antsub
-
-[includeIf "gitdir:~/src/qube/"]
-    path = keys/qube
