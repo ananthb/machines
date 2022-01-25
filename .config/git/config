@@ -1,3 +1,6 @@
+[core]
+    autocrlf = input
+
 [init]
     defaultBranch = main
 
@@ -18,14 +21,20 @@
 [help]
   autoCorrect = prompt
 
-[core]
-    autocrlf = input
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  allowedSignersFile = "~/.config/git/allowed_signers"
 
 [commit]
     gpgsign = true
 
+[tag]
+  gpgsign = true
+
 [include]
-    path = id
+    path = user
     path = gh_ssh_urls
 
 [pull]
