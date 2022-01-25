@@ -15,6 +15,9 @@
     implicitIdentity = false
     detachedHead = false
 
+[help]
+  autoCorrect = prompt
+
 [core]
     autocrlf = input
 
