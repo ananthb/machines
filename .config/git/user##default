@@ -2,10 +2,11 @@
   signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAUN7DX5bhOHeoC4GcYszrspcpY9KLURce28uLXMkWVK ananth"
 
 [url "ssh://git@github.com/"]
-        insteadOf = https://github.com/
+  insteadOf = https://github.com/
 
 [include]
-    path = profiles/ananth
+  path = profiles/ananth
 
 [includeIf "gitdir:~/src/qube/"]
-    path = profiles/qube
+  path = profiles/qube
+

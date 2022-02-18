@@ -1,22 +1,31 @@
 [core]
-    autocrlf = input
+  autocrlf = input
+
+[alias]
+  a = add
+  b = branch
+  p = push
+  r = reset
+  s = status -sb
+  co = checkout
+  cp = cherry-pick
 
 [init]
-    defaultBranch = main
+  defaultBranch = main
 
 [color]
-    ui = true
-    diff = auto
-    status = auto
-    branch = auto
+  ui = true
+  diff = auto
+  status = auto
+  branch = auto
 
 [advice]
-    pushNonFastForward = false
-    statusHints = false
-    commitBeforeMerge = false
-    resolveConflict = false
-    implicitIdentity = false
-    detachedHead = false
+  pushNonFastForward = false
+  statusHints = false
+  commitBeforeMerge = false
+  resolveConflict = false
+  implicitIdentity = false
+  detachedHead = false
 
 [help]
   autoCorrect = prompt
@@ -28,20 +37,21 @@
   allowedSignersFile = "~/.config/git/allowed_signers"
 
 [commit]
-    gpgsign = true
+  gpgsign = true
 
 [tag]
   gpgsign = true
 
 [include]
-    path = user
-    path = gh_ssh_urls
+  path = user
+  path = gh_ssh_urls
 
 [pull]
-    ff = only
+  ff = only
 
 [filter "lfs"]
-    required = true
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
