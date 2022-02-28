@@ -4,6 +4,7 @@
 [alias]
   a = add
   b = branch
+  c = commit
   p = push
   r = reset
   s = status -sb
