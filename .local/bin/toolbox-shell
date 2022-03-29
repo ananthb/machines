@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# toolbox-shell starts or connects to tmux session 0.
+# Its meant to be used as a custom command for gnome-terminal.
+
+shell="$(getent passwd "$(id -u)" | awk -F: '{ print $7  }')"
+exec toolbox run "$shell" -c "/usr/bin/tmux new -As0"
