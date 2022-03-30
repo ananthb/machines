@@ -1,6 +1,28 @@
 #!/usr/bin/env bash
+#
 # toolbox-shell starts or connects to tmux session 0.
 # Its meant to be used as a custom command for gnome-terminal.
 
+set -euo pipefail
+
+if [[ -z "$container" ]]; then
+  printf 'toolbox-shell should only be run inside a toolbox container\n'
+  exit 1
+fi
+
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/toolbox-setup"
+
+if [[ ! -f "$cfg" ]]; then
+  toolbox create || true
+  toolbox_vscode="$HOME/.local/share/toolbox-vscode"
+  git clone https://github.com/owtaylor/toolbox-vscode.git "$toolbox_vscode"
+  mkdir -p ~/.local/bin
+  ln -sf "$toolbox_vscode"/code.sh ~/.local/bin/code
+  ln -sf "$toolbox_vscode"/podman-host.sh ~/.local/bin/podman-host
+  sudo ln -sf "$toolbox_vscode"/podman-host.sh /usr/local/bin/podman
+  toolbox run bash -c "sudo dnf install -y fish neovim tmux"
+  touch "$cfg"
+fi
+
 shell="$(getent passwd "$(id -u)" | awk -F: '{ print $7  }')"
-exec toolbox run "$shell" -c "/usr/bin/tmux new -As0"
+exec toolbox run "$shell" -c "tmux new -As0"
