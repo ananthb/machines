@@ -13,7 +13,7 @@ if [[ ! -f "$cfg" ]]; then
   if [[ -d "$toolbox_vscode"/.git ]]; then
     git -C "$toolbox_vscode" pull
   else
-    rm -r "$toolbox_vscode"
+    rm -rf "$toolbox_vscode"
     git clone https://github.com/owtaylor/toolbox-vscode.git "$toolbox_vscode"
   fi
   mkdir -p ~/.local/bin
