@@ -5,11 +5,6 @@
 
 set -euo pipefail
 
-if [[ -z "$container" ]]; then
-  printf 'toolbox-shell should only be run inside a toolbox container\n'
-  exit 1
-fi
-
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}/toolbox-setup"
 
 if [[ ! -f "$cfg" ]]; then
