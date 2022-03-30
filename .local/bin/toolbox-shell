@@ -19,10 +19,10 @@ if [[ ! -f "$cfg" ]]; then
   mkdir -p ~/.local/bin
   ln -sf "$toolbox_vscode"/code.sh ~/.local/bin/code
   ln -sf "$toolbox_vscode"/podman-host.sh ~/.local/bin/podman-host
-  sudo ln -sf "$toolbox_vscode"/podman-host.sh /usr/local/bin/podman
-  toolbox run bash -c "sudo dnf install -y fish neovim tmux"
+  toolbox run bash -c 'sudo ln -sf '"$toolbox_vscode"'/podman-host.sh /usr/local/bin/podman'
+  toolbox run bash -c 'sudo dnf install -y fish neovim tmux'
   touch "$cfg"
 fi
 
 shell="$(getent passwd "$(id -u)" | awk -F: '{ print $7  }')"
-exec toolbox run "$shell" -c "tmux new -As0"
+exec toolbox run "$shell" -c 'tmux new -As0'
