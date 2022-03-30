@@ -15,7 +15,7 @@ if [[ ! -f "$cfg" ]]; then
   ln -sf "$toolbox_vscode"/code.sh ~/.local/bin/code
   ln -sf "$toolbox_vscode"/podman-host.sh ~/.local/bin/podman-host
   toolbox run bash -c 'sudo ln -sf '"$toolbox_vscode"'/podman-host.sh /usr/local/bin/podman'
-  toolbox run bash -c 'sudo dnf install -y fish neovim tmux'
+  toolbox run bash -c 'sudo dnf install -y fish neovim tmux git'
   touch "$cfg"
 fi
 
