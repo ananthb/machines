@@ -8,19 +8,19 @@ set -euo pipefail
 cfg="${XDG_CONFIG_HOME:-$HOME/.config}/toolbox/tools-setup"
 
 if [[ ! -f "$cfg" ]]; then
-  toolbox create &>/dev/null || true
+  toolbox create --assumeyes &>/dev/null || true
   toolbox_vscode="$HOME/.local/share/toolbox-vscode"
   if [[ -d "$toolbox_vscode"/.git ]]; then
-    git -C "$toolbox_vscode" pull
+    git -C "$toolbox_vscode" pull &>/dev/null
   else
     rm -rf "$toolbox_vscode"
-    git clone https://github.com/owtaylor/toolbox-vscode.git "$toolbox_vscode"
+    git clone https://github.com/owtaylor/toolbox-vscode.git "$toolbox_vscode" &>/dev/null
   fi
   mkdir -p ~/.local/bin
   ln -sf "$toolbox_vscode"/code.sh ~/.local/bin/code
   ln -sf "$toolbox_vscode"/podman-host.sh ~/.local/bin/podman-host
-  toolbox run bash -c 'sudo ln -sf '"$toolbox_vscode"'/podman-host.sh /usr/local/bin/podman'
-  toolbox run bash -c 'sudo dnf -q install -y fish neovim tmux git'
+  toolbox run bash -c 'sudo ln -sf '"$toolbox_vscode"'/podman-host.sh /usr/local/bin/podman' &>/dev/null
+  toolbox run bash -c 'sudo dnf -q install -y fish neovim tmux git' &>/dev/null
   touch "$cfg"
 fi
 
