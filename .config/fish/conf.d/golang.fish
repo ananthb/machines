@@ -1,1 +1,1 @@
-set -gx GOBIN ~/.local/bin
+fish_add_path ~/go/bin

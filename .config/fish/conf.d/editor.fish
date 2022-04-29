@@ -1,2 +1,4 @@
-set -gx VISUAL nvim
-set -gx EDITOR $VISUAL
+if command -v nvim
+  set -gx EDITOR nvim
+  set -gx VISUAL $EDITOR
+end
