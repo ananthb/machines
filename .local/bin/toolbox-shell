@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 #
 # toolbox-shell starts or connects to tmux session 0.
-# It is meant to be used as a custom command for gnome-terminal, vscode, etc.
+# Its primary use is as a custom command for gnome-terminal.
 
 set -euo pipefail
 
-cfg="${XDG_CONFIG_HOME:-$HOME/.config}/toolbox/tools-setup"
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}/toolbox/toolbox-shell-setup"
 
 if [[ ! -f "$cfg" ]]; then
   toolbox create --assumeyes &>/dev/null || true
-  podman_host="$HOME/.local/share/podman-host.sh"
-  toolbox run bash -c 'sudo ln -sf '"$podman_host"' /usr/local/bin/podman' &>/dev/null
+  toolbox_vscode="$HOME/.local/share/toolbox-vscode"
+  toolbox run bash -c 'sudo ln -sf '"$toolbox_vscode"'/code.sh /usr/local/bin/code' &>/dev/null
+  toolbox run bash -c 'sudo ln -sf '"$toolbox_vscode"'/podman-host.sh /usr/local/bin/podman' &>/dev/null
   toolbox run bash -c 'sudo dnf -q install -y fish neovim tmux git curl htop' &>/dev/null
   touch "$cfg"
 fi
