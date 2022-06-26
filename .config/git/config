@@ -31,12 +31,6 @@
 [help]
   autoCorrect = prompt
 
-[gpg]
-  format = ssh
-
-[gpg "ssh"]
-  allowedSignersFile = "~/.config/git/allowed_signers"
-
 [commit]
   gpgsign = true
 
@@ -45,7 +39,6 @@
 
 [include]
   path = user
-  path = gh_ssh_urls
 
 [pull]
   ff = only
