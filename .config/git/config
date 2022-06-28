@@ -29,7 +29,7 @@
   detachedHead = false
 
 [help]
-  autoCorrect = prompt
+  autoCorrect = 10
 
 [commit]
   gpgsign = true

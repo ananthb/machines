@@ -1,11 +1,5 @@
 [user]
   name = Ananth Bhaskararaman
   email = antsub@gmail.com
-  signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAUN7DX5bhOHeoC4GcYszrspcpY9KLURce28uLXMkWVK ananth"
-
-[gpg]
-  format = ssh
-
-[gpg "ssh"]
-  allowedSignersFile = "~/.config/git/allowed_signers"
+  signingkey = 4F0758D4AAE24E6D5A4483C666A20525398E18D7
 
