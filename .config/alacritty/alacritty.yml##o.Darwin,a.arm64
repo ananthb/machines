@@ -16,9 +16,9 @@ selection:
 live_config_reload: true
 
 shell:
-  program: /usr/local/bin/fish
+  program: /opt/homebrew/bin/fish
   args:
     - -l
     - -i
     - -c
-    - "/usr/local/bin/tmux attach -t main || /usr/local/bin/tmux new-session -t main"
+    - "/opt/homebrew/bin/tmux attach -t main || /opt/homebrew/bin/tmux new-session -t main"
