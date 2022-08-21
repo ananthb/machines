@@ -2,5 +2,5 @@
 	path = .local/share/yadm-src
 	url = https://github.com/TheLocehiliosan/yadm.git
 [submodule "/var/home/ananth/.local/share/toolbox-vscode"]
-	path = /var/home/ananth/.local/share/toolbox-vscode
-	url = git@github.com:owtaylor/toolbox-vscode.git
+	path = .local/share/toolbox-vscode
+	url = https://github.com/owtaylor/toolbox-vscode.git
