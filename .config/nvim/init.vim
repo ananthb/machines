@@ -12,6 +12,7 @@ silent! if plug#begin()
   Plug 'tpope/vim-surround'
   Plug 'jiangmiao/auto-pairs'
   Plug 'github/copilot.vim'
+  Plug 'vijaymarupudi/nvim-fzf'
 
   " LANGUAGE PLUGINS
   Plug 'neovim/nvim-lspconfig'
