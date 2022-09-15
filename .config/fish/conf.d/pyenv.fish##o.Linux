@@ -1,3 +1,0 @@
-set -gx PYENV_ROOT $HOME/.local/share/pyenv
-fish_add_path $PYENV_ROOT/bin
-

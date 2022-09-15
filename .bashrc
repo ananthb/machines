@@ -100,3 +100,4 @@ export PATH="$CARGO_HOME/bin":$PATH
 # haskell
 export GHCUP_INSTALL_BASE_PREFIX=~/.local/share
 export PATH="$HOME/.cabal/bin:$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin:$PATH"
+. "/home/ananth/.local/share/cargo/env"
