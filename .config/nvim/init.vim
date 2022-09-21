@@ -20,6 +20,7 @@ silent! if plug#begin()
   Plug 'f-person/git-blame.nvim'
   Plug 'beauwilliams/statusline.lua'
   Plug 'ellisonleao/glow.nvim'
+  Plug 'petobens/poet-v'
 
   " languages
   Plug 'ray-x/go.nvim', {'for': 'go'}
@@ -36,9 +37,11 @@ set relativenumber
 set autochdir
 set clipboard=unnamedplus
 
-" LSP
-lua << EOF
-local lsp = require'lspconfig'
-lsp.gopls.setup{}
-EOF
+" CONFIG
+
+let g:poetv_auto_activate = 0
+let g:coq_settings = { 'auto_start': 'shut-up' }
+
+" LUA
+lua require'config'
 
