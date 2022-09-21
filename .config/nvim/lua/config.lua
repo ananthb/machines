@@ -1,3 +1,9 @@
+-- NVIM TREE
+-- disable netrw
+vim.g.loaded = 1
+vim.g.loaded_netrwPlugin = 1
+require'nvim-tree'.setup()
+
 -- COQ
 local coq = require'coq'
 
