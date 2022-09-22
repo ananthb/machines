@@ -1,4 +1,10 @@
-" plugins
+" CONFIG
+
+let g:python3_host_prog = "$HOME/.local/share/nvim/pyvenv/bin/python"
+let g:poetv_auto_activate = 1
+let g:coq_settings = { 'auto_start': 'shut-up' }
+
+" PLUGINS
 
 silent! if plug#begin()
   Plug 'tomasiser/vim-code-dark'
@@ -37,11 +43,6 @@ set number
 set relativenumber
 set autochdir
 set clipboard=unnamedplus
-
-" CONFIG
-
-let g:poetv_auto_activate = 0
-let g:coq_settings = { 'auto_start': 'shut-up' }
 
 " LUA
 lua require'config'
