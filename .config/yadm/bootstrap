@@ -30,8 +30,8 @@ fi
 # install Hack Nerd Font
 case "$OSTYPE" in
   darwin*)
-    brew tap homebrew/cask-fonts
-    brew install --cask font-hack-nerd-font
+    brew tap --quiet homebrew/cask-fonts
+    brew install --quiet --cask font-hack-nerd-font
     ;;
   linux*)
     if ! fc-list | grep -wq 'Hack Nerd Font'; then
