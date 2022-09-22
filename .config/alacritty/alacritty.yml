@@ -1,6 +1,6 @@
 # vim: set filetype=yaml:
 
-imports:
+import:
   - ~/.config/alacritty/extra.yml
 
 window:
@@ -27,17 +27,8 @@ font:
     family: Hack Nerd Font
     style: Bold Italic
 
-  size: 14.0
-
 selection:
   save_to_clipboard: true
 
 live_config_reload: true
 
-shell:
-  program: /usr/bin/fish
-  args:
-    - -l
-    - -i
-    - -c 
-    - "/usr/bin/tmux attach -t main || /usr/bin/tmux new-session -t main"
