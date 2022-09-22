@@ -44,6 +44,8 @@ set relativenumber
 set autochdir
 set clipboard=unnamedplus
 
+nmap <C-n> :NvimTreeToggle<CR>
+
 " LUA
 lua require'config'
 
