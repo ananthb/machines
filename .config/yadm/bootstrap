@@ -15,7 +15,7 @@ if command -v nvim >/dev/null 2>&1; then
   fi
 
   # install and update everything
-  $pyvenv/bin/pip install --quiet --upgrade pyvenv
+  "$pyvenv"/bin/pip install --quiet --upgrade pyvenv
   nvim '+PlugUpgrade' '+PlugClean!' '+PlugUpdate' '+GoInstallBinaries' \
     '+qall'
 fi
@@ -26,4 +26,30 @@ if command -v tmux >/dev/null 2>&1; then
     git clone https://github.com/tmux-plugins/tpm "$tpm"
   fi
 fi
+
+# install Hack Nerd Font
+case "$OSTYPE" in
+  darwin*)
+    brew tap homebrew/cask-fonts
+    brew install --cask font-hack-nerd-font
+    ;;
+  linux*)
+    if ! fc-list | grep -wq 'Hack Nerd Font'; then
+      mkdir -p ~/.local/share/fonts
+      cd ~/.local/share/fonts || exit 1
+      hack="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack"
+      variants=("Bold" "BoldItalic" "Italic" "Regular")
+      for v in "${variants[@]}"; do
+        ttf="Hack %v Nerd Font Complete.ttf"
+        url="$hack/complete/Hack%20$v%20Nerd%20Font%20Complete.ttf"
+        curl -fLo "$ttf" "$url"
+      done
+    fi
+    ;;
+  solaris*) ;;
+  bsd*)     ;;
+  msys*)    ;;
+  cygwin*)  ;;
+  *) echo "unknown: $OSTYPE" ;;
+esac
 

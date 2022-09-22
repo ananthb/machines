@@ -1,8 +1,6 @@
-" CONFIG
+" KEYMAPS
 
-let g:python3_host_prog = "$HOME/.local/share/nvim/pyvenv/bin/python"
-let g:poetv_auto_activate = 1
-let g:coq_settings = { 'auto_start': 'shut-up' }
+nnoremap <C-n> :NvimTreeToggle<CR>
 
 " PLUGINS
 
@@ -36,6 +34,13 @@ silent! if plug#begin()
   call plug#end()
 endif
 
+
+" CONFIG
+
+let g:python3_host_prog = "$HOME/.local/share/nvim/pyvenv/bin/python"
+let g:poetv_auto_activate = 1
+let g:coq_settings = { 'auto_start': 'shut-up' }
+
 colorscheme codedark
 set background=dark
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
@@ -44,8 +49,8 @@ set relativenumber
 set autochdir
 set clipboard=unnamedplus
 
-nmap <C-n> :NvimTreeToggle<CR>
 
 " LUA
+
 lua require'config'
 

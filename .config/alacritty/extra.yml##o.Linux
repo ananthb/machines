@@ -1,19 +1,7 @@
 # vim: set filetype=yaml:
 
-window:
-  dimensions:
-    columns: 80
-    lines: 24
-
-  dynamic_title: true
-
 font:
   size: 14.0
-
-selection:
-  save_to_clipboard: true
-
-live_config_reload: true
 
 shell:
   program: /usr/bin/fish
@@ -22,3 +10,4 @@ shell:
     - -i
     - -c 
     - "/usr/bin/tmux attach -t main || /usr/bin/tmux new-session -t main"
+
