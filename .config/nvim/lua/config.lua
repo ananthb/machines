@@ -1,4 +1,5 @@
 -- DASHBOARD
+
 local home = os.getenv('HOME')
 local db = require('dashboard')
 local sysname = vim.loop.os_uname().sysname
@@ -52,12 +53,16 @@ db.custom_center = {
   },
 }
 
+
 -- NVIM TREE
+
 vim.g.loaded = 1
 vim.g.loaded_netrwPlugin = 1
 require'nvim-tree'.setup()
 
+
 --NVIM TREESITTER
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = {
     "c", "cpp", "css", "dockerfile", "elm", "fish", "go", "gomod",
@@ -67,14 +72,20 @@ require'nvim-treesitter.configs'.setup {
   auto_install = true,
 }
 
+
 -- COQ
+
 local coq = require'coq'
 
+
 -- LSP
+
 local lsp = require'lspconfig'
 lsp.gopls.setup{}
 lsp.pyright.setup{}
 
+
 -- GO
+
 require'go'.setup()
 

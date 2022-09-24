@@ -34,6 +34,7 @@ silent! if plug#begin()
   Plug 'petobens/poet-v'
 
   " languages
+  Plug 'sbdchd/neoformat'
   Plug 'ray-x/go.nvim', {'for': 'go'}
   Plug 'ray-x/guihua.lua'
 
@@ -53,8 +54,13 @@ set background=dark
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set number
 set relativenumber
-set autochdir
 set clipboard=unnamedplus
+
+" format on save
+augroup fmt
+  autocmd!
+  autocmd BufWritePre * undojoin | Neoformat
+augroup end
 
 
 " LUA
