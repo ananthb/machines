@@ -1,6 +1,12 @@
 " KEYMAPS
 
-nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <C-n> :NvimTreeToggle<cr>
+nnoremap <leader>ss <cmd>SessionSave<cr>
+nnoremap <leader>sl <cmd>SessionLoad<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
 
 " PLUGINS
 
@@ -42,6 +48,7 @@ let g:poetv_auto_activate = 1
 let g:coq_settings = { 'auto_start': 'shut-up' }
 
 colorscheme codedark
+set mouse=a
 set background=dark
 set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set number

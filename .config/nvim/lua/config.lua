@@ -11,44 +11,44 @@ elseif sysname == "Darwin" then
 end
 
 db.preview_file_path = home .. '/.local/share/nvim/neovim.cat'
-db.preview_file_height = 11
-db.preview_file_width = 70
+db.preview_file_height = 5
+db.preview_file_width = 55
 db.custom_center = {
   {
-    icon = '  ',
-    desc = 'Recently latest session                 ',
-    shortcut = 'SPC s l',
-    action ='SessionLoad'
+    icon = 'ﮦ  ',
+    desc = 'Resume session                     ',
+    action = "SessionLoad",
+    shortcut = '<leader> sl',
   },
   {
-    icon = '  ',
-    desc = 'Recently opened files                   ',
-    action =  'DashboardFindHistory',
-    shortcut = 'SPC f h'
+    icon = '  ', 
+    desc = 'Save session                       ',
+    action = 'SessionSave',
+    shortcut = '<leader> ss',
   },
   {
-    icon = '  ',
-    desc = 'Find  File                              ',
-    action = 'Telescope find_files find_command=rg,--hidden,--files',
-    shortcut = 'SPC f f'
-  },
-  {
-    icon = '  ',
-    desc ='File Browser                            ',
-    action =  'Telescope file_browser',
-    shortcut = 'SPC f b'
-  },
-  {
-    icon = '  ',
-    desc = 'Find  word                              ',
+    icon = '  ',
+    desc = 'Live Grep                          ',
     action = 'Telescope live_grep',
-    shortcut = 'SPC f w'
+    shortcut = '<leader> fg'
   },
   {
-    icon = '  ',
-    desc = 'Open Personal dotfiles                  ',
-    action = 'Telescope dotfiles path=' .. home ..'/.dotfiles',
-    shortcut = 'SPC f d'
+    icon = '  ',
+    desc = 'Find Files                         ',
+    action = 'Telescope find_files',
+    shortcut = '<leader> ff'
+  },
+  {
+    icon = '  ',
+    desc = 'Search Help Tags                   ',
+    action = 'Telescope help_tags',
+    shortcut = '<leader> fh'
+  },
+  {
+    icon = '  ',
+    desc = 'Search buffers                     ',
+    action = 'Telescope buffers',
+    shortcut = '<leader> fb'
   },
 }
 
