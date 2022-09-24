@@ -1,17 +1,21 @@
 " KEYMAPS
 
 nnoremap <C-n> :NvimTreeToggle<cr>
-nnoremap <leader>ss <cmd>SessionSave<cr>
-nnoremap <leader>sl <cmd>SessionLoad<cr>
+nnoremap <leader>fs <cmd>Telescope session-lens search_session<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>gg <cmd>Glow<cr>
 
 " PLUGINS
 
 silent! if plug#begin()
   Plug 'tomasiser/vim-code-dark'
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim'
+  Plug 'rmagatti/auto-session'
+  Plug 'rmagatti/session-lens'
   Plug 'glepnir/dashboard-nvim'
   Plug 'kyazdani42/nvim-web-devicons'
   Plug 'kyazdani42/nvim-tree.lua'
@@ -25,8 +29,6 @@ silent! if plug#begin()
   Plug 'gennaro-tedesco/nvim-peekup'
   Plug 'chentoast/marks.nvim'
   Plug 'nvim-lua/popup.nvim'
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim'
   Plug 'jvgrootveld/telescope-zoxide'
   Plug 'f-person/git-blame.nvim'
   Plug 'beauwilliams/statusline.lua'
@@ -44,7 +46,7 @@ endif
 
 " CONFIG
 
-let g:python3_host_prog = "$HOME/.local/share/nvim/pyvenv/bin/python"
+let g:python3_host_prog = stdpath('data')..'/pyvenv/bin/python'
 let g:poetv_auto_activate = 1
 let g:coq_settings = { 'auto_start': 'shut-up' }
 
