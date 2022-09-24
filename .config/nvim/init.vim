@@ -8,6 +8,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>gg <cmd>Glow<cr>
 
+
 " PLUGINS
 
 silent! if plug#begin()
@@ -34,6 +35,7 @@ silent! if plug#begin()
   Plug 'beauwilliams/statusline.lua'
   Plug 'ellisonleao/glow.nvim'
   Plug 'petobens/poet-v'
+  Plug 'tpope/vim-sleuth'
 
   " languages
   Plug 'sbdchd/neoformat'
@@ -53,10 +55,15 @@ let g:coq_settings = { 'auto_start': 'shut-up' }
 colorscheme codedark
 set mouse=a
 set background=dark
-set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
 set number
 set relativenumber
 set clipboard=unnamedplus
+set undofile
+set completeopt=menuone,noselect
+set ignorecase
+set smartcase
+set updatetime=250
+
 
 " format on save
 augroup fmt
