@@ -43,31 +43,31 @@ require('packer').startup(function(use)
       db.custom_center = {
         {
           icon = '  ',
-          desc = '[S]earch [S]essions    ',
+          desc = '[S]earch [S]essions          ',
           action = 'Telescope session-lens search_session',
           shortcut = '<space>ss',
         },
         {
           icon = '  ',
-          desc = '[S]earch [F]iles       ',
+          desc = '[S]earch [F]iles             ',
           action = 'Telescope find_files',
           shortcut = '<space>sf',
         },
         {
           icon = '  ',
-          desc = '[S]earch by [G]rep     ',
+          desc = '[S]earch by [G]rep           ',
           action = 'Telescope live_grep',
           shortcut = '<space>sg',
         },
         {
           icon = '  ',
-          desc = '[S]earch [B]uffers     ',
+          desc = '[S]earch [B]uffers           ',
           action = 'Telescope buffers',
           shortcut = '<space>sb',
         },
         {
           icon = '  ',
-          desc = '[S]earch [H]elp        ',
+          desc = '[S]earch [H]elp              ',
           action = 'Telescope help_tags',
           shortcut = '<space>sh',
         },
@@ -105,6 +105,7 @@ require('packer').startup(function(use)
     requires = { 'kyazdani42/nvim-web-devicons' },
     config = function()
       require'nvim-tree'.setup()
+      vim.keymap.set('n', '<C-n>', require'nvim-tree.api'.tree.toggle, { desc = "Toggle Nvim Tree" })
     end
   }
 
