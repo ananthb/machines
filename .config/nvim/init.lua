@@ -12,32 +12,131 @@ require('packer').startup(function(use)
 
   -- display
   use 'tomasiser/vim-code-dark'
+  use 'nvim-lua/popup.nvim'
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+    config = function()
+      require('lualine').setup {
+        options = {
+          icons_enabled = true,
+          theme = 'codedark',
+          component_separators = '|',
+          section_separators = '',
+        },
+      }
+    end
   }
-  use 'glepnir/dashboard-nvim'
-  use 'rmagatti/auto-session'
-  use 'rmagatti/session-lens'
-  use 'nvim-lua/popup.nvim'
+  use {
+    'glepnir/dashboard-nvim',
+    config = function()
+      local db = require('dashboard')
+      db.preview_command = 'cat | lolcat'
+      db.preview_file_path = vim.fn.stdpath 'data' .. '/neovim.cat'
+      db.preview_file_height = 5
+      db.preview_file_width = 55
+      db.custom_center = {
+        {
+          icon = '  ',
+          desc = '[S]earch [S]essions    ',
+          action = 'Telescope session-lens search_session',
+          shortcut = '<space>ss',
+        },
+        {
+          icon = '  ',
+          desc = '[S]earch [F]iles       ',
+          action = 'Telescope find_files',
+          shortcut = '<space>sf',
+        },
+        {
+          icon = '  ',
+          desc = '[S]earch by [G]rep     ',
+          action = 'Telescope live_grep',
+          shortcut = '<space>sg',
+        },
+        {
+          icon = '  ',
+          desc = '[S]earch [B]uffers     ',
+          action = 'Telescope buffers',
+          shortcut = '<space>sb',
+        },
+        {
+          icon = '  ',
+          desc = '[S]earch [H]elp        ',
+          action = 'Telescope help_tags',
+          shortcut = '<space>sh',
+        },
+      }
+    end
+  }
+
+  -- sessions
+  use {
+    'rmagatti/auto-session',
+    config = function()
+      require('auto-session').setup({
+        auto_session_root_dir = vim.fn.stdpath 'data' .. '/sessions/',
+        auto_session_enabled = true,
+        auto_save_enabled = true,
+        auto_restore_enabled = true,
+        auto_session_allowed_dirs = { "~/src/*" },
+      })
+    end
+  }
+  use {
+    'rmagatti/session-lens',
+    requires = { 'rmagatti/auto-session', 'nvim-telescope/telescope.nvim' },
+    config = function()
+      require('session-lens').setup{}
+    end
+  }
 
   -- file tree
-  use { 'kyazdani42/nvim-tree.lua', requires = { 'kyazdani42/nvim-web-devicons' } }
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = { 'kyazdani42/nvim-web-devicons' },
+    config = function()
+      require'nvim-tree'.setup()
+    end
+  }
 
   -- completion
   use { 'ms-jpq/coq_nvim', branch = 'coq', requires = {'ms-jpq/coq.artifacts', branch = 'artifacts' } }
-  
+
   -- git
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
-  use {   
+  use {
     'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' }
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('gitsigns').setup {
+        signs = {
+          add = { text = '+' },
+          change = { text = '~' },
+          delete = { text = '_' },
+          topdelete = { text = '‾' },
+          changedelete = { text = '~' },
+        },
+      }
+    end
   }
 
   -- treesitter
-  use 'nvim-treesitter/nvim-treesitter' 
-  use 'nvim-treesitter/nvim-treesitter-textobjects' 
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    requires = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    config = function()
+      require'nvim-treesitter.configs'.setup {
+        ensure_installed = {
+          "c", "cpp", "css", "dockerfile", "elm", "fish", "go", "gomod",
+          "haskell", "http", "javascript", "json", "lua", "make", "python",
+          "toml", "typescript", "yaml", "zig"
+        },
+        auto_install = true,
+      }
+    end
+  }
 
   -- lsp
   use 'neovim/nvim-lspconfig'
@@ -45,17 +144,54 @@ require('packer').startup(function(use)
   use 'williamboman/mason-lspconfig.nvim'
 
   -- telescope
-  use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
+  use {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local scope = require('telescope')
+      scope.setup {
+        defaults = {
+          mappings = {
+            i = {
+              ['<C-u>'] = false,
+              ['<C-d>'] = false,
+            },
+          },
+        },
+      }
+
+      -- Enable telescope fzf native, if installed
+      pcall(scope.load_extension, 'fzf')
+
+      -- See `:help telescope.builtin`
+      local telescope_builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>?', telescope_builtin.oldfiles, { desc = '[?] Find recently opened files' })
+      vim.keymap.set('n', '<leader><space>', telescope_builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>/', function()
+        -- You can pass additional configuration to telescope to change theme, layout, etc.
+        telescope_builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end, { desc = '[/] Fuzzily search in current buffer]' })
+
+      vim.keymap.set('n', '<leader>ss', require('session-lens').search_session, { desc = '[S]earch [S]essions' })
+      vim.keymap.set('n', '<leader>sf', telescope_builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sh', telescope_builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sw', telescope_builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', telescope_builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sb', telescope_builtin.buffers, {desc = '[S]earch [B]uffers'})
+    end
+  }
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable "make" == 1 }
 
-  
   -- editor
   use 'ellisonleao/glow.nvim'
   use 'tpope/vim-sleuth'
   use 'kylechui/nvim-surround'
   use 'mhartington/formatter.nvim'
-  
 
   -- python envs
   use 'petobens/poet-v'
@@ -66,11 +202,7 @@ require('packer').startup(function(use)
 end)
 
 if is_bootstrap then
-  print '=================================='
-  print '    Plugins are being installed'
-  print '    Wait until Packer completes,'
-  print '       then restart nvim'
-  print '=================================='
+  -- do not load rest of config
   return
 end
 
@@ -126,147 +258,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
-
--- AUTO SESSION
-require('auto-session').setup({
-  auto_session_root_dir = vim.fn.stdpath 'data' .. '/sessions/',
-  auto_session_enabled = true,
-  auto_save_enabled = true,
-  auto_restore_enabled = true,
-  auto_session_allowed_dirs = { "~/src/*" },
-})
-
-
--- SESSION LENS
-require('session-lens').setup {}
-
-
--- DASHBOARD
-local db = require('dashboard')
-local sysname = vim.loop.os_uname().sysname
-if sysname == "Linux" then
-  -- linux
-  db.preview_command = 'ueberzug'
-elseif sysname == "Darwin" then
-  -- macos
-  db.preview_command = 'cat | lolcat -F 0.3'
-end
-
-db.preview_file_path = vim.fn.stdpath 'data' .. '/neovim.cat'
-db.preview_file_height = 5
-db.preview_file_width = 55
-db.custom_center = {
-  {
-    icon = '  ',
-    desc = 'Sessions                     ',
-    action = 'Telescope session-lens search_session',
-    shortcut = '<leader> fs',
-  },
-  {
-    icon = '  ',
-    desc = 'Live Grep                    ',
-    action = 'Telescope live_grep',
-    shortcut = '<leader> fg',
-  },
-  {
-    icon = '  ',
-    desc = 'Find Files                   ',
-    action = 'Telescope find_files',
-    shortcut = '<leader> ff',
-  },
-  {
-    icon = '  ',
-    desc = 'Help Tags                    ',
-    action = 'Telescope help_tags',
-    shortcut = '<leader> fh',
-  },
-  {
-    icon = '  ',
-    desc = 'Buffers                      ',
-    action = 'Telescope buffers',
-    shortcut = '<leader> fb',
-  },
-}
-
-
--- LUALINE
--- See `:help lualine.txt`
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'codedark',
-    component_separators = '|',
-    section_separators = '',
-  },
-}
-
-
--- GITSIGNS
--- See `:help gitsigns.txt`
-require('gitsigns').setup {
-  signs = {
-    add = { text = '+' },
-    change = { text = '~' },
-    delete = { text = '_' },
-    topdelete = { text = '‾' },
-    changedelete = { text = '~' },
-  },
-}
-
-
--- NVIM TREE
-require'nvim-tree'.setup()
-
-
--- COQ
-local coq = require'coq'
-
-
--- TELESCOPE
--- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-u>'] = false,
-        ['<C-d>'] = false,
-      },
-    },
-  },
-}
-
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
-
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer]' })
-
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-
-
---NVIM TREESITTER
--- See `:help nvim-treesitter`
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = {
-    "c", "cpp", "css", "dockerfile", "elm", "fish", "go", "gomod",
-    "haskell", "http", "javascript", "json", "lua", "make", "python",
-    "toml", "typescript", "yaml", "zig"
-  },
-  auto_install = true,
-}
 
 
 -- MASON
