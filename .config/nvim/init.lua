@@ -20,7 +20,6 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 })
 
 
-
 -- use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, 'packer')
 if not status_ok then
@@ -350,6 +349,8 @@ packer.startup(function(use)
   }
   use 'ellisonleao/glow.nvim'
   use 'tpope/vim-sleuth'
+  use 'tpope-vim-repeat'
+  use 'tpope-vim-speeddating'
   use 'kylechui/nvim-surround'
   use {
     'mhartington/formatter.nvim',
