@@ -11,7 +11,8 @@ end
 
 
 -- reload nvim automatically
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
+local packer_group = vim.api.nvim_create_augroup('Packer',
+  { clear = true })
 vim.api.nvim_create_autocmd('BufWritePost', {
   command = 'source <afile> | PackerCompile',
   group = packer_group,
@@ -21,14 +22,14 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 
 
 -- use a protected call so we don't error out on first use
-local status_ok, packer = pcall(require, "packer")
+local status_ok, packer = pcall(require, 'packer')
 if not status_ok then
-	print("Packer is NOT OK")
+	print('Packer is NOT OK')
 	return
 end
 
 
-require('packer').startup(function(use)
+packer.startup(function(use)
   use 'wbthomason/packer.nvim'
 
 
@@ -341,6 +342,12 @@ require('packer').startup(function(use)
 
 
   -- EDITOR
+  use {
+    'ggandor/leap.nvim',
+    config = function()
+      require 'leap'.set_default_keymaps()
+    end
+  }
   use 'ellisonleao/glow.nvim'
   use 'tpope/vim-sleuth'
   use 'kylechui/nvim-surround'
