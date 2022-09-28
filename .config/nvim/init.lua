@@ -129,7 +129,6 @@ packer.startup(function(use)
     requires = { 'kyazdani42/nvim-web-devicons' },
     config = function()
       require 'nvim-tree'.setup {
-        disable_netrw = true,
         prefer_startup_root = true,
         sync_root_with_cwd = true,
       }
@@ -405,6 +404,7 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.completeopt = 'menuone,noselect'
+vim.g.loaded_netrwPlugin = 1
 
 
 -- KEYMAPS
