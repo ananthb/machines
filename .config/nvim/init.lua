@@ -61,31 +61,31 @@ packer.startup(function(use)
           icon = '  ',
           desc = '[S]earch [S]essions          ',
           action = 'Telescope session-lens search_session',
-          shortcut = '<space>ss',
+          shortcut = '     <space>ss',
         },
         {
           icon = '  ',
           desc = '[S]earch [F]iles             ',
           action = 'Telescope find_files',
-          shortcut = '<space>sf',
+          shortcut = '     <space>sf',
         },
         {
           icon = '  ',
           desc = '[S]earch by [G]rep           ',
           action = 'Telescope live_grep',
-          shortcut = '<space>sg',
-        },
-        {
-          icon = '  ',
-          desc = '[S]earch [B]uffers           ',
-          action = 'Telescope buffers',
-          shortcut = '<space>sb',
+          shortcut = '     <space>sg',
         },
         {
           icon = '  ',
           desc = '[S]earch [H]elp              ',
           action = 'Telescope help_tags',
-          shortcut = '<space>sh',
+          shortcut = '     <space>sh',
+        },
+        {
+          icon = '  ',
+          desc = 'Search Buffers               ',
+          action = 'Telescope buffers',
+          shortcut = '<space><space>',
         },
       }
     end
@@ -327,8 +327,6 @@ packer.startup(function(use)
         { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', telescope_builtin.live_grep,
         { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sb', telescope_builtin.buffers,
-        { desc = '[S]earch [B]uffers' })
     end
   }
 
