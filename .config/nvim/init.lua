@@ -9,6 +9,13 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.cmd [[packadd packer.nvim]]
 end
 
+-- HOST PYTHON VENV
+local python_venv = vim.fn.stdpath 'data' .. '/pyvenv'
+if vim.fn.empty(vim.fn.glob(python_venv .. '/bin/python')) > 0 then
+  vim.fn.system({'python3', '-m', 'venv', python_venv})
+  vim.fn.system({python_venv .. '/bin/pip', 'install', '-qU', 'pynvim'})
+end
+
 
 -- reload nvim automatically
 local packer_group = vim.api.nvim_create_augroup('Packer',
@@ -141,7 +148,7 @@ packer.startup(function(use)
   -- COQ
   use {
     'ms-jpq/coq_nvim', branch = 'coq',
-    requires = { 'ms-jpq/coq.artifacts', branch = 'artifacts' }
+    requires = { 'ms-jpq/coq.artifacts', branch = 'artifacts' },
   }
 
 
@@ -230,6 +237,7 @@ packer.startup(function(use)
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require 'lspconfig'
       local mason_lspconfig = require 'mason-lspconfig'
+      local coq_capabilities = require 'coq'.lsp_ensure_capabilities()
 
       -- LSP Servers to install and setup
       mason_lspconfig.setup {
@@ -246,6 +254,7 @@ packer.startup(function(use)
             on_attach = on_attach,
             capabilities = capabilities,
           }
+          lspconfig[server_name].setup(coq_capabilities)
         end,
         ['sumneko_lua'] = function()
           lspconfig.sumneko_lua.setup {
@@ -259,6 +268,9 @@ packer.startup(function(use)
           }
         end
       }
+
+      -- start COQ
+      vim.cmd('COQnow -s')
     end
   }
 
@@ -266,7 +278,7 @@ packer.startup(function(use)
 
   use {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    config = function() 
+    config = function()
       require 'mason-tool-installer'.setup {
         ensure_installed = {
           'black', 'clang-format', 'cpplint', 'elm-format',
@@ -393,6 +405,10 @@ end
 
 -- CONFIG
 vim.cmd [[colorscheme codedark]]
+
+vim.g.loaded_netrwPlugin = 1
+vim.g.python3_host_prog = vim.fn.stdpath 'data' .. '/pyvenv/bin/python'
+
 vim.o.termguicolors = true
 vim.o.updatetime = 250
 vim.o.hlsearch = false
@@ -404,7 +420,6 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.completeopt = 'menuone,noselect'
-vim.g.loaded_netrwPlugin = 1
 
 
 -- KEYMAPS
