@@ -128,7 +128,11 @@ packer.startup(function(use)
     'kyazdani42/nvim-tree.lua',
     requires = { 'kyazdani42/nvim-web-devicons' },
     config = function()
-      require 'nvim-tree'.setup()
+      require 'nvim-tree'.setup {
+        disable_netrw = true,
+        prefer_startup_root = true,
+        sync_root_with_cwd = true,
+      }
       vim.keymap.set('n', '<C-n>', require 'nvim-tree.api'.tree.toggle,
         { desc = "Toggle Nvim Tree" })
     end
@@ -389,8 +393,6 @@ end
 
 
 -- CONFIG
-vim.g.loaded = 1
-vim.g.loaded_netrwPlugin = 1
 vim.cmd [[colorscheme codedark]]
 vim.o.termguicolors = true
 vim.o.updatetime = 250
