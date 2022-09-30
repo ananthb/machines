@@ -362,8 +362,8 @@ packer.startup(function(use)
   }
   use 'ellisonleao/glow.nvim'
   use 'tpope/vim-sleuth'
-  use 'tpope-vim-repeat'
-  use 'tpope-vim-speeddating'
+  use 'tpope/vim-repeat'
+  use 'tpope/vim-speeddating'
   use 'kylechui/nvim-surround'
   use {
     'mhartington/formatter.nvim',
