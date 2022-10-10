@@ -130,6 +130,13 @@ packer.startup(function(use)
   }
 
 
+  -- DEV CONTAINERS
+  use {
+    'https://codeberg.org/esensar/nvim-dev-container',
+    requires = { 'nvim-treesitter/nvim-treesitter' }
+  }
+
+
   -- NVIM TREE
   use {
     'kyazdani42/nvim-tree.lua',
