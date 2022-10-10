@@ -133,7 +133,10 @@ packer.startup(function(use)
   -- DEV CONTAINERS
   use {
     'https://codeberg.org/esensar/nvim-dev-container',
-    requires = { 'nvim-treesitter/nvim-treesitter' }
+    requires = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('devcontainer').setup {}
+    end
   }
 
 
