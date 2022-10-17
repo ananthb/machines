@@ -1,0 +1,14 @@
+#!/bin/sh
+usage='usage: env workers=4 curlbench 10 <curl options>\n\nworkers=number of CPUs by default\n'
+if [ $# -lt 2 ]; then
+  printf 'need iterations\n\n%s' "$usage" >&2
+  exit 1
+fi
+iterations=$1
+shift
+workers=${workers:=$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu)}
+printf 'spawning %d workers\n' "$workers"
+seq 1 "$iterations" \
+  | xargs -n1 -P"$workers" curl -s -o /dev/null -w "%{time_total}\n" "$@" \
+  | awk '{s+=$1} END {printf "mean response time of %.4fms for %d requests in %.2fs\n",s/(NR/2000),NR/2,s}'
+

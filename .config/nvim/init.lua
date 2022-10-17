@@ -401,6 +401,16 @@ packer.startup(function(use)
   use 'petobens/poet-v'
 
 
+  -- GOLANG
+  use {
+    'ray-x/go.nvim',
+    requires = { 'ray-x/guihua.lua' },
+    config = function()
+      require'go'.setup {}
+    end
+  }
+
+
   if PACKER_BOOTSTRAP then
     require('packer').sync()
   end
