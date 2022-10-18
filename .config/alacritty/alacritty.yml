@@ -1,7 +1,7 @@
 # vim: set filetype=yaml:
 
 import:
-  - ~/.config/alacritty/shell.yml
+  - ~/.config/alacritty/extra.yml
 
 window:
   dimensions:
