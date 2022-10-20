@@ -169,9 +169,10 @@ packer.startup(function(use)
     'lewis6991/gitsigns.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
     config = function()
-      require('gitsigns').setup {}
+      require('gitsigns').setup()
     end
   }
+  use 'f-person/git-blame.nvim'
 
 
   -- TREESITTER
