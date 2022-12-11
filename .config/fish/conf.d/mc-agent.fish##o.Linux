@@ -1,0 +1,8 @@
+set mooltipass_data ~/.local/share/mooltipass
+set mc_agent_sock $mooltipass_data/mc-agent/mc-agent.sock
+
+mkdir -p "$mooltipass_data"
+
+if test -S $mc_agent_sock
+  set -gx SSH_AUTH_SOCK $mc_agent_sock
+end
