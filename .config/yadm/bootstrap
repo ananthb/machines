@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# install neovim plugins
 if command -v nvim >/dev/null 2>&1; then
   nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 fi
 
+# install tmux plugins
 if command -v tmux >/dev/null 2>&1; then
   tpm="$HOME/.config/tmux/plugins/tpm"
   if [[ ! -d "$tpm" ]]; then
@@ -11,13 +13,24 @@ if command -v tmux >/dev/null 2>&1; then
   fi
 fi
 
-# install Hack Nerd Font
+download_mc_bin() {
+  mc_bin="$HOME/.local/bin/$1"
+  if [[ ! -x "$mc_bin" ]]; then
+    curl -Lo "$mc_bin" https://calaos.fr/mooltipass/tools/linux/"$1"
+    chmod +x "$mc_bin"
+  fi
+}
+
+# OS specific setup
 case "$OSTYPE" in
   darwin*)
+    # install Hack Nerd Font
     brew tap --quiet homebrew/cask-fonts
     brew install --quiet --cask font-hack-nerd-font
     ;;
+
   linux*)
+    # install Hack Nerd Font
     if ! fc-list | grep -wq 'Hack Nerd Font'; then
       mkdir -p ~/.local/share/fonts
       cd ~/.local/share/fonts || exit 1
@@ -29,11 +42,19 @@ case "$OSTYPE" in
         curl -fLo "$ttf" "$url"
       done
     fi
-    ;;
+
+    # install mc-agent, mc-cli & start mc-agent
+    download_mc_bin mc-agent
+    download_mc_bin mc-cli
+    systemctl --user enable --now mc-agent.service
+  ;;
+
   solaris*) ;;
   bsd*)     ;;
   msys*)    ;;
   cygwin*)  ;;
   *) echo "unknown: $OSTYPE" ;;
 esac
+
+# install & start mc-agent
 
