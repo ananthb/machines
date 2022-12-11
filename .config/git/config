@@ -38,6 +38,10 @@
   gpgsign = true
 
 [include]
+  # local configs
+  path = local
+
+  # user selected by yadm
   path = user
 
 [pull]
@@ -48,4 +52,3 @@
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
-
