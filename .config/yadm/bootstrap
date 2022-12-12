@@ -27,6 +27,10 @@ case "$OSTYPE" in
     # install Hack Nerd Font
     brew tap --quiet homebrew/cask-fonts
     brew install --quiet --cask font-hack-nerd-font
+
+    # start mc-agent on startup
+    launchctl load -w "$HOME/Library/LaunchAgents/com.themooltipass.mc-agent.plist"
+    launchctl start com.themooltipass.mc-agent
     ;;
 
   linux*)
@@ -55,6 +59,4 @@ case "$OSTYPE" in
   cygwin*)  ;;
   *) echo "unknown: $OSTYPE" ;;
 esac
-
-# install & start mc-agent
 

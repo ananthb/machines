@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.themooltipass.mc-agent</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/Moolticute.app/Contents/MacOS/cli/mc-agent</string>
+        <string>--no-fork</string>
+        <string>--address</string>
+        <string>/Users/{{ yadm.user }}/Library/Application Support/mooltipass/mc-agent.sock</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/{{ yadm.user }}/Library/Logs/mooltipass/mc-agent.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/{{ yadm.user }}/Library/Logs/mooltipass/mc-agent.stderr.log</string>
+</dict>
+</plist>
