@@ -38,10 +38,8 @@
   gpgsign = true
 
 [include]
-  # local configs
-  path = local
-
-  # user selected by yadm
+  path = local # local isn't version controlled
+  path = sys
   path = user
 
 [pull]
