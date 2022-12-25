@@ -429,6 +429,10 @@ vim.cmd [[colorscheme codedark]]
 
 vim.g.loaded_netrwPlugin = 1
 vim.g.python3_host_prog = vim.fn.stdpath 'data' .. '/pyvenv/bin/python'
+vim.g.poetv_auto_activate = 1
+vim.cmd [[
+  let g:poetv_executables = ['poetry']
+]]
 
 vim.o.termguicolors = true
 vim.o.updatetime = 250
