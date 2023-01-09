@@ -98,6 +98,8 @@ packer.startup(function(use)
     end
   }
 
+  use 'github/copilot.vim'
+
   use {
     "folke/trouble.nvim",
     requires = "kyazdani42/nvim-web-devicons",
