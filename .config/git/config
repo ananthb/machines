@@ -1,6 +1,9 @@
 [core]
   autocrlf = input
 
+[user]
+  useConfigOnly = true
+
 [alias]
   a = add
   b = branch

@@ -98,7 +98,12 @@ packer.startup(function(use)
     end
   }
 
-  use 'github/copilot.vim'
+  use {
+    'github/copilot.vim',
+    cond = function()
+      return vim.g.vscode == nil
+    end
+  }
 
   use {
     "folke/trouble.nvim",
