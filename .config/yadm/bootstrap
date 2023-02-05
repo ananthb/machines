@@ -13,46 +13,15 @@ if command -v tmux >/dev/null 2>&1; then
   fi
 fi
 
-download_mc_bin() {
-  mc_bin="$HOME/.local/bin/$1"
-  if [[ ! -x "$mc_bin" ]]; then
-    curl -Lo "$mc_bin" https://calaos.fr/mooltipass/tools/linux/"$1"
-    chmod +x "$mc_bin"
-  fi
-}
-
 # OS specific setup
 case "$OSTYPE" in
   darwin*)
-    # install Hack Nerd Font
-    brew tap --quiet homebrew/cask-fonts
-    brew install --quiet --cask font-hack-nerd-font
-
     # start mc-agent on startup
     launchctl load -w "$HOME/Library/LaunchAgents/com.themooltipass.mc-agent.plist"
     launchctl start com.themooltipass.mc-agent
     ;;
 
   linux*)
-    # install Hack Nerd Font
-    if ! fc-list | grep -wq 'Hack Nerd Font'; then
-      mkdir -p ~/.local/share/fonts
-      cd ~/.local/share/fonts || exit 1
-      hack="https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack"
-      variants=("Bold" "BoldItalic" "Italic" "Regular")
-      for v in "${variants[@]}"; do
-        ttf="Hack %v Nerd Font Complete.ttf"
-        url="$hack/complete/Hack%20$v%20Nerd%20Font%20Complete.ttf"
-        curl -fLo "$ttf" "$url"
-      done
-    fi
-
-    # install mc-agent, mc-cli & start mc-agent
-    download_mc_bin mc-agent
-    download_mc_bin mc-cli
-    systemctl --user enable --now mc-agent.service
-  ;;
-
   solaris*) ;;
   bsd*)     ;;
   msys*)    ;;

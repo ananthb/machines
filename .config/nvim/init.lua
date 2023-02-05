@@ -1,57 +1,3 @@
--- CONFIG
-vim.cmd([[colorscheme codedark]])
-
-vim.g.loaded_netrwPlugin = 1
-vim.g.python3_host_prog = vim.fn.stdpath("data") .. "/pyvenv/bin/python"
-vim.g.poetv_auto_activate = 1
-vim.cmd([[
-  let g:poetv_executables = ['poetry']
-]])
-vim.o.termguicolors = true
-vim.o.updatetime = 250
-vim.o.hlsearch = false
-vim.o.mouse = "a"
-vim.o.number = true
-vim.o.relativenumber = true
-vim.o.breakindent = true
-vim.o.undofile = true
-vim.o.ignorecase = true
-vim.o.smartcase = true
-vim.o.completeopt = "menuone,noselect"
-
--- KEYMAPS
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required
---  (otherwise wrong leader will be used)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- YANK HIGHLIGHT
--- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
-vim.api.nvim_create_autocmd("TextYankPost", {
-	callback = function()
-		vim.highlight.on_yank()
-	end,
-	group = highlight_group,
-	pattern = "*",
-})
-
--- DIAGNOSTIC KEYMAPS
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
-
 -- PACKER
 local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
@@ -74,7 +20,19 @@ if vim.fn.empty(vim.fn.glob(python_venv .. "/bin/python")) > 0 then
 	vim.fn.system({ python_venv .. "/bin/pip", "install", "-qU", "pynvim" })
 end
 
--- reload nvim automatically
+-- Stop loading config if bootstrapping.
+if PACKER_BOOTSTRAP then
+	return
+end
+
+-- Set <space> as the leader key
+-- See `:help mapleader`
+--  NOTE: Must happen before plugins are required
+--  (otherwise wrong leader will be used)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- Reload config automatically.
 local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePost", {
 	command = "source <afile> | PackerCompile",
@@ -82,7 +40,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	pattern = vim.fn.expand("$MYVIMRC"),
 })
 
--- use a protected call so we don't error out on first use
+-- Use a protected call so we don't error out on first use.
 local status_ok, packer = pcall(require, "packer")
 if not status_ok then
 	print("Packer is NOT OK")
@@ -466,8 +424,6 @@ packer.startup(function(use)
 	})
 
 	-- LANGUAGES
-	-- PYTHON
-	use("petobens/poet-v")
 	-- GOLANG
 	use({
 		"ray-x/go.nvim",
@@ -479,10 +435,55 @@ packer.startup(function(use)
 
 	if PACKER_BOOTSTRAP then
 		require("packer").sync()
+		vim.cmd("COQdeps")
 	end
 end)
 
--- stop loading config if bootstrapping
-if PACKER_BOOTSTRAP then
-	return
-end
+-- CONFIG
+vim.cmd([[colorscheme codedark]])
+
+vim.g.loaded_netrwPlugin = 1
+vim.g.python3_host_prog = vim.fn.stdpath("data") .. "/pyvenv/bin/python"
+vim.g.poetv_auto_activate = 1
+vim.cmd([[
+  let g:poetv_executables = ['poetry']
+]])
+vim.o.termguicolors = true
+vim.o.updatetime = 250
+vim.o.hlsearch = false
+vim.o.mouse = "a"
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.breakindent = true
+vim.o.undofile = true
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.completeopt = "menuone,noselect"
+
+-- KEYMAPS
+
+-- Keymaps for better default experience
+-- See `:help vim.keymap.set()`
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+
+-- Remap for dealing with word wrap
+vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- YANK HIGHLIGHT
+-- See `:help vim.highlight.on_yank()`
+local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+	group = highlight_group,
+	pattern = "*",
+})
+
+-- DIAGNOSTIC KEYMAPS
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+
