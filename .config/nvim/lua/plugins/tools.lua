@@ -46,7 +46,12 @@ return {
 		end,
 	},
 	-- DAP
-	"mfussenegger/nvim-dap",
+	{
+		"mfussenegger/nvim-dap",
+		config = function()
+			require("dap.ext.vscode").load_launchjs(nil, {})
+		end,
+	},
 	{ "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
 	"leoluz/nvim-dap-go",
 	"theHamsta/nvim-dap-virtual-text",
