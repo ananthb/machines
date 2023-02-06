@@ -1,5 +1,6 @@
 -- DEV TOOLS
 return {
+	"williamboman/mason.nvim",
 	-- MASON INSTALLER
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -52,8 +53,16 @@ return {
 			require("dap.ext.vscode").load_launchjs(nil, {})
 		end,
 	},
+	{
+		"jay-babu/mason-nvim-dap.nvim",
+		dependencies = { "williamboman/mason.nvim" },
+		config = function()
+			require("mason-nvim-dap").setup({
+				ensure_installed = { "python", "delve" },
+			})
+		end,
+	},
 	{ "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
-	"leoluz/nvim-dap-go",
 	"theHamsta/nvim-dap-virtual-text",
 	-- GIT
 	"tpope/vim-fugitive",

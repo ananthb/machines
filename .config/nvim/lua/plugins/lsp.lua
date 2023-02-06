@@ -1,10 +1,6 @@
 return {
 	"neovim/nvim-lspconfig",
 	{
-		"williamboman/mason.nvim",
-		config = true,
-	},
-	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = { "ms-jpq/coq_nvim", "github/copilot.vim" },
 		config = function()
