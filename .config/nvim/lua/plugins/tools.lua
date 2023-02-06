@@ -47,6 +47,9 @@ return {
 	},
 	-- DAP
 	"mfussenegger/nvim-dap",
+	{ "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
+	"leoluz/nvim-dap-go",
+	"theHamsta/nvim-dap-virtual-text",
 	-- GIT
 	"tpope/vim-fugitive",
 	"tpope/vim-rhubarb",
