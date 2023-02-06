@@ -5,7 +5,11 @@ return {
 			require("leap").set_default_keymaps()
 		end,
 	},
-	"ellisonleao/glow.nvim",
+	{
+		"ellisonleao/glow.nvim",
+		config = true,
+		cmd = "Glow",
+	},
 	"tpope/vim-sleuth",
 	"tpope/vim-repeat",
 	"tpope/vim-speeddating",

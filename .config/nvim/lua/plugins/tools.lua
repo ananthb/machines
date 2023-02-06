@@ -1,3 +1,4 @@
+-- DEV TOOLS
 return {
 	-- MASON INSTALLER
 	{
@@ -31,7 +32,6 @@ return {
 			})
 		end,
 	},
-	-- DEV TOOLS
 	{
 		"ms-jpq/coq_nvim",
 		branch = "coq",
@@ -45,6 +45,8 @@ return {
 			vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 		end,
 	},
+	-- DAP
+	"mfussenegger/nvim-dap",
 	-- GIT
 	"tpope/vim-fugitive",
 	"tpope/vim-rhubarb",

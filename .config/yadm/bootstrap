@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# install neovim plugins
-if command -v nvim >/dev/null 2>&1; then
-  nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-fi
-
 # install tmux plugins
 if command -v tmux >/dev/null 2>&1; then
   tpm="$HOME/.config/tmux/plugins/tpm"
@@ -12,20 +7,3 @@ if command -v tmux >/dev/null 2>&1; then
     git clone https://github.com/tmux-plugins/tpm "$tpm"
   fi
 fi
-
-# OS specific setup
-case "$OSTYPE" in
-  darwin*)
-    # start mc-agent on startup
-    launchctl load -w "$HOME/Library/LaunchAgents/com.themooltipass.mc-agent.plist"
-    launchctl start com.themooltipass.mc-agent
-    ;;
-
-  linux*)
-  solaris*) ;;
-  bsd*)     ;;
-  msys*)    ;;
-  cygwin*)  ;;
-  *) echo "unknown: $OSTYPE" ;;
-esac
-
