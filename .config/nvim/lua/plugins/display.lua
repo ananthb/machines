@@ -17,19 +17,26 @@ return {
 	"bluz71/vim-moonfly-colors",
 	"nvim-lua/popup.nvim",
 	{
+		"SmiteshP/nvim-navic",
+		dependencies = "neovim/nvim-lspconfig",
+	},
+	{
+		"utilyre/barbecue.nvim",
+		name = "barbecue",
+		version = "*",
+		dependencies = {
+			"SmiteshP/nvim-navic",
+			"nvim-tree/nvim-web-devicons",
+		},
+	},
+	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons", "SmiteshP/nvim-navic" },
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			local navic = require("nvim-navic")
 			require("lualine").setup({
 				options = {
 					icons_enabled = true,
 					theme = "auto",
-				},
-				sections = {
-					lualine_c = {
-						{ "filename", { navic.get_location, cond = navic.is_available } },
-					},
 				},
 			})
 		end,
@@ -77,10 +84,6 @@ return {
 				},
 			})
 		end,
-	},
-	{
-		"SmiteshP/nvim-navic",
-		dependencies = "neovim/nvim-lspconfig",
 	},
 	{
 		"folke/trouble.nvim",

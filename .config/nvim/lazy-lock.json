@@ -1,5 +1,6 @@
 {
   "auto-session": { "branch": "main", "commit": "c8b2f4048f846387361bd04cc185bf1aa7d2e3d1" },
+  "barbecue": { "branch": "main", "commit": "173b63fd5320ac99c4ff9123f4d65a0b752e5db6" },
   "copilot.vim": { "branch": "release", "commit": "c7d166ebda265370f38cec374e33f02eeec2f857" },
   "coq.artifacts": { "branch": "artifacts", "commit": "e100e8e640bc14296199f94da965c575b41d5e24" },
   "coq_nvim": { "branch": "coq", "commit": "4255eda91b9bc432510eb51395ce4bf810c2d6bc" },
