@@ -33,7 +33,7 @@ vim.g.maplocalleader = " "
 require("lazy").setup("plugins")
 
 -- CONFIG
-vim.cmd([[colorscheme codedark]])
+vim.cmd([[colorscheme moonfly]])
 
 vim.g.loaded_netrwPlugin = 1
 vim.g.python3_host_prog = vim.fn.stdpath("data") .. "/pyvenv/bin/python"

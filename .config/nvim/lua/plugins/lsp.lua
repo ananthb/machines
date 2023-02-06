@@ -2,7 +2,7 @@ return {
 	"neovim/nvim-lspconfig",
 	{
 		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "ms-jpq/coq_nvim", "github/copilot.vim" },
+		dependencies = { "williamboman/mason.nvim", "ms-jpq/coq_nvim", "github/copilot.vim" },
 		config = function()
 			-- on_attach runs when an LSP attaches to a buffer
 			local on_attach = function(client, bufnr)

@@ -1,6 +1,9 @@
 -- DEV TOOLS
 return {
-	"williamboman/mason.nvim",
+	{
+		"williamboman/mason.nvim",
+		config = true,
+	},
 	-- MASON INSTALLER
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",

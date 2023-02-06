@@ -14,7 +14,7 @@ local function open_nvim_tree(data)
 end
 
 return {
-	"tomasiser/vim-code-dark",
+	"bluz71/vim-moonfly-colors",
 	"nvim-lua/popup.nvim",
 	{
 		"nvim-lualine/lualine.nvim",
