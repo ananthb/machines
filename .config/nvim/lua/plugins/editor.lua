@@ -5,11 +5,6 @@ return {
 			require("leap").set_default_keymaps()
 		end,
 	},
-	{
-		"ellisonleao/glow.nvim",
-		config = true,
-		cmd = "Glow",
-	},
 	"tpope/vim-sleuth",
 	"tpope/vim-repeat",
 	"tpope/vim-speeddating",
@@ -17,12 +12,6 @@ return {
 	{
 		"mhartington/formatter.nvim",
 		config = function()
-			-- format on save
-			vim.api.nvim_create_autocmd("BufWritePost", {
-				command = "FormatWrite",
-				pattern = "*",
-			})
-
 			require("formatter").setup({
 				filetype = {
 					["*"] = {

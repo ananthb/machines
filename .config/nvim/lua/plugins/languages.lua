@@ -2,7 +2,11 @@ return {
 	-- GOLANG
 	{
 		"ray-x/go.nvim",
-		dependencies = { "ray-x/guihua.lua", "neovim/nvim-lspconfig", "nvim-treesitter/nvim-treesitter" },
-		config = true,
+		dependencies = {
+			"ray-x/guihua.lua",
+			"nvim-treesitter/nvim-treesitter",
+			"neovim/nvim-lspconfig",
+		},
+		opts = {},
 	},
 }
