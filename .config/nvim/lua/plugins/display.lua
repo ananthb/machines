@@ -1,15 +1,15 @@
 local function open_nvim_tree(data)
-	-- buffer is a directory
+	-- Buffer is a directory.
 	local directory = vim.fn.isdirectory(data.file) == 1
 
 	if not directory then
 		return
 	end
 
-	-- change to the directory
+	-- Change to the directory.
 	vim.cmd.cd(data.file)
 
-	-- open the tree
+	-- Open the tree.
 	require("nvim-tree.api").tree.open()
 end
 
@@ -17,7 +17,7 @@ return {
 	"nvim-lua/plenary.nvim",
 	{
 		"bluz71/vim-moonfly-colors",
-		priorit = 1000,
+		priority = 1000,
 		config = function()
 			vim.cmd([[colorscheme moonfly]])
 		end,
@@ -25,7 +25,7 @@ return {
 	-- GLOW markdown
 	{
 		"ellisonleao/glow.nvim",
-		opts = {},
+		config = true,
 		cmd = "Glow",
 	},
 	-- WHICH KEY
@@ -34,7 +34,7 @@ return {
 		config = function()
 			vim.o.timeout = true
 			vim.o.timeoutlen = 300
-			require("which-key").setup({})
+			require("which-key").setup()
 		end,
 	},
 	{
@@ -108,7 +108,7 @@ return {
 	{
 		"folke/trouble.nvim",
 		dependencies = "nvim-tree/nvim-web-devicons",
-		opts = {},
+		config = true,
 	},
 	-- NVIM TREE
 	{

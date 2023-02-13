@@ -5,7 +5,7 @@ return {
 		"lewis6991/gitsigns.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		name = "gitsigns",
-		opts = {},
+		config = true,
 	},
 	"f-person/git-blame.nvim",
 }

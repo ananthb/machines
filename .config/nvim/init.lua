@@ -12,6 +12,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 if BOOTSTRAP then
 	-- Stop loading config on bootstrap
+	print("Bootstraping lazy.nvim. Restart neovim to finish setup.")
 	return
 end
 vim.opt.rtp:prepend(lazypath)
@@ -74,9 +75,3 @@ vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 
 -- LAZY PLUGINS
 require("lazy").setup("plugins")
-
--- PLUGIN CONFIG
-require("mason").setup()
-require("mason-tool-installer").setup(require("lsp").mason_tool_opts)
-require("mason-lspconfig").setup(require("lsp").mason_lsp_opts)
-require("mason-lspconfig").setup_handlers(require("lsp").mason_lsp_handlers)

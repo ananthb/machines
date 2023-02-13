@@ -1,8 +1,42 @@
 return {
 	-- MASON TOOLS
-	"williamboman/mason.nvim",
-	"williamboman/mason-lspconfig.nvim",
-	"WhoIsSethDaniel/mason-tool-installer.nvim",
+	{
+		"williamboman/mason.nvim",
+		opts = {},
+	},
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependencies = { "williamboman/mason.nvim" },
+		config = function()
+			require("mason-tool-installer").setup({
+				ensure_installed = {
+					"black",
+					"clang-format",
+					"cpplint",
+					"elm-format",
+					"eslint-lsp",
+					"flake8",
+					"goimports",
+					"golangci-lint",
+					"html-lsp",
+					"jq",
+					"lua-language-server",
+					"markdownlint",
+					"mypy",
+					"prettier",
+					"pylint",
+					"shellcheck",
+					"shfmt",
+					"sql-formatter",
+					"staticcheck",
+					"stylua",
+					"yamlfmt",
+					"yamllint",
+				},
+				auto_update = true,
+			})
+		end,
+	},
 	-- TREESITTER
 	{
 		"nvim-treesitter/nvim-treesitter",

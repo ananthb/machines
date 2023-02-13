@@ -16,16 +16,15 @@ return {
 				},
 			})
 
-			-- enable telescope fzf native, if installed
+			-- Enable telescope fzf native, if installed.
 			pcall(scope.load_extension, "fzf")
 
-			-- see `:help telescope.builtin`
+			-- See `:help telescope.builtin`.
 			local telescope_builtin = require("telescope.builtin")
 			vim.keymap.set("n", "<leader>?", telescope_builtin.oldfiles, { desc = "[?] Find recently opened files" })
 			vim.keymap.set("n", "<leader><space>", telescope_builtin.buffers, { desc = "[ ] Find existing buffers" })
 			vim.keymap.set("n", "<leader>/", function()
-				-- You can pass additional configuration to telescope to
-				-- change theme, layout, etc.
+				-- You can pass additional configuration to telescope to change theme, layout, etc.
 				telescope_builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
 					winblend = 10,
 					previewer = false,
@@ -39,7 +38,7 @@ return {
 			vim.keymap.set("n", "<leader>sg", telescope_builtin.live_grep, { desc = "[S]earch by [G]rep" })
 		end,
 	},
-	-- build telescope fzf native if make is available
+	-- Build telescope fzf native if make is available.
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
 		build = "make",
