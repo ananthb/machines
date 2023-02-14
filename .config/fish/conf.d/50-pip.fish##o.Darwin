@@ -1,0 +1,4 @@
+set python3_bin ~/Library/Python/3.9/bin
+if test -d $python3_bin
+  fish_add_path $python3_bin
+end

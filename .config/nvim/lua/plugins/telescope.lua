@@ -29,7 +29,7 @@ return {
 					winblend = 10,
 					previewer = false,
 				}))
-			end, { desc = "[/] Fuzzily search in current buffer]" })
+			end, { desc = "[/] Fuzzily search in current buffer" })
 
 			vim.keymap.set("n", "<leader>ss", require("session-lens").search_session, { desc = "[S]earch [S]essions" })
 			vim.keymap.set("n", "<leader>sf", telescope_builtin.find_files, { desc = "[S]earch [F]iles" })
