@@ -22,13 +22,12 @@ return {
 			vim.cmd([[colorscheme moonfly]])
 		end,
 	},
-	-- GLOW markdown
+	"stevearc/dressing.nvim",
 	{
 		"ellisonleao/glow.nvim",
 		config = true,
 		cmd = "Glow",
 	},
-	-- WHICH KEY
 	{
 		"folke/which-key.nvim",
 		config = function()
@@ -50,6 +49,22 @@ return {
 			"nvim-tree/nvim-web-devicons",
 		},
 		config = true,
+	},
+	{
+		"akinsho/bufferline.nvim",
+		opts = {
+			options = {
+				diagnostics = "nvim_lsp",
+				offsets = {
+					{
+						filetype = "NvimTree",
+						text = "File Explorer",
+						highlight = "Directory",
+						text_align = "left",
+					},
+				},
+			},
+		},
 	},
 	{
 		"nvim-lualine/lualine.nvim",
@@ -110,7 +125,6 @@ return {
 		dependencies = "nvim-tree/nvim-web-devicons",
 		config = true,
 	},
-	-- NVIM TREE
 	{
 		"nvim-tree/nvim-tree.lua",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
