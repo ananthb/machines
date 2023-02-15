@@ -1,6 +1,0 @@
-set mc_agent_sock "$HOME/Library/Application Support/mooltipass/mc-agent.sock"
-
-if test -S $mc_agent_sock
-  set -gx SSH_AUTH_SOCK $mc_agent_sock
-end
-

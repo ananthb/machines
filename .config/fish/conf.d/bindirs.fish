@@ -1,1 +1,1 @@
-fish_add_path ~/.local/bin ~/Applications
+fish_add_path ~/.local/bin
