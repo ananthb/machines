@@ -1,84 +1,85 @@
 local on_attach = function(client, bufnr)
-	local telescope_builtin = require("telescope.builtin")
-
+	require("plugins.lsp.format").on_attach(client, bufnr)
+	require("plugins.lsp.keymap").on_attach(client, bufnr)
 	if client.server_capabilities.documentSymbolProvider then
 		require("nvim-navic").attach(client, bufnr)
 	end
-
-	local nmap = function(keys, func, desc)
-		if desc then
-			desc = "LSP: " .. desc
-		end
-		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-	end
-
-	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-
-	nmap("gd", vim.lsp.buf.definition, "[G]o to [D]efinition")
-	nmap("gi", vim.lsp.buf.implementation, "[G]o to [I]mplementation")
-	nmap("gr", telescope_builtin.lsp_references, "[G]o to [R]eferences")
-	nmap("<leader>ds", telescope_builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
-	nmap("<leader>ws", telescope_builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-
-	-- See `:help K` for why this keymap.
-	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
-
-	-- Lesser used LSP functionality.
-	nmap("gD", vim.lsp.buf.declaration, "[G]o to [D]eclaration")
-	nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
-	nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
-	nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-	nmap("<leader>wl", function()
-		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-	end, "[W]orkspace [L]ist Folders")
-
-	-- Create a command `:Format` local to the LSP buffer.
-	vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-		if vim.lsp.buf.format then
-			vim.lsp.buf.format()
-		elseif vim.lsp.buf.formatting then
-			vim.lsp.buf.formatting()
-		end
-	end, { desc = "Format current buffer with LSP" })
 end
 
 return {
+	{
+		"jose-elias-alvarez/null-ls.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"neovim/nvim-lspconfig",
+			"williamboman/mason.nvim",
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			"hrsh7th/cmp-nvim-lsp",
+		},
+		config = function()
+			local null_ls = require("null-ls")
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.code_actions.cspell,
+					null_ls.builtins.code_actions.gitrebase,
+					null_ls.builtins.code_actions.gitsigns,
+					null_ls.builtins.code_actions.gomodifytags,
+					null_ls.builtins.code_actions.shellcheck,
+					null_ls.builtins.completion.vsnip,
+					null_ls.builtins.diagnostics.commitlint,
+					null_ls.builtins.diagnostics.cpplint,
+					null_ls.builtins.diagnostics.fish,
+					null_ls.builtins.diagnostics.gitlint,
+					null_ls.builtins.diagnostics.golangci_lint,
+					null_ls.builtins.diagnostics.jsonlint,
+					null_ls.builtins.diagnostics.markdownlint,
+					null_ls.builtins.diagnostics.pylint,
+					null_ls.builtins.diagnostics.shellcheck,
+					null_ls.builtins.diagnostics.staticcheck,
+					--null_ls.builtins.diagnostics.vacuum,
+					null_ls.builtins.diagnostics.vale,
+					null_ls.builtins.diagnostics.write_good,
+					null_ls.builtins.diagnostics.yamllint,
+					null_ls.builtins.formatting.black,
+					null_ls.builtins.formatting.clang_format,
+					null_ls.builtins.formatting.elm_format,
+					null_ls.builtins.formatting.fish_indent,
+					null_ls.builtins.formatting.gofmt,
+					null_ls.builtins.formatting.gofumpt,
+					null_ls.builtins.formatting.goimports,
+					null_ls.builtins.formatting.golines,
+					null_ls.builtins.formatting.isort,
+					null_ls.builtins.formatting.jq,
+					null_ls.builtins.formatting.markdownlint,
+					null_ls.builtins.formatting.shellharden,
+					null_ls.builtins.formatting.stylua,
+					null_ls.builtins.formatting.trim_newlines,
+					null_ls.builtins.formatting.trim_whitespace,
+					null_ls.builtins.formatting.yamlfmt,
+					null_ls.builtins.formatting.zigfmt,
+				},
+			})
+		end,
+	},
 	"neovim/nvim-lspconfig",
 	{
 		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "williamboman/mason.nvim" },
+		dependencies = {
+			"williamboman/mason.nvim",
+			"neovim/nvim-lspconfig",
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+		},
 		config = function()
-			local lsp_opts = {
-				ensure_installed = {
-					"bashls",
-					"clangd",
-					"cmake",
-					"dockerls",
-					"elmls",
-					"gopls",
-					"jsonls",
-					"marksman",
-					"pyright",
-					"rust_analyzer",
-					"sqls",
-					"yamlls",
-					"zls",
-				},
-				automatic_installation = true,
-			}
-
+			local capabilities =
+			    require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			local lsp_handlers = {
 				function(server_name)
-					local capabilities = require("cmp_nvim_lsp").default_capabilities()
 					require("lspconfig")[server_name].setup({
 						on_attach = on_attach,
 						capabilities = capabilities,
 					})
 				end,
 				["lua_ls"] = function()
-					local capabilities = require("cmp_nvim_lsp").default_capabilities()
 					require("lspconfig").lua_ls.setup({
 						on_attach = on_attach,
 						capabilities = capabilities,
@@ -99,7 +100,7 @@ return {
 					})
 				end,
 			}
-			require("mason-lspconfig").setup(lsp_opts)
+			require("mason-lspconfig").setup()
 			require("mason-lspconfig").setup_handlers(lsp_handlers)
 		end,
 	},
@@ -137,7 +138,7 @@ return {
 					-- documentation = cmp.config.window.bordered(),
 				},
 				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-b>"] = cmp.mapping.scroll_docs( -4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
