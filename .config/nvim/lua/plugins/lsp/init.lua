@@ -20,6 +20,8 @@ return {
 			local null_ls = require("null-ls")
 			null_ls.setup({
 				sources = {
+					-- this doesn't work
+					--null_ls.builtins.diagnostics.vacuum,
 					null_ls.builtins.code_actions.cspell,
 					null_ls.builtins.code_actions.gitrebase,
 					null_ls.builtins.code_actions.gitsigns,
@@ -36,7 +38,6 @@ return {
 					null_ls.builtins.diagnostics.pylint,
 					null_ls.builtins.diagnostics.shellcheck,
 					null_ls.builtins.diagnostics.staticcheck,
-					--null_ls.builtins.diagnostics.vacuum,
 					null_ls.builtins.diagnostics.vale,
 					null_ls.builtins.diagnostics.write_good,
 					null_ls.builtins.diagnostics.yamllint,
@@ -51,6 +52,7 @@ return {
 					null_ls.builtins.formatting.isort,
 					null_ls.builtins.formatting.jq,
 					null_ls.builtins.formatting.markdownlint,
+					null_ls.builtins.formatting.prettierd,
 					null_ls.builtins.formatting.shellharden,
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.trim_newlines,
@@ -71,7 +73,7 @@ return {
 		},
 		config = function()
 			local capabilities =
-			    require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 			local lsp_handlers = {
 				function(server_name)
 					require("lspconfig")[server_name].setup({
@@ -138,7 +140,7 @@ return {
 					-- documentation = cmp.config.window.bordered(),
 				},
 				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs( -4),
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),

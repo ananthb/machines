@@ -52,6 +52,7 @@ return {
 	},
 	{
 		"akinsho/bufferline.nvim",
+		dependencies = "neovim/nvim-lspconfig",
 		opts = {
 			options = {
 				diagnostics = "nvim_lsp",

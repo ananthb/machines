@@ -1,5 +1,4 @@
 return {
-	-- GOLANG
 	{
 		"ray-x/go.nvim",
 		dependencies = {
@@ -12,4 +11,5 @@ return {
 		ft = { "go", "gomod" },
 		build = ':lua require("go.install").update_all_sync',
 	},
+	"jparise/vim-graphql",
 }
