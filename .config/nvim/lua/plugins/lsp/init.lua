@@ -8,6 +8,14 @@ end
 
 return {
 	{
+		"folke/neoconf.nvim",
+		config = true,
+	},
+	{
+		"neovim/nvim-lspconfig",
+		dependencies = { "folke/neoconf.nvim" },
+	},
+	{
 		"jose-elias-alvarez/null-ls.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -63,7 +71,6 @@ return {
 			})
 		end,
 	},
-	"neovim/nvim-lspconfig",
 	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = {
