@@ -55,13 +55,16 @@ return {
 					null_ls.builtins.formatting.gofumpt,
 					null_ls.builtins.formatting.goimports,
 					null_ls.builtins.formatting.golines.with({
-						extra_args = { "--max-len=128" },
+						extra_args = { "--max-len=108" },
 					}),
 					null_ls.builtins.formatting.isort,
 					null_ls.builtins.formatting.jq,
 					null_ls.builtins.formatting.markdownlint,
 					null_ls.builtins.formatting.prettierd,
 					null_ls.builtins.formatting.shellharden,
+					null_ls.builtins.diagnostics.sqlfluff.with({
+						extra_args = { "--dialect", "postgres" },
+					}),
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.trim_newlines,
 					null_ls.builtins.formatting.trim_whitespace,

@@ -12,4 +12,11 @@ return {
 		build = ':lua require("go.install").update_all_sync',
 	},
 	"jparise/vim-graphql",
+	"google/vim-maktaba",
+	{
+		"bazelbuild/vim-bazel",
+		dependencies = {
+			"google/vim-maktaba",
+		},
+	},
 }
