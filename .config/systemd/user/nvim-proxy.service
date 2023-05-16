@@ -1,0 +1,8 @@
+[Unit]
+Description=Socket activation proxy for nvim headless server
+BindsTo=nvim-proxy.socket
+BindsTo=nvim.service
+After=nvim.service
+
+[Service]
+ExecStart=/lib/systemd/systemd-socket-proxyd --exit-idle-time=300s localhost:6665
