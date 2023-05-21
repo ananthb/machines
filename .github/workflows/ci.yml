@@ -15,9 +15,9 @@ jobs:
         uses: actions/checkout@v3
       - name: Check butane config
         run: |
-          podman run --rm -v .:/:z \
+          podman run --rm -v .:/machines:z \
             quay.io/coreos/butane:release -ps -d . \
-            /getafix.config.bu > getafix.config.ign
+            /machines/getafix.config.bu > getafix.config.ign
       - if: startsWith(github.ref, 'refs/tags/')
         name: Add ignition files to release
         uses: softprops/action-gh-release@v1
