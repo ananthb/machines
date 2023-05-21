@@ -7,10 +7,9 @@ passwd:
       shell: /usr/bin/fish
       groups:
         - wheel
-	- uucp
-      ssh_authorized_keys:
-        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKcREYF3yaTtE0Rw8+cdYG0PgZsEBWqwGhBC+gOMTkPf ananth@obelix
-	- ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ7IZ87w4JwbqXB1pO5ikW2bDxG3qzCZlFjzPloO1jH6 ananth.b@ananthbs-MBP
+        - uucp
+      ssh_authorized_keys_local:
+        - ananth_ssh_keys.pem
     - name: core
       should_exist: false
 
@@ -49,9 +48,9 @@ storage:
           set -eu
 
           rpm-ostree install --apply-live --allow-inactive \
-	    container-selinux cockpit-system cockpit-ostree \
-	    cockpit-storaged cockpit-networkmanager cockpit-podman \
-	    cockpit-navigator golang-github-prometheus-node-exporter
+            container-selinux cockpit-system cockpit-ostree \
+            cockpit-storaged cockpit-networkmanager cockpit-podman \
+            cockpit-navigator golang-github-prometheus-node-exporter fish
           systemctl enable --now cockpit.socket prometheus-node-exporter.service
 
     - path: /etc/hostname

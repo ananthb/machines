@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  release:
+
+jobs:
+  ignite:
+    name: Transpile Butane to Ignition
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Check butane config
+        run: |
+          podman run --rm -v .:/:z \
+            quay.io/coreos/butane:release -ps -d . \
+            /getafix.config.bu > getafix.config.ign
+      - if: startsWith(github.ref, 'refs/tags/')
+        name: Add ignition files to release
+        uses: softprops/action-gh-release@v1
+        with:
+          append_body: true
+          generate_release_notes: true
+          files: |
+            getafix.config.ign
