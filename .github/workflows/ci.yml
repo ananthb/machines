@@ -16,7 +16,7 @@ jobs:
       - name: Generate ignition files
         run: |
           podman run --rm -v $(pwd):/machines:z \
-            quay.io/coreos/butane:release -ps -d /machines \
+            quay.io/coreos/butane:release -ps -d /machines/files \
             /machines/getafix.config.bu > getafix.config.ign
       - name: Archive ignition files
         uses: actions/upload-artifact@v3
