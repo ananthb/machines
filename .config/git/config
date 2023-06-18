@@ -48,6 +48,9 @@
 [pull]
   ff = only
 
+[push]
+  autoSetupRemote = true
+
 [filter "lfs"]
   required = true
   clean = git-lfs clean -- %f
