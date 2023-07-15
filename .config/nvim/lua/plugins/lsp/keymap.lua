@@ -56,6 +56,12 @@ M.keymap = {
 		mode = "v",
 		has = "documentRangeFormatting",
 	},
+	{
+		"<leader>cl",
+		vim.lsp.codelens.run,
+		desc = "Run Code Lens on current line",
+		has = "codeLens",
+	},
 	{ "<leader>cn", "<cmd>LspInfo<cr>", desc = "LSP Info" },
 	{ "<leader>rn", vim.lsp.buf.rename, desc = "Rename" },
 	-- Workspaces.

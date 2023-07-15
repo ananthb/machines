@@ -19,4 +19,11 @@ return {
 			"google/vim-maktaba",
 		},
 	},
+	{
+		"mrcjkb/haskell-tools.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+		},
+	},
 }

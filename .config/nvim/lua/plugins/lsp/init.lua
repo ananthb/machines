@@ -1,4 +1,6 @@
 local on_attach = function(client, bufnr)
+	require("plugins.lsp.codelens").on_attach(client, bufnr)
+	require("plugins.lsp.highlight").on_attach(client, bufnr)
 	require("plugins.lsp.format").on_attach(client, bufnr)
 	require("plugins.lsp.keymap").on_attach(client, bufnr)
 	if client.server_capabilities.documentSymbolProvider then
@@ -107,6 +109,20 @@ return {
 									-- Make the server aware of Neovim runtime files.
 									library = vim.api.nvim_get_runtime_file("", true),
 								},
+							},
+						},
+					})
+				end,
+				["yamlls"] = function()
+					require("lspconfig").yamlls.setup({
+						settings = {
+							yaml = {
+								schemaStore = {
+									-- You must disable built-in schemaStore support if you want to use
+									-- this plugin and its advanced options like `ignore`.
+									enable = false,
+								},
+								schemas = require("schemastore").yaml.schemas(),
 							},
 						},
 					})

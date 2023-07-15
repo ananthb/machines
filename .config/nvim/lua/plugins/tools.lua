@@ -34,6 +34,8 @@ return {
 					"golines",
 					"gopls",
 					"graphql-language-service-cli",
+					"haskell-debug-adapter",
+					"haskell-language-server",
 					"html-lsp",
 					"isort",
 					"jdtls",
@@ -100,4 +102,5 @@ return {
 			})
 		end,
 	},
+	"b0o/schemastore.nvim",
 }
