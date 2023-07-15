@@ -1,6 +1,7 @@
 local on_attach = function(client, bufnr)
 	require("plugins.lsp.codelens").on_attach(client, bufnr)
 	require("plugins.lsp.highlight").on_attach(client, bufnr)
+	require("plugins.lsp.hover").on_attach(client, bufnr)
 	require("plugins.lsp.format").on_attach(client, bufnr)
 	require("plugins.lsp.keymap").on_attach(client, bufnr)
 	if client.server_capabilities.documentSymbolProvider then
