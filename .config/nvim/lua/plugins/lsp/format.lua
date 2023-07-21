@@ -37,9 +37,7 @@ function M.on_attach(client, buf)
 	vim.api.nvim_create_autocmd("BufWritePre", {
 		group = group,
 		buffer = buf,
-		callback = function()
-			M.format()
-		end,
+		callback = M.format,
 	})
 end
 
