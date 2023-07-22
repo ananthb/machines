@@ -128,7 +128,7 @@ return {
 	},
 	{
 		"nvim-tree/nvim-tree.lua",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		dependencies = "nvim-tree/nvim-web-devicons",
 		config = function()
 			vim.keymap.set("n", "<C-n>", require("nvim-tree.api").tree.toggle, { desc = "Toggle Nvim Tree" })
 			vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
