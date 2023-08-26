@@ -30,9 +30,7 @@ function M.null_ls_sources()
 		null_ls.builtins.formatting.gofmt,
 		null_ls.builtins.formatting.gofumpt,
 		null_ls.builtins.formatting.goimports,
-		null_ls.builtins.formatting.golines.with({
-			extra_args = { "--max-len=108" },
-		}),
+		null_ls.builtins.formatting.golines,
 		null_ls.builtins.formatting.isort,
 		null_ls.builtins.formatting.jq,
 		null_ls.builtins.formatting.markdownlint,

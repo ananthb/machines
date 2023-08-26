@@ -8,7 +8,7 @@ return {
 			auto_restore_enabled = true,
 			auto_session_supress_dirs = { "~" },
 			auto_session_allowed_dirs = { "~/src/*" },
-			auto_session_enable_last_session = vim.loop.cwd() == vim.loop.os_homedir(),
+			auto_session_enable_last_session = vim.g.neovide and vim.loop.cwd() == vim.loop.os_homedir(),
 		},
 	},
 	{
