@@ -26,4 +26,5 @@ return {
 			"nvim-telescope/telescope.nvim",
 		},
 	},
+	"vmchale/dhall-vim",
 }
