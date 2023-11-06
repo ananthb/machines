@@ -1,18 +1,3 @@
-local function open_nvim_tree(data)
-	-- Buffer is a directory.
-	local directory = vim.fn.isdirectory(data.file) == 1
-
-	if not directory then
-		return
-	end
-
-	-- Change to the directory.
-	vim.cmd.cd(data.file)
-
-	-- Open the tree.
-	require("nvim-tree.api").tree.open()
-end
-
 return {
 	"nvim-lua/plenary.nvim",
 	{
@@ -125,16 +110,5 @@ return {
 		"folke/trouble.nvim",
 		dependencies = "nvim-tree/nvim-web-devicons",
 		config = true,
-	},
-	{
-		"nvim-tree/nvim-tree.lua",
-		dependencies = "nvim-tree/nvim-web-devicons",
-		config = function()
-			vim.keymap.set("n", "<C-n>", require("nvim-tree.api").tree.toggle, { desc = "Toggle Nvim Tree" })
-			vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
-			require("nvim-tree").setup({
-				sync_root_with_cwd = true,
-			})
-		end,
 	},
 }
