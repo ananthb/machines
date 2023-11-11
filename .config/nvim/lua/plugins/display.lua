@@ -78,6 +78,9 @@ return {
 		dependencies = "nvim-tree/nvim-web-devicons",
 		event = "VimEnter",
 		name = "dashboard",
+		cond = function()
+			return vim.g.neovide == true
+		end,
 		opts = {
 			theme = "doom",
 			config = {
