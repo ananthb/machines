@@ -48,6 +48,9 @@ return {
 	{
 		"akinsho/bufferline.nvim",
 		dependencies = "neovim/nvim-lspconfig",
+		cond = function()
+			return vim.g.neovide == true
+		end,
 		opts = {
 			options = {
 				diagnostics = "nvim_lsp",
