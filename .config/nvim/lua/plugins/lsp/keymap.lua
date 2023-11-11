@@ -85,7 +85,6 @@ end
 function M.on_attach(client, _)
 	for _, keys in pairs(keymap) do
 		if not keys.has or has(client, keys.has) then
-			print("Setting keymap", keys[1], keys[2])
 			local opts = {}
 			opts.silent = opts.silent ~= false
 			if keys.desc then
