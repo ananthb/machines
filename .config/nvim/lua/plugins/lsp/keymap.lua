@@ -2,7 +2,7 @@ local M = {}
 
 local format = require("plugins.lsp.format").format
 
-function M.diagnostic_goto(next, severity)
+local function diagnostic_goto(next, severity)
 	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
 	severity = severity and vim.diagnostic.severity[severity] or nil
 	return function()
@@ -10,7 +10,7 @@ function M.diagnostic_goto(next, severity)
 	end
 end
 
-M.keymap = {
+local keymap = {
 	-- Goto stuff.
 	{ "gd", "<cmd>Telescope lsp_definitions<cr>", desc = "Goto Definition" },
 	{ "gr", "<cmd>Telescope lsp_references<cr>", desc = "References" },
@@ -27,12 +27,12 @@ M.keymap = {
 		has = "signatureHelp",
 	},
 	-- Diagnostic.
-	{ "]d", M.diagnostic_goto(true), desc = "Next Diagnostic" },
-	{ "[d", M.diagnostic_goto(false), desc = "Prev Diagnostic" },
-	{ "]e", M.diagnostic_goto(true, "ERROR"), desc = "Next Error" },
-	{ "[e", M.diagnostic_goto(false, "ERROR"), desc = "Prev Error" },
-	{ "]w", M.diagnostic_goto(true, "WARN"), desc = "Next Warning" },
-	{ "[w", M.diagnostic_goto(false, "WARN"), desc = "Prev Warning" },
+	{ "]d", diagnostic_goto(true), desc = "Next Diagnostic" },
+	{ "[d", diagnostic_goto(false), desc = "Prev Diagnostic" },
+	{ "]e", diagnostic_goto(true, "ERROR"), desc = "Next Error" },
+	{ "[e", diagnostic_goto(false, "ERROR"), desc = "Prev Error" },
+	{ "]w", diagnostic_goto(true, "WARN"), desc = "Next Warning" },
+	{ "[w", diagnostic_goto(false, "WARN"), desc = "Prev Warning" },
 	{ "<leader>cd", vim.diagnostic.open_float, desc = "Open diagnostic" },
 	{ "<leader>cl", vim.diagnostic.setloclist, desc = "Add diagnostic to location list" },
 	-- Code.
@@ -77,43 +77,22 @@ M.keymap = {
 }
 
 ---@param method string
-function M.has(buffer, method)
+local function has(client, method)
 	method = method:find("/") and method or "textDocument/" .. method
-	local clients = require("lazyvim.util").lsp.get_clients({ bufnr = buffer })
-	for _, client in ipairs(clients) do
-		if client.supports_method(method) then
-			return true
-		end
-	end
-	return false
+	return client.supports_method(method)
 end
 
----@return (LazyKeys|{has?:string})[]
-function M.resolve(buffer)
-	local Keys = require("lazy.core.handler.keys")
-	if not Keys.resolve then
-		return {}
-	end
-	local opts = require("lazyvim.util").opts("nvim-lspconfig")
-	local clients = require("lazyvim.util").lsp.get_clients({ bufnr = buffer })
-	for _, client in ipairs(clients) do
-		local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
-		vim.list_extend(M.keymap, maps)
-	end
-	return Keys.resolve(M.keymap)
-end
-
-function M.on_attach(_, buffer)
-	local Keys = require("lazy.core.handler.keys")
-	local keymaps = M.resolve(buffer)
-
-	for _, keys in pairs(keymaps) do
-		if not keys.has or M.has(buffer, keys.has) then
-			local opts = Keys.opts(keys)
-			opts.has = nil
+function M.on_attach(client, _)
+	for _, keys in pairs(keymap) do
+		if not keys.has or has(client, keys.has) then
+			print("Setting keymap", keys[1], keys[2])
+			local opts = {}
 			opts.silent = opts.silent ~= false
-			opts.buffer = buffer
-			vim.keymap.set(keys.mode or "n", keys.lhs, keys.rhs, opts)
+			if keys.desc then
+				opts.desc = keys.desc
+			end
+			opts.silent = opts.silent ~= false
+			vim.keymap.set(keys.mode or "n", keys[1], keys[2], opts)
 		end
 	end
 end
