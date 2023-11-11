@@ -1,12 +1,22 @@
 return {
-	"nvim-lua/plenary.nvim",
+	"rebelot/kanagawa.nvim",
 	{
-		"bluz71/vim-moonfly-colors",
+		"sheharyarn/werewolf.nvim",
 		priority = 1000,
-		config = function()
-			vim.cmd([[colorscheme moonfly]])
-		end,
+		dependencies = "rebelot/kanagawa.nvim",
+		opts = {
+			system_theme = {
+				on_change = function(system_theme)
+					if system_theme == "Dark" then
+						vim.cmd("colorscheme kanagawa-dragon")
+					else
+						vim.cmd("colorscheme kanagawa-lotus")
+					end
+				end,
+			},
+		},
 	},
+	"nvim-lua/plenary.nvim",
 	"stevearc/dressing.nvim",
 	{
 		"ellisonleao/glow.nvim",
