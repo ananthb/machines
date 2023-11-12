@@ -60,6 +60,7 @@ return {
 					"sqlfmt",
 					"staticcheck",
 					"stylua",
+					"tsserver",
 					"vacuum",
 					"vale",
 					"write-good",

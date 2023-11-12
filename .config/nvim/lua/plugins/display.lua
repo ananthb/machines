@@ -127,4 +127,12 @@ return {
 		dependencies = "nvim-tree/nvim-web-devicons",
 		config = true,
 	},
+	{
+		"hedyhli/outline.nvim",
+		cmd = { "Outline", "OutlineOpen" },
+		keys = {
+			{ "<leader>tt", "<cmd>Outline<CR>", desc = "Toggle outline" },
+		},
+		config = true,
+	},
 }
