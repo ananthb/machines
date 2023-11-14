@@ -10,4 +10,9 @@ return {
 	"tpope/vim-speeddating",
 	"kylechui/nvim-surround",
 	"andymass/vim-matchup",
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = true,
+	},
 }
