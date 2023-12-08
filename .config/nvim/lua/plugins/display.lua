@@ -1,6 +1,10 @@
 return {
 	"rebelot/kanagawa.nvim",
 	{
+		"j-hui/fidget.nvim",
+		config = true,
+	},
+	{
 		"sheharyarn/werewolf.nvim",
 		priority = 1000,
 		dependencies = "rebelot/kanagawa.nvim",
