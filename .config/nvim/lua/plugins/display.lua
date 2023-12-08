@@ -3,6 +3,7 @@ return {
 	{
 		"j-hui/fidget.nvim",
 		config = true,
+		cond = vim.g.neovide == true,
 	},
 	{
 		"sheharyarn/werewolf.nvim",
@@ -52,9 +53,7 @@ return {
 	{
 		"akinsho/bufferline.nvim",
 		dependencies = "neovim/nvim-lspconfig",
-		cond = function()
-			return vim.g.neovide == true
-		end,
+		cond = vim.g.neovide == true,
 		opts = {
 			options = {
 				diagnostics = "nvim_lsp",
@@ -85,9 +84,7 @@ return {
 		dependencies = "nvim-tree/nvim-web-devicons",
 		event = "VimEnter",
 		name = "dashboard",
-		cond = function()
-			return vim.g.neovide == true
-		end,
+		cond = vim.g.neovide == true,
 		opts = {
 			theme = "doom",
 			config = {
