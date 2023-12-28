@@ -1,0 +1,28 @@
+import = ["/Users/ananth.b/.config/alacritty/extra.toml"]
+live_config_reload = true
+
+[font.bold]
+family = "Hack Nerd Font"
+style = "Bold"
+
+[font.bold_italic]
+family = "Hack Nerd Font"
+style = "Bold Italic"
+
+[font.italic]
+family = "Hack Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "Hack Nerd Font"
+style = "Regular"
+
+[selection]
+save_to_clipboard = true
+
+[window]
+dynamic_title = true
+
+[window.dimensions]
+columns = 80
+lines = 24

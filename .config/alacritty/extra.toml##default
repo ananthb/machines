@@ -1,0 +1,4 @@
+# vim: set filetype=toml
+
+[font]
+size = 16.0
