@@ -3,7 +3,7 @@ return {
 	{
 		"j-hui/fidget.nvim",
 		config = true,
-		cond = vim.g.neovide == true,
+		cond = not vim.g.started_by_firenvim,
 	},
 	{
 		"sheharyarn/werewolf.nvim",
@@ -30,6 +30,7 @@ return {
 	},
 	{
 		"folke/which-key.nvim",
+		cond = not vim.g.started_by_firenvim,
 		config = function()
 			vim.o.timeout = true
 			vim.o.timeoutlen = 300
@@ -38,10 +39,12 @@ return {
 	},
 	{
 		"SmiteshP/nvim-navic",
+		cond = not vim.g.started_by_firenvim,
 		dependencies = "neovim/nvim-lspconfig",
 	},
 	{
 		"utilyre/barbecue.nvim",
+		cond = not vim.g.started_by_firenvim,
 		name = "barbecue",
 		version = "*",
 		dependencies = {
@@ -53,7 +56,7 @@ return {
 	{
 		"akinsho/bufferline.nvim",
 		dependencies = "neovim/nvim-lspconfig",
-		cond = vim.g.neovide == true,
+		cond = not vim.g.started_by_firenvim,
 		opts = {
 			options = {
 				diagnostics = "nvim_lsp",
@@ -70,6 +73,7 @@ return {
 	},
 	{
 		"nvim-lualine/lualine.nvim",
+		cond = not vim.g.started_by_firenvim,
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		name = "lualine",
 		opts = {
@@ -125,11 +129,13 @@ return {
 	},
 	{
 		"folke/trouble.nvim",
+		cond = not vim.g.started_by_firenvim,
 		dependencies = "nvim-tree/nvim-web-devicons",
 		config = true,
 	},
 	{
 		"hedyhli/outline.nvim",
+		cond = not vim.g.started_by_firenvim,
 		cmd = { "Outline", "OutlineOpen" },
 		keys = {
 			{ "<leader>tt", "<cmd>Outline<CR>", desc = "Toggle outline" },

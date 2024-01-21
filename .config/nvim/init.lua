@@ -63,5 +63,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 })
 
+if vim.g.started_by_firenvim == true then
+	vim.o.laststatus = 0
+end
+
 -- LAZY PLUGINS
 require("lazy").setup("plugins")
