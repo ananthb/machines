@@ -6,7 +6,7 @@ return {
 		cond = not vim.g.started_by_firenvim,
 	},
 	{
-		"sheharyarn/werewolf.nvim",
+		"ananthb/werewolf.nvim",
 		priority = 1000,
 		dependencies = "rebelot/kanagawa.nvim",
 		opts = {
