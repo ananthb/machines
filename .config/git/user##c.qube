@@ -1,3 +1,5 @@
 [include]
   path = profiles/qube
 
+[includeIf "gitdir:~/src/me/"]
+  path = profiles/ananth
