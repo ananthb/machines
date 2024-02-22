@@ -1,5 +1,11 @@
+[include]
+  path = local # local isn't version controlled
+  path = sys
+  path = user
+
 [core]
   autocrlf = input
+	pager = delta
 
 [user]
   useConfigOnly = true
@@ -36,14 +42,10 @@
 
 [commit]
   gpgsign = true
+	verbose = true
 
 [tag]
   gpgsign = true
-
-[include]
-  path = local # local isn't version controlled
-  path = sys
-  path = user
 
 [pull]
   ff = only
@@ -56,3 +58,13 @@
 	ui = auto
 [branch]
 	sort = -committerdate
+[merge]
+	conflictStyle = zdiff3
+[diff]
+	algorithm = histogram
+[transfer]
+	fsckObjects = true
+[fetch]
+	fsckObjects = true
+[receive]
+	fsckObjects = true
