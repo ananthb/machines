@@ -4,8 +4,7 @@
   path = user
 
 [core]
-  autocrlf = input
-	pager = delta
+  pager = delta
 
 [user]
   useConfigOnly = true
