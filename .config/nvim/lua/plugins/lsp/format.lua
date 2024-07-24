@@ -3,21 +3,16 @@ local M = {}
 function M.null_ls_sources()
 	local null_ls = require("null-ls")
 	return {
-		null_ls.builtins.code_actions.cspell,
 		null_ls.builtins.code_actions.gitrebase,
 		null_ls.builtins.code_actions.gitsigns,
 		null_ls.builtins.code_actions.gomodifytags,
-		null_ls.builtins.code_actions.shellcheck,
 		null_ls.builtins.completion.vsnip,
 		null_ls.builtins.diagnostics.commitlint,
-		null_ls.builtins.diagnostics.cpplint,
 		null_ls.builtins.diagnostics.fish,
 		null_ls.builtins.diagnostics.gitlint,
 		null_ls.builtins.diagnostics.golangci_lint,
-		null_ls.builtins.diagnostics.jsonlint,
 		null_ls.builtins.diagnostics.markdownlint,
 		null_ls.builtins.diagnostics.pylint,
-		null_ls.builtins.diagnostics.shellcheck,
 		null_ls.builtins.diagnostics.staticcheck,
 		null_ls.builtins.diagnostics.vale,
 		null_ls.builtins.diagnostics.write_good,
@@ -26,25 +21,17 @@ function M.null_ls_sources()
 		null_ls.builtins.formatting.clang_format,
 		null_ls.builtins.formatting.elm_format,
 		null_ls.builtins.formatting.fish_indent,
-		null_ls.builtins.formatting.fourmolu,
 		null_ls.builtins.formatting.gofmt,
-		null_ls.builtins.formatting.gofumpt,
 		null_ls.builtins.formatting.goimports,
-		null_ls.builtins.formatting.golines,
 		null_ls.builtins.formatting.isort,
-		null_ls.builtins.formatting.jq,
 		null_ls.builtins.formatting.markdownlint,
-		null_ls.builtins.formatting.prettierd,
 		null_ls.builtins.formatting.shellharden,
 		null_ls.builtins.diagnostics.sqlfluff.with({
 			extra_args = { "--dialect", "postgres" },
 		}),
 		null_ls.builtins.formatting.sqlfmt,
 		null_ls.builtins.formatting.stylua,
-		null_ls.builtins.formatting.trim_newlines,
-		null_ls.builtins.formatting.trim_whitespace,
 		null_ls.builtins.formatting.yamlfmt,
-		null_ls.builtins.formatting.zigfmt,
 	}
 end
 

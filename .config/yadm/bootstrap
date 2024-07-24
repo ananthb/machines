@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# sparse ceckout
+yadm gitconfig core.sparseCheckout true
+yadm sparse-checkout reapply
+
 # install tmux plugins
 if command -v tmux >/dev/null 2>&1; then
   tpm="$HOME/.config/tmux/plugins/tpm"
