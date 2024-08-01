@@ -1,4 +1,4 @@
-import = ["/Users/ananth.b/.config/alacritty/extra.toml"]
+import = ["~/.config/alacritty/extra.toml"]
 live_config_reload = true
 
 [font.bold]
