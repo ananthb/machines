@@ -1,6 +1,3 @@
-[include]
-  path = profiles/ananth
-
-[includeIf "gitdir:~/src/qube/"]
-  path = profiles/qube
-
+[user]
+  name = Ananth Bhaskararaman
+  email = antsub@gmail.com

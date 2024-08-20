@@ -1,2 +1,3 @@
-[include]
-  path = profiles/qube
+[user]
+  name = Ananth Bhaskararaman
+  email = ananth.b@qubecinema.com
