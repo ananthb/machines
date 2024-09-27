@@ -73,3 +73,5 @@
 	fsckObjects = true
 [receive]
 	fsckObjects = true
+[http]
+	postBuffer = 157286400
