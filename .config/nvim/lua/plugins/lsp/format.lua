@@ -18,7 +18,6 @@ function M.null_ls_sources()
 		null_ls.builtins.diagnostics.vale,
 		null_ls.builtins.diagnostics.write_good,
 		null_ls.builtins.diagnostics.yamllint,
-		null_ls.builtins.formatting.black,
 		null_ls.builtins.formatting.elm_format,
 		null_ls.builtins.formatting.fish_indent,
 		null_ls.builtins.formatting.gofmt,
