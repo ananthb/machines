@@ -428,6 +428,9 @@
                   programs.tmux = {
                     enable = true;
                     historyLimit = 100000;
+		    shortcut = "a";
+		    keyMode = "vi";
+		    mouse = true;
                     plugins = with pkgs; [
                       tmuxPlugins.better-mouse-mode
                       {
