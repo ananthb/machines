@@ -282,6 +282,7 @@
                 {
                   home.username = "ananth";
                   home.homeDirectory = "/home/ananth";
+		  home.sessionVariables.EDITOR = "nvim";
 
                   home.packages = [
                     pkgs.atool
