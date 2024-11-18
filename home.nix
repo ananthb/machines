@@ -22,6 +22,7 @@
     pkgs.delta
     pkgs.tokei
     pkgs.fzf
+    pkgs.git-credential-manager
   ];
 
   fonts = {
@@ -102,6 +103,12 @@
       core.pager = "delta";
       user.useConfigOnly = "true";
       init.defaultBranch = "main";
+
+      credential = {
+        credentialStore = "cache";
+        helper = "manager";
+        "https://github.com".username = "ananthb";
+      };
 
       color = {
         ui = "true";
