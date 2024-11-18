@@ -29,7 +29,6 @@
 
           modules = [
             lanzaboote.nixosModules.lanzaboote
-
             (
               {
                 config,
