@@ -1,5 +1,14 @@
-{ pkgs, ... }:
 {
+  pkgs,
+  inputs,
+  ...
+}:
+{
+
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+  ];
+
   home.username = "ananth";
   home.homeDirectory = "/home/ananth";
   home.sessionVariables.EDITOR = "nvim";
@@ -139,19 +148,147 @@
     };
   };
 
-  programs.neovim = {
+  programs.nixvim = {
     enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-    vimdiffAlias = true;
-    plugins = with pkgs.vimPlugins; [
-      nvim-lspconfig
-      nvim-treesitter.withAllGrammars
-      plenary-nvim
-      gruvbox-material
-      mini-nvim
-    ];
+
+    colorschemes.oxocarbon.enable = true;
+
+    plugins = {
+
+      lualine.enable = true;
+
+      # Includes all parsers for treesitter
+      treesitter = {
+        enable = true;
+      };
+
+      # Icons 
+      web-devicons.enable = true;
+
+      sleuth = {
+        enable = true;
+      };
+
+      # Autopairs
+      nvim-autopairs = {
+        enable = true;
+      };
+
+      # Trouble
+      trouble = {
+        enable = true;
+      };
+
+      which-key = {
+        enable = false;
+        registrations = {
+          "<leader>fg" = "Find Git files with telescope";
+          "<leader>fw" = "Find text with telescope";
+          "<leader>ff" = "Find files with telescope";
+        };
+      };
+
+      # Prettier fancier command window
+      noice = {
+        enable = true;
+      };
+
+      # Good old Telescope
+      telescope = {
+        enable = true;
+        extensions = {
+          fzf-native = {
+            enable = true;
+          };
+        };
+      };
+
+      # Todo comments
+      todo-comments = {
+        enable = true;
+        settings.colors = {
+          error = [
+            "DiagnosticError"
+            "ErrorMsg"
+            "#DC2626"
+          ];
+          warning = [
+            "DiagnosticWarn"
+            "WarningMsg"
+            "#FBBF24"
+          ];
+          info = [
+            "DiagnosticInfo"
+            "#2563EB"
+          ];
+          hint = [
+            "DiagnosticHint"
+            "#10B981"
+          ];
+          default = [
+            "Identifier"
+            "#7C3AED"
+          ];
+          test = [
+            "Identifier"
+            "#FF00FF"
+          ];
+        };
+      };
+
+      # Language server
+      lsp = {
+        enable = true;
+        servers = {
+          # Average webdev LSPs
+          # ts-ls.enable = true; # TS/JS
+          ts_ls.enable = true; # TS/JS
+          cssls.enable = true; # CSS
+          html.enable = true; # HTML
+          pyright.enable = true; # Python
+          marksman.enable = true; # Markdown
+          nil_ls.enable = true; # Nix
+          dockerls.enable = true; # Docker
+          bashls.enable = true; # Bash
+          clangd.enable = true; # C/C++
+          yamlls.enable = true; # YAML
+          ltex = {
+            enable = true;
+            settings = {
+              enabled = [
+                "html"
+                "latex"
+                "markdown"
+                "text"
+                "tex"
+                "gitcommit"
+              ];
+              completionEnabled = true;
+              language = "en-US";
+            };
+          };
+          gopls = {
+            # Golang
+            enable = true;
+            autostart = true;
+          };
+
+          lua_ls = {
+            # Lua
+            enable = true;
+            settings.telemetry.enable = false;
+          };
+
+          # Rust
+          rust_analyzer = {
+            enable = true;
+            installRustc = true;
+            installCargo = true;
+          };
+        };
+      };
+
+    };
   };
 
   programs.tmux = {
