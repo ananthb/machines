@@ -54,6 +54,14 @@
                 boot.kernelModules = [ "kvm-intel" ];
                 boot.extraModulePackages = [ ];
 
+                boot.initrd.luks.devices = {
+                  luksroot = {
+                    device = "/dev/disk/by-uuid/08426303-8b48-4547-b1ff-88c52c0b7029";
+                    allowDiscards = true;
+                    bypassWorkqueues = true;
+                  };
+                };
+
                 # Lanzaboote currently replaces the systemd-boot module.
                 # This setting is usually set to true in configuration.nix
                 # generated at installation time. So we force it to false
@@ -95,6 +103,15 @@
                   fsType = "btrfs";
                   options = [
                     "subvol=@nix"
+                    "compress=zstd"
+                  ];
+                };
+
+                fileSystems."/var" = {
+                  device = "/dev/disk/by-uuid/08426303-8b48-4547-b1ff-88c52c0b7029";
+                  fsType = "btrfs";
+                  options = [
+                    "subvol=@var"
                     "compress=zstd"
                   ];
                 };
@@ -282,7 +299,7 @@
                 {
                   home.username = "ananth";
                   home.homeDirectory = "/home/ananth";
-		  home.sessionVariables.EDITOR = "nvim";
+                  home.sessionVariables.EDITOR = "nvim";
 
                   home.packages = [
                     pkgs.atool
@@ -428,9 +445,9 @@
                   programs.tmux = {
                     enable = true;
                     historyLimit = 100000;
-		    shortcut = "a";
-		    keyMode = "vi";
-		    mouse = true;
+                    shortcut = "a";
+                    keyMode = "vi";
+                    mouse = true;
                     plugins = with pkgs; [
                       tmuxPlugins.better-mouse-mode
                       {
