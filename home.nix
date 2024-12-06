@@ -14,9 +14,12 @@
   home.sessionVariables.EDITOR = "nvim";
 
   home.packages = [
+    # Fonts
+    pkgs.hack-font
+
+    # Tools
     pkgs.atool
     pkgs.httpie
-    pkgs.firefox
     pkgs.tree
     pkgs.alacritty
     pkgs.fish
@@ -24,14 +27,20 @@
     pkgs.curl
     pkgs.httpie
     pkgs.htop
-    pkgs.neovide
-    pkgs.wireshark
-    pkgs.hack-font
-    pkgs.moolticute
     pkgs.delta
     pkgs.tokei
     pkgs.fzf
     pkgs.git-credential-manager
+
+    # Apps
+    pkgs.jellyfin-media-player
+    pkgs.wireshark
+    pkgs.moolticute
+    pkgs.neovide
+    pkgs.firefox
+    pkgs.bruno
+
+    # Gnome extensions
     pkgs.gnomeExtensions.appindicator
   ];
 
