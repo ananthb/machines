@@ -32,7 +32,17 @@
     pkgs.tokei
     pkgs.fzf
     pkgs.git-credential-manager
+    pkgs.gnomeExtensions.appindicator
   ];
+
+  dconf.settings = {
+   "org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = [
+        "org.gnome.shell.extensions.appindicator"
+      ];
+    };
+  };
 
   fonts = {
     fontconfig.enable = true;
