@@ -39,6 +39,7 @@
     pkgs.neovide
     pkgs.firefox
     pkgs.bruno
+    pkgs.rpi-imager
 
     # Gnome extensions
     pkgs.gnomeExtensions.appindicator
