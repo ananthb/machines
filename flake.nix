@@ -155,6 +155,7 @@
                 networking.useDHCP = lib.mkDefault true;
                 networking.hostName = "defiant"; # Define your hostname.
                 networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+                networking.networkmanager.connectionConfig."connection.mdns" = 2; # Enable mDNS on all interfaces
 
                 nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
                 hardware.cpu.intel.updateMicrocode = true;
@@ -210,6 +211,10 @@
                 # };
 
                 # List services that you want to enable:
+
+                # Enable resolved and avahi
+                services.resolved.enable = true;
+                services.avahi.enable = true;
 
                 # Enable the X11 windowing system.
                 services.xserver.enable = true;
