@@ -47,10 +47,19 @@
                 ...
               }:
               {
-                nix.settings.experimental-features = [
-                  "nix-command"
-                  "flakes"
-                ];
+                nix = {
+                  settings = {
+                    expiremental-features = [
+                      "nix-command"
+                      "flakes"
+                    ];
+                    auto-optimise-store = true;
+                  };
+                  gc = {
+                    automatic = true;
+                    dates = "weekly";
+                  };
+                };
 
                 # Bootloader & SecureBoot
                 boot.initrd.availableKernelModules = [
@@ -96,7 +105,8 @@
                   ];
                 };
 
-                boot.initrd.luks.devices."nixroot".device = "/dev/disk/by-uuid/2d37d757-cc63-49a8-8f9e-5f61d130a7dc";
+                boot.initrd.luks.devices."nixroot".device =
+                  "/dev/disk/by-uuid/2d37d757-cc63-49a8-8f9e-5f61d130a7dc";
 
                 fileSystems."/home" = {
                   device = "/dev/disk/by-uuid/08426303-8b48-4547-b1ff-88c52c0b7029";

@@ -46,7 +46,7 @@
   ];
 
   dconf.settings = {
-   "org/gnome/shell" = {
+    "org/gnome/shell" = {
       disable-user-extensions = false;
       enabled-extensions = [
         "org.gnome.shell.extensions.appindicator"
@@ -182,7 +182,7 @@
         enable = true;
       };
 
-      # Icons 
+      # Icons
       web-devicons.enable = true;
 
       sleuth = {
