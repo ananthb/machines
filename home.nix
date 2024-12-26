@@ -32,6 +32,9 @@
     pkgs.fzf
     pkgs.git-credential-manager
     pkgs.gcr
+    pkgs.hugo
+    pkgs.wrangler
+    pkgs.flyctl
 
     # Apps
     pkgs.jellyfin-media-player
@@ -138,7 +141,6 @@
 
       credential = {
         credentialStore = "secretservice";
-        helper = "manager";
         "https://github.com".username = "ananthb";
       };
 
