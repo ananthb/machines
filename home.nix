@@ -66,7 +66,13 @@
     fontconfig.enable = true;
   };
 
-  programs.fish.enable = true;
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      set fish_greeting ""
+    '';
+  };
+
   programs.home-manager.enable = true;
   programs.alacritty = {
     enable = true;
