@@ -25,6 +25,7 @@
     pkgs.fish
     pkgs.git
     pkgs.curl
+    pkgs.ripgrep
     pkgs.httpie
     pkgs.htop
     pkgs.delta
@@ -32,6 +33,7 @@
     pkgs.fzf
     pkgs.git-credential-manager
     pkgs.gcr
+    pkgs.go
     pkgs.hugo
     pkgs.wrangler
     pkgs.flyctl
@@ -141,6 +143,7 @@
 
       credential = {
         credentialStore = "secretservice";
+        helper = "manager";
         "https://github.com".username = "ananthb";
       };
 
