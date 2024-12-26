@@ -31,6 +31,7 @@
     pkgs.tokei
     pkgs.fzf
     pkgs.git-credential-manager
+    pkgs.gcr
 
     # Apps
     pkgs.jellyfin-media-player
@@ -44,6 +45,8 @@
     # Gnome extensions
     pkgs.gnomeExtensions.appindicator
   ];
+
+  services.gnome-keyring.enable = true;
 
   dconf.settings = {
     "org/gnome/shell" = {
@@ -134,7 +137,7 @@
       init.defaultBranch = "main";
 
       credential = {
-        credentialStore = "cache";
+        credentialStore = "secretservice";
         helper = "manager";
         "https://github.com".username = "ananthb";
       };
