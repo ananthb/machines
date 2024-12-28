@@ -37,6 +37,8 @@
     pkgs.hugo
     pkgs.wrangler
     pkgs.flyctl
+    pkgs.nodejs
+    pkgs.pnpm
 
     # Apps
     pkgs.jellyfin-media-player
