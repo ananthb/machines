@@ -212,7 +212,7 @@
                     "networkmanager"
                     "systemd-journal"
                   ];
-                  shell = pkgs.fish;
+                  shell = pkgs.nushell;
                   packages = [ ];
                 };
 
@@ -322,10 +322,14 @@
 
             home-manager.nixosModules.home-manager
             {
-              home-manager.extraSpecialArgs = {
-                inherit inputs;
+              home-manager = {
+                extraSpecialArgs = {
+                  inherit inputs;
+                };
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.ananth = import ./ananth.nix;
               };
-              home-manager.users.ananth = import ./ananth.nix;
             }
           ];
         };
