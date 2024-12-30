@@ -21,6 +21,10 @@
 
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
   };
 
   outputs =
@@ -191,7 +195,7 @@
                 time.timeZone = "Asia/Kolkata";
 
                 # Select internationalisation properties.
-                i18n.defaultLocale = "en_IN.UTF-8";
+                i18n.defaultLocale = "en_IN";
                 # console = {
                 #   font = "Lat2-Terminus16";
                 #   keyMap = "us";
@@ -321,7 +325,7 @@
               home-manager.extraSpecialArgs = {
                 inherit inputs;
               };
-              home-manager.users.ananth = import ./home.nix;
+              home-manager.users.ananth = import ./ananth.nix;
             }
           ];
         };

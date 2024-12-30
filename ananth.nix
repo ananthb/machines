@@ -18,11 +18,11 @@
     pkgs.hack-font
 
     # Tools
+    pkgs.nushell
+    pkgs.fish
     pkgs.atool
     pkgs.httpie
     pkgs.tree
-    pkgs.alacritty
-    pkgs.fish
     pkgs.git
     pkgs.curl
     pkgs.ripgrep
@@ -39,8 +39,11 @@
     pkgs.flyctl
     pkgs.nodejs
     pkgs.pnpm
+    pkgs.mosh
 
     # Apps
+    pkgs.alacritty
+    inputs.ghostty.packages.x86_64-linux.default
     pkgs.jellyfin-media-player
     pkgs.wireshark
     pkgs.moolticute
@@ -48,6 +51,8 @@
     pkgs.firefox
     pkgs.bruno
     pkgs.rpi-imager
+    pkgs.vlc
+    pkgs.chromium
 
     # Gnome extensions
     pkgs.gnomeExtensions.appindicator
