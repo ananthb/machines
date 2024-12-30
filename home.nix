@@ -20,8 +20,8 @@
     # Tools
     pkgs.nushell
     pkgs.fish
+    pkgs.mosh
     pkgs.atool
-    pkgs.httpie
     pkgs.tree
     pkgs.git
     pkgs.curl
@@ -33,13 +33,15 @@
     pkgs.fzf
     pkgs.git-credential-manager
     pkgs.gcr
-    pkgs.go
     pkgs.hugo
     pkgs.wrangler
     pkgs.flyctl
+
+    # Languages
     pkgs.nodejs
     pkgs.pnpm
-    pkgs.mosh
+    pkgs.zig
+    pkgs.go
 
     # Apps
     pkgs.firefox
