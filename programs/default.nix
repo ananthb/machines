@@ -11,9 +11,7 @@
     '';
   };
 
-  nushell = {
-    enable = true;
-  };
+  nushell = import ./nushell.nix;
 
   alacritty = import ./alacritty.nix;
 

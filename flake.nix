@@ -328,7 +328,7 @@
                 };
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.ananth = import ./ananth.nix;
+                users.ananth = import ./home.nix;
               };
             }
           ];
