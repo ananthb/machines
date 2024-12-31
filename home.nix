@@ -20,6 +20,7 @@
     # Tools
     pkgs.nushell
     pkgs.fish
+    pkgs.wl-clipboard
     pkgs.mosh
     pkgs.atool
     pkgs.tree

@@ -1,49 +1,31 @@
 {
   enable = true;
 
+  globals.mapleader = " ";
+
   colorschemes.oxocarbon.enable = true;
 
   plugins = {
+    barbecue.enable = true;
+    bufferline.enable = true;
+    copilot-vim.enable = true;
+    glow.enable = true;
     lualine.enable = true;
-
-    # Includes all parsers for treesitter
-    treesitter = {
-      enable = true;
-    };
-
-    # Icons
+    navic.enable = true;
+    noice.enable = true;
+    nvim-autopairs.enable = true;
+    sleuth.enable = true;
+    trouble.enable = true;
+    treesitter.enable = true;
     web-devicons.enable = true;
-
-    sleuth = {
-      enable = true;
-    };
-
-    # Autopairs
-    nvim-autopairs = {
-      enable = true;
-    };
-
-    # Trouble
-    trouble = {
-      enable = true;
-    };
-
-    which-key = {
-      enable = true;
-    };
-
-    # Prettier fancier command window
-    noice = {
-      enable = true;
-    };
+    which-key.enable = true;
 
     # Good old Telescope
     telescope = {
       enable = true;
       extensions = {
-        fzf-native = {
-          enable = true;
-        };
+        fzf-native.enable = true;
+        file-browser.enable = true;
       };
       keymaps = {
         "<leader>f'" = {
@@ -67,22 +49,22 @@
           options.desc = "View commands";
         };
         "<leader>fb" = {
+          action = "file_browser";
+          options.desc = "Open File Browser";
+        };
+        "<leader>fB" = {
           action = "buffers";
           options.desc = "View buffers";
-        };
-        "<leader>fc" = {
-          action = "grep_string";
-          options.desc = "Grep string";
         };
         "<leader>fd" = {
           action = "diagnostics";
           options.desc = "View diagnostics";
         };
-        "<leader>ff" = {
-          action = "find_files";
-          options.desc = "Find files";
+        "<leader>fg" = {
+          action = "grep_string";
+          options.desc = "Grep string";
         };
-        "<leader><leader>" = {
+        "<leader>ff" = {
           action = "find_files";
           options.desc = "Find files";
         };
