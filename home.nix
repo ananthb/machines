@@ -52,6 +52,7 @@
     pkgs.wireshark
     pkgs.moolticute
     pkgs.neovide
+    pkgs.zed-editor
     pkgs.bruno
     pkgs.rpi-imager
     pkgs.vlc

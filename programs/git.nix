@@ -16,6 +16,7 @@
   };
 
   extraConfig = {
+    core.editor = "nvim";
     core.pager = "delta";
     user.useConfigOnly = "true";
     init.defaultBranch = "main";
