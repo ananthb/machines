@@ -36,10 +36,26 @@
       nixvim,
       ...
     }@inputs:
+    let
+      system = "x86_64-linux";
+
+      pkgs = import nixpkgs {
+        system = system;
+        config = {
+          allowUnfree = true;
+        };
+      };
+
+    in
+
     {
       nixosConfigurations = {
         defiant = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
+
+          specialArgs = inputs // {
+            pkgs = pkgs;
+          };
 
           modules = [
             lanzaboote.nixosModules.lanzaboote
@@ -324,7 +340,7 @@
             {
               home-manager = {
                 extraSpecialArgs = {
-                  inherit inputs;
+                  inherit inputs system;
                 };
                 useGlobalPkgs = true;
                 useUserPackages = true;

@@ -1,10 +1,10 @@
 {
   pkgs,
   inputs,
+  system,
   ...
 }:
 {
-
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
   ];
@@ -45,9 +45,9 @@
 
     # Apps
     pkgs.firefox
-    # pkgs.google-chrome
+    pkgs.google-chrome
     pkgs.alacritty
-    inputs.ghostty.packages.x86_64-linux.default
+    inputs.ghostty.packages.${system}.default
     pkgs.jellyfin-media-player
     pkgs.wireshark
     pkgs.moolticute
