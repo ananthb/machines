@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   system,
+  username,
   ...
 }:
 {
@@ -9,8 +10,8 @@
     inputs.nixvim.homeManagerModules.nixvim
   ];
 
-  home.username = "ananth";
-  home.homeDirectory = "/home/ananth";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
   home.sessionVariables.EDITOR = "nvim";
 
   home.packages = [

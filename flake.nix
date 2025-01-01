@@ -53,6 +53,7 @@
           let
             hostname = "defiant";
             system = "x86_64-linux";
+            username = "ananth";
           in
           nixpkgs.lib.nixosSystem {
             inherit system;
@@ -70,11 +71,11 @@
               {
                 home-manager = {
                   extraSpecialArgs = {
-                    inherit inputs system;
+                    inherit username inputs system;
                   };
                   useGlobalPkgs = true;
                   useUserPackages = true;
-                  users.ananth = import ./home.nix;
+                  users.${username} = import ./home.nix;
                 };
               }
             ];
