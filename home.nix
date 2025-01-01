@@ -18,11 +18,13 @@
     # Fonts
     pkgs.hack-font
 
-    # Tools
+    # Shell
     pkgs.nushell
     pkgs.fish
-    pkgs.wl-clipboard
     pkgs.mosh
+    pkgs.wl-clipboard
+
+    # Tools
     pkgs.atool
     pkgs.tree
     pkgs.git
@@ -38,6 +40,7 @@
     pkgs.hugo
     pkgs.wrangler
     pkgs.flyctl
+    pkgs.unzip
 
     # Languages
     pkgs.nodejs
