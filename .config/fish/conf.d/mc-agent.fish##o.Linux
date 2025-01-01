@@ -1,5 +1,0 @@
-set mc_agent_sock $XDG_RUNTIME_DIR/moolticute-ssh-agent.socket
-
-if test -S $mc_agent_sock
-  set -gx SSH_AUTH_SOCK $mc_agent_sock
-end

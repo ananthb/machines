@@ -1,8 +1,0 @@
-[Unit]
-Description = Socket activation for nvim headless server
-
-[Socket]
-ListenStream=6666
-
-[Install]
-WantedBy=sockets.target

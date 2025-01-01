@@ -1,8 +1,0 @@
-# vim: set filetype=toml
-
-[font]
-size = 14.0
-
-[terminal.shell]
-program = "/usr/bin/fish"
-args = ["-l", "-i", "-c" , "/usr/bin/tmux attach -t main || /usr/bin/tmux new-session -t main"]

@@ -1,9 +1,0 @@
-[Unit]
-Description=Nvim headless server
-After=network.target
-StopWhenUnneeded=true
-PrivateNetwork=yes
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/nvim --headless --listen localhost:6665
