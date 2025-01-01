@@ -13,16 +13,71 @@
     gitblame.enable = true;
     gitsigns.enable = true;
     glow.enable = true;
+    illuminate.enable = true;
     leap.enable = true;
+
+    # Language server
+    lsp = {
+      enable = true;
+
+      servers = {
+        bashls.enable = true;
+        clangd.enable = true;
+        cssls.enable = true;
+        dockerls.enable = true;
+
+        gopls = {
+          enable = true;
+          autostart = true;
+        };
+
+        html.enable = true;
+
+        ltex = {
+          enable = true;
+          settings = {
+            enabled = [
+              "html"
+              "latex"
+              "markdown"
+              "text"
+              "tex"
+              "gitcommit"
+            ];
+            completionEnabled = true;
+            language = "en-US";
+          };
+        };
+
+        lua_ls = {
+          enable = true;
+          settings.telemetry.enable = false;
+        };
+
+        marksman.enable = true;
+        nil_ls.enable = true;
+        pyright.enable = true;
+
+        # Rust
+        rust_analyzer = {
+          enable = true;
+          installRustc = true;
+          installCargo = true;
+        };
+
+        ts_ls.enable = true;
+        yamlls.enable = true;
+      };
+    };
+
+    lsp-format.enable = true;
+    lsp-signature.enable = true;
     lualine.enable = true;
     navic.enable = true;
     noice.enable = true;
+    none-ls.enable = true;
     nvim-autopairs.enable = true;
     sleuth.enable = true;
-    trouble.enable = true;
-    treesitter.enable = true;
-    web-devicons.enable = true;
-    which-key.enable = true;
 
     # Good old Telescope
     telescope = {
@@ -148,56 +203,9 @@
       };
     };
 
-    # Language server
-    lsp = {
-      enable = true;
-      servers = {
-        # Average webdev LSPs
-        # ts-ls.enable = true; # TS/JS
-        ts_ls.enable = true; # TS/JS
-        cssls.enable = true; # CSS
-        html.enable = true; # HTML
-        pyright.enable = true; # Python
-        marksman.enable = true; # Markdown
-        nil_ls.enable = true; # Nix
-        dockerls.enable = true; # Docker
-        bashls.enable = true; # Bash
-        clangd.enable = true; # C/C++
-        yamlls.enable = true; # YAML
-        ltex = {
-          enable = true;
-          settings = {
-            enabled = [
-              "html"
-              "latex"
-              "markdown"
-              "text"
-              "tex"
-              "gitcommit"
-            ];
-            completionEnabled = true;
-            language = "en-US";
-          };
-        };
-        gopls = {
-          # Golang
-          enable = true;
-          autostart = true;
-        };
-
-        lua_ls = {
-          # Lua
-          enable = true;
-          settings.telemetry.enable = false;
-        };
-
-        # Rust
-        rust_analyzer = {
-          enable = true;
-          installRustc = true;
-          installCargo = true;
-        };
-      };
-    };
+    trouble.enable = true;
+    treesitter.enable = true;
+    web-devicons.enable = true;
+    which-key.enable = true;
   };
 }
