@@ -67,6 +67,7 @@
 
         ts_ls.enable = true;
         yamlls.enable = true;
+        zls.enable = true;
       };
     };
 
@@ -207,5 +208,6 @@
     treesitter.enable = true;
     web-devicons.enable = true;
     which-key.enable = true;
+    zig.enable = true;
   };
 }
