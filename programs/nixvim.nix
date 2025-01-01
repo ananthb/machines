@@ -9,7 +9,11 @@
     barbecue.enable = true;
     bufferline.enable = true;
     copilot-vim.enable = true;
+    fugitive.enable = true;
+    gitblame.enable = true;
+    gitsigns.enable = true;
     glow.enable = true;
+    leap.enable = true;
     lualine.enable = true;
     navic.enable = true;
     noice.enable = true;
@@ -92,21 +96,21 @@
           action = "quickfix";
           options.desc = "Search quickfix";
         };
-        "<leader>gB" = {
-          action = "git_branches";
-          options.desc = "View git branches";
+        "<leader>gd" = {
+          action = "lsp_definitions";
+          options.desc = "Go to Definitions";
         };
-        "<leader>gC" = {
-          action = "git_commits";
-          options.desc = "View git commits";
+        "<leader>gr" = {
+          action = "lsp_references";
+          options.desc = "List References";
         };
-        "<leader>gs" = {
-          action = "git_status";
-          options.desc = "View git status";
+        "<leader>gI" = {
+          action = "lsp_implementations";
+          options.desc = "Go to Implementations";
         };
-        "<leader>gS" = {
-          action = "git_stash";
-          options.desc = "View git stashes";
+        "<leader>gt" = {
+          action = "lsp_type_definitions";
+          options.desc = "Go to Type Definitions";
         };
       };
     };

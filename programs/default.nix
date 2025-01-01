@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   alacritty = import ./alacritty.nix;
- 
- home-manager.enable = true;
+
+  home-manager.enable = true;
 
   fish = {
     enable = true;
@@ -13,10 +13,8 @@
 
   git = import ./git.nix;
 
-  gnupg.agent.enable = true;
-  
   nixvim = import ./nixvim.nix;
-  
+
   nushell = import ./nushell.nix;
 
   tmux = import ./tmux.nix pkgs;
