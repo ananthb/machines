@@ -9,6 +9,18 @@
     barbecue.enable = true;
     bufferline.enable = true;
     copilot-vim.enable = true;
+
+    cmp = {
+      enable = true;
+      autoEnableSources = true;
+      settings.sources = [
+        { name = "nvim_lsp"; }
+        { name = "path"; }
+        { name = "buffer"; }
+      ];
+    };
+    cmp-nvim-lsp.enable = true;
+
     fugitive.enable = true;
     gitblame.enable = true;
     gitsigns.enable = true;
@@ -19,6 +31,20 @@
     # Language server
     lsp = {
       enable = true;
+
+      inlayHints = true;
+
+      onAttach = ''
+                if not client.supports_method("textDocument/codeLens") then
+        	  return
+        	end
+        	local group = vim.api.nvim_create_augroup("LspCodeLens." .. bufnr, {})
+        	vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+        	  group = group,
+        	  buffer = bufnr,
+        	  callback = vim.lsp.codelens.refresh,
+        	})
+      '';
 
       servers = {
         bashls.enable = true;
@@ -75,6 +101,7 @@
     lsp-signature.enable = true;
     lualine.enable = true;
     navic.enable = true;
+    nix.enable = true;
     noice.enable = true;
     none-ls.enable = true;
     nvim-autopairs.enable = true;
