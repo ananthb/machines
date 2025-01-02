@@ -63,12 +63,9 @@
           enable = true;
           settings = {
             enabled = [
-              "html"
               "latex"
-              "markdown"
               "text"
               "tex"
-              "gitcommit"
             ];
             completionEnabled = true;
             language = "en-US";

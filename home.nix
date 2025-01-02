@@ -64,6 +64,7 @@
 
     # Gnome extensions
     pkgs.gnomeExtensions.appindicator
+    pkgs.gnomeExtensions.night-theme-switcher
   ];
 
   services.gnome-keyring.enable = true;
