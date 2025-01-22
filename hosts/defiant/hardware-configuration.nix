@@ -1,4 +1,9 @@
-{ lib, hostname, ... }:
+{
+  lib,
+  pkgs,
+  hostname,
+  ...
+}:
 {
   # Bootloader & SecureBoot
   boot = {
@@ -28,7 +33,6 @@
     initrd.systemd.enable = true;
     loader.efi.canTouchEfiVariables = true;
     loader.efi.efiSysMountPoint = "/efi";
-    plymouth.enable = true;
 
     lanzaboote = {
       enable = true;
@@ -37,6 +41,24 @@
 
     initrd.luks.devices."nixroot".device = "/dev/disk/by-uuid/2d37d757-cc63-49a8-8f9e-5f61d130a7dc";
 
+    plymouth.enable = true;
+
+    # Enable "Silent Boot"
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
+      "udev.log_priority=3"
+    ];
+    # Hide the OS choice for bootloaders.
+    # It's still possible to open the bootloader list by pressing any key
+    # It will just not appear on screen unless a key is pressed
+    loader.timeout = 0;
   };
 
   # Filesystems
