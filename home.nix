@@ -14,67 +14,65 @@
   home.homeDirectory = "/home/${username}";
   home.sessionVariables.EDITOR = "nvim";
 
-  home.packages = [
+  home.packages = with pkgs; [
     # Fonts
-    pkgs.hack-font
+    hack-font
 
     # Shell
-    pkgs.nushell
-    pkgs.fish
-    pkgs.mosh
-    pkgs.wl-clipboard
+    nushell
+    fish
+    mosh
+    wl-clipboard
 
     # Tools
-    pkgs.atool
-    pkgs.tree
-    pkgs.git
-    pkgs.curl
-    pkgs.ripgrep
-    pkgs.httpie
-    pkgs.htop
-    pkgs.delta
-    pkgs.tokei
-    pkgs.fzf
-    pkgs.git-credential-manager
-    pkgs.gcr
-    pkgs.hugo
-    pkgs.wrangler
-    pkgs.flyctl
-    pkgs.unzip
-
-    # Languages
-    pkgs.nodejs
-    pkgs.pnpm
-    pkgs.zig
-    pkgs.go
+    atool
+    tree
+    git
+    ripgrep
+    curl
+    httpie
+    htop
+    delta
+    tokei
+    fzf
+    git-credential-manager
+    gcr
+    unzip
 
     # Apps
-    pkgs.firefox
-    pkgs.google-chrome
-    pkgs.alacritty
+    firefox
+    google-chrome
+    alacritty
     inputs.ghostty.packages.${system}.default
-    pkgs.jellyfin-media-player
-    pkgs.wireshark
-    pkgs.moolticute
-    pkgs.neovide
-    pkgs.zed-editor
-    pkgs.bruno
-    pkgs.rpi-imager
-    pkgs.vlc
+    jellyfin-media-player
+    wireshark
+    moolticute
+    neovide
+    zed-editor
+    bruno
+    rpi-imager
+    vlc
 
     # Gnome extensions
-    pkgs.gnomeExtensions.appindicator
-    pkgs.gnomeExtensions.night-theme-switcher
+    gnomeExtensions.appindicator
+    gnomeExtensions.night-theme-switcher
+    gnomeExtensions.gsconnect
   ];
 
   services.gnome-keyring.enable = true;
 
-  dconf.settings = {
-    "org/gnome/shell" = {
-      disable-user-extensions = false;
-      enabled-extensions = [
-        "org.gnome.shell.extensions.appindicator"
-      ];
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/shell" = {
+        disable-user-extensions = false;
+        enabled-extensions = with pkgs.gnomeExtensions; [
+          appindicator.extensionUuid
+          night-theme-switcher.extensionUuid
+          gsconnect.extensionUuid
+          system-monitor.extensionUuid
+        ];
+      };
     };
   };
 

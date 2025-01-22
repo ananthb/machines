@@ -129,7 +129,10 @@
   };
   services.spice-vdagentd.enable = true;
 
-  services.udev.packages = [ pkgs.moolticute.udev ];
+  services.udev.packages = with pkgs; [
+    moolticute.udev
+    gnome.gnome-settings-daemon
+  ];
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
