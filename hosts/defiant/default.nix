@@ -131,7 +131,7 @@
 
   services.udev.packages = with pkgs; [
     moolticute.udev
-    gnome.gnome-settings-daemon
+    gnome-settings-daemon
   ];
 
   # Enable the OpenSSH daemon.
