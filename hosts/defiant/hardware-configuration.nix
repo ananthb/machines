@@ -121,7 +121,7 @@
   zramSwap.enable = true;
 
   # Host platform
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  nixpkgs.hostPlatform = pkgs.system;
   hardware.cpu.intel.updateMicrocode = true;
   hardware.enableRedistributableFirmware = true;
 
