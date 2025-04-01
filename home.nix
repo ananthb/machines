@@ -52,6 +52,9 @@
     bruno
     rpi-imager
     vlc
+    slack
+    discord
+    vscode
 
     # Gnome extensions
     gnomeExtensions.appindicator
