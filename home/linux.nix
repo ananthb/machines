@@ -7,7 +7,6 @@
     # Apps
     firefox
     google-chrome
-    alacritty
     inputs.ghostty.packages.${system}.default
     jellyfin-media-player
     wireshark
@@ -17,9 +16,9 @@
     bruno
     rpi-imager
     vlc
-    slack
     discord
     vscode
+    neovide
 
     gnomeExtensions.appindicator
     gnomeExtensions.night-theme-switcher
