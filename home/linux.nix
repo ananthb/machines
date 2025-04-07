@@ -1,43 +1,8 @@
-{
-  pkgs,
-  inputs,
-  system,
-  username,
-  ...
-}:
-{
-  imports = [
-    inputs.nixvim.homeManagerModules.nixvim
-  ];
-
-  home.username = username;
-  home.homeDirectory = "/home/${username}";
-  home.sessionVariables.EDITOR = "nvim";
-
+{ pkgs, ... }: {
   home.packages = with pkgs; [
-    # Fonts
-    hack-font
-
-    # Shell
-    nushell
-    fish
-    mosh
     wl-clipboard
-
-    # Tools
-    atool
-    tree
-    git
-    ripgrep
-    curl
-    httpie
-    htop
-    delta
-    tokei
-    fzf
     git-credential-manager
     gcr
-    unzip
 
     # Apps
     firefox
@@ -56,7 +21,6 @@
     discord
     vscode
 
-    # Gnome extensions
     gnomeExtensions.appindicator
     gnomeExtensions.night-theme-switcher
     gnomeExtensions.gsconnect
@@ -79,11 +43,5 @@
     };
   };
 
-  fonts = {
-    fontconfig.enable = true;
-  };
-
-  programs = import ./programs pkgs;
-
-  home.stateVersion = "24.05";
+  fonts = { fontconfig.enable = true; };
 }

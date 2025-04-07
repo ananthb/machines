@@ -13,11 +13,8 @@
     cmp = {
       enable = true;
       autoEnableSources = true;
-      settings.sources = [
-        { name = "nvim_lsp"; }
-        { name = "path"; }
-        { name = "buffer"; }
-      ];
+      settings.sources =
+        [ { name = "nvim_lsp"; } { name = "path"; } { name = "buffer"; } ];
     };
     cmp-nvim-lsp.enable = true;
 
@@ -62,11 +59,7 @@
         ltex = {
           enable = true;
           settings = {
-            enabled = [
-              "latex"
-              "text"
-              "tex"
-            ];
+            enabled = [ "latex" "text" "tex" ];
             completionEnabled = true;
             language = "en-US";
           };
@@ -199,32 +192,12 @@
     todo-comments = {
       enable = true;
       settings.colors = {
-        error = [
-          "DiagnosticError"
-          "ErrorMsg"
-          "#DC2626"
-        ];
-        warning = [
-          "DiagnosticWarn"
-          "WarningMsg"
-          "#FBBF24"
-        ];
-        info = [
-          "DiagnosticInfo"
-          "#2563EB"
-        ];
-        hint = [
-          "DiagnosticHint"
-          "#10B981"
-        ];
-        default = [
-          "Identifier"
-          "#7C3AED"
-        ];
-        test = [
-          "Identifier"
-          "#FF00FF"
-        ];
+        error = [ "DiagnosticError" "ErrorMsg" "#DC2626" ];
+        warning = [ "DiagnosticWarn" "WarningMsg" "#FBBF24" ];
+        info = [ "DiagnosticInfo" "#2563EB" ];
+        hint = [ "DiagnosticHint" "#10B981" ];
+        default = [ "Identifier" "#7C3AED" ];
+        test = [ "Identifier" "#FF00FF" ];
       };
     };
 

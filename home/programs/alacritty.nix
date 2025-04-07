@@ -23,27 +23,17 @@
       };
     };
 
-    selection = {
-      save_to_clipboard = true;
-    };
+    selection = { save_to_clipboard = true; };
 
-    window = {
-      dynamic_title = true;
-    };
+    window = { dynamic_title = true; };
 
-    general = {
-      live_config_reload = true;
-    };
+    general = { live_config_reload = true; };
 
     terminal = {
       shell = {
         program = "fish";
-        args = [
-          "-l"
-          "-i"
-          "-c"
-          "tmux attach -t main || tmux new-session -t main"
-        ];
+        args =
+          [ "-l" "-i" "-c" "tmux attach -t main || tmux new-session -t main" ];
       };
     };
   };

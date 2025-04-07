@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   enable = true;
   historyLimit = 100000;
   shortcut = "a";
@@ -24,5 +23,5 @@
       '';
     }
   ];
-  extraConfig = '''';
+  extraConfig = "";
 }
