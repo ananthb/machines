@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, inputs, ... }: {
   home.packages = with pkgs; [
     wl-clipboard
     git-credential-manager
@@ -16,9 +16,9 @@
     bruno
     rpi-imager
     vlc
-    discord
     vscode
     neovide
+    gimp
 
     gnomeExtensions.appindicator
     gnomeExtensions.night-theme-switcher

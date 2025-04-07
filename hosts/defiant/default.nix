@@ -46,6 +46,8 @@
     shell = pkgs.fish;
   };
 
+  programs.fish.enable = true;
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -80,6 +82,9 @@
     enable = true;
     pulse.enable = true;
   };
+
+  # Enable fingerprint reader daemon
+  services.fprintd.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
