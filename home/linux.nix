@@ -42,5 +42,9 @@
     };
   };
 
+  programs.fish.interactiveShellInit = ''
+    set fish_greeting ""
+  '';
+
   fonts = { fontconfig.enable = true; };
 }

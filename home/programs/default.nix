@@ -3,13 +3,7 @@
 
   home-manager.enable = true;
 
-  fish = {
-    enable = true;
-    interactiveShellInit = ''
-      set fish_greeting ""
-      set -gx DOCKER_HOST (limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')
-    '';
-  };
+  fish.enable = true;
 
   git = import ./git.nix {
     inherit lib;
