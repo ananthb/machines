@@ -35,6 +35,7 @@
     git-credential-manager
     gcr
     unzip
+    nix-output-monitor
   ];
 
   home.stateVersion = "24.05";
