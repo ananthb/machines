@@ -38,7 +38,7 @@
     enable = true;
     onActivation.autoUpdate = true;
     onActivation.cleanup = "zap";
-    brews = [ "mas" "lima" ];
+    brews = [ "mas" "lima" "docker" ];
     casks = [
       "google-chrome"
       "visual-studio-code"
