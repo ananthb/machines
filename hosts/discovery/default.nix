@@ -42,6 +42,10 @@
       "mas"
       "lima"
       "docker"
+      {
+        name = "neovim";
+	link = false;
+      }
     ];
     casks = [
       "google-chrome"
