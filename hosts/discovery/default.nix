@@ -30,7 +30,7 @@
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = [ pkgs.neovim ];
+  environment.systemPackages = [ ];
 
   fonts.packages = [ pkgs.hack-font ];
 
@@ -38,7 +38,11 @@
     enable = true;
     onActivation.autoUpdate = true;
     onActivation.cleanup = "zap";
-    brews = [ "mas" "lima" "docker" ];
+    brews = [
+      "mas"
+      "lima"
+      "docker"
+    ];
     casks = [
       "google-chrome"
       "visual-studio-code"
