@@ -36,6 +36,7 @@
     gcr
     unzip
     nix-output-monitor
+    kopia
   ];
 
   home.stateVersion = "24.05";

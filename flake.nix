@@ -146,6 +146,55 @@
             }
           ];
         };
+
+        enterprise = let
+          system = "aarch64-darwin";
+          username = "ananth";
+          hostname = "enterprise";
+        in nix-darwin.lib.darwinSystem {
+          inherit system;
+
+          specialArgs = inputs // {
+            inherit system;
+            pkgs = mkPkgs system;
+            hostname = hostname;
+          };
+
+          modules = [
+            ./hosts/enterprise
+
+            nix-homebrew.darwinModules.nix-homebrew
+            {
+              nix-homebrew = {
+                user = username;
+                enable = true;
+                taps = {
+                  "homebrew/homebrew-core" = homebrew-core;
+                  "homebrew/homebrew-cask" = homebrew-cask;
+                  "homebrew/homebrew-bundle" = homebrew-bundle;
+                };
+                mutableTaps = false;
+                autoMigrate = true;
+              };
+            }
+
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${username} = {
+                imports = [
+                  ./home/common.nix
+                  ./home/darwin.nix
+                ];
+              };
+              home-manager.extraSpecialArgs = {
+                inherit username inputs system;
+              };
+            }
+          ];
+        };
+
       };
     };
 }
