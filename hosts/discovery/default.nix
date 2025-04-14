@@ -53,10 +53,15 @@
       "wireshark"
       "discord"
       "slack"
+      "slack-cli"
       "vlc"
       "ghostty"
       "1password"
       "neovide"
+      "rectangle-pro"
+      "yubico-yubikey-manager"
+      "raspberry-pi-imager"
+      "scroll-reverser"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
