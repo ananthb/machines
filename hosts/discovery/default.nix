@@ -62,6 +62,7 @@
       "yubico-yubikey-manager"
       "raspberry-pi-imager"
       "scroll-reverser"
+      "bruno"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
