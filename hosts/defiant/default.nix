@@ -120,6 +120,17 @@
 
   services.udev.packages = with pkgs; [ moolticute.udev gnome-settings-daemon ];
 
+  # Allow wheel group to inhibit suspend and hibernate
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if ((action.id == "org.freedesktop.login1.inhibit" || 
+           action.id == "org.freedesktop.login1.inhibit-block-sleep")
+          && subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+      }
+    });
+  '';
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
