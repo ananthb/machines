@@ -186,6 +186,7 @@
                 imports = [
                   ./home/common.nix
                   ./home/darwin.nix
+                  ./home/arr.nix
                 ];
               };
               home-manager.extraSpecialArgs = {

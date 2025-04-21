@@ -53,6 +53,8 @@
       "ghostty"
       "neovide"
       "jellyfin"
+      "kopiaui"
+      "qbittorrent"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
