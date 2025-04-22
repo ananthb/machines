@@ -42,7 +42,7 @@
       "mas"
       {
         name = "neovim";
-	link = false;
+        link = false;
       }
     ];
     casks = [

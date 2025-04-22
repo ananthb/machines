@@ -1,5 +1,4 @@
-{ ... }:
-{
+{ ... }: {
   programs.fish.interactiveShellInit = ''
     set fish_greeting ""
     if command -q limactl

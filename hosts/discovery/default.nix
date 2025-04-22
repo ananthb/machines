@@ -44,7 +44,7 @@
       "docker"
       {
         name = "neovim";
-	link = false;
+        link = false;
       }
     ];
     casks = [

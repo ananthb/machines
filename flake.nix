@@ -135,10 +135,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.${username} = {
-                imports = [
-                  ./home/common.nix
-                  ./home/darwin.nix
-                ];
+                imports = [ ./home/common.nix ./home/darwin.nix ];
               };
               home-manager.extraSpecialArgs = {
                 inherit username inputs system;
@@ -183,11 +180,8 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.${username} = {
-                imports = [
-                  ./home/common.nix
-                  ./home/darwin.nix
-                  ./home/arr.nix
-                ];
+                imports =
+                  [ ./home/common.nix ./home/darwin.nix ./home/arr.nix ];
               };
               home-manager.extraSpecialArgs = {
                 inherit username inputs system;

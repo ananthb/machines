@@ -1,8 +1,1 @@
-{ pkgs, ... }:
-{
-  home.packages = with pkgs; [
-    radarr
-    sonarr
-    prowlarr
-  ];
-}
+{ pkgs, ... }: { home.packages = with pkgs; [ radarr sonarr prowlarr ]; }
