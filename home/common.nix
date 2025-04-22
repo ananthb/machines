@@ -37,6 +37,7 @@
     unzip
     nix-output-monitor
     kopia
+    flyctl
   ];
 
   home.stateVersion = "24.05";
