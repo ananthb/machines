@@ -55,6 +55,7 @@
       "jellyfin"
       "kopiaui"
       "qbittorrent"
+      "moolticute"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
