@@ -42,6 +42,7 @@
       "mas"
       "lima"
       "docker"
+      "docker-compose"
       {
         name = "neovim";
         link = false;
