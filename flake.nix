@@ -107,12 +107,12 @@
           inherit system;
 
           specialArgs = inputs // {
-            inherit system;
+            inherit system hostname username;
             pkgs = mkPkgs system;
-            hostname = hostname;
           };
 
           modules = [
+            ./hosts/darwin.nix
             ./hosts/discovery
 
             nix-homebrew.darwinModules.nix-homebrew
@@ -152,9 +152,8 @@
           inherit system;
 
           specialArgs = inputs // {
-            inherit system;
+            inherit system hostname username;
             pkgs = mkPkgs system;
-            hostname = hostname;
           };
 
           modules = [
