@@ -38,5 +38,24 @@
     enable = true;
     onActivation.autoUpdate = true;
     onActivation.cleanup = "zap";
+    brews = [
+      "mas"
+      {
+        name = "neovim";
+        link = false;
+      }
+    ];
+    casks = [
+      "google-chrome"
+      "visual-studio-code"
+      "ghostty"
+      "neovide"
+      "rectangle-pro"
+      "scroll-reverser"
+      "ddpm"
+      "browserosaurus"
+      "vlc"
+    ];
+    masApps = { "Tailscale" = 1475387142; };
   };
 }
