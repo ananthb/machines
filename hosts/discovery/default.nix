@@ -64,6 +64,7 @@
       "raspberry-pi-imager"
       "scroll-reverser"
       "bruno"
+      "ddpm"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };

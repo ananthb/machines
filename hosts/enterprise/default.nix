@@ -58,6 +58,7 @@
       "cloudflare-warp"
       "scroll-reverser"
       "rectangle-pro"
+      "ddpm"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
