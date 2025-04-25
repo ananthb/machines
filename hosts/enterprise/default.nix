@@ -56,6 +56,8 @@
       "kopiaui"
       "qbittorrent"
       "cloudflare-warp"
+      "scroll-reverser"
+      "rectangle-pro"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
