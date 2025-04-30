@@ -38,9 +38,7 @@
     enable = true;
     onActivation.autoUpdate = true;
     onActivation.cleanup = "zap";
-    taps = [
-      "homebrew/cask"
-    ];
+    taps = [ "homebrew/cask" ];
     brews = [
       "mas"
       {
