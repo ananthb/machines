@@ -2,11 +2,6 @@
   imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
   home.username = username;
-  home.homeDirectory = lib.mkDefault
-    (if lib.strings.hasSuffix "darwin" system then
-      "/home/${username}"
-    else
-      "/Users/${username}");
   home.sessionVariables.EDITOR = "nvim";
 
   programs = import ./programs args;

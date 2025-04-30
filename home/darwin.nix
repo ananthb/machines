@@ -1,4 +1,7 @@
-{ ... }: {
+{ lib, username, ... }: {
+  
+  home.homeDirectory = lib.mkForce "/Users/${username}";
+  
   programs.fish.interactiveShellInit = ''
     set fish_greeting ""
     if command -q limactl

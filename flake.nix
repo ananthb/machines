@@ -60,7 +60,6 @@
             })
           ];
         };
-
     in {
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
@@ -157,6 +156,7 @@
           };
 
           modules = [
+            ./hosts/darwin.nix
             ./hosts/enterprise
 
             nix-homebrew.darwinModules.nix-homebrew

@@ -1,4 +1,7 @@
-{ pkgs, inputs, ... }: {
+{ lib, pkgs, inputs, username, ... }: {
+
+  home.homeDirectory = lib.mkForce "/home/${username}";
+
   home.packages = with pkgs; [
     wl-clipboard
     git-credential-manager
