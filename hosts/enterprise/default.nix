@@ -10,7 +10,7 @@
     user = {
       agents = {
         dump1090 = {
-          command = "dump1090 --net";
+          command = "dump1090 --net --aggressive";
           serviceConfig = {
             KeepAlive = true;
             RunAtLoad = true;
