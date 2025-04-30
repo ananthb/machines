@@ -1,7 +1,7 @@
-{ pkgs, system, ... }:
+{ ... }:
 
 {
-  homebrew.brews = [ "nut" ];
+  homebrew.brews = [ "nut" "dump1090-mutability" ];
   homebrew.casks =
     [ "wireshark" "jellyfin" "kopiaui" "qbittorrent" "cloudflare-warp" ];
   homebrew.masApps = { };

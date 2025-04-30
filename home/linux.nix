@@ -1,6 +1,6 @@
 { lib, pkgs, inputs, username, ... }: {
 
-  home.homeDirectory = lib.mkForce "/home/${username}";
+  home.homeDirectory = "/home/${username}";
 
   home.packages = with pkgs; [
     wl-clipboard
