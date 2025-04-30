@@ -38,6 +38,9 @@
     enable = true;
     onActivation.autoUpdate = true;
     onActivation.cleanup = "zap";
+    taps = [
+      "homebrew/cask"
+    ];
     brews = [
       "mas"
       {
@@ -53,8 +56,8 @@
       "rectangle-pro"
       "scroll-reverser"
       "ddpm"
-      "browserosaurus"
       "vlc"
+      "logi-options+"
     ];
     masApps = { "Tailscale" = 1475387142; };
   };
