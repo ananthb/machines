@@ -47,6 +47,7 @@
           config = { allowUnfree = true; };
           overlays = [
             (self: super: {
+              # Use a custom version of karabiner-elements that works
               karabiner-elements = super.karabiner-elements.overrideAttrs
                 (old: {
                   version = "14.13.0";
@@ -57,6 +58,11 @@
                       "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
                   };
                 });
+
+              # Use nodejs 22 for all packages because 20 is broken right now.
+              # https://github.com/NixOS/nixpkgs/issues/402079#issuecomment-2848820056
+              nodejs = super.nodejs_22;
+              nodejs-slim = super.nodejs_22;
             })
           ];
         };
