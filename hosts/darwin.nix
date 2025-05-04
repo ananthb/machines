@@ -37,6 +37,7 @@
   homebrew = {
     enable = true;
     onActivation.autoUpdate = true;
+    onActivation.upgrade = true;
     onActivation.cleanup = "zap";
     taps = [ "homebrew/cask" ];
     brews = [
@@ -57,6 +58,14 @@
       "vlc"
       "logi-options+"
     ];
-    masApps = { "Tailscale" = 1475387142; };
+    masApps = {
+      "GarageBand" = 682658836;
+      "iMovie" = 408981434;
+      "Keynote" = 409183694;
+      "Numbers" = 409203825;
+      "Pages" = 409201541;
+      "Tailscale" = 1475387142;
+      "Velja" = 1607635845;
+    };
   };
 }
