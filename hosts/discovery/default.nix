@@ -1,7 +1,7 @@
 { pkgs, system, ... }:
 
 {
-  homebrew.brews = [ "lima" "docker" "docker-compose" ];
+  homebrew.brews = [ "lima" "docker" "docker-compose" "magic-wormhole" ];
   homebrew.casks = [
     "wireshark"
     "discord"
