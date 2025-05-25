@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  homebrew.brews = [ "nut" "dump1090-mutability" ];
+  homebrew.brews = [ "nut" "dump1090-mutability" "readsb" ];
   homebrew.casks =
     [ "wireshark" "jellyfin" "kopiaui" "qbittorrent" "cloudflare-warp" ];
   homebrew.masApps = { };
