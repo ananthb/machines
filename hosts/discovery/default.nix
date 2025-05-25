@@ -11,6 +11,7 @@
     "yubico-yubikey-manager"
     "raspberry-pi-imager"
     "bruno"
+    "ledger-live"
   ];
   homebrew.masApps = { "1Password for Safari" = 1569813296; };
 }
