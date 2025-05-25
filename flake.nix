@@ -2,10 +2,10 @@
   description = "A SecureBoot-enabled NixOS configurations";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     nix-darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-24.11";
+      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew = { url = "github:zhaofengli-wip/nix-homebrew"; };
@@ -22,16 +22,16 @@
       flake = false;
     };
 
-    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.1";
+      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.11";
+      url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -58,11 +58,6 @@
                       "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
                   };
                 });
-
-              # Use nodejs 22 for all packages because 20 is broken right now.
-              # https://github.com/NixOS/nixpkgs/issues/402079#issuecomment-2848820056
-              nodejs = super.nodejs_22;
-              nodejs-slim = super.nodejs_22;
             })
           ];
         };

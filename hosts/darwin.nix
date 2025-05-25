@@ -1,8 +1,10 @@
 { pkgs, system, username, ... }:
 
 {
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  # Set primary user because of the whole 
+  # 'run-services-as-root-for-better-multiuser-support' thing.
+  system.primaryUser = username;
+
   services.karabiner-elements.enable = true;
 
   # Necessary for using flakes on this system.
@@ -16,7 +18,7 @@
   nixpkgs.hostPlatform = system;
 
   # Add ability to used TouchID for sudo authentication
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   users.users.${username} = {
     name = username;
