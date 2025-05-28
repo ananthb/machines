@@ -44,22 +44,7 @@
       mkPkgs = sys:
         import nixpkgs {
           system = sys;
-          config = { allowUnfree = true; };
-          overlays = [
-            (self: super: {
-              # Use a custom version of karabiner-elements that works
-              karabiner-elements = super.karabiner-elements.overrideAttrs
-                (old: {
-                  version = "14.13.0";
-
-                  src = super.fetchurl {
-                    inherit (old.src) url;
-                    hash =
-                      "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
-                  };
-                });
-            })
-          ];
+          config.allowUnfree = true;
         };
     in {
 
@@ -86,7 +71,9 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
-                extraSpecialArgs = { inherit username inputs system; };
+                extraSpecialArgs = { 
+                  inherit username inputs system; 
+                };
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 users.${username} = {
