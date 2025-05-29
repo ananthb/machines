@@ -60,11 +60,12 @@
           inherit system;
 
           specialArgs = inputs // {
-            pkgs = mkPkgs system;
             hostname = hostname;
           };
 
           modules = [
+            ./configuration.nix
+
             lanzaboote.nixosModules.lanzaboote
             (import ./hosts/defiant)
 
@@ -92,10 +93,10 @@
           hostname = "discovery";
         in nix-darwin.lib.darwinSystem {
           inherit system;
+          pkgs = mkPkgs system;
 
           specialArgs = inputs // {
             inherit system hostname username;
-            pkgs = mkPkgs system;
           };
 
           modules = [
@@ -137,10 +138,10 @@
           hostname = "enterprise";
         in nix-darwin.lib.darwinSystem {
           inherit system;
+          pkgs = mkPkgs system;
 
           specialArgs = inputs // {
             inherit system hostname username;
-            pkgs = mkPkgs system;
           };
 
           modules = [
