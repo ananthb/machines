@@ -13,7 +13,7 @@
     user = {
       agents = {
         readsb = {
-          command = "/opt/homebrew/bin/readsb --net --aggressive";
+          command = "/opt/homebrew/bin/readsb --device-type rtlsdr --net-connector feed.airplanes.live,30004,beast_reduce_plus_out,feed.airplanes.live,64004 --uuid-file ~/Library/Application\ Support/readsb/airplanes.live/airplanes-uuid";
           serviceConfig = {
             KeepAlive = true;
             RunAtLoad = true;
