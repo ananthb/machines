@@ -51,41 +51,6 @@
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
 
-      nixosConfigurations = {
-        defiant = let
-          hostname = "defiant";
-          system = "x86_64-linux";
-          username = "ananth";
-        in nixpkgs.lib.nixosSystem {
-          inherit system;
-
-          specialArgs = inputs // {
-            hostname = hostname;
-          };
-
-          modules = [
-            ./configuration.nix
-
-            lanzaboote.nixosModules.lanzaboote
-            (import ./hosts/defiant)
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                extraSpecialArgs = { 
-                  inherit username inputs system; 
-                };
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${username} = {
-                  imports = [ ./home/common.nix ./home/linux.nix ];
-                };
-              };
-            }
-          ];
-        };
-      };
-
       darwinConfigurations = {
         discovery = let
           system = "aarch64-darwin";
