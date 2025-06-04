@@ -15,6 +15,7 @@
     "google-drive"
     "utm"
     "zed"
+    "jellyfin-media-player"
   ];
   homebrew.masApps = { "1Password for Safari" = 1569813296; };
 }
