@@ -39,8 +39,8 @@
   };
 
   outputs = { self, nixpkgs, lanzaboote, home-manager, nixvim, nix-darwin
-    , nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ... }@inputs:
-    {
+    , nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ...
+    }@inputs: {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
 
@@ -52,9 +52,7 @@
         in nix-darwin.lib.darwinSystem {
           inherit system;
 
-          specialArgs = inputs // {
-            inherit system hostname username;
-          };
+          specialArgs = inputs // { inherit system hostname username; };
 
           modules = [
             ./hosts/darwin.nix
@@ -96,9 +94,7 @@
         in nix-darwin.lib.darwinSystem {
           inherit system;
 
-          specialArgs = inputs // {
-            inherit system hostname username;
-          };
+          specialArgs = inputs // { inherit system hostname username; };
 
           modules = [
             ./hosts/darwin.nix
