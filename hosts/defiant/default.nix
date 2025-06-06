@@ -1,9 +1,13 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [ ./hardware-configuration.nix ];
 
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
     };
     gc = {
@@ -42,7 +46,12 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.ananth = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "libvirtd" "networkmanager" "systemd-journal" ];
+    extraGroups = [
+      "wheel"
+      "libvirtd"
+      "networkmanager"
+      "systemd-journal"
+    ];
     shell = pkgs.fish;
   };
 
@@ -118,7 +127,10 @@
   };
   services.spice-vdagentd.enable = true;
 
-  services.udev.packages = with pkgs; [ moolticute.udev gnome-settings-daemon ];
+  services.udev.packages = with pkgs; [
+    moolticute.udev
+    gnome-settings-daemon
+  ];
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;

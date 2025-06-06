@@ -1,4 +1,10 @@
-{ pkgs, inputs, username, ... }@args: {
+{
+  pkgs,
+  inputs,
+  username,
+  ...
+}@args:
+{
   imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
   home.username = username;

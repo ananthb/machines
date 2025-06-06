@@ -1,4 +1,11 @@
-{ lib, pkgs, inputs, username, ... }: {
+{
+  lib,
+  pkgs,
+  inputs,
+  username,
+  ...
+}:
+{
 
   home.homeDirectory = "/home/${username}";
 
@@ -49,5 +56,7 @@
     set fish_greeting ""
   '';
 
-  fonts = { fontconfig.enable = true; };
+  fonts = {
+    fontconfig.enable = true;
+  };
 }

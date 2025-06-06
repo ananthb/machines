@@ -1,4 +1,5 @@
-{ lib, system, ... }: {
+{ lib, system, ... }:
+{
   enable = true;
   userName = "Ananth Bhaskararaman";
   userEmail = "antsub@gmail.com";
@@ -21,15 +22,21 @@
     user.useConfigOnly = "true";
     init.defaultBranch = "main";
 
-    credential = let
-      store = if lib.strings.hasSuffix "linux" system then {
-        credentialStore = "secretservice";
-      } else
-        { };
-    in {
-      helper = "manager";
-      "https://github.com".username = "ananthb";
-    } // store;
+    credential =
+      let
+        store =
+          if lib.strings.hasSuffix "linux" system then
+            {
+              credentialStore = "secretservice";
+            }
+          else
+            { };
+      in
+      {
+        helper = "manager";
+        "https://github.com".username = "ananthb";
+      }
+      // store;
 
     color = {
       ui = "true";

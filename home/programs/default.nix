@@ -1,4 +1,10 @@
-{ lib, pkgs, system, ... }: {
+{
+  lib,
+  pkgs,
+  system,
+  ...
+}:
+{
   alacritty = import ./alacritty.nix;
 
   home-manager.enable = true;

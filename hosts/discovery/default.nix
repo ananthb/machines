@@ -1,7 +1,12 @@
 { ... }:
 
 {
-  homebrew.brews = [ "lima" "docker" "docker-compose" "magic-wormhole" ];
+  homebrew.brews = [
+    "lima"
+    "docker"
+    "docker-compose"
+    "magic-wormhole"
+  ];
   homebrew.casks = [
     "wireshark"
     "discord"
@@ -17,5 +22,7 @@
     "zed"
     "jellyfin-media-player"
   ];
-  homebrew.masApps = { "1Password for Safari" = 1569813296; };
+  homebrew.masApps = {
+    "1Password for Safari" = 1569813296;
+  };
 }

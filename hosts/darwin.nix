@@ -1,25 +1,29 @@
-{ pkgs, system, username, ... }:
+{
+  pkgs,
+  system,
+  username,
+  ...
+}:
 
 {
   nixpkgs.config.allowUnfree = true;
 
-  # Set primary user because of the whole 
+  # Set primary user because of the whole
   # 'run-services-as-root-for-better-multiuser-support' thing.
   system.primaryUser = username;
 
   services.karabiner-elements.enable = true;
   # See: https://github.com/nix-darwin/nix-darwin/issues/1041#issuecomment-2889787482
-  services.karabiner-elements.package = pkgs.karabiner-elements.overrideAttrs
-    (old: {
-      version = "14.13.0";
+  services.karabiner-elements.package = pkgs.karabiner-elements.overrideAttrs (old: {
+    version = "14.13.0";
 
-      src = pkgs.fetchurl {
-        inherit (old.src) url;
-        hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
-      };
+    src = pkgs.fetchurl {
+      inherit (old.src) url;
+      hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
+    };
 
-      dontFixup = true;
-    });
+    dontFixup = true;
+  });
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
