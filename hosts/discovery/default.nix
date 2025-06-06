@@ -1,4 +1,4 @@
-{ pkgs, system, ... }:
+{ ... }:
 
 {
   homebrew.brews = [ "lima" "docker" "docker-compose" "magic-wormhole" ];

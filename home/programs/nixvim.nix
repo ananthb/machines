@@ -1,6 +1,8 @@
 {
   enable = true;
 
+  nixpkgs.useGlobalPackages = true;
+
   globals.mapleader = " ";
 
   colorschemes.oxocarbon.enable = true;

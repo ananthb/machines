@@ -1,5 +1,5 @@
-{ username, ... }: {
-
+{ username, ... }:
+{
   home.homeDirectory = "/Users/${username}";
 
   programs.fish.interactiveShellInit = ''
