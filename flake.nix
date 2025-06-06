@@ -23,6 +23,14 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+    homebrew-ffmpeg = {
+      url = "github:homebrew-ffmpeg/homebrew-ffmpeg";
+      flake = false;
+    };
+    homebrew-amiaos = {
+      url = "github:amiaopensource/homebrew-amiaos";
+      flake = false;
+    };
 
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -54,6 +62,8 @@
       homebrew-bundle,
       homebrew-core,
       homebrew-cask,
+      homebrew-ffmpeg,
+      homebrew-amiaos,
       ...
     }@inputs:
     {
@@ -136,6 +146,8 @@
                     "homebrew/homebrew-core" = homebrew-core;
                     "homebrew/homebrew-cask" = homebrew-cask;
                     "homebrew/homebrew-bundle" = homebrew-bundle;
+                    "homebrew/homebrew-amiaos" = homebrew-amiaos;
+                    "homebrew/homebrew-ffmpeg" = homebrew-ffmpeg;
                   };
                   mutableTaps = false;
                   autoMigrate = true;

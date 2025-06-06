@@ -1,14 +1,13 @@
 { ... }:
 
 {
-  homebrew.taps = [ "homebrew-ffmpeg/ffmpeg" ];
   homebrew.brews = [
     "nut"
     "readsb"
     "chromaprint"
     "amiaopensource/amiaos/decklinksdk"
     {
-      name = "homebrew-ffmped/ffmpeg/ffmpeg";
+      name = "homebrew-ffmpeg/ffmpeg/ffmpeg";
       args = [ "with-chromaprint" ];
     }
   ];

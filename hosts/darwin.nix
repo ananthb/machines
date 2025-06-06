@@ -2,6 +2,7 @@
   pkgs,
   system,
   username,
+  config,
   ...
 }:
 
@@ -62,7 +63,8 @@
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
     onActivation.cleanup = "zap";
-    taps = [ "homebrew/cask" ];
+    taps = builtins.attrNames config.nix-homebrew.taps;
+
     brews = [
       "mas"
       {

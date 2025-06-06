@@ -207,6 +207,22 @@
         "type": "github"
       }
     },
+    "homebrew-amiaos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1748415151,
+        "narHash": "sha256-H09K4YzB0buF0OxFglrBf2pNr/Dj4EN1VdLjTyNjgfs=",
+        "owner": "amiaopensource",
+        "repo": "homebrew-amiaos",
+        "rev": "e05c682275359c0fbab9466641b84b2984b3ec2f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "amiaopensource",
+        "repo": "homebrew-amiaos",
+        "type": "github"
+      }
+    },
     "homebrew-bundle": {
       "flake": false,
       "locked": {
@@ -226,11 +242,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1749193701,
-        "narHash": "sha256-95AmcybiHRwH+zTmjsihHaj76rxei48SlHdiloPPaQg=",
+        "lastModified": 1749215907,
+        "narHash": "sha256-18zvdTSzPffbpqyCLB1T1okcZ9AIIOBRYt5Zgs5kmZE=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "1cc32eadf31827bf1ac1f24c353fb5125b671af5",
+        "rev": "a41dc9a72e312744fe6111aa32851d4b8e58153c",
         "type": "github"
       },
       "original": {
@@ -242,16 +258,32 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1749189355,
-        "narHash": "sha256-Pysy6VcWjTTKTK99xt00CvJ1uSxhZElsitFvg5TZ+ic=",
+        "lastModified": 1749218012,
+        "narHash": "sha256-tAFoHh0n6lW/YG0CCxM/xxtyeaif8qGYRLw0eQhMZiM=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "6b6b9022399dd75e6563db0c3d8bb81433e59625",
+        "rev": "48cbab2a6055315c932283069e77172cdc06b80c",
         "type": "github"
       },
       "original": {
         "owner": "homebrew",
         "repo": "homebrew-core",
+        "type": "github"
+      }
+    },
+    "homebrew-ffmpeg": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1741343729,
+        "narHash": "sha256-TmaPwqtC4ZF5QrDOVH/HwfBxEevC3HrizTvFE5o1pXY=",
+        "owner": "homebrew-ffmpeg",
+        "repo": "homebrew-ffmpeg",
+        "rev": "e07a0986acf0ba29487a4d1e46a03fc3e047c3b7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "homebrew-ffmpeg",
+        "repo": "homebrew-ffmpeg",
         "type": "github"
       }
     },
@@ -403,11 +435,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1748975233,
-        "narHash": "sha256-eLz/5C3qQN8w7dyLnY8zKdwLuHuS03s8csuLjTis2No=",
+        "lastModified": 1749205734,
+        "narHash": "sha256-GSU6VdK0IY1ukFV/0BrlShkuMUdNm7BG0RNTVHG0Jyg=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "8917e2e8ecc957037c712145ddcfce08d00c1cad",
+        "rev": "9a8a103ab2ce3bb2965a469a07d244277e68b56d",
         "type": "github"
       },
       "original": {
@@ -471,9 +503,11 @@
       "inputs": {
         "ghostty": "ghostty",
         "home-manager": "home-manager",
+        "homebrew-amiaos": "homebrew-amiaos",
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
+        "homebrew-ffmpeg": "homebrew-ffmpeg",
         "lanzaboote": "lanzaboote",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
