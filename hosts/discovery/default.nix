@@ -13,6 +13,9 @@
     "bruno"
     "ledger-live"
     "google-drive"
+    "jellyfin-media-player"
+    "utm"
+    "zed"
   ];
   homebrew.masApps = { "1Password for Safari" = 1569813296; };
 }

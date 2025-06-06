@@ -1,9 +1,5 @@
 { username, ... }:
 {
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
-
   home.homeDirectory = "/Users/${username}";
 
   programs.fish.interactiveShellInit = ''
