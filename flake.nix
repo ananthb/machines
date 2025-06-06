@@ -54,8 +54,6 @@
       homebrew-bundle,
       homebrew-core,
       homebrew-cask,
-      homebrew-ffmpeg,
-      homebrew-amiaos,
       ...
     }@inputs:
     {
