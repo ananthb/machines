@@ -4,12 +4,6 @@
   homebrew.brews = [
     "nut"
     "readsb"
-    "chromaprint"
-    "amiaopensource/amiaos/decklinksdk"
-    {
-      name = "homebrew-ffmpeg/ffmpeg/ffmpeg";
-      args = [ "with-chromaprint" ];
-    }
   ];
   homebrew.casks = [
     "wireshark"
