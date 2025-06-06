@@ -40,14 +40,7 @@
 
   outputs = { self, nixpkgs, lanzaboote, home-manager, nixvim, nix-darwin
     , nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, ... }@inputs:
-    let
-      mkPkgs = sys:
-        import nixpkgs {
-          system = sys;
-          config.allowUnfree = true;
-        };
-    in {
-
+    {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
 
@@ -58,7 +51,6 @@
           hostname = "discovery";
         in nix-darwin.lib.darwinSystem {
           inherit system;
-          pkgs = mkPkgs system;
 
           specialArgs = inputs // {
             inherit system hostname username;
@@ -103,7 +95,6 @@
           hostname = "enterprise";
         in nix-darwin.lib.darwinSystem {
           inherit system;
-          pkgs = mkPkgs system;
 
           specialArgs = inputs // {
             inherit system hostname username;

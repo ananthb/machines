@@ -1,6 +1,8 @@
 { pkgs, system, username, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
+
   # Set primary user because of the whole 
   # 'run-services-as-root-for-better-multiuser-support' thing.
   system.primaryUser = username;

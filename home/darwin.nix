@@ -1,4 +1,8 @@
-{ username, ... }: {
+{ username, ... }:
+{
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
 
   home.homeDirectory = "/Users/${username}";
 
