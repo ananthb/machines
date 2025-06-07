@@ -2,7 +2,6 @@
 
 {
   homebrew.brews = [
-    "nut"
     "readsb"
   ];
   homebrew.casks = [
