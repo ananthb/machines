@@ -69,7 +69,7 @@
 
         tsnet-serve-tv = {
           serviceConfig = {
-            Program = "/Users/ananth/Downloads/tsnet-serve";
+            Program = "/opt/homebrew/bin/tsnet-serve";
             ProgramArguments = [
               "-funnel"
               "-hostname" "tv"
