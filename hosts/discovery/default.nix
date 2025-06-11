@@ -6,6 +6,7 @@
     "docker"
     "docker-compose"
     "magic-wormhole"
+    "flyctl"
   ];
   homebrew.casks = [
     "wireshark"

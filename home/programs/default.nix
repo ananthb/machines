@@ -16,6 +16,8 @@
     inherit system;
   };
 
+  gpg = import ./gpg.nix;
+
   nixvim = import ./nixvim.nix;
 
   nushell = import ./nushell.nix;
