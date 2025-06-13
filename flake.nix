@@ -1,52 +1,49 @@
 {
   description = "A SecureBoot-enabled NixOS configurations";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin/nix-darwin-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-homebrew = {
-      url = "github:zhaofengli-wip/nix-homebrew";
-    };
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
+  inputs.nix-darwin = {
+    url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.sops-nix.url = "github:Mic92/sops-nix";
+  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+  inputs.nix-homebrew = {
+    url = "github:zhaofengli-wip/nix-homebrew";
+  };
+  inputs.homebrew-bundle = {
+    url = "github:homebrew/homebrew-bundle";
+    flake = false;
+  };
+  inputs.homebrew-core = {
+    url = "github:homebrew/homebrew-core";
+    flake = false;
+  };
+  inputs.homebrew-cask = {
+    url = "github:homebrew/homebrew-cask";
+    flake = false;
+  };
 
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+  inputs.home-manager.url = "github:nix-community/home-manager/release-25.05";
+  inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-    };
+  inputs.nixvim = {
+    url = "github:nix-community/nixvim/nixos-25.05";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  inputs.ghostty = {
+    url = "github:ghostty-org/ghostty";
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      lanzaboote,
+      sops-nix,
       home-manager,
       nixvim,
       nix-darwin,
@@ -75,6 +72,7 @@
             };
 
             modules = [
+              sops-nix.darwinModules.sops
               ./hosts/darwin.nix
               ./hosts/discovery
 
@@ -124,6 +122,7 @@
             };
 
             modules = [
+              sops-nix.darwinModules.sops
               ./hosts/darwin.nix
               ./hosts/enterprise
 

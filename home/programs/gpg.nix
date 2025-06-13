@@ -1,7 +1,7 @@
 {
-  enable = true; 
-  publicKeys = [];
+  enable = true;
+  publicKeys = [ ];
   settings = {
-    use-agent = true; 
+    use-agent = true;
   };
 }

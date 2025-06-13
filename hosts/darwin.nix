@@ -72,7 +72,7 @@
         link = false;
       }
       "openssh" # needed for yubikey ssh keys
-     ];
+    ];
     casks = [
       "google-chrome"
       "visual-studio-code"
