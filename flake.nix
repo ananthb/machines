@@ -74,7 +74,7 @@
             modules = [
               sops-nix.darwinModules.sops
               ./hosts/darwin.nix
-              ./hosts/discovery
+              ./hosts/discovery/config.nix
 
               nix-homebrew.darwinModules.nix-homebrew
               {
