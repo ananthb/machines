@@ -124,7 +124,7 @@
             modules = [
               sops-nix.darwinModules.sops
               ./hosts/darwin.nix
-              ./hosts/enterprise
+              ./hosts/enterprise/config.nix
 
               nix-homebrew.darwinModules.nix-homebrew
               {
@@ -150,6 +150,7 @@
                     ./home/common.nix
                     ./home/darwin.nix
                     ./home/arr.nix
+                    ./hosts/enterprise/home.nix
                   ];
                 };
                 home-manager.extraSpecialArgs = {
