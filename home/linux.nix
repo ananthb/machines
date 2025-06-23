@@ -1,7 +1,5 @@
 {
-  lib,
   pkgs,
-  inputs,
   username,
   ...
 }:
@@ -17,7 +15,7 @@
     # Apps
     firefox
     google-chrome
-    inputs.ghostty.packages.${system}.default
+    ghostty
     jellyfin-media-player
     wireshark
     moolticute

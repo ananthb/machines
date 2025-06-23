@@ -35,10 +35,6 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  inputs.ghostty = {
-    url = "github:ghostty-org/ghostty";
-  };
-
   outputs =
     {
       self,
@@ -99,6 +95,7 @@
                   imports = [
                     ./home/common.nix
                     ./home/darwin.nix
+                    ./hosts/discovery/home.nix
                   ];
                 };
                 home-manager.extraSpecialArgs = {
