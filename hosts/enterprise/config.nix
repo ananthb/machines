@@ -153,6 +153,8 @@
               "/Users/ananth/Library/Application\ Support/tsnet-serve/tv"
               "-backend"
               "localhost:8096"
+              "-denied-paths"
+              "/metrics"
             ];
             ProcessType = "Background";
             KeepAlive = true;
