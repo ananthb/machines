@@ -22,6 +22,10 @@
     user.useConfigOnly = "true";
     init.defaultBranch = "main";
 
+    # signing
+    gpg.format = "ssh";
+    user.signingkey = "~/.ssh/id_ed25519_sk.pub";
+
     credential =
       let
         store =
