@@ -25,6 +25,7 @@
     # signing
     gpg.format = "ssh";
     user.signingkey = "~/.ssh/id_ed25519_sk.pub";
+    commit.gpgsign = "true";
 
     credential =
       let
