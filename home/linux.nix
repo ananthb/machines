@@ -54,6 +54,14 @@
     set fish_greeting ""
   '';
 
+  programs.git.extraConfig = {
+    credential = {
+      helper = "manager";
+      "https://github.com".username = "ananthb";
+      credentialStore = "secretservice";
+    };
+  };
+
   fonts = {
     fontconfig.enable = true;
   };

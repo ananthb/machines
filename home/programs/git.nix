@@ -22,27 +22,6 @@
     user.useConfigOnly = "true";
     init.defaultBranch = "main";
 
-    # signing
-    gpg.format = "ssh";
-    user.signingkey = "~/.ssh/id_ed25519_sk.pub";
-    commit.gpgsign = "true";
-
-    credential =
-      let
-        store =
-          if lib.strings.hasSuffix "linux" system then
-            {
-              credentialStore = "secretservice";
-            }
-          else
-            { };
-      in
-      {
-        helper = "manager";
-        "https://github.com".username = "ananthb";
-      }
-      // store;
-
     color = {
       ui = "true";
       diff = "auto";
