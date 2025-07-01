@@ -33,7 +33,7 @@
     options = [ "subvol=@" ];
   };
 
-  boot.initrd.luks.devices."nixos".device = "/dev/disk/by-uuid/cc6a5172-3299-494d-b0ec-c23ae75f0bf6";
+  boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/cc6a5172-3299-494d-b0ec-c23ae75f0bf6";
 
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
@@ -41,10 +41,15 @@
     options = [ "subvol=@home" ];
   };
 
-  fileSystems."/var" = {
+  fileSystems."/nix" = {
     device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
     fsType = "btrfs";
-    options = [ "subvol=@var" ];
+    options = [ "subvol=@nix" ];
+  };
+  
+  fileSystems."/var" = {
+    device = "/dev/disk/by-uuid/2b8303be-0372-4dfe-8430-03d15c27629c";
+    fsType = "btrfs";
   };
 
   fileSystems."/boot" = {
