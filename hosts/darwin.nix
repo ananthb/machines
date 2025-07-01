@@ -53,9 +53,9 @@
   programs.fish.enable = true;
 
   programs.ssh.extraConfig = ''
-  Host *
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_ed25519_sk
+    Host *
+      AddKeysToAgent yes
+      IdentityFile ~/.ssh/id_ed25519_sk
   '';
 
   # List packages installed in system profile. To search by name, run:

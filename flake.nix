@@ -3,13 +3,16 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
+  inputs.sops-nix.url = "github:Mic92/sops-nix";
+  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+  inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
+  inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
+
   inputs.nix-darwin = {
     url = "github:LnL7/nix-darwin/nix-darwin-25.05";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-
-  inputs.sops-nix.url = "github:Mic92/sops-nix";
-  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.nix-homebrew = {
     url = "github:zhaofengli-wip/nix-homebrew";
@@ -40,6 +43,7 @@
       self,
       nixpkgs,
       sops-nix,
+      lanzaboote,
       home-manager,
       nixvim,
       nix-darwin,
@@ -52,6 +56,43 @@
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-rfc-style;
+
+      nixosConfigurations = {
+        endeavour =
+          let
+            system = "x86_64-linux";
+            username = "ananth";
+            hostname = "endeavour";
+          in
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+
+            specialArgs = inputs // {
+              inherit system hostname username;
+            };
+
+            modules = [
+              lanzaboote.nixosModules.lanzaboote
+              ./hosts/linux.nix
+              ./hosts/endeavour
+
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.${username} = {
+                  imports = [
+                    ./home/common.nix
+                    ./home/linux-headless.nix
+                  ];
+                };
+                home-manager.extraSpecialArgs = {
+                  inherit username inputs system;
+                };
+              }
+            ];
+          };
+      };
 
       darwinConfigurations = {
         discovery =

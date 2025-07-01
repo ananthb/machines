@@ -1,35 +1,32 @@
-{ pkgs, ... }:
+{
+  lib,
+  pkgs,
+  hostname,
+  ...
+}:
 {
   imports = [ ./hardware-configuration.nix ];
 
-  nix = {
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-    };
+  networking.hostName = hostname;
+
+  # systemd-boot
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.initrd.systemd.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/var/lib/sbctl";
   };
 
   # System packages
-  environment.systemPackages = [
-    pkgs.nixfmt-rfc-style
-    pkgs.sbctl
-    pkgs.tpm2-tss
-    pkgs.accountsservice
-    pkgs.virt-manager
-    pkgs.virt-viewer
-    pkgs.spice
-    pkgs.spice-gtk
-    pkgs.spice-protocol
-    pkgs.win-virtio
-    pkgs.win-spice
-    pkgs.adwaita-icon-theme
+  environment.systemPackages = with pkgs; [
+    tpm2-tss
+    virt-manager
+    spice
+    spice-gtk
+    spice-protocol
+    win-virtio
+    win-spice
   ];
 
   # Set your time zone.
@@ -42,18 +39,6 @@
   #   keyMap = "us";
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.ananth = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "libvirtd"
-      "networkmanager"
-      "systemd-journal"
-    ];
-    shell = pkgs.fish;
-  };
 
   programs.fish.enable = true;
 
@@ -70,33 +55,6 @@
   # Enable resolved and avahi
   services.resolved.enable = true;
   services.avahi.enable = true;
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  hardware.pulseaudio.enable = false;
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
-
-  # Enable fingerprint reader daemon
-  services.fprintd.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
 
   services.prometheus.exporters.node = {
     enable = true;
@@ -128,7 +86,6 @@
   services.spice-vdagentd.enable = true;
 
   services.udev.packages = with pkgs; [
-    moolticute.udev
     gnome-settings-daemon
   ];
 
