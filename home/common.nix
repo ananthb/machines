@@ -33,8 +33,6 @@
     delta
     tokei
     fzf
-    git-credential-manager
-    gcr
     unzip
     nix-output-monitor
     kopia
