@@ -41,7 +41,12 @@
         ];
       };
       home-manager.extraSpecialArgs = {
-        inherit username system pkgs nixvim;
+        inherit
+          username
+          system
+          pkgs
+          nixvim
+          ;
       };
     }
   ];

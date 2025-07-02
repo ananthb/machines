@@ -2,6 +2,7 @@
   lib,
   pkgs,
   hostname,
+  username,
   ...
 }:
 {
@@ -61,6 +62,8 @@
   };
 
   services = import ./services.nix { };
+
+  security = import ./security.nix username;
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
