@@ -2,7 +2,6 @@
   pkgs,
   nixvim,
   username,
-  config,
   ...
 }@args:
 {
@@ -11,9 +10,8 @@
   home.username = username;
   home.sessionVariables.EDITOR = "nvim";
 
-  home.file."${config.xdg.configHome}/.ssh/id_ed25519_sk.pub" = {
-    source = ../ssh/id_ed25519_sk.pub;
-    mode = "0644";
+  home.file = {
+    ".ssh/id_ed25519_sk.pub".source = ../ssh/id_ed25519_sk.pub;
   };
 
   programs = import ./programs args;
