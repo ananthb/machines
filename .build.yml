@@ -3,8 +3,8 @@ image: archlinux
 secrets:
   - ae5292da-26ac-47e8-a81d-7565c4f35697
 sources:
-  - git@git.sr.ht:~ananth/machines.git
+  - git@git.sr.ht:~ananth/machines
 tasks:
   - mirror: |
       cd machines
-      git push --mirror git@github.com:ananthb/machines.git 
+      git push --mirror git@github.com:ananthb/machines
