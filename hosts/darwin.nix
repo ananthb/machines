@@ -3,10 +3,48 @@
   system,
   username,
   config,
+  nix-homebrew,
+  homebrew-core,
+  homebrew-cask,
+  homebrew-bundle,
+  home-manager,
   ...
 }:
 
 {
+
+  imports = [
+    nix-homebrew.darwinModules.nix-homebrew
+    {
+      nix-homebrew = {
+        user = username;
+        enable = true;
+        taps = {
+          "homebrew/homebrew-core" = homebrew-core;
+          "homebrew/homebrew-cask" = homebrew-cask;
+          "homebrew/homebrew-bundle" = homebrew-bundle;
+        };
+        mutableTaps = false;
+        autoMigrate = true;
+      };
+    }
+
+    home-manager.darwinModules.home-manager
+    {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.users.${username} = {
+        imports = [
+          ./home/common.nix
+          ./home/darwin.nix
+        ];
+      };
+      home-manager.extraSpecialArgs = {
+        inherit username inputs system;
+      };
+    }
+  ];
+
   nixpkgs.config.allowUnfree = true;
 
   # Set primary user because of the whole

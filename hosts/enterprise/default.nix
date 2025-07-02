@@ -5,8 +5,6 @@
     "readsb"
   ];
   homebrew.casks = [
-    "wireshark"
-    "jellyfin"
     "kopiaui"
     "utm"
     "jellyfin-media-player"

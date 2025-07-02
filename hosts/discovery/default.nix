@@ -9,7 +9,6 @@
     "flyctl"
   ];
   homebrew.casks = [
-    "wireshark"
     "discord"
     "slack"
     "slack-cli"

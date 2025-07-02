@@ -96,38 +96,7 @@
             modules = [
               sops-nix.darwinModules.sops
               ./hosts/darwin.nix
-              ./hosts/discovery/config.nix
-
-              nix-homebrew.darwinModules.nix-homebrew
-              {
-                nix-homebrew = {
-                  user = username;
-                  enable = true;
-                  taps = {
-                    "homebrew/homebrew-core" = homebrew-core;
-                    "homebrew/homebrew-cask" = homebrew-cask;
-                    "homebrew/homebrew-bundle" = homebrew-bundle;
-                  };
-                  mutableTaps = false;
-                  autoMigrate = true;
-                };
-              }
-
-              home-manager.darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.${username} = {
-                  imports = [
-                    ./home/common.nix
-                    ./home/darwin.nix
-                    ./hosts/discovery/home.nix
-                  ];
-                };
-                home-manager.extraSpecialArgs = {
-                  inherit username inputs system;
-                };
-              }
+              ./hosts/discovery
             ];
           };
 
@@ -147,38 +116,7 @@
             modules = [
               sops-nix.darwinModules.sops
               ./hosts/darwin.nix
-              ./hosts/enterprise/config.nix
-
-              nix-homebrew.darwinModules.nix-homebrew
-              {
-                nix-homebrew = {
-                  user = username;
-                  enable = true;
-                  taps = {
-                    "homebrew/homebrew-core" = homebrew-core;
-                    "homebrew/homebrew-cask" = homebrew-cask;
-                    "homebrew/homebrew-bundle" = homebrew-bundle;
-                  };
-                  mutableTaps = false;
-                  autoMigrate = true;
-                };
-              }
-
-              home-manager.darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.${username} = {
-                  imports = [
-                    ./home/common.nix
-                    ./home/darwin.nix
-                    ./hosts/enterprise/home.nix
-                  ];
-                };
-                home-manager.extraSpecialArgs = {
-                  inherit username inputs system;
-                };
-              }
+              ./hosts/enterprise
             ];
           };
 
