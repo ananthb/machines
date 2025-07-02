@@ -1,0 +1,10 @@
+---
+image: archlinux
+packages:
+  - git
+secrets:
+- 46f739e5-4538-45dd-a79f-bf173b7a2ed9
+sources:
+  - git@git.sr.ht:~ananth/machines.git
+tasks:
+  - mirror: git push --mirror git@github.com:ananthb/machines.git 
