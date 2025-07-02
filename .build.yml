@@ -1,7 +1,7 @@
 ---
 image: archlinux
 secrets:
-  - 46f739e5-4538-45dd-a79f-bf173b7a2ed9
+  - ae5292da-26ac-47e8-a81d-7565c4f35697
 sources:
   - git@git.sr.ht:~ananth/machines.git
 tasks:
