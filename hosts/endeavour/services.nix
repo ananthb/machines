@@ -1,6 +1,9 @@
 { }:
 
 {
+  # Enable the OpenSSH daemon.
+  openssh.enable = true;
+
   # Enable resolved and avahi
   resolved.enable = true;
   avahi.enable = true;

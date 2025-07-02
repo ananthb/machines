@@ -63,10 +63,7 @@
 
   services = import ./services.nix { };
 
-  security = import ./security.nix username;
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  security = import ./security.nix { inherit username; };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
