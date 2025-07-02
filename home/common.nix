@@ -1,11 +1,11 @@
 {
   pkgs,
-  inputs,
+  nixvim,
   username,
   ...
 }@args:
 {
-  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
+  imports = [ nixvim.homeManagerModules.nixvim ];
 
   home.username = username;
   home.sessionVariables.EDITOR = "nvim";

@@ -2,7 +2,8 @@
   pkgs,
   system,
   username,
-  inputs,
+  home-manager,
+  nixvim,
   ...
 }:
 
@@ -10,7 +11,7 @@
 
   imports = [
 
-    inputs.home-manager.nixosModules.home-manager
+    home-manager.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
@@ -21,7 +22,7 @@
         ];
       };
       home-manager.extraSpecialArgs = {
-        inherit username inputs system;
+        inherit username system nixvim;
       };
     }
 
