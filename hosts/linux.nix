@@ -54,7 +54,7 @@
   environment.shells = [ pkgs.fish ];
   environment.etc."ssh/authorized_keys.d/${username}" = {
     mode = "0644";
-    source = ../authorized_keys/${username};
+    source = ../ssh/authorized_keys/${username};
   };
 
   programs.fish.enable = true;
