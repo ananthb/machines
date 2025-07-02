@@ -2,10 +2,31 @@
   pkgs,
   system,
   username,
+  inputs,
   ...
 }:
 
 {
+
+  imports = [
+
+    inputs.home-manager.nixosModules.home-manager
+    {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.users.${username} = {
+        imports = [
+          ../home/common.nix
+          ../home/linux.nix
+        ];
+      };
+      home-manager.extraSpecialArgs = {
+        inherit username inputs system;
+      };
+    }
+
+  ];
+
   nixpkgs.config.allowUnfree = true;
 
   # Necessary for using flakes on this system.
