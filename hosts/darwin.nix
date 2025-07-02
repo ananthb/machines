@@ -3,6 +3,7 @@
   system,
   username,
   config,
+  nixvim,
   nix-homebrew,
   homebrew-core,
   homebrew-cask,
@@ -35,12 +36,12 @@
       home-manager.useUserPackages = true;
       home-manager.users.${username} = {
         imports = [
-          ./home/common.nix
-          ./home/darwin.nix
+          ../home/common.nix
+          ../home/darwin.nix
         ];
       };
       home-manager.extraSpecialArgs = {
-        inherit username inputs system;
+        inherit username system pkgs nixvim;
       };
     }
   ];
