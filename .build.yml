@@ -5,6 +5,8 @@ secrets:
   - d364323f-1d50-49ad-8639-706df644d8c0
 sources:
   - git@git.sr.ht:~ananth/machines
+packages:
+  - jq
 tasks:
   - trust_gh_host_keys: |
       curl -L \
