@@ -46,7 +46,7 @@
     fsType = "btrfs";
     options = [ "subvol=@nix" ];
   };
-  
+
   fileSystems."/var" = {
     device = "/dev/disk/by-uuid/2b8303be-0372-4dfe-8430-03d15c27629c";
     fsType = "btrfs";

@@ -75,21 +75,6 @@
               lanzaboote.nixosModules.lanzaboote
               ./hosts/linux.nix
               ./hosts/endeavour
-
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.${username} = {
-                  imports = [
-                    ./home/common.nix
-                    ./home/linux-headless.nix
-                  ];
-                };
-                home-manager.extraSpecialArgs = {
-                  inherit username inputs system;
-                };
-              }
             ];
           };
       };
@@ -187,7 +172,6 @@
                   imports = [
                     ./home/common.nix
                     ./home/darwin.nix
-                    ./home/arr.nix
                     ./hosts/enterprise/home.nix
                   ];
                 };

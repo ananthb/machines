@@ -3,8 +3,6 @@
 {
   homebrew.brews = [
     "readsb"
-    "meilisearch"
-    "tsnet-serve"
   ];
   homebrew.casks = [
     "wireshark"
@@ -12,7 +10,6 @@
     "kopiaui"
     "utm"
     "jellyfin-media-player"
-    "cloudflare-warp"
   ];
   homebrew.masApps = { };
 
@@ -139,42 +136,6 @@
             RunAtLoad = true;
             StandardOutPath = "/Users/ananth/Library/Logs/mlat-client/adsbexchange.log";
             StandardErrorPath = "/Users/ananth/Library/Logs/mlat-client/adsbexchange.log";
-          };
-        };
-
-        tsnet-serve-tv = {
-          serviceConfig = {
-            ProgramArguments = [
-              "/opt/homebrew/bin/tsnet-serve"
-              "-funnel"
-              "-hostname"
-              "tv"
-              "-state-dir"
-              "/Users/ananth/Library/Application\ Support/tsnet-serve/tv"
-              "-backend"
-              "localhost:8096"
-              "-denied-paths"
-              "/metrics"
-            ];
-            ProcessType = "Background";
-            KeepAlive = true;
-            RunAtLoad = true;
-            StandardOutPath = "/Users/ananth/Library/Logs/tsnet-serve/tv.log";
-            StandardErrorPath = "/Users/ananth/Library/Logs/tsnet-serve/tv.log";
-          };
-        };
-
-        warp-proxy-proxy = {
-          serviceConfig = {
-            ProgramArguments = [
-              "/etc/profiles/per-user/ananth/bin/socat"
-              "-d"
-              "TCP6-LISTEN:8888,fork,reuseaddr"
-              "TCP:localhost:8887"
-            ];
-            ProcessType = "Background";
-            KeepAlive = true;
-            RunAtLoad = true;
           };
         };
       };
