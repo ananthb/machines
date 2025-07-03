@@ -11,7 +11,7 @@
   home.sessionVariables.EDITOR = "nvim";
 
   home.file = {
-    ".ssh/id_ed25519_sk.pub".source = ../ssh/id_ed25519_sk.pub;
+    ".ssh/id_ed25519_sk.pub".source = ../keys/ssh/id_ed25519_sk.pub;
   };
 
   programs = import ./programs args;

@@ -2,13 +2,18 @@
   lib,
   pkgs,
   hostname,
-  username,
   ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
   ];
+
+  systemd.enableEmergencyMode = false;
+  systemd.sleep.extraConfig = ''
+    AllowSuspend=no
+    AllowHibernation=no
+  '';
 
   networking.hostName = hostname;
 
@@ -30,6 +35,7 @@
     spice-protocol
     win-virtio
     win-spice
+    pam_rssh
 
     jellyfin
     jellyfin-web
@@ -63,7 +69,15 @@
 
   services = import ./services.nix { };
 
-  security = import ./security.nix { inherit username; };
+  security = {
+    pam.rssh.enable = true;
+    pam.rssh.settings = {
+      auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
+      loglevel = "debug";
+    };
+    pam.services.sudo.rssh = true;
+    pam.services.sshd.rssh = true;
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

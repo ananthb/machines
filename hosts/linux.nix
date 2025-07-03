@@ -49,13 +49,17 @@
       "libvirtd"
       "systemd-journal"
     ];
+    openssh.authorizedKeys.keyFiles = [
+      ../keys/ssh/id_ed25519_sk.pub
+    ];
+  };
+
+  security.pam.services = {
+    login.u2fAuth = true;
+    sudo.u2fAuth = true;
   };
 
   environment.shells = [ pkgs.fish ];
-  environment.etc."ssh/authorized_keys.d/${username}" = {
-    mode = "0644";
-    source = ../ssh/authorized_keys/${username};
-  };
 
   programs.fish.enable = true;
 
