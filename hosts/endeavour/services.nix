@@ -4,6 +4,7 @@
   # Enable the OpenSSH daemon.
   openssh.enable = true;
   openssh.settings.PermitRootLogin = "no";
+  openssh.settings.PasswordAuthentication = false;
 
   # Enable resolved and avahi
   resolved.enable = true;
