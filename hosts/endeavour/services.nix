@@ -1,4 +1,4 @@
-{ }:
+{ pkgs, ...}:
 
 {
   # Enable the OpenSSH daemon.
@@ -63,6 +63,9 @@
 
   jellyfin.enable = true;
   jellyfin.openFirewall = true;
+
+  transmission.enable = true;
+  transmission.package = pkgs.transmission_4;
 
   radarr = {
     enable = true;

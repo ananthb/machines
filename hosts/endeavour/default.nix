@@ -2,11 +2,18 @@
   lib,
   pkgs,
   hostname,
+  username,
   ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
+  ];
+
+  users.groups.transmission.members = [
+    username
+    "radarr"
+    "sonarr"
   ];
 
   systemd.enableEmergencyMode = false;
@@ -67,7 +74,7 @@
     spiceUSBRedirection.enable = true;
   };
 
-  services = import ./services.nix { };
+  services = import ./services.nix { inherit pkgs; };
 
   security = {
     pam.rssh.enable = true;
