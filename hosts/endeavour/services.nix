@@ -1,4 +1,4 @@
-{ pkgs, ...}:
+{ pkgs, ... }:
 
 {
   # Enable the OpenSSH daemon.
@@ -62,18 +62,26 @@
   };
 
   jellyfin.enable = true;
+  jellyfin.group = "media";
   jellyfin.openFirewall = true;
 
-  transmission.enable = true;
-  transmission.package = pkgs.transmission_4;
-  transmission.settings.umask = "002";
+  transmission = {
+    enable = true;
+    package = pkgs.transmission_4;
+    group = "media";
+    settings = {
+      umask = "002";
+    };
+  };
 
   radarr = {
     enable = true;
+    group = "media";
   };
 
   sonarr = {
     enable = true;
+    group = "media";
   };
 
   prowlarr = {

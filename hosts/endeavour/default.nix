@@ -10,10 +10,12 @@
     ./hardware-configuration.nix
   ];
 
-  users.groups.transmission.members = [
+  users.groups.media.members = [
     username
+    "jellyfin"
     "radarr"
     "sonarr"
+    "transmission"
   ];
 
   systemd.enableEmergencyMode = false;
