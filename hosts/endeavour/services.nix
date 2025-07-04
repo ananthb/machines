@@ -1,17 +1,6 @@
 { pkgs, ... }:
 
 {
-  zram-generator = {
-    enable = true;
-    settings = {
-      zram0 = { };
-      zram1 = {
-        mount-point = "/var/cache/jellyfin/transcodes";
-        options = "X-mount.mode=1700,X-mount.owner=jellyfin,X-mount.group=media";
-      };
-    };
-  };
-
   # Enable the OpenSSH daemon.
   openssh.enable = true;
   openssh.settings.PermitRootLogin = "no";
