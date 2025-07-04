@@ -61,6 +61,7 @@
     win-virtio
     win-spice
     pam_rssh
+    e2fsprogs
 
     jellyfin
     jellyfin-web
