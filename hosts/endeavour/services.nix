@@ -68,6 +68,9 @@
   jellyfin.group = "media";
   jellyfin.openFirewall = true;
 
+  meilisearch.enable = true;
+  meilisearch.package = pkgs.meilisearch;
+
   transmission = {
     enable = true;
     package = pkgs.transmission_4;
@@ -76,6 +79,8 @@
     settings = {
       umask = "002";
       proxy_url = "socks5://localhost:8080";
+
+      watch-dir-enabled = true;
 
       alt-speed-up = 1000; # 1000KB/s
       alt-speed-down = 1000; # 1000KB/s

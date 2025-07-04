@@ -51,8 +51,6 @@
     }
   ];
 
-  nixpkgs.config.allowUnfree = true;
-
   # Set primary user because of the whole
   # 'run-services-as-root-for-better-multiuser-support' thing.
   system.primaryUser = username;
@@ -69,9 +67,6 @@
 
     dontFixup = true;
   });
-
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -101,10 +96,6 @@
       AddKeysToAgent yes
       IdentityFile ~/.ssh/id_ed25519_sk
   '';
-
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = [ ];
 
   fonts.packages = [ pkgs.hack-font ];
 

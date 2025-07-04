@@ -73,6 +73,7 @@
 
             modules = [
               lanzaboote.nixosModules.lanzaboote
+              ./hosts/common.nix
               ./hosts/linux.nix
               ./hosts/endeavour
             ];
@@ -95,6 +96,7 @@
 
             modules = [
               sops-nix.darwinModules.sops
+              ./hosts/common.nix
               ./hosts/darwin.nix
               ./hosts/discovery
             ];
@@ -115,6 +117,7 @@
 
             modules = [
               sops-nix.darwinModules.sops
+              ./hosts/common.nix
               ./hosts/darwin.nix
               ./hosts/enterprise
             ];
