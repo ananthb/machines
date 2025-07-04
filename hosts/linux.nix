@@ -66,5 +66,6 @@
   environment.systemPackages = with pkgs; [
     nixfmt-rfc-style
     mosh
+    ghostty.terminfo
   ];
 }
