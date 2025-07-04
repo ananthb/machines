@@ -8,7 +8,7 @@ sources:
 packages:
   - jq
 tasks:
-  - trust_gh_host_keys: |
+  - fetch_gh_host_keys: |
       curl -L \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $(cat ~/github_pat)" \
@@ -18,5 +18,4 @@ tasks:
       >> ~/.ssh/known_hosts
 
   - mirror: |
-      cd machines
-      git push --mirror git@github.com:ananthb/machines
+      git -C machines push --mirror git@github.com:ananthb/machines
