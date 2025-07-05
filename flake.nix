@@ -38,6 +38,11 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  inputs.tsnsrv = {
+    url = "github:boinkor-net/tsnsrv";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
   outputs =
     {
       self,
@@ -51,6 +56,7 @@
       homebrew-bundle,
       homebrew-core,
       homebrew-cask,
+      tsnsrv,
       ...
     }@inputs:
     {

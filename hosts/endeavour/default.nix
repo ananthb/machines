@@ -3,11 +3,13 @@
   pkgs,
   hostname,
   username,
+  tsnsrv,
   ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
+    tsnsrv.nixosModules.default
   ];
 
   users.groups.media.members = [
@@ -66,6 +68,7 @@
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg
+    tsnsrv
   ];
 
   # Set your time zone.

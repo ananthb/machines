@@ -53,6 +53,10 @@
       # home stuff
       "esphome"
     ];
+    customComponents = with pkgs.home-assistant-custom-components; [
+      smartir
+      frigate
+    ];
     config = {
       # Includes dependencies for a basic setup
       # https://www.home-assistant.io/integrations/default_config/
@@ -66,7 +70,7 @@
 
   jellyfin.enable = true;
   jellyfin.group = "media";
-  jellyfin.openFirewall = true;
+  jellyfin.openFirewall = false;
 
   meilisearch.enable = true;
   meilisearch.package = pkgs.meilisearch;
@@ -111,5 +115,15 @@
   jellyseerr = {
     enable = true;
     openFirewall = true;
+  };
+
+  tsnsrv.services = {
+    enable = true;
+    defaults.urlParts.host = "127.0.0.1";
+    services.tv = {
+      enable = true;
+      funnel = true;
+      urlParts.port = 8096;
+    };
   };
 }
