@@ -28,9 +28,9 @@
               "350"
               "--modeac"
               "--lat"
-	      config.sops.secrets."home/penthouse/latitude".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/latitude".path)
               "--lon"
-	      config.sops.secrets."home/penthouse/longitude".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/longitude".path)
               "--net"
               "--net-heartbeat"
               "60"
@@ -77,11 +77,11 @@
               "--user"
               "buntutintu"
               "--lat"
-	      config.sops.secrets."home/penthouse/longitude".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/latitude".path)
               "--lon"
-	      config.sops.secrets."home/penthouse/longitude".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/longitude".path)
               "--alt"
-	      config.sops.secrets."home/penthouse/elevation".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/elevation".path)
               "--results"
               "beast,connect,localhost:30005"
               "--results"
@@ -115,11 +115,11 @@
               "--user"
               "blasduncds"
               "--lat"
-	      config.sops.secrets."home/penthouse/latitude".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/latitude".path)
               "--lon"
-	      config.sops.secrets."home/penthouse/longitude".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/longitude".path)
               "--alt"
-	      config.sops.secrets."home/penthouse/elevation".content
+	      (builtins.readFile config.sops.secrets."home/penthouse/elevation".path)
               "--results"
               "beast,connect,localhost:30005"
               "--results"
