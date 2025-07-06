@@ -70,10 +70,13 @@
       default_config = { };
 
       http = {
-        trusted_proxies = [ "::1" "127.0.0.1" ];
+        trusted_proxies = [
+          "::1"
+          "127.0.0.1"
+        ];
         use_x_forwarded_for = true;
-	ip_ban_enabled = true;
-	login_attempts_threshold = 5;
+        ip_ban_enabled = true;
+        login_attempts_threshold = 5;
       };
 
       name = "6A";
