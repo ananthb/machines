@@ -1,0 +1,15 @@
+---
+keys:
+  - &admin_ananth 4F0758D4AAE24E6D5A4483C666A20525398E18D7
+  - &host_endeavour age1ttpu0r89p89laf37yugqwrlfcca3h90njzs86sskmhhxlfk03s6s745p7r
+  - &host_discovery age10ptm7gkn0kx9033r4zmqsx7l65emghg3vnme3xfdxw4an0ys8ccsafaaar
+  - &host_enterprise age1s5zrm3qygmhjfxw6wfauas7zm85exr2cq7ff7v79suhdkvzjnf3s97dw5s
+creation_rules:
+  - path_regex: secrets.yaml$
+    key_groups:
+      - pgp:
+        - *admin_ananth
+        age:
+        - *host_endeavour
+        - *host_discovery
+        - *host_enterprise
