@@ -107,6 +107,9 @@
     group = "media";
     downloadDirPermissions = "770";
     settings = {
+      rpc-whitelist = "*";
+      rpc-host-whitelist = "*";
+
       umask = "002";
       proxy_url = "socks5://localhost:8080";
 
@@ -174,6 +177,7 @@
     };
 
     services.dl = {
+      urlParts.host = "127.0.0.1";
       urlParts.port = 9091;
     };
 
