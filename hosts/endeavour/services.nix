@@ -50,10 +50,46 @@
         startTLS_policy = "MandatoryStartTLS";
       };
     };
+
+    provision = {
+      enable = true;
+      datasources.settings.datasources = [
+        {
+          url = "http://localhost:8428";
+          name = "VictoraMetrics";
+          type = "prometheus";
+          jsonData = {
+            httpMethod = "POST";
+            manageAlerts = true;
+          };
+        }
+      ];
+    };
   };
 
   victoriametrics = {
     enable = true;
+    listenAddress = "[::1]:8428";
+    extraOptions = [
+      "-enableTCP6"
+    ];
+    prometheusConfig = {
+      scrape_configs = [
+        {
+          job_name = "network";
+          static_configs = [
+            {
+              targets = [
+                "atlantis.local:9100"
+                "intrepid.local:9100"
+                "phoenix.local:9100"
+              ];
+              labels.type = "router";
+            }
+          ];
+        }
+      ];
+    };
   };
 
   home-assistant = {
@@ -167,10 +203,6 @@
 
     services.mon = {
       urlParts.port = 3000;
-    };
-
-    services.vm = {
-      urlParts.port = 8428;
     };
 
     services."6a" = {
