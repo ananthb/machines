@@ -88,6 +88,17 @@
             }
           ];
         }
+        {
+          job_name = "machines";
+          static_configs = [
+            {
+              targets = [
+                "endeavour.local:9100"
+              ];
+              labels.type = "node";
+            }
+          ];
+        }
       ];
     };
   };
