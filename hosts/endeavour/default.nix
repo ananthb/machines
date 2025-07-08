@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   hostname,
@@ -11,6 +12,20 @@
     ./hardware-configuration.nix
     tsnsrv.nixosModules.default
   ];
+
+  sops.secrets."tsnsrv/auth_key" = { };
+  sops.secrets."smtp/username" = {
+    owner = config.users.users.grafana.name;
+    group = config.users.users.grafana.name;
+  };
+  sops.secrets."smtp/password" = {
+    owner = config.users.users.grafana.name;
+    group = config.users.users.grafana.name;
+  };
+  sops.secrets."smtp/host" = {
+    owner = config.users.users.grafana.name;
+    group = config.users.users.grafana.name;
+  };
 
   users.groups.media.members = [
     username
@@ -119,6 +134,17 @@
   ];
 
   services = import ./services.nix inputs;
+
+  systemd.services.grafana.environment = {
+    GF_AUTH_PROXY_ENABLED = "true";
+    GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
+    GF_AUTH_PROXY_HEADER_PROPERTY = "username";
+    GF_AUTH_PROXY_AUTO_SIGN_UP = "true";
+    GF_AUTH_PROXY_SYNC_TTL = "60";
+    GF_AUTH_PROXY_WHITELIST = "::1";
+    GF_AUTH_PROXY_HEADERS = "Name:X-Tailscale-User-DisplayName";
+    GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
+  };
 
   security = {
     pam.rssh.enable = true;

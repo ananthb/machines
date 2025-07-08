@@ -35,6 +35,21 @@
 
   grafana = {
     enable = true;
+    settings = {
+      server = {
+        http_addr = "::1";
+        domain = "mon.tail42937.ts.net";
+      };
+
+      smtp = {
+        enabled = true;
+        user = "$__file{${config.sops.secrets."smtp/username".path}}";
+        password = "$__file{${config.sops.secrets."smtp/password".path}}";
+        host = "$__file{${config.sops.secrets."smtp/host".path}}";
+        from_address = "mon@kedi.dev";
+        startTLS_policy = "MandatoryStartTLS";
+      };
+    };
   };
 
   victoriametrics = {
@@ -151,8 +166,6 @@
     defaults.urlParts.host = "localhost";
 
     services.mon = {
-      funnel = true;
-      urlParts.host = "127.0.0.1";
       urlParts.port = 3000;
     };
 
