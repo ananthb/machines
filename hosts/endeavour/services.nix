@@ -96,6 +96,15 @@
                 "endeavour.local:9100"
               ];
               labels.type = "node";
+              labels.os = "linux";
+            }
+            {
+              targets = [
+                "discovery.local:9100"
+                "enterprise.local:9100"
+              ];
+              labels.type = "node";
+              labels.os = "darwin";
             }
           ];
         }
