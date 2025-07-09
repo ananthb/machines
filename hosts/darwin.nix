@@ -113,7 +113,10 @@
         link = false;
       }
       "openssh" # needed for yubikey ssh keys
-      "node_exporter"
+      {
+        name = "node_exporter";
+        start_service = true;
+      }
     ];
     casks = [
       "google-chrome"
