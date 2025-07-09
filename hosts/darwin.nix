@@ -9,6 +9,7 @@
   homebrew-cask,
   homebrew-bundle,
   home-manager,
+  sops-nix,
   ...
 }:
 
@@ -32,6 +33,9 @@
 
     home-manager.darwinModules.home-manager
     {
+      home-manager.sharedModules = [
+        sops-nix.homeManagerModules.sops
+      ];
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.users.${username} = {

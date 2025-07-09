@@ -7,6 +7,10 @@
 {
   imports = [ nixvim.homeManagerModules.nixvim ];
 
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+  };
+
   home.username = username;
   home.sessionVariables.EDITOR = "nvim";
 
