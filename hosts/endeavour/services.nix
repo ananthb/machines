@@ -194,6 +194,7 @@
     group = "media";
     downloadDirPermissions = "775";
     settings = {
+      rpc-bind-address = "[::]";
       rpc-whitelist = "*";
       rpc-host-whitelist = "*";
 
@@ -269,18 +270,10 @@
       ];
     };
 
-    services.dl = {
-      urlParts.host = "127.0.0.1";
-      urlParts.port = 9091;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9095"
-      ];
-    };
-
     services.esp = {
       urlParts.port = 6053;
       extraArgs = [
-        "-prometheusAddr=[::1]:9094"
+        "-prometheusAddr=[::1]:9095"
       ];
     };
   };
