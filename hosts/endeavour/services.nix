@@ -108,6 +108,22 @@
             }
           ];
         }
+        {
+          job_name = "tsnsrvs";
+          static_configs = [
+            {
+              targets = [
+                "localhost:9099"
+                "localhost:9098"
+                "localhost:9097"
+                "localhost:9096"
+                "localhost:9095"
+                "localhost:9094"
+              ];
+              labels.type = "reverse_proxy";
+            }
+          ];
+        }
       ];
     };
   };
@@ -176,7 +192,7 @@
     enable = true;
     package = pkgs.transmission_4;
     group = "media";
-    downloadDirPermissions = "770";
+    downloadDirPermissions = "775";
     settings = {
       rpc-whitelist = "*";
       rpc-host-whitelist = "*";
@@ -223,31 +239,49 @@
 
     services.mon = {
       urlParts.port = 3000;
+      extraArgs = [
+        "-prometheusAddr=[::1]:9099"
+      ];
     };
 
     services."6a" = {
       funnel = true;
       urlParts.port = 8123;
+      extraArgs = [
+        "-prometheusAddr=[::1]:9098"
+      ];
     };
 
     services.tv = {
       funnel = true;
       urlParts.host = "127.0.0.1";
       urlParts.port = 8096;
+      extraArgs = [
+        "-prometheusAddr=[::1]:9097"
+      ];
     };
 
     services.see = {
       funnel = true;
       urlParts.port = 5055;
+      extraArgs = [
+        "-prometheusAddr=[::1]:9096"
+      ];
     };
 
     services.dl = {
       urlParts.host = "127.0.0.1";
       urlParts.port = 9091;
+      extraArgs = [
+        "-prometheusAddr=[::1]:9095"
+      ];
     };
 
     services.esp = {
       urlParts.port = 6053;
+      extraArgs = [
+        "-prometheusAddr=[::1]:9094"
+      ];
     };
   };
 }
