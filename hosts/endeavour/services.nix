@@ -255,7 +255,6 @@
 
     services.tv = {
       funnel = true;
-      urlParts.host = "127.0.0.1";
       urlParts.port = 8096;
       extraArgs = [
         "-prometheusAddr=[::1]:9097"
