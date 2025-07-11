@@ -8,15 +8,20 @@
   imports = [ nixvim.homeManagerModules.nixvim ];
 
   sops = {
+    age.sshKeyPaths =
+      let
+        homeDir = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username + "/.ssh/id_ed25519";
+      in
+      [ homeDir ];
     defaultSopsFile = ../secrets.yaml;
+
+    secrets."keys/ssh/id_ed25519_sk.pub" = {
+      path = "~/.ssh/id_ed25519_sk.pub";
+    };
   };
 
   home.username = username;
   home.sessionVariables.EDITOR = "nvim";
-
-  home.file = {
-    ".ssh/id_ed25519_sk.pub".source = ../keys/ssh/id_ed25519_sk.pub;
-  };
 
   programs = import ./programs args;
 
