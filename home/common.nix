@@ -16,6 +16,9 @@
       [ homeDir ];
     defaultSopsFile = ../secrets.yaml;
 
+    secrets."keys/ssh/id_ed25519_sk" = {
+      path = ".ssh/id_ed25519_sk";
+    };
     secrets."keys/ssh/id_ed25519_sk.pub" = {
       path = ".ssh/id_ed25519_sk.pub";
     };
