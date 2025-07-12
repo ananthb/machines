@@ -4,27 +4,31 @@
   username,
   ...
 }@args:
+let
+  homeDir = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username;
+in
 {
   imports = [ nixvim.homeManagerModules.nixvim ];
+
+  home.homeDirectory = homeDir;
+  home.username = username;
+  home.sessionVariables.EDITOR = "nvim";
 
   sops = {
     age.sshKeyPaths =
       let
-        sshKeyPath = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username + "/.ssh/id_ed25519";
+        sshKeyPath = homeDir + "/.ssh/id_ed25519";
       in
       [ sshKeyPath ];
     defaultSopsFile = ../secrets.yaml;
 
     secrets."keys/ssh/id_ed25519_sk" = {
-      path = ".ssh/id_ed25519_sk";
+      path = homeDir + "/.ssh/id_ed25519_sk";
     };
     secrets."keys/ssh/id_ed25519_sk.pub" = {
-      path = ".ssh/id_ed25519_sk.pub";
+      path = homeDir + "/.ssh/id_ed25519_sk.pub";
     };
   };
-
-  home.username = username;
-  home.sessionVariables.EDITOR = "nvim";
 
   programs = import ./programs args;
 

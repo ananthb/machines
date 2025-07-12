@@ -5,8 +5,6 @@
 }:
 {
 
-  home.homeDirectory = "/home/${username}";
-
   home.packages = with pkgs; [
     wl-clipboard
     git-credential-manager
