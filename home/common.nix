@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   nixvim,
   username,
@@ -16,7 +17,7 @@
     defaultSopsFile = ../secrets.yaml;
 
     secrets."keys/ssh/id_ed25519_sk.pub" = {
-      path = "~/.ssh/id_ed25519_sk.pub";
+      path = ".ssh/id_ed25519_sk.pub";
     };
   };
 
