@@ -129,7 +129,6 @@
       "google-chrome"
       "visual-studio-code"
       "ghostty"
-      "neovide"
       "rectangle-pro"
       "scroll-reverser"
       "ddpm"

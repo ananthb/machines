@@ -19,7 +19,6 @@
     jellyfin-media-player
     wireshark
     moolticute
-    neovide
     zed-editor
     bruno
     rpi-imager
