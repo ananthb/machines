@@ -2,8 +2,6 @@
 {
   home.homeDirectory = "/Users/${username}";
 
-  home.file.".ssh/authorized_keys".source = ../keys/ssh/id_ed25519_sk.pub;
-
   programs.fish.interactiveShellInit = ''
     set fish_greeting ""
     if command -q limactl

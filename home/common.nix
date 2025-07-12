@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   nixvim,
   username,
@@ -11,9 +10,9 @@
   sops = {
     age.sshKeyPaths =
       let
-        homeDir = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username + "/.ssh/id_ed25519";
+        sshKeyPath = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username + "/.ssh/id_ed25519";
       in
-      [ homeDir ];
+      [ sshKeyPath ];
     defaultSopsFile = ../secrets.yaml;
 
     secrets."keys/ssh/id_ed25519_sk" = {
