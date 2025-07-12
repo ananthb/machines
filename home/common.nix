@@ -46,8 +46,10 @@ in
     atool
     tree
     git
+    lazygit
     ripgrep
     curl
+    hurl
     httpie
     htop
     delta

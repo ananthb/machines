@@ -1,4 +1,4 @@
-{ lib, system, ... }:
+{ ... }:
 {
   enable = true;
   userName = "Ananth Bhaskararaman";
