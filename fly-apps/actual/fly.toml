@@ -16,6 +16,8 @@ primary_region = 'sin'
 [env]
   PORT = '5006'
   TINI_SUBREAPER = '1'
+  ACTUAL_LOGIN_METHOD = 'openid'
+  ACTUAL_ALLOWED_LOGIN_METHODS = 'openid'
 
 [[mounts]]
   source = 'actual_data'
