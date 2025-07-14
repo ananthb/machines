@@ -45,7 +45,7 @@
         enabled = true;
         user = "$__file{${config.sops.secrets."smtp/username".path}}";
         password = "$__file{${config.sops.secrets."smtp/password".path}}";
-        host = "$__file{${config.sops.secrets."smtp/host".path}}";
+        host = "$__file{${config.sops.secrets."smtp/host".path}}:587";
         from_address = "mon@kedi.dev";
         startTLS_policy = "MandatoryStartTLS";
       };
