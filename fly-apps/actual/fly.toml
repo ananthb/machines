@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for actual-wandering-night-2132 on 2025-07-09T23:23:06+05:30
+# fly.toml app configuration file generated for actual-white-moon-5023 on 2025-07-14T22:43:59+05:30
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'actual-wandering-night-2132'
+app = 'actual-white-moon-5023'
 primary_region = 'sin'
 
 [experimental]
@@ -48,6 +48,4 @@ primary_region = 'sin'
     grace_period = '10s'
 
 [[vm]]
-  cpu_kind = 'shared'
-  cpus = 1
-  memory_mb = 256
+  size = 'shared-cpu-1x'
