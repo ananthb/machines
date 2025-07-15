@@ -86,24 +86,6 @@
     tsnsrv
   ];
 
-  environment.etc."prometheus/blackbox_exporter.conf".text = ''
-    modules:
-      icmp:
-        prober: icmp
-        timeout: 5s
-      warp_proxy:
-        prober: tcp
-        timeout: 5s
-        tcp:
-          proxy_url: "socks5://localhost:8080"
-          target_addr: "https://cloudflare.com"
-      http_2xx:
-        prober: http
-        timeout: 5s
-        http:
-          method: GET
-  '';
-
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 

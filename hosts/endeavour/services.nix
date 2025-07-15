@@ -56,15 +56,16 @@
           static_configs = [
             {
               targets = [ "endeavour.local" ];
-              labels.type = "server";
+              labels.type = "node";
               labels.os = "linux";
+              labels.role = "server";
             }
             {
               targets = [
                 "enterprise.local"
                 "discovery.local"
               ];
-              labels.type = "device";
+              labels.type = "node";
               labels.os = "darwin";
             }
             {
@@ -73,8 +74,9 @@
                 "intrepid.local"
                 "phoenix.local"
               ];
-              labels.type = "router";
+              labels.type = "node";
               labels.os = "openwrt";
+              labels.role = "router";
             }
           ];
         }
@@ -95,11 +97,15 @@
               replacement = "localhost:9115";
             }
           ];
-          params.module = [ "warp_proxy" ];
+          params.module = [ "http_via_warp_proxy" ];
           static_configs = [
             {
-              targets = [ "localhost:9115" ];
-              labels.type = "server";
+              targets = [
+                "https://www.cloudflare.com"
+                "https://www.google.com"
+              ];
+              labels.type = "app";
+              labels.role = "server";
             }
           ];
           scheme = "http";
@@ -128,7 +134,8 @@
                 "https://tv.tail42937.ts.net"
                 "https://see.tail42937.ts.net"
               ];
-              labels.type = "server";
+              labels.type = "app";
+              labels.role = "server";
             }
 
           ];
@@ -142,8 +149,9 @@
                 "intrepid.local:9100"
                 "phoenix.local:9100"
               ];
-              labels.type = "router";
+              labels.type = "node";
               labels.os = "openwrt";
+              labels.role = "router";
             }
           ];
         }
@@ -154,15 +162,16 @@
               targets = [
                 "endeavour.local:9100"
               ];
-              labels.type = "server";
+              labels.type = "node";
               labels.os = "linux";
+              labels.role = "server";
             }
             {
               targets = [
                 "discovery.local:9100"
                 "enterprise.local:9100"
               ];
-              labels.type = "device";
+              labels.type = "node";
               labels.os = "darwin";
             }
           ];
@@ -206,8 +215,25 @@
   prometheus.exporters.blackbox = {
     enable = true;
     listenAddress = "[::1]";
-    configFile = "/etc/prometheus/blackbox_exporter.conf";
-    enableConfigCheck = false;
+    configFile = (
+      pkgs.writeText "blackbox_exporter.conf" ''
+        modules:
+          icmp:
+            prober: icmp
+          http_via_warp_proxy:
+            prober: http
+            http:
+              proxy_url: "socks5://localhost:8080"
+              method: GET
+              valid_status_codes: [200]
+              no_follow_redirects: false
+              fail_if_not_ssl: true
+          http_2xx:
+            prober: http
+            http:
+              method: GET
+      ''
+    );
   };
 
   grafana = {
