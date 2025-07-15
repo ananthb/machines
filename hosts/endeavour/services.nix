@@ -13,59 +13,11 @@
   # Enable resolved and avahi
   resolved.enable = true;
   avahi.enable = true;
-
-  prometheus.exporters.node = {
-    enable = true;
-    port = 9100;
-    # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
-    enabledCollectors = [ "systemd" ];
-    extraFlags = [
-      "--collector.ethtool"
-      "--collector.softirqs"
-      "--collector.tcpstat"
-      "--collector.wifi"
-    ];
-  };
-
   # Enable tailscale
   tailscale.enable = true;
 
   cloudflare-warp.enable = true;
   cloudflare-warp.openFirewall = false;
-
-  grafana = {
-    enable = true;
-    settings = {
-      server = {
-        http_addr = "::1";
-        domain = "mon.tail42937.ts.net";
-      };
-
-      smtp = {
-        enabled = true;
-        user = "$__file{${config.sops.secrets."smtp/username".path}}";
-        password = "$__file{${config.sops.secrets."smtp/password".path}}";
-        host = "$__file{${config.sops.secrets."smtp/host".path}}:587";
-        from_address = "mon@kedi.dev";
-        startTLS_policy = "MandatoryStartTLS";
-      };
-    };
-
-    provision = {
-      enable = true;
-      datasources.settings.datasources = [
-        {
-          url = "http://localhost:8428";
-          name = "VictoraMetrics";
-          type = "prometheus";
-          jsonData = {
-            httpMethod = "POST";
-            manageAlerts = true;
-          };
-        }
-      ];
-    };
-  };
 
   victoriametrics = {
     enable = true;
@@ -75,6 +27,23 @@
     ];
     prometheusConfig = {
       scrape_configs = [
+        {
+          job_name = "blackbox_ping";
+          metrics_path = "/probe";
+          params.module = [ "icmp" ];
+          static_configs = [
+            {
+              targets = [
+                "atlantis.local"
+                "intrepid.local"
+                "phoenix.local"
+                "endeavour.local"
+                "enterprise.local"
+                "discovery.local"
+              ];
+            }
+          ];
+        }
         {
           job_name = "network";
           static_configs = [
@@ -108,21 +77,78 @@
             }
           ];
         }
+        /*
+          {
+            job_name = "tsnsrvs";
+            static_configs = [
+              {
+                targets = [
+                  "localhost:9099"
+                  "localhost:9098"
+                  "localhost:9097"
+                  "localhost:9096"
+                  "localhost:9095"
+                  "localhost:9094"
+                ];
+                labels.type = "reverse_proxy";
+              }
+            ];
+          }
+        */
+      ];
+    };
+  };
+
+  prometheus.exporters.node = {
+    enable = true;
+    port = 9100;
+    # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
+    enabledCollectors = [
+      "ethtool"
+      "libvirtd"
+      "perf"
+      "systemd"
+      "tcpstat"
+      "wifi"
+    ];
+    disabledCollectors = [ "textfile" ];
+  };
+
+  prometheus.exporters.blackbox = {
+    enable = true;
+    configFile = "/etc/prometheus/blackbox_exporter.conf";
+    enableConfigCheck = false;
+  };
+
+  grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "::1";
+        domain = "mon.tail42937.ts.net";
+      };
+
+      smtp = {
+        enabled = true;
+        user = "$__file{${config.sops.secrets."smtp/username".path}}";
+        password = "$__file{${config.sops.secrets."smtp/password".path}}";
+        host = "$__file{${config.sops.secrets."smtp/host".path}}:587";
+        from_address = "mon@kedi.dev";
+        startTLS_policy = "MandatoryStartTLS";
+      };
+    };
+
+    provision = {
+      enable = true;
+      datasources.settings.datasources = [
         {
-          job_name = "tsnsrvs";
-          static_configs = [
-            {
-              targets = [
-                "localhost:9099"
-                "localhost:9098"
-                "localhost:9097"
-                "localhost:9096"
-                "localhost:9095"
-                "localhost:9094"
-              ];
-              labels.type = "reverse_proxy";
-            }
-          ];
+          url = "http://localhost:8428";
+          name = "VictoraMetrics";
+          type = "prometheus";
+          jsonData = {
+            httpMethod = "POST";
+            manageAlerts = true;
+          };
         }
       ];
     };

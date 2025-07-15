@@ -86,6 +86,13 @@
     tsnsrv
   ];
 
+  environment.etc."prometheus/blackbox_exporter.conf".text = ''
+    modules:
+      icmp:
+        prober: icmp
+        timeout: 5s
+  '';
+
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
@@ -139,7 +146,7 @@
     GF_AUTH_PROXY_ENABLED = "true";
     GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
     GF_AUTH_PROXY_HEADER_PROPERTY = "username";
-    GF_AUTH_PROXY_AUTO_SIGN_UP = "true";
+    GF_AUTH_PROXY_AUTO_SIGN_UP = "false";
     GF_AUTH_PROXY_SYNC_TTL = "60";
     GF_AUTH_PROXY_WHITELIST = "::1";
     GF_AUTH_PROXY_HEADERS = "Name:X-Tailscale-User-DisplayName";

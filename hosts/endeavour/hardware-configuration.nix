@@ -64,6 +64,15 @@
     ];
   };
 
+  fileSystems."/srv/hathi" = {
+    device = "/dev/disk/by-uuid/5f886f0b-58aa-45a8-a269-3544deb53141";
+    fsType = "btrfs";
+    options = [
+      "subvol=@backups"
+      "relatime"
+    ];
+  };
+
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/E8B1-45C7";
     fsType = "vfat";
