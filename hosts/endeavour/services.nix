@@ -80,40 +80,13 @@
             }
           ];
         }
+        # Query these addresses via the warp proxy.
+        # This checks if the proxy is working and if
+        # these sites are accessible from the internet.
         {
-          job_name = "blackbox_warp_proxy";
+          job_name = "blackbox_http_2xx_warp_proxy";
           metrics_path = "/probe";
-          relabel_configs = [
-            {
-              source_labels = [ "__address__" ];
-              target_label = "__param_target";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-            }
-            {
-              target_label = "__address__";
-              replacement = "localhost:9115";
-            }
-          ];
-          params.module = [ "http_via_warp_proxy" ];
-          static_configs = [
-            {
-              targets = [
-                "https://www.cloudflare.com"
-                "https://www.google.com"
-              ];
-              labels.type = "app";
-              labels.role = "server";
-            }
-          ];
-          scheme = "http";
-        }
-        {
-          job_name = "blackbox_http_2xx";
-          metrics_path = "/probe";
-          params.module = [ "http_2xx" ];
+          params.module = [ "http_2xx_warp_proxy" ];
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -138,6 +111,7 @@
               ];
               labels.type = "app";
               labels.role = "server";
+              labels.in-the = "clouds";
             }
             {
               targets = [
@@ -148,6 +122,55 @@
                 "https://lilaartscentre.com"
               ];
               labels.type = "website";
+            }
+            {
+              targets = [
+                "http://localhost:7878"
+                "http://localhost:8989"
+                "http://localhost:9696"
+              ];
+              labels.type = "app";
+              labels.role = "server";
+            }
+          ];
+        }
+        {
+          job_name = "blackbox_http_2xx";
+          metrics_path = "/probe";
+          params.module = [ "http_2xx" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "localhost:9115";
+            }
+          ];
+          static_configs = [
+            {
+              targets = [
+                "https://devhuman.net"
+                "https://bhaskararaman.com"
+                "https://futuraphysio.com"
+                "https://drvibhu.com"
+                "https://lilaartscentre.com"
+              ];
+              labels.type = "website";
+            }
+            {
+              targets = [
+                "http://localhost:7878"
+                "http://localhost:8989"
+                "http://localhost:9696"
+              ];
+              labels.type = "app";
+              labels.role = "server";
             }
           ];
         }
@@ -230,7 +253,7 @@
       modules:
         icmp:
           prober: icmp
-        http_via_warp_proxy:
+        http_2xx_warp_proxy:
           prober: http
           http:
             proxy_url: "socks5://localhost:8080"
