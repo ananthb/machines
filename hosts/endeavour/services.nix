@@ -133,11 +133,22 @@
               targets = [
                 "https://tv.tail42937.ts.net"
                 "https://see.tail42937.ts.net"
+                "https://6a.tail42937.ts.net"
+                "https://t1.tail42937.ts.net"
               ];
               labels.type = "app";
               labels.role = "server";
             }
-
+            {
+              targets = [
+                "https://devhuman.net"
+                "https://bhaskararaman.com"
+                "https://futuraphysio.com"
+                "https://drvibhu.com"
+                "https://lilaartscentre.com"
+              ];
+              labels.type = "website";
+            }
           ];
         }
         {
