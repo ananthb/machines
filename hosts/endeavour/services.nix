@@ -215,25 +215,23 @@
   prometheus.exporters.blackbox = {
     enable = true;
     listenAddress = "[::1]";
-    configFile = (
-      pkgs.writeText "blackbox_exporter.conf" ''
-        modules:
-          icmp:
-            prober: icmp
-          http_via_warp_proxy:
-            prober: http
-            http:
-              proxy_url: "socks5://localhost:8080"
-              method: GET
-              valid_status_codes: [200]
-              no_follow_redirects: false
-              fail_if_not_ssl: true
-          http_2xx:
-            prober: http
-            http:
-              method: GET
-      ''
-    );
+    configFile = pkgs.writeText "blackbox_exporter.conf" ''
+      modules:
+        icmp:
+          prober: icmp
+        http_via_warp_proxy:
+          prober: http
+          http:
+            proxy_url: "socks5://localhost:8080"
+            method: GET
+            valid_status_codes: [200]
+            no_follow_redirects: false
+            fail_if_not_ssl: true
+        http_2xx:
+          prober: http
+          http:
+            method: GET
+    '';
   };
 
   grafana = {
