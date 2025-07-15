@@ -28,20 +28,109 @@
     prometheusConfig = {
       scrape_configs = [
         {
+          job_name = "blackbox_exporter";
+          static_configs = [
+            {
+              targets = [ "localhost:9115" ];
+            }
+          ];
+        }
+        {
           job_name = "blackbox_ping";
           metrics_path = "/probe";
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "localhost:9115";
+            }
+          ];
           params.module = [ "icmp" ];
           static_configs = [
+            {
+              targets = [ "endeavour.local" ];
+              labels.type = "server";
+              labels.os = "linux";
+            }
+            {
+              targets = [
+                "enterprise.local"
+                "discovery.local"
+              ];
+              labels.type = "device";
+              labels.os = "darwin";
+            }
             {
               targets = [
                 "atlantis.local"
                 "intrepid.local"
                 "phoenix.local"
-                "endeavour.local"
-                "enterprise.local"
-                "discovery.local"
               ];
+              labels.type = "router";
+              labels.os = "openwrt";
             }
+          ];
+        }
+        {
+          job_name = "blackbox_warp_proxy";
+          metrics_path = "/probe";
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "localhost:9115";
+            }
+          ];
+          params.module = [ "warp_proxy" ];
+          static_configs = [
+            {
+              targets = [ "localhost:9115" ];
+              labels.type = "server";
+            }
+          ];
+          scheme = "http";
+        }
+        {
+          job_name = "blackbox_http_2xx";
+          metrics_path = "/probe";
+          params.module = [ "http_2xx" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "localhost:9115";
+            }
+          ];
+          static_configs = [
+            {
+              targets = [
+                "https://tv.tail42937.ts.net"
+                "https://see.tail42937.ts.net"
+              ];
+              labels.type = "server";
+            }
+
           ];
         }
         {
@@ -54,6 +143,7 @@
                 "phoenix.local:9100"
               ];
               labels.type = "router";
+              labels.os = "openwrt";
             }
           ];
         }
@@ -64,7 +154,7 @@
               targets = [
                 "endeavour.local:9100"
               ];
-              labels.type = "node";
+              labels.type = "server";
               labels.os = "linux";
             }
             {
@@ -72,7 +162,7 @@
                 "discovery.local:9100"
                 "enterprise.local:9100"
               ];
-              labels.type = "node";
+              labels.type = "device";
               labels.os = "darwin";
             }
           ];
@@ -101,11 +191,10 @@
 
   prometheus.exporters.node = {
     enable = true;
-    port = 9100;
+    openFirewall = true;
     # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
     enabledCollectors = [
       "ethtool"
-      "libvirtd"
       "perf"
       "systemd"
       "tcpstat"
@@ -116,6 +205,7 @@
 
   prometheus.exporters.blackbox = {
     enable = true;
+    listenAddress = "[::1]";
     configFile = "/etc/prometheus/blackbox_exporter.conf";
     enableConfigCheck = false;
   };
@@ -265,6 +355,7 @@
     defaults.urlParts.host = "localhost";
 
     services.mon = {
+      funnel = true;
       urlParts.port = 3000;
       extraArgs = [
         "-prometheusAddr=[::1]:9099"

@@ -90,7 +90,15 @@
     modules:
       icmp:
         prober: icmp
-        timeout: 5s
+      warp_proxy:
+        prober: tcp
+        tcp:
+          proxy_url: "socks5://localhost:8080"
+          target_addr: "https://cloudflare.com"
+      http_2xx:
+        prober: http
+        http:
+          method: GET
   '';
 
   # Set your time zone.
@@ -143,6 +151,8 @@
   services = import ./services.nix inputs;
 
   systemd.services.grafana.environment = {
+    GF_AUTH_DISABLE_LOGIN_FORM = "true";
+    GF_AUTH_BASIC_ENABLED = "false";
     GF_AUTH_PROXY_ENABLED = "true";
     GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
     GF_AUTH_PROXY_HEADER_PROPERTY = "username";
