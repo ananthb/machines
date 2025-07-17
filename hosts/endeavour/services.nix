@@ -93,6 +93,7 @@
               ];
               labels.role = "canary";
               labels.type = "internet";
+              labels.location = "penthouse";
             }
           ];
         }
@@ -127,7 +128,7 @@
               ];
               labels.type = "app";
               labels.role = "server";
-              labels.in-the = "clouds";
+              labels.location = "cloud";
             }
             {
               targets = [
@@ -136,6 +137,7 @@
               ];
               labels.role = "canary";
               labels.type = "internet";
+              labels.location = "penthouse";
             }
           ];
         }
@@ -215,6 +217,7 @@
               ];
               labels.type = "internet";
               labels.role = "canary";
+              labels.location = "penthouse";
             }
           ];
         }
@@ -297,18 +300,26 @@
       modules:
         icmp:
           prober: icmp
-        http_2xx_warp_proxy:
+        https_2xx_warp_proxy:
           prober: http
           http:
             proxy_url: "socks5://localhost:8080"
             method: GET
             valid_status_codes: [200]
-            no_follow_redirects: false
+            no_follow_redirects: true
             fail_if_not_ssl: true
         http_2xx:
           prober: http
           http:
             method: GET
+            no_follow_redirects: true
+            fail_if_ssl: true
+        https_2ss:
+          prober: http
+          http:
+            method: GET
+            no_follow_redirects: true
+            fail_if_not_ssl: true
     '';
   };
 
@@ -348,26 +359,40 @@
 
   home-assistant = {
     enable = true;
+    openFirewall = true;
     extraComponents = [
+      "default_config"
+      "dhcp"
+
       # Components required to complete the onboarding
       "analytics"
       "google_translate"
       "met"
-      "radio_browser"
-      "shopping_list"
+      "mobile_app"
+      # "radio_browser"
+      # "shopping_list"
       # Recommended for fast zlib compression
       # https://www.home-assistant.io/integrations/isal
       "isal"
 
       # home stuff
-      "esphome"
-      "apple_tv"
-      "cast"
+      "androidtv"
       "androidtv_remote"
+      "apple_tv"
+      "bluetooth"
+      "bluetooth_le_tracker"
+      "bluetooth_tracker"
+      "broadlink"
+      "camera"
+      "cast"
+      "ecovacs"
+      "esphome"
+      "luci"
     ];
     customComponents = with pkgs.home-assistant-custom-components; [
       smartir
       frigate
+      prometheus_sensor
     ];
     config = {
       # Includes dependencies for a basic setup
