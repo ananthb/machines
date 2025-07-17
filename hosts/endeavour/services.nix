@@ -80,15 +80,29 @@
               labels.os = "openwrt";
               labels.role = "router";
             }
+            {
+              targets = [
+                "2001:4860:4860::8888"
+                "2001:4860:4860::8844"
+                "2606:4700:4700::1001"
+                "2606:4700:4700::1111"
+                "8.8.8.8"
+                "8.8.4.4"
+                "1.1.1.1"
+                "1.0.0.1"
+              ];
+              labels.role = "canary";
+              labels.type = "internet";
+            }
           ];
         }
         # Query these addresses via the warp proxy.
         # This checks if the proxy is working and if
         # these sites are accessible from the internet.
         {
-          job_name = "blackbox_http_2xx_warp_proxy";
+          job_name = "blackbox_https_2xx_warp_proxy";
           metrics_path = "/probe";
-          params.module = [ "http_2xx_warp_proxy" ];
+          params.module = [ "https_2xx_warp_proxy" ];
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -120,7 +134,8 @@
                 "https://www.google.com"
                 "https://www.cloudflare.com"
               ];
-              labels.type = "canary";
+              labels.role = "canary";
+              labels.type = "internet";
             }
           ];
         }
@@ -128,6 +143,46 @@
           job_name = "blackbox_http_2xx";
           metrics_path = "/probe";
           params.module = [ "http_2xx" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = "localhost:9115";
+            }
+          ];
+          static_configs = [
+            {
+              targets = [
+                "http://localhost:7878"
+                "http://localhost:8989"
+                "http://localhost:9696"
+              ];
+              labels.type = "app";
+              labels.role = "server";
+            }
+            {
+              targets = [
+                "http://atlantis.local"
+                "http://intrepid.local"
+                "http://phoenix.local"
+              ];
+              labels.type = "node";
+              labels.os = "openwrt";
+              labels.role = "router";
+            }
+          ];
+        }
+        {
+          job_name = "blackbox_https_2xx";
+          metrics_path = "/probe";
+          params.module = [ "https_2xx" ];
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -155,12 +210,11 @@
             }
             {
               targets = [
-                "http://localhost:7878"
-                "http://localhost:8989"
-                "http://localhost:9696"
+                "https://www.google.com"
+                "https://www.cloudflare.com"
               ];
-              labels.type = "app";
-              labels.role = "server";
+              labels.type = "internet";
+              labels.role = "canary";
             }
           ];
         }
