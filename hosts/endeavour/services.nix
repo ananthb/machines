@@ -117,22 +117,10 @@
             }
             {
               targets = [
-                "https://devhuman.net"
-                "https://bhaskararaman.com"
-                "https://futuraphysio.com"
-                "https://drvibhu.com"
-                "https://lilaartscentre.com"
+                "https://www.google.com"
+                "https://www.cloudflare.com"
               ];
-              labels.type = "website";
-            }
-            {
-              targets = [
-                "http://localhost:7878"
-                "http://localhost:8989"
-                "http://localhost:9696"
-              ];
-              labels.type = "app";
-              labels.role = "server";
+              labels.type = "canary";
             }
           ];
         }
