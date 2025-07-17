@@ -22,6 +22,7 @@
   victoriametrics = {
     enable = true;
     listenAddress = "[::1]:8428";
+    retentionPeriod = "1y";
     extraOptions = [
       "-enableTCP6"
     ];
