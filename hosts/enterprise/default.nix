@@ -61,7 +61,7 @@
                             --user buntutintu \
             		    --lat $(cat $LAT_PATH) \
             		    --lon $(cat $LON_PATH) \
-                            --alt $(cat $ALT_PATH) \
+                            --alt $(cat $ALT_PATH)m \
                             --results beast,connect,localhost:30005 \
                             --results basestation,listen,31003 \
                             --results beast,listen,30157 \
@@ -93,7 +93,7 @@
             	      --user blasduncds \
             	      --lat $(cat $LAT_PATH) \
             	      --lon $(cat $LON_PATH) \
-                      --alt $(cat $ALT_PATH) \
+                      --alt $(cat $ALT_PATH)m \
             	      --results beast,connect,localhost:30005 \
             	      --results basestation,listen,31004 \
             	      --results beast,listen,30158 \
