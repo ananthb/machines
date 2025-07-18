@@ -49,7 +49,6 @@ in
     lazygit
     ripgrep
     curl
-    hurl
     httpie
     htop
     delta
