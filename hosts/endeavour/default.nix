@@ -14,15 +14,12 @@
   ];
 
   sops.secrets."tsnsrv/auth_key" = { };
-  sops.secrets."smtp/username" = {
-    owner = config.users.users.grafana.name;
-  };
-  sops.secrets."smtp/password" = {
-    owner = config.users.users.grafana.name;
-  };
-  sops.secrets."smtp/host" = {
-    owner = config.users.users.grafana.name;
-  };
+  sops.secrets."smtp/username".owner = config.users.users.grafana.name;
+  sops.secrets."smtp/password".owner = config.users.users.grafana.name;
+  sops.secrets."smtp/host".owner = config.users.users.grafana.name;
+  sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;
+  sops.secrets."home/6a/longitude".owner = config.users.users.hass.name;
+  sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
 
   users.groups.media.members = [
     username
