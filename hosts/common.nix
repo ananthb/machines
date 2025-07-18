@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   ...
 }:
@@ -15,7 +16,13 @@
   sops.defaultSopsFile = ../secrets.yaml;
   sops.secrets."keys/ssh/id_ed25519_sk" = { };
   sops.secrets."keys/ssh/id_ed25519_sk.pub" = { };
-  sops.secrets."home/6a/latitude" = { };
-  sops.secrets."home/6a/longitude" = { };
-  sops.secrets."home/6a/elevation" = { };
+  sops.secrets."home/6a/latitude" = {
+    owner = config.users.users.hass.name;
+  };
+  sops.secrets."home/6a/longitude" = {
+    owner = config.users.users.hass.name;
+  };
+  sops.secrets."home/6a/elevation" = {
+    owner = config.users.users.hass.name;
+  };
 }

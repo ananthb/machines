@@ -409,14 +409,19 @@
         login_attempts_threshold = 5;
       };
 
-      name = "6A";
-      unit_system = "metric";
-      time_zone = "Asia/Kolkata";
-      temperature_unit = "C";
-      currency = "INR";
-      country = "IN";
-      external_url = "https://6a.tail42937.ts.net";
-      internal_url = "http://endeavour.local:8123";
+      homeassistant = {
+        name = "6A";
+        unit_system = "metric";
+        time_zone = "Asia/Kolkata";
+        latitude = "!include ${config.sops.secrets."home/6a/latitude".path}";
+        longitude = "!include ${config.sops.secrets."home/6a/longitude".path}";
+        elevation = "!include ${config.sops.secrets."home/6a/elevation".path}";
+        temperature_unit = "C";
+        currency = "INR";
+        country = "IN";
+        external_url = "https://6a.tail42937.ts.net";
+        internal_url = "http://endeavour.local:8123";
+      };
     };
   };
 

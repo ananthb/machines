@@ -16,15 +16,12 @@
   sops.secrets."tsnsrv/auth_key" = { };
   sops.secrets."smtp/username" = {
     owner = config.users.users.grafana.name;
-    group = config.users.users.grafana.name;
   };
   sops.secrets."smtp/password" = {
     owner = config.users.users.grafana.name;
-    group = config.users.users.grafana.name;
   };
   sops.secrets."smtp/host" = {
     owner = config.users.users.grafana.name;
-    group = config.users.users.grafana.name;
   };
 
   users.groups.media.members = [
