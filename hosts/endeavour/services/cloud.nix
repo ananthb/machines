@@ -21,6 +21,7 @@
     };
 
     tsnsrv.services.imm = {
+      funnel = true;
       urlParts.port = 2283;
       extraArgs = [
         "-prometheusAddr=[::1]:9097"
