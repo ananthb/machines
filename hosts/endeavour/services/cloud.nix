@@ -157,7 +157,7 @@
         "oauth": {
           "autoLaunch": true,
           "autoRegister": false,
-          "buttonText": "Signin with Google",
+          "buttonText": "Sign in with Google",
           "clientId": "${config.sops.placeholder."oauth_clients/immich/client_id"}",
           "clientSecret": "${config.sops.placeholder."oauth_clients/immich/client_secret"}",
           "defaultStorageQuota": null,
