@@ -6,20 +6,19 @@
   username,
   tsnsrv,
   ...
-}@inputs:
+}:
 {
   imports = [
     ./hardware-configuration.nix
     tsnsrv.nixosModules.default
+    ./services
   ];
 
   sops.secrets."tsnsrv/auth_key" = { };
-  sops.secrets."smtp/username".owner = config.users.users.grafana.name;
-  sops.secrets."smtp/password".owner = config.users.users.grafana.name;
-  sops.secrets."smtp/host".owner = config.users.users.grafana.name;
-  sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;
-  sops.secrets."home/6a/longitude".owner = config.users.users.hass.name;
-  sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
+  sops.secrets."tsnsrv/tailnet" = { };
+  sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
+  sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
+  sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
 
   users.groups.media.members = [
     username
@@ -126,8 +125,6 @@
       );
     })
   ];
-
-  services = import ./services.nix inputs;
 
   systemd.services.grafana.environment = {
     GF_AUTH_DISABLE_LOGIN_FORM = "true";

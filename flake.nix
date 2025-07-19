@@ -91,7 +91,7 @@
               sops-nix.darwinModules.sops
               ./hosts/common.nix
               ./hosts/darwin.nix
-              ./hosts/discovery
+              ./hosts/discovery.nix
             ];
           };
 
@@ -112,7 +112,7 @@
               sops-nix.darwinModules.sops
               ./hosts/common.nix
               ./hosts/darwin.nix
-              ./hosts/enterprise
+              ./hosts/enterprise.nix
             ];
           };
 
