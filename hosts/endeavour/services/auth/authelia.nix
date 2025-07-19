@@ -1,32 +1,32 @@
 {
   lib,
-  config,
-  pkgs,
   ...
 }:
+
+let
+  authelia = "authelia-pie-o-my";
+in
 
 {
 
   services = {
-    postgresql.ensureDatabases = [ "authelia" ];
-
-    authelia.instances.kedi = {
+    authelia.instances.pie-o-my = {
       enable = true;
       settings = {
         theme = "auto";
         authentication_backend.ldap = {
           address = "ldap://localhost:3890";
-          base_dn = "dc=haddock,dc=cc";
+          base_dn = "dc=pie-o-my,dc=com";
           users_filter = "(&({username_attribute}={input})(objectClass=person))";
           groups_filter = "(member={dn})";
-          user = "uid=authelia,ou=people,dc=haddock,dc=cc";
+          user = "uid=authelia,ou=people,dc=pie-o-my,dc=com";
         };
         access_control = {
           default_policy = "deny";
           # We want this rule to be low priority so it doesn't override the others
           rules = lib.mkAfter [
             {
-              domain = "*.kedi.dev";
+              domain = "*.pie-o-my.com";
               policy = "one_factor";
             }
           ];
@@ -41,11 +41,11 @@
           password = authelia;
         };
         session = {
-          redis.host = "/var/run/redis-haddock/redis.sock";
+          redis.host = "/var/run/redis-authelia/redis.sock";
           cookies = [
             {
-              domain = "haddock.cc";
-              authelia_url = "https://auth.haddock.cc";
+              domain = "pie-o-my.com";
+              authelia_url = "https://auth.pie-o-my.com";
               # The period of time the user can be inactive for before the session is destroyed
               inactivity = "1M";
               # The period of time before the cookie expires and the session is destroyed
@@ -83,5 +83,38 @@
         };
       };
     };
+
+    postgresql = {
+      ensureDatabases = [ authelia ];
+      ensureUsers = [
+        {
+          name = authelia;
+          ensureDBOwnership = true;
+        }
+      ];
+    };
+
+    redis.servers.authelia = {
+      enable = true;
+    };
   };
+
+  users.users.${authelia}.extraGroups = [ "redis-authelia" ];
+
+  systemd.services.${authelia} =
+    let
+      dependencies = [
+        "lldap.service"
+        "postgresql.service"
+        "redis-authelia.service"
+      ];
+
+    in
+    {
+      # Authelia requires LLDAP, PostgreSQL, and Redis to be running
+      after = dependencies;
+      requires = dependencies;
+      # Required for templating
+      serviceConfig.Environment = "X_AUTHELIA_CONFIG_FILTERS=template";
+    };
 }
