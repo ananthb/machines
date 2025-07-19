@@ -3,7 +3,6 @@
 {
   imports = [
     ./arr.nix
-    ./auth
     ./cloud.nix
     ./hass.nix
     ./monitoring.nix
@@ -32,14 +31,5 @@
       defaults.authKeyPath = config.sops.secrets."tsnsrv/auth_key".path;
       defaults.urlParts.host = "localhost";
     };
-
-    postgresql = {
-      enable = true;
-      authentication = pkgs.lib.mkOverride 10 ''
-        #type database  DBuser  auth-method
-        local all       all     trust
-      '';
-    };
   };
-
 }
