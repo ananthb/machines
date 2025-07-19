@@ -155,16 +155,16 @@
           }
         },
         "oauth": {
-          "autoLaunch": false,
-          "autoRegister": true,
-          "buttonText": "Login with OAuth",
-          "clientId": "",
-          "clientSecret": "",
+          "autoLaunch": true,
+          "autoRegister": false,
+          "buttonText": "Signin with Google",
+          "clientId": "${config.sops.placeholder."oauth_clients/immich/client_id"}",
+          "clientSecret": "${config.sops.placeholder."oauth_clients/immich/client_secret"}",
           "defaultStorageQuota": null,
           "enabled": false,
-          "issuerUrl": "",
-          "mobileOverrideEnabled": false,
-          "mobileRedirectUri": "",
+          "issuerUrl": "${config.sops.placeholder."oauth_clients/immich/issuer_url"}",
+          "mobileOverrideEnabled": true,
+          "mobileRedirectUri": "${config.sops.placeholder."oauth_clients/immich/redirect_uris/mobile"}",
           "scope": "openid email profile",
           "signingAlgorithm": "RS256",
           "profileSigningAlgorithm": "none",
@@ -236,5 +236,13 @@
         }
       }
     '';
+  };
+
+  sops.secrets = {
+    "oauth_clients/immich/client_id".owner = config.users.users.immich.name;
+    "oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
+    "oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
+    "oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
+    "oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
   };
 }
