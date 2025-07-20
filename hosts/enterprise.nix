@@ -27,7 +27,7 @@
               -hostname $(cat $NAME) \
               -backend http://localhost:8096 \
               -funnel \
-              -stateDir /Users/ananth/Library/Application\ Support/tsnet-serve/$(cat $NAME)
+              -state-dir /Users/ananth/Library/Application\ Support/tsnet-serve/$(cat $NAME)
           '';
           serviceConfig = {
             EnvironmentVariables = {
