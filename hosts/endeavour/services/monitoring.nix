@@ -358,6 +358,10 @@
 
   sops.secrets."tsnsrv/nodes/grafana" = { };
   sops.secrets."email/from/grafana".owner = config.users.users.grafana.name;
+  sops.secrets."keys/arr_apis/radarr".owner = config.services.prometheus.exporters.exportarr-radarr.user;
+  sops.secrets."keys/arr_apis/sonarr".owner = config.services.prometheus.exporters.exportarr-sonarr.user;
+  sops.secrets."keys/arr_apis/prowlarr".owner = config.services.prometheus.exporters.exportarr-prowlarr.user;
+
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;
     content = "${config.sops.placeholder."tsnsrv/nodes/grafana"}.${

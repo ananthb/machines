@@ -70,11 +70,11 @@
     "tsnsrv/nodes/immich" = { };
     "email/from/immich" = { };
     "email/replyTo/immich" = { };
-    "oauth_clients/immich/client_id".owner = config.users.users.immich.name;
-    "oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
-    "oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
-    "oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
-    "oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
+    "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;
+    "keys/oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
+    "keys/oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
+    "keys/oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
+    "keys/oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
   };
 
   sops.templates."immich/config.json" = {
@@ -186,13 +186,13 @@
           "autoLaunch": true,
           "autoRegister": false,
           "buttonText": "Sign in with Google",
-          "clientId": "${config.sops.placeholder."oauth_clients/immich/client_id"}",
-          "clientSecret": "${config.sops.placeholder."oauth_clients/immich/client_secret"}",
+          "clientId": "${config.sops.placeholder."keys/oauth_clients/immich/client_id"}",
+          "clientSecret": "${config.sops.placeholder."keys/oauth_clients/immich/client_secret"}",
           "defaultStorageQuota": null,
           "enabled": true,
-          "issuerUrl": "${config.sops.placeholder."oauth_clients/immich/issuer_url"}",
+          "issuerUrl": "${config.sops.placeholder."keys/oauth_clients/immich/issuer_url"}",
           "mobileOverrideEnabled": true,
-          "mobileRedirectUri": "${config.sops.placeholder."oauth_clients/immich/redirect_uris/mobile"}",
+          "mobileRedirectUri": "${config.sops.placeholder."keys/oauth_clients/immich/redirect_uris/mobile"}",
           "scope": "openid email profile",
           "signingAlgorithm": "RS256",
           "profileSigningAlgorithm": "none",
