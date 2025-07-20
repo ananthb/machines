@@ -14,8 +14,6 @@
     ./services
   ];
 
-  sops.secrets."tsnsrv/auth_key" = { };
-  sops.secrets."tsnsrv/tailnet" = { };
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;

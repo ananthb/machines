@@ -19,4 +19,6 @@
   sops.secrets."home/6a/latitude" = { };
   sops.secrets."home/6a/longitude" = { };
   sops.secrets."home/6a/elevation" = { };
+  sops.secrets."tsnsrv/auth_key" = { };
+  sops.secrets."tsnsrv/tailnet" = { };
 }

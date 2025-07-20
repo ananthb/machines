@@ -45,11 +45,19 @@
     };
   };
 
-  sops.secrets."tsnsrv/nodes/jellyfin" = { };
-  sops.secrets."tsnsrv/nodes/jellyseerr" = { };
-  sops.secrets."tsnsrv/nodes/immich" = { };
-  sops.secrets."email/from/immich" = { };
-  sops.secrets."email/replyTo/immich" = { };
+  sops.secrets = {
+    "tsnsrv/nodes/jellyfin" = { };
+    "tsnsrv/nodes/jellyseerr" = { };
+    "tsnsrv/nodes/immich" = { };
+    "email/from/immich" = { };
+    "email/replyTo/immich" = { };
+    "oauth_clients/immich/client_id".owner = config.users.users.immich.name;
+    "oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
+    "oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
+    "oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
+    "oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
+  };
+
   sops.templates."immich/config.json" = {
     owner = config.users.users.immich.name;
     content = ''
@@ -239,11 +247,4 @@
     '';
   };
 
-  sops.secrets = {
-    "oauth_clients/immich/client_id".owner = config.users.users.immich.name;
-    "oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
-    "oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
-    "oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
-    "oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
-  };
 }

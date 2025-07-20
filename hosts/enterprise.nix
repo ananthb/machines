@@ -1,12 +1,17 @@
-{ config, ... }:
+{ pkgs, config, ... }:
 
 {
+  environment.systemPackages = with pkgs; [
+    tsnsrv
+  ];
+
   homebrew.brews = [
     "readsb"
   ];
   homebrew.casks = [
     "kopiaui"
     "utm"
+    "jellyfin"
     "jellyfin-media-player"
   ];
   homebrew.masApps = { };
@@ -14,6 +19,28 @@
   launchd = {
     user = {
       agents = {
+        tsnsrv-tv = {
+          script = ''
+            /opt/homebrew/bin/tsnsrv \
+              -funnel \
+              -name $(cat $NAME) \
+              -authKeyPath $AUTH_KEY \
+              -stateDir /Users/ananth/Library/Application\ Support/tsnsrv/$(cat $NAME) \
+              http://localhost:8096
+          '';
+          serviceConfig = {
+            EnvironmentVariables = {
+              AUTH_KEY = config.sops.secrets."tsnsrv/auth_key".path;
+              TAILNET = config.sops.secrets."tsnsrv/tailnet".path;
+              NAME = config.sops.secrets."tsnsrv/nodes/jellyfin".path;
+            };
+            ProcessType = "Background";
+            KeepAlive = true;
+            RunAtLoad = true;
+            StandardOutPath = "/Users/ananth/Library/Logs/tsnsrv/tv.log";
+            StandardErrorPath = "/Users/ananth/Library/Logs/tsnsrv/tv.log";
+          };
+        };
         readsb = {
           script = ''
             	    /opt/homebrew/bin/readsb \
@@ -115,4 +142,6 @@
       };
     };
   };
+
+  sops.secrets."tsnsrv/nodes/jellyfin" = { };
 }
