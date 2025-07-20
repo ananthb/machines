@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ config, username, ... }:
 
 {
   homebrew.brews = [
@@ -142,5 +142,8 @@
     };
   };
 
-  sops.secrets."tsnsrv/nodes/jellyfin" = { };
+  sops.secrets."home/6a/latitude" = { owner = username; };
+  sops.secrets."home/6a/longitude" = { owner = username; };
+  sops.secrets."home/6a/elevation" = { owner = username; };
+  sops.secrets."tsnsrv/nodes/jellyfin" = { owner = username; };
 }
