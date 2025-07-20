@@ -1,12 +1,9 @@
 { pkgs, config, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    tsnsrv
-  ];
-
   homebrew.brews = [
     "readsb"
+    "tsnet-serve"
     {
       name = "meilisearch";
       start_service = true;
@@ -26,24 +23,21 @@
       agents = {
         tsnsrv-tv = {
           script = ''
-            tsnsrv \
+            /opt/homebrew/bin/tsnet-serve \
+              -hostname $(cat $NAME) \
+              -backend http://localhost:8096 \
               -funnel \
-              -name $(cat $NAME) \
-              -authKeyPath $AUTH_KEY \
-              -stateDir /Users/ananth/Library/Application\ Support/tsnsrv/$(cat $NAME) \
-              http://localhost:8096
+              -stateDir /Users/ananth/Library/Application\ Support/tsnet-serve/$(cat $NAME)
           '';
           serviceConfig = {
             EnvironmentVariables = {
-              AUTH_KEY = config.sops.secrets."tsnsrv/auth_key".path;
-              TAILNET = config.sops.secrets."tsnsrv/tailnet".path;
               NAME = config.sops.secrets."tsnsrv/nodes/jellyfin".path;
             };
             ProcessType = "Background";
             KeepAlive = true;
             RunAtLoad = true;
-            StandardOutPath = "/Users/ananth/Library/Logs/tsnsrv/tv.log";
-            StandardErrorPath = "/Users/ananth/Library/Logs/tsnsrv/tv.log";
+            StandardOutPath = "/Users/ananth/Library/Logs/tsnet-serve/tv.log";
+            StandardErrorPath = "/Users/ananth/Library/Logs/tsnet-serve/tv.log";
           };
         };
         readsb = {
