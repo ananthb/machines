@@ -240,10 +240,14 @@
             static_configs = [
               {
                 targets = [
-                  "localhost:8081" # immich
-                  "localhost:9187" # postgres
+                  "localhost:8081" # immich exporter
+                  "localhost:9187" # postgres exporter
+                  "localhost:9121" # redis exporter
+                  "localhost:9708" # radarr exporter
+                  "localhost:9709" # sonarr exporter
+                  "localhost:9710" # prowlarr exporter
                 ];
-                labels.type = "app";
+                labels.type = "exporter";
                 labels.role = "server";
               }
             ];
@@ -254,51 +258,73 @@
 
     prometheus.exporters = {
       node = {
-      enable = true;
-      openFirewall = true;
-      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
-      enabledCollectors = [
-        "ethtool"
-        "perf"
-        "systemd"
-        "tcpstat"
-        "wifi"
-      ];
-      disabledCollectors = [ "textfile" ];
-    };
+        enable = true;
+        openFirewall = true;
+        # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
+        enabledCollectors = [
+          "ethtool"
+          "perf"
+          "systemd"
+          "tcpstat"
+          "wifi"
+        ];
+        disabledCollectors = [ "textfile" ];
+      };
 
-    blackbox = {
-      enable = true;
-      listenAddress = "[::1]";
-      configFile = pkgs.writeText "blackbox_exporter.conf" ''
-        modules:
-          icmp:
-            prober: icmp
-          https_2xx_warp_proxy:
-            prober: http
-            http:
-              proxy_url: "socks5://localhost:8080"
-              method: GET
-              valid_status_codes: [200]
-              no_follow_redirects: true
-              fail_if_not_ssl: true
-          http_2xx:
-            prober: http
-            http:
-              method: GET
-              no_follow_redirects: true
-              fail_if_ssl: true
-          https_2xx:
-            prober: http
-            http:
-              method: GET
-              no_follow_redirects: true
-              fail_if_not_ssl: true
-      '';
-    };
+      blackbox = {
+        enable = true;
+        listenAddress = "[::1]";
+        configFile = pkgs.writeText "blackbox_exporter.conf" ''
+          modules:
+            icmp:
+              prober: icmp
+            https_2xx_warp_proxy:
+              prober: http
+              http:
+                proxy_url: "socks5://localhost:8080"
+                method: GET
+                valid_status_codes: [200]
+                no_follow_redirects: true
+                fail_if_not_ssl: true
+            http_2xx:
+              prober: http
+              http:
+                method: GET
+                no_follow_redirects: true
+                fail_if_ssl: true
+            https_2xx:
+              prober: http
+              http:
+                method: GET
+                no_follow_redirects: true
+                fail_if_not_ssl: true
+        '';
+      };
 
-    postgres.enable = true;
-  };
+      postgres.enable = true;
+      redis.enable = true;
+      exportarr-radarr = {
+        enable = true;
+        url = "http://localhost:7878";
+        listenAddress = "[::1]";
+        port = 9708;
+        apiKeyFile = config.sops.secrets."arr/api_keys/radarr".path;
+      };
+      exportarr-sonarr = {
+        enable = true;
+        url = "http://localhost:8989";
+        listenAddress = "[::1]";
+        port = 9709;
+        apiKeyFile = config.sops.secrets."arr/api_keys/sonarr".path;
+      };
+      exportarr-prowlarr = {
+        enable = true;
+        url = "http://localhost:9696";
+        listenAddress = "[::1]";
+        port = 9710;
+        apiKeyFile = config.sops.secrets."arr/api_keys/prowlarr".path;
+      };
+    };
 
     grafana = {
       enable = true;
@@ -358,9 +384,12 @@
 
   sops.secrets."tsnsrv/nodes/grafana" = { };
   sops.secrets."email/from/grafana".owner = config.users.users.grafana.name;
-  sops.secrets."keys/arr_apis/radarr".owner = config.services.prometheus.exporters.exportarr-radarr.user;
-  sops.secrets."keys/arr_apis/sonarr".owner = config.services.prometheus.exporters.exportarr-sonarr.user;
-  sops.secrets."keys/arr_apis/prowlarr".owner = config.services.prometheus.exporters.exportarr-prowlarr.user;
+  sops.secrets."keys/arr_apis/radarr".owner =
+    config.services.prometheus.exporters.exportarr-radarr.user;
+  sops.secrets."keys/arr_apis/sonarr".owner =
+    config.services.prometheus.exporters.exportarr-sonarr.user;
+  sops.secrets."keys/arr_apis/prowlarr".owner =
+    config.services.prometheus.exporters.exportarr-prowlarr.user;
 
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;

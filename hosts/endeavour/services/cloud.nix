@@ -192,7 +192,9 @@
           "enabled": true,
           "issuerUrl": "${config.sops.placeholder."keys/oauth_clients/immich/issuer_url"}",
           "mobileOverrideEnabled": true,
-          "mobileRedirectUri": "${config.sops.placeholder."keys/oauth_clients/immich/redirect_uris/mobile"}",
+          "mobileRedirectUri": "${
+            config.sops.placeholder."keys/oauth_clients/immich/redirect_uris/mobile"
+          }",
           "scope": "openid email profile",
           "signingAlgorithm": "RS256",
           "profileSigningAlgorithm": "none",
