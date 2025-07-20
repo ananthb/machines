@@ -3,17 +3,10 @@
 {
   homebrew.brews = [
     "readsb"
-    "tsnet-serve"
-    {
-      name = "meilisearch";
-      start_service = true;
-      restart_service = "changed";
-    }
   ];
   homebrew.casks = [
     "kopiaui"
     "utm"
-    "jellyfin"
     "jellyfin-media-player"
   ];
   homebrew.masApps = { };
@@ -21,25 +14,6 @@
   launchd = {
     user = {
       agents = {
-        tsnet-serve-tv = {
-          script = ''
-            /opt/homebrew/bin/tsnet-serve \
-              -hostname $(cat $NAME) \
-              -backend http://localhost:8096 \
-              -funnel \
-              -state-dir /Users/ananth/Library/Application\ Support/tsnet-serve/$(cat $NAME)
-          '';
-          serviceConfig = {
-            EnvironmentVariables = {
-              NAME = config.sops.secrets."tsnsrv/nodes/jellyfin".path;
-            };
-            ProcessType = "Background";
-            KeepAlive = true;
-            RunAtLoad = true;
-            StandardOutPath = "/Users/ananth/Library/Logs/tsnet-serve/tv.log";
-            StandardErrorPath = "/Users/ananth/Library/Logs/tsnet-serve/tv.log";
-          };
-        };
         readsb = {
           script = ''
             	    /opt/homebrew/bin/readsb \
@@ -142,8 +116,13 @@
     };
   };
 
-  sops.secrets."home/6a/latitude" = { owner = username; };
-  sops.secrets."home/6a/longitude" = { owner = username; };
-  sops.secrets."home/6a/elevation" = { owner = username; };
-  sops.secrets."tsnsrv/nodes/jellyfin" = { owner = username; };
+  sops.secrets."home/6a/latitude" = {
+    owner = username;
+  };
+  sops.secrets."home/6a/longitude" = {
+    owner = username;
+  };
+  sops.secrets."home/6a/elevation" = {
+    owner = username;
+  };
 }

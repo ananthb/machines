@@ -20,14 +20,21 @@
       enable = true;
     };
 
-    tsnsrv.services.imm = {
-      funnel = true;
-      urlParts.port = 2283;
-    };
+    tsnsrv.services = {
+      tv = {
+        funnel = true;
+        urlParts.port = 8096;
+      };
 
-    tsnsrv.services.see = {
-      funnel = true;
-      urlParts.port = 5055;
+      imm = {
+        funnel = true;
+        urlParts.port = 2283;
+      };
+
+      see = {
+        funnel = true;
+        urlParts.port = 5055;
+      };
     };
   };
 
