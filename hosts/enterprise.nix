@@ -7,6 +7,11 @@
 
   homebrew.brews = [
     "readsb"
+    {
+      name = "meilisearch";
+      start_service = true;
+      restart_service = "changed";
+    }
   ];
   homebrew.casks = [
     "kopiaui"
@@ -21,7 +26,7 @@
       agents = {
         tsnsrv-tv = {
           script = ''
-            /opt/homebrew/bin/tsnsrv \
+            tsnsrv \
               -funnel \
               -name $(cat $NAME) \
               -authKeyPath $AUTH_KEY \
