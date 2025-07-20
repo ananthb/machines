@@ -162,7 +162,7 @@
           "clientId": "${config.sops.placeholder."oauth_clients/immich/client_id"}",
           "clientSecret": "${config.sops.placeholder."oauth_clients/immich/client_secret"}",
           "defaultStorageQuota": null,
-          "enabled": false,
+          "enabled": true,
           "issuerUrl": "${config.sops.placeholder."oauth_clients/immich/issuer_url"}",
           "mobileOverrideEnabled": true,
           "mobileRedirectUri": "${config.sops.placeholder."oauth_clients/immich/redirect_uris/mobile"}",
