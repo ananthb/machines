@@ -1,6 +1,10 @@
-{ ... }:
+{ tsnsrv, ... }:
 
 {
+  imports = [
+    tsnsrv.nixosModules.default
+  ];
+
   homebrew.brews = [
     "lima"
     "docker"
