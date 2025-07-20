@@ -38,6 +38,32 @@
     };
   };
 
+  # Modify jellyfin-web index.html for the intro-skipper plugin to work.
+  # intro skipper plugin has to be installed from the UI.
+  nixpkgs.overlays = [
+    (final: prev: {
+      jellyfin-web = prev.jellyfin-web.overrideAttrs (
+        finalAttrs: previousAttrs: {
+          installPhase = ''
+            runHook preInstall
+
+            # this is the important line
+            sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
+
+            mkdir -p $out/share
+            cp -a dist $out/share/jellyfin-web
+
+            runHook postInstall
+          '';
+        }
+      );
+    })
+  ];
+
+  systemd.services.immich-server.environment = {
+    IMMICH_TELEMETRY_INCLUDE = "all";
+  };
+
   sops.secrets = {
     "tsnsrv/nodes/jellyfin" = { };
     "tsnsrv/nodes/jellyseerr" = { };

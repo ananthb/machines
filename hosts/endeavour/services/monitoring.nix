@@ -1,10 +1,10 @@
 { config, pkgs, ... }:
-{
 
+{
   services = {
     victoriametrics = {
       enable = true;
-      listenAddress = "[::1]:8428";
+      #listenAddress = "[::1]:8428";
       retentionPeriod = "1y";
       extraOptions = [
         "-enableTCP6"
@@ -142,6 +142,7 @@
                   "http://localhost:7878"
                   "http://localhost:8989"
                   "http://localhost:9696"
+                  "http://localhost:2283"
                 ];
                 labels.type = "app";
                 labels.role = "server";
@@ -234,29 +235,25 @@
               }
             ];
           }
-          /*
-            {
-              job_name = "tsnsrvs";
-              static_configs = [
-                {
-                  targets = [
-                    "localhost:9099"
-                    "localhost:9098"
-                    "localhost:9097"
-                    "localhost:9096"
-                    "localhost:9095"
-                    "localhost:9094"
-                  ];
-                  labels.type = "reverse_proxy";
-                }
-              ];
-            }
-          */
+          {
+            job_name = "apps";
+            static_configs = [
+              {
+                targets = [
+                  "localhost:8081" # immich
+                  "localhost:9187" # postgres
+                ];
+                labels.type = "app";
+                labels.role = "server";
+              }
+            ];
+          }
         ];
       };
     };
 
-    prometheus.exporters.node = {
+    prometheus.exporters = {
+      node = {
       enable = true;
       openFirewall = true;
       # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
@@ -270,7 +267,7 @@
       disabledCollectors = [ "textfile" ];
     };
 
-    prometheus.exporters.blackbox = {
+    blackbox = {
       enable = true;
       listenAddress = "[::1]";
       configFile = pkgs.writeText "blackbox_exporter.conf" ''
@@ -299,6 +296,9 @@
               fail_if_not_ssl: true
       '';
     };
+
+    postgres.enable = true;
+  };
 
     grafana = {
       enable = true;
@@ -343,6 +343,19 @@
     };
   };
 
+  systemd.services.grafana.environment = {
+    GF_AUTH_DISABLE_LOGIN_FORM = "true";
+    GF_AUTH_BASIC_ENABLED = "false";
+    GF_AUTH_PROXY_ENABLED = "true";
+    GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
+    GF_AUTH_PROXY_HEADER_PROPERTY = "username";
+    GF_AUTH_PROXY_AUTO_SIGN_UP = "false";
+    GF_AUTH_PROXY_SYNC_TTL = "60";
+    GF_AUTH_PROXY_WHITELIST = "::1";
+    GF_AUTH_PROXY_HEADERS = "Name:X-Tailscale-User-DisplayName";
+    GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
+  };
+
   sops.secrets."tsnsrv/nodes/grafana" = { };
   sops.secrets."email/from/grafana".owner = config.users.users.grafana.name;
   sops.templates."fqdns/grafana.txt" = {
@@ -371,7 +384,7 @@
                 }",
                 "https://${config.sops.placeholder."tsnsrv/nodes/immich"}.${
                   config.sops.placeholder."tsnsrv/tailnet"
-                }",
+                }"
               ],
               "labels" = {
                   "type" = "app",

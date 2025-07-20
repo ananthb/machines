@@ -45,6 +45,8 @@
     pkiBundle = "/var/lib/sbctl";
   };
 
+  # hardware accelerated graphics
+  # used by immich and jellyfin
   nixpkgs.config.packageOverrides = pkgs: {
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
@@ -102,41 +104,6 @@
       };
     };
     spiceUSBRedirection.enable = true;
-  };
-
-  # Modify jellyfin-web index.html for the intro-skipper plugin to work.
-  # intro skipper plugin has to be installed from the UI.
-  nixpkgs.overlays = [
-    (final: prev: {
-      jellyfin-web = prev.jellyfin-web.overrideAttrs (
-        finalAttrs: previousAttrs: {
-          installPhase = ''
-            runHook preInstall
-
-            # this is the important line
-            sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
-
-            mkdir -p $out/share
-            cp -a dist $out/share/jellyfin-web
-
-            runHook postInstall
-          '';
-        }
-      );
-    })
-  ];
-
-  systemd.services.grafana.environment = {
-    GF_AUTH_DISABLE_LOGIN_FORM = "true";
-    GF_AUTH_BASIC_ENABLED = "false";
-    GF_AUTH_PROXY_ENABLED = "true";
-    GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
-    GF_AUTH_PROXY_HEADER_PROPERTY = "username";
-    GF_AUTH_PROXY_AUTO_SIGN_UP = "false";
-    GF_AUTH_PROXY_SYNC_TTL = "60";
-    GF_AUTH_PROXY_WHITELIST = "::1";
-    GF_AUTH_PROXY_HEADERS = "Name:X-Tailscale-User-DisplayName";
-    GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
   };
 
   security = {
