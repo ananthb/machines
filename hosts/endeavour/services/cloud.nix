@@ -23,25 +23,11 @@
     tsnsrv.services.imm = {
       funnel = true;
       urlParts.port = 2283;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9097"
-      ];
-    };
-
-    tsnsrv.services.tv = {
-      funnel = true;
-      urlParts.port = 8096;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9096"
-      ];
     };
 
     tsnsrv.services.see = {
       funnel = true;
       urlParts.port = 5055;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9095"
-      ];
     };
   };
 

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, hostname, ... }:
 
 {
   imports = [
@@ -26,7 +26,7 @@
     cloudflare-warp.enable = true;
     cloudflare-warp.openFirewall = false;
 
-    services.samba = {
+    samba = {
       enable = true;
       securityType = "user";
       openFirewall = true;
@@ -34,7 +34,7 @@
         global = {
           "workgroup" = "WORKGROUP";
           "server string" = "Samba Server %v";
-          "netbios name" = "samba-server";
+          "netbios name" = "${hostname}";
           "security" = "user";
           "use sendfile" = "yes";
           # note: localhost is the ipv6 localhost ::1
@@ -54,6 +54,11 @@
           "force group" = "media";
         };
       };
+    };
+
+    samba-wsdd = {
+      enable = true;
+      openFirewall = true;
     };
 
     tsnsrv = {
