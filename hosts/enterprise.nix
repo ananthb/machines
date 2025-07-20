@@ -21,7 +21,7 @@
   launchd = {
     user = {
       agents = {
-        tsnsrv-tv = {
+        tsnet-serve-tv = {
           script = ''
             /opt/homebrew/bin/tsnet-serve \
               -hostname $(cat $NAME) \
