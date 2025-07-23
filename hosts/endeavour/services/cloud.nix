@@ -7,6 +7,7 @@
       environment = {
         "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
       };
+      mediaLocation = "/srv/immich";
     };
 
     jellyfin.enable = true;

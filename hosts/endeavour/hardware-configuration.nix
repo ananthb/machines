@@ -55,14 +55,21 @@
       "relatime"
     ];
   };
-
+  
   fileSystems."/var" = {
-    device = "/dev/disk/by-uuid/2b8303be-0372-4dfe-8430-03d15c27629c";
+    device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
     fsType = "btrfs";
     options = [
+      "subvol=@var"
       "compress=zstd"
       "relatime"
     ];
+  };
+
+  fileSystems."/srv" = {
+    device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
+    fsType = "bcachefs";
+    options = [ "relatime" ];
   };
 
   fileSystems."/boot" = {
