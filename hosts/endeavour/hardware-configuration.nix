@@ -26,6 +26,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.supportedFilesystems = [ "bcachefs" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
@@ -60,15 +61,6 @@
     fsType = "btrfs";
     options = [
       "compress=zstd"
-      "relatime"
-    ];
-  };
-
-  fileSystems."/srv/hathi" = {
-    device = "/dev/disk/by-uuid/5f886f0b-58aa-45a8-a269-3544deb53141";
-    fsType = "btrfs";
-    options = [
-      "subvol=@backups"
       "relatime"
     ];
   };

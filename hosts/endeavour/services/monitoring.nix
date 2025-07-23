@@ -308,27 +308,34 @@
         url = "http://localhost:7878";
         listenAddress = "[::1]";
         port = 9708;
-        apiKeyFile = config.sops.secrets."arr/api_keys/radarr".path;
+        apiKeyFile = config.sops.secrets."keys/arr_apis/radarr".path;
       };
       exportarr-sonarr = {
         enable = true;
         url = "http://localhost:8989";
         listenAddress = "[::1]";
         port = 9709;
-        apiKeyFile = config.sops.secrets."arr/api_keys/sonarr".path;
+        apiKeyFile = config.sops.secrets."keys/arr_apis/sonarr".path;
       };
       exportarr-prowlarr = {
         enable = true;
         url = "http://localhost:9696";
         listenAddress = "[::1]";
         port = 9710;
-        apiKeyFile = config.sops.secrets."arr/api_keys/prowlarr".path;
+        apiKeyFile = config.sops.secrets."keys/arr_apis/prowlarr".path;
       };
     };
 
     grafana = {
       enable = true;
       settings = {
+        database = {
+          type = "postgres";
+          host = "/run/postgresql";
+          name = "grafana";
+          user = "grafana";
+        };
+
         server = {
           http_addr = "::1";
           domain = "$__file{${config.sops.templates."fqdns/grafana.txt".path}}";
@@ -360,6 +367,18 @@
       };
     };
 
+    postgresql = {
+      enable = true;
+      ensureDatabases = [ "grafana" ];
+      ensureUsers = [
+        {
+          name = "grafana";
+          ensureDBOwnership = true;
+          ensureClauses.login = true;
+        }
+      ];
+    };
+
     tsnsrv.services.mon = {
       funnel = true;
       urlParts.port = 3000;
@@ -384,12 +403,9 @@
 
   sops.secrets."tsnsrv/nodes/grafana" = { };
   sops.secrets."email/from/grafana".owner = config.users.users.grafana.name;
-  sops.secrets."keys/arr_apis/radarr".owner =
-    config.services.prometheus.exporters.exportarr-radarr.user;
-  sops.secrets."keys/arr_apis/sonarr".owner =
-    config.services.prometheus.exporters.exportarr-sonarr.user;
-  sops.secrets."keys/arr_apis/prowlarr".owner =
-    config.services.prometheus.exporters.exportarr-prowlarr.user;
+  sops.secrets."keys/arr_apis/radarr".mode = "0444";
+  sops.secrets."keys/arr_apis/sonarr".mode = "0444";
+  sops.secrets."keys/arr_apis/prowlarr".mode = "0444";
 
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;
