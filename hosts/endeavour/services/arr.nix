@@ -15,7 +15,7 @@
         umask = "002";
         proxy_url = "socks5://localhost:8080";
 
-        download-dir = "/srv/downloads";
+        download-dir = "/srv/media/Downloads";
 
         alt-speed-up = 1000; # 1000KB/s
         alt-speed-down = 1000; # 1000KB/s
