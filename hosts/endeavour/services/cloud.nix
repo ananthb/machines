@@ -119,28 +119,28 @@
         },
         "job": {
           "backgroundTask": {
-            "concurrency": 5
+            "concurrency": 4
           },
           "smartSearch": {
             "concurrency": 2
           },
           "metadataExtraction": {
-            "concurrency": 5
+            "concurrency": 4
           },
           "faceDetection": {
             "concurrency": 2
           },
           "search": {
-            "concurrency": 5
+            "concurrency": 4
           },
           "sidecar": {
-            "concurrency": 5
+            "concurrency": 4
           },
           "library": {
-            "concurrency": 5
+            "concurrency": 4
           },
           "migration": {
-            "concurrency": 5
+            "concurrency": 4
           },
           "thumbnailGeneration": {
             "concurrency": 3
@@ -149,7 +149,7 @@
             "concurrency": 1
           },
           "notifications": {
-            "concurrency": 5
+            "concurrency": 4
           }
         },
         "logging": {
