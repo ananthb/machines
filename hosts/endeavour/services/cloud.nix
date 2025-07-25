@@ -39,6 +39,11 @@
     };
   };
 
+  users.users.immich.extraGroups = [
+    "video"
+    "render"
+  ];
+
   # Modify jellyfin-web index.html for the intro-skipper plugin to work.
   # intro skipper plugin has to be installed from the UI.
   nixpkgs.overlays = [
@@ -153,7 +158,7 @@
         },
         "machineLearning": {
           "enabled": true,
-          "urls": ["http://immich-machine-learning:3003"],
+          "urls": ["http://localhost:3003"],
           "clip": {
             "enabled": true,
             "modelName": "ViT-B-32__openai"

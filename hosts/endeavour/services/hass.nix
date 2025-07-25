@@ -96,7 +96,7 @@
   sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
   sops.templates."fqdns/ha-6a.txt" = {
     owner = config.users.users.hass.name;
-    content = "${config.sops.placeholder."tsnsrv/nodes/ha-6a"}.${
+    content = "https://${config.sops.placeholder."tsnsrv/nodes/ha-6a"}.${
       config.sops.placeholder."tsnsrv/tailnet"
     }";
   };

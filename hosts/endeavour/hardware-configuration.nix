@@ -55,7 +55,7 @@
       "relatime"
     ];
   };
-  
+
   fileSystems."/var" = {
     device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
     fsType = "btrfs";
