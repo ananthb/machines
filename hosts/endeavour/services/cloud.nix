@@ -17,9 +17,7 @@
     meilisearch.enable = true;
     meilisearch.package = pkgs.meilisearch;
 
-    jellyseerr = {
-      enable = true;
-    };
+    jellyseerr.enable = true;
 
     tsnsrv.services = {
       tv = {
