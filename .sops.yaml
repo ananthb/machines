@@ -8,6 +8,10 @@ keys:
   - &host_enterprise age1s5zrm3qygmhjfxw6wfauas7zm85exr2cq7ff7v79suhdkvzjnf3s97dw5s
   - &host_enterprise_user_ananth age1wl9ycv0enhqrhkxhh5q200qqul6zq27865la4m3vfwqzqphfhp3qu3zksh
 creation_rules:
+  - path_regex: fly\-apps\/.*\.toml$
+    key_groups:
+      - pgp:
+        - *admin_ananth
   - path_regex: secrets.yaml$
     key_groups:
       - pgp:

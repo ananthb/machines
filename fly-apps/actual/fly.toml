@@ -1,53 +1,16 @@
-# fly.toml app configuration file generated for actual-white-moon-5023 on 2025-07-14T22:43:59+05:30
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = 'actual-white-moon-5023'
-primary_region = 'sin'
-
-[experimental]
-  cmd = ['node', '--max-old-space-size=180', 'app.js']
-  auto_rollback = true
-
-[build]
-  image = 'actualbudget/actual-server:latest'
-
-[env]
-  PORT = '5006'
-  TINI_SUBREAPER = '1'
-  ACTUAL_LOGIN_METHOD = 'openid'
-  ACTUAL_ALLOWED_LOGIN_METHODS = 'openid'
-
-[[mounts]]
-  source = 'actual_data'
-  destination = '/data'
-
-[[services]]
-  protocol = 'tcp'
-  internal_port = 5006
-  processes = ['app']
-  auto_start_machines = true
-  auto_stop_machines = true
-
-  [[services.ports]]
-    port = 80
-    handlers = ['http']
-    force_https = true
-
-  [[services.ports]]
-    port = 443
-    handlers = ['tls', 'http']
-
-  [services.concurrency]
-    type = 'connections'
-    hard_limit = 25
-    soft_limit = 20
-
-  [[services.tcp_checks]]
-    interval = '15s'
-    timeout = '2s'
-    grace_period = '10s'
-
-[[vm]]
-  size = 'shared-cpu-1x'
+{
+	"data": "ENC[AES256_GCM,data:drSWfl07+txxeAvleddt5fhcmuPj4UxOS42TxCvOQN9uhGtTyHTeyb7gnbIsaNuLUarWHQEOAvPPyoCjrObvCGz3rz7BsvuAnwP+f9d+N7kTWwL8uiVdvCrdPhT/PLDX1mnaGBlmIOdsBaLbtTBDXwvOAIcNO1lBDQXqPOWs9OB24hPAXZWlCM4Rfbk2WgZLDUKM9DXOeT08LVjg7kdpJElkQCr6Lpu70UvyJUVGMLfb29Yh3iCr8JnJ4iWaIm9mB53p2Ih4AcmiT4FnLNW40tRrPscI0TK/SvDEskM0F5psPFQTA93AXJTutouP31yYQ7NF0SXkYNSGnPzXuJgVGaAwEc3tMVXx1UA5urX5Sd0eNjS4QqCCjftSEDLqItKX+6LDeMMj7pPBFTOyMbOZgvAqKy8QkBnhCrNnebucrzkGJdWgHX9g0HqVb4OuCzs3R8X5no5D537TxcNJeCf2bUpl8XrXVULFZF5PlM3gsScC/92Y8dzSkBwZ/4NC3y5P3/kAP+hzW+xdFsW5lhSuCtezw70N2P+fNvkAgrgDVMkHJHlKRRlO5teZGAPPEhz5pt93ROfT3n2WiMnb3L8po3W04oxCv1PcbbhRMVDmn9/ZpJRllMlZRXGG9eXWq5FFNEcxPKBAZ37kv1Ylh17TomGWGYjUCF4LcnDEnhrZeEdXwmIt56kykz6uC+QaAeuzqfLWr2s9bLA/7D3uAe4846LfDp9RYK9WjBLas9WYbKaDyDmrOrbGpDK5NaNAJSyB0kZnCdUoEq1OG2psCsgjIET+T6RWdsBmvXkCCWq+NGB1ofAHU5pM+ydlOtF88ugTr1i+YUFIvybv3uhsIdlGg9WlKFQu9uFJSFNugjPQuBMwU0hcZxy/224BEq+LtgW6yliNd9P2yOdHWQE5NLdLflzxUb4r9k7n7HdBKieQzWdH77O3W8w5cwejiQEy5h9TAbPR5upe4+t8JqFZTcu3hU7Z68dSGkkfhfqJtoZpSmry9g+Y5CQfX9Grb8RS5c2l6VQUWUDR6ynKvy3UWGtMhJWj/mRSMr+TPbvV1VhJYVpjtgYo/Nrz92stxuY9G9pO+pHNvSBgYZZPmU5yhemhks6VgXRIdqwJAjV1x02bfOZno3XtJYs5sVEg8uHPohSKASiIyVaT1hb8UKrFyokyE9QZ1gtECGuBDtoGU899FG4n9Y7wkc4Xx7KZhND1+uYdjLshSfsiS8IM7M6VVi0+hkIqa4ZABO3wBNlSPzSqzTkw/nDOmcQYAdXFGaAeBck17EpztwwfkcGShqQF9ha9MOka/aAZS4tfjzHI6gqkCdZzkClFpz8r1hDTb4sQ+DEmhDPStpyBLlUsd4h8MxTfkz9Uz9lSaYNCx0pNJS3KV3l1j4lQ4sHtrT1dSR2GIO7D3GwclPpCLpGT2qniQwQ9rP1dRSJI49wHNkXeGZ1FqQ==,iv:LTq4AsEo+LwDrTLJd7AzBRz+c0xqVV/DaVDZc2NMtkI=,tag:YseyFSsOyYVNNSQtCDBrsw==,type:str]",
+	"sops": {
+		"lastmodified": "2025-07-26T19:08:09Z",
+		"mac": "ENC[AES256_GCM,data:mm9fI0fhPh5FpDKJCZwd5+rv14e9xkqtEig4pe6OAxN2wvaGGmMGXUKI63vHgsSEMizVrmvRqfNLFC0ZhGnNEYmOFc8mlk0u674kHUh7/MXh5hEJd5jzttd18ujnS2MZrFnr0tlMLSu+mUWw5Gu6Obj95tEu29M0VkVkcehZHDA=,iv:Xo/VkTRhEa1t8/tkJR7DlBXHuk84g2TKWpsFzsPsu5g=,tag:V+udxD/h0tURCZkjvcEv/w==,type:str]",
+		"pgp": [
+			{
+				"created_at": "2025-07-26T19:08:09Z",
+				"enc": "-----BEGIN PGP MESSAGE-----\n\nhF4DWXc/otv8sz4SAQdArpvs+lPJML6Vm/yze/QdVpcH6o9ptso/a1bXyf3Pewow\nWThI4mPgZmDkxLQlSpOQdrX4IVHRb1Xc+DQP6K3t0sXfWNp/hbIBkWYcqcf7j8M5\n0lwBamdZtdP8sm+UpOmt5wA6GXK+RJ3O/YaEFOGREVeyjceCvSFNRyzyj+2oWtee\ngXpcduHg8rcE7EWrOXMEXAfeJrmqllrVAxwptf9o4ik8MUGkvMCL3l3/LfBcOA==\n=zTHq\n-----END PGP MESSAGE-----",
+				"fp": "4F0758D4AAE24E6D5A4483C666A20525398E18D7"
+			}
+		],
+		"unencrypted_suffix": "_unencrypted",
+		"version": "3.10.2"
+	}
+}
