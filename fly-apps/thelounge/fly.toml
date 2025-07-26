@@ -1,0 +1,39 @@
+# fly.toml app configuration file generated for thelounge-wispy-haze-4397 on 2025-07-26T22:09:16+05:30
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'thelounge-wispy-haze-4397'
+primary_region = 'sin'
+
+[build]
+  image = 'ghcr.io/thelounge/thelounge'
+
+[[mounts]]
+  source = 'thelounge_data'
+  destination = '/var/opt/thelounge'
+
+[http_service]
+  internal_port = 9000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[services]]
+  internal_port = 8113 # thelounge identd port
+  protocol = "tcp"
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 113
+    handlers = ["proxy_proto"]
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
