@@ -117,16 +117,16 @@
         },
         "job": {
           "backgroundTask": {
-            "concurrency": 4
+            "concurrency": 2
           },
           "smartSearch": {
-            "concurrency": 2
+            "concurrency": 1
           },
           "metadataExtraction": {
-            "concurrency": 4
+            "concurrency": 2
           },
           "faceDetection": {
-            "concurrency": 2
+            "concurrency": 1
           },
           "search": {
             "concurrency": 4
@@ -141,7 +141,7 @@
             "concurrency": 4
           },
           "thumbnailGeneration": {
-            "concurrency": 3
+            "concurrency": 4
           },
           "videoConversion": {
             "concurrency": 1
