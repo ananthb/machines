@@ -17,6 +17,7 @@
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
+  sops.secrets."google_cloud_service_accounts/kopia-hathi-backups" = { };
 
   users.groups.media.members = [
     username
