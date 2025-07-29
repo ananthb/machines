@@ -29,6 +29,8 @@
   inputs.tsnsrv.url = "github:boinkor-net/tsnsrv";
   inputs.tsnsrv.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.copyparty.url = "github:9001/copyparty";
+
   outputs =
     {
       self,
@@ -43,6 +45,7 @@
       homebrew-core,
       homebrew-cask,
       tsnsrv,
+      copyparty,
       ...
     }@inputs:
     {

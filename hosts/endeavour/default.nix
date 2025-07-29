@@ -21,6 +21,7 @@
 
   users.groups.media.members = [
     username
+    "copyparty"
     "jellyfin"
     "radarr"
     "sonarr"

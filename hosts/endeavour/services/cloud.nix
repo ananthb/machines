@@ -1,7 +1,23 @@
-{ config, pkgs, ... }:
+{ config, pkgs, copyparty, ... }:
 
 {
+  imports = [
+    copyparty.nixosModules.default
+  ];
+
   services = {
+    copyparty = {
+      enable = true;
+      settings = {
+        i = "unix:777:/dev/shm/party.sock";
+        e2dsa = true;
+        e2ts = true;
+        z = true;
+        idp-h-usr = "X-Tailscale-User-LoginName";
+        v = "/srv/drive/ananth:/drive:rwmda,antsub@gmail.com";
+      };
+    };
+
     immich = {
       enable = true;
       environment = {
@@ -25,6 +41,11 @@
         urlParts.port = 8096;
       };
 
+      cp = {
+        urlParts.port = 3923; # ignored
+        upstreamUnixAddr = "/dev/shm/party.sock";
+      };
+
       imm = {
         funnel = true;
         urlParts.port = 2283;
@@ -42,9 +63,11 @@
     "render"
   ];
 
-  # Modify jellyfin-web index.html for the intro-skipper plugin to work.
-  # intro skipper plugin has to be installed from the UI.
   nixpkgs.overlays = [
+    copyparty.overlays.default
+
+    # Modify jellyfin-web index.html for the intro-skipper plugin to work.
+    # intro skipper plugin has to be installed from the UI.
     (final: prev: {
       jellyfin-web = prev.jellyfin-web.overrideAttrs (
         finalAttrs: previousAttrs: {
@@ -64,6 +87,10 @@
     })
   ];
 
+  systemd.services.tsnsrv-cp.wants = [ "copyparty.service" ];
+  systemd.services.tsnsrv-cp.after = [ "copyparty.service" ];
+  systemd.services.tsnsrv-cp.serviceConfig.BindPaths = "/dev/shm";
+  systemd.services.copyparty.serviceConfig.BindPaths = "/srv/drive";
   systemd.services.immich-server.environment = {
     IMMICH_TELEMETRY_INCLUDE = "all";
   };
