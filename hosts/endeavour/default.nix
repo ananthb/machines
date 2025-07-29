@@ -67,12 +67,6 @@
   # System packages
   environment.systemPackages = with pkgs; [
     tpm2-tss
-    virt-manager
-    spice
-    spice-gtk
-    spice-protocol
-    win-virtio
-    win-spice
     pam_rssh
     e2fsprogs
 
@@ -94,18 +88,6 @@
   # };
 
   programs.fish.enable = true;
-
-  virtualisation = {
-    libvirtd = {
-      enable = true;
-      qemu = {
-        swtpm.enable = true;
-        ovmf.enable = true;
-        ovmf.packages = [ pkgs.OVMFFull.fd ];
-      };
-    };
-    spiceUSBRedirection.enable = true;
-  };
 
   security = {
     pam.rssh.enable = true;
