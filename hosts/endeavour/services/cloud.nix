@@ -1,6 +1,15 @@
-{ config, pkgs, copyparty, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  copyparty,
+  ...
+}:
 
 {
+  #
+  # Copyparty
+  #
   imports = [
     copyparty.nixosModules.default
   ];
@@ -14,10 +23,64 @@
         e2ts = true;
         z = true;
         idp-h-usr = "X-Tailscale-User-LoginName";
-        v = "/srv/drive/ananth:/drive:rwmda,antsub@gmail.com";
+      };
+      volumes = {
+        "/" = {
+          path = "/srv/drive/public";
+          access = {
+            rw = "*";
+            A = "antsub@gmail.com";
+          };
+        };
+        "/media" = {
+          path = "/srv/media";
+          access = {
+            r = "*";
+          };
+        };
+        "/ananth" = {
+          path = "/srv/drive/ananth";
+          access = {
+            A = "antsub@gmail.com";
+          };
+        };
+        "/arul" = {
+          path = "/srv/drive/arul";
+          access = {
+            A = "arulpriya93@gmail.com";
+          };
+        };
+        "/bhaskar" = {
+          path = "/srv/drive/bhaskar";
+          access = {
+            A = "bhaskar.yampet@gmail.com";
+          };
+        };
+        "/anu" = {
+          path = "/srv/drive/anu";
+          access = {
+            A = "anu.bhsrmn@gmail.com";
+          };
+        };
       };
     };
 
+    tsnsrv.services.cp = {
+      urlParts.port = 3923; # ignored
+      upstreamUnixAddr = "/dev/shm/party.sock";
+    };
+  };
+  systemd.services.tsnsrv-cp.wants = [ "copyparty.service" ];
+  systemd.services.tsnsrv-cp.after = [ "copyparty.service" ];
+  systemd.services.tsnsrv-cp.serviceConfig.BindPaths = "/dev/shm";
+  systemd.services.copyparty.serviceConfig.BindPaths = "/srv/drive";
+  systemd.services.copyparty.serviceConfig.Group = lib.mkForce "media";
+  systemd.services.copyparty.serviceConfig.UMask = lib.mkForce "0007";
+
+  #
+  # Immich
+  #
+  services = {
     immich = {
       enable = true;
       environment = {
@@ -26,35 +89,9 @@
       mediaLocation = "/srv/immich";
     };
 
-    jellyfin.enable = true;
-    jellyfin.group = "media";
-    jellyfin.openFirewall = true;
-
-    meilisearch.enable = true;
-    meilisearch.package = pkgs.meilisearch;
-
-    jellyseerr.enable = true;
-
-    tsnsrv.services = {
-      tv = {
-        funnel = true;
-        urlParts.port = 8096;
-      };
-
-      cp = {
-        urlParts.port = 3923; # ignored
-        upstreamUnixAddr = "/dev/shm/party.sock";
-      };
-
-      imm = {
-        funnel = true;
-        urlParts.port = 2283;
-      };
-
-      see = {
-        funnel = true;
-        urlParts.port = 5055;
-      };
+    tsnsrv.services.imm = {
+      funnel = true;
+      urlParts.port = 2283;
     };
   };
 
@@ -62,6 +99,27 @@
     "video"
     "render"
   ];
+
+  systemd.services.immich-server.environment = {
+    IMMICH_TELEMETRY_INCLUDE = "all";
+  };
+
+  #
+  # Jellyfin
+  #
+  services = {
+    jellyfin.enable = true;
+    jellyfin.group = "media";
+    jellyfin.openFirewall = true;
+
+    meilisearch.enable = true;
+    meilisearch.package = pkgs.meilisearch;
+
+    tsnsrv.services.tv = {
+      funnel = true;
+      urlParts.port = 8096;
+    };
+  };
 
   nixpkgs.overlays = [
     copyparty.overlays.default
@@ -87,12 +145,16 @@
     })
   ];
 
-  systemd.services.tsnsrv-cp.wants = [ "copyparty.service" ];
-  systemd.services.tsnsrv-cp.after = [ "copyparty.service" ];
-  systemd.services.tsnsrv-cp.serviceConfig.BindPaths = "/dev/shm";
-  systemd.services.copyparty.serviceConfig.BindPaths = "/srv/drive";
-  systemd.services.immich-server.environment = {
-    IMMICH_TELEMETRY_INCLUDE = "all";
+  #
+  # Jellyseer
+  #
+  services = {
+    jellyseerr.enable = true;
+
+    tsnsrv.services.see = {
+      funnel = true;
+      urlParts.port = 5055;
+    };
   };
 
   sops.secrets = {
