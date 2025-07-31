@@ -18,11 +18,35 @@
     copyparty = {
       enable = true;
       settings = {
+        name = "Copyparty";
+        ansi = true;
+
+        #network
         i = "unix:777:/dev/shm/party.sock";
+
+        # ssl/tls
+        http-only = true;
+
+        # idp
+        idp-h-usr = "X-Tailscale-User-LoginName";
+        idp-adm = "antsub@gmail.com";
+
+        # zeroconf
+        z = true;
+        z-on = [
+          "enp2s0"
+          "enp4s0"
+        ];
+
+        # upload
+        chmod-f = "664";
+        chmod-d = "775";
+        df = "10"; # reject uploads if we have less than 10GiB free
+        nosubtle = "137"; # enable wasm hasher on chrome > 137
+
+        # general db
         e2dsa = true;
         e2ts = true;
-        z = true;
-        idp-h-usr = "X-Tailscale-User-LoginName";
       };
       volumes = {
         "/" = {
