@@ -58,6 +58,7 @@ in
     nix-output-monitor
     kopia
     flyctl
+    devenv
   ];
 
   home.stateVersion = "24.05";
