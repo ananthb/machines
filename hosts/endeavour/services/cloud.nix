@@ -379,7 +379,7 @@
           }
         },
         "user": {
-          "deleteDelay": 7
+          "deleteDelay": 1
         }
       }
     '';
