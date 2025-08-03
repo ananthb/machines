@@ -15,18 +15,21 @@
             cputemp = true;
             uptime = true;
             units = "metrics";
+            refresh = 30000;
           };
         }
         {
           resources = {
             label = "Network";
             network = true;
+            refresh = 10000;
           };
         }
         {
           resources = {
             label = "Storage";
             disk = "/srv";
+            refresh = 60000;
           };
         }
       ];
