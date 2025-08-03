@@ -94,12 +94,15 @@
       upstreamUnixAddr = "/dev/shm/party.sock";
     };
   };
+
   systemd.services.tsnsrv-cp.wants = [ "copyparty.service" ];
   systemd.services.tsnsrv-cp.after = [ "copyparty.service" ];
   systemd.services.tsnsrv-cp.serviceConfig.BindPaths = "/dev/shm";
+
   systemd.services.copyparty.serviceConfig.BindPaths = "/srv/drive";
   systemd.services.copyparty.serviceConfig.Group = lib.mkForce "media";
   systemd.services.copyparty.serviceConfig.UMask = lib.mkForce "0007";
+  systemd.services.copyparty.unitConfig.requiresmountsfor = "/srv";
 
   #
   # Immich
@@ -127,6 +130,10 @@
   systemd.services.immich-server.environment = {
     IMMICH_TELEMETRY_INCLUDE = "all";
   };
+  systemd.services.immich.unitConfig.requiresmountsfor = "/srv";
+
+  systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
+  systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
 
   #
   # Jellyfin
@@ -144,6 +151,9 @@
       urlParts.port = 8096;
     };
   };
+
+  systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
+  systemd.services.tsnsrv-tv.after = [ "jellyfin.service" ];
 
   nixpkgs.overlays = [
     copyparty.overlays.default
@@ -181,6 +191,12 @@
     };
   };
 
+  systemd.services.tsnsrv-see.wants = [ "jellyseer.service" ];
+  systemd.services.tsnsrv-see.after = [ "jellyseer.service" ];
+
+  #
+  # Secrets
+  #
   sops.secrets = {
     "tsnsrv/nodes/jellyfin" = { };
     "tsnsrv/nodes/jellyseerr" = { };
@@ -296,11 +312,11 @@
         },
         "metadata": {
           "faces": {
-            "import": false
+            "import": true
           }
         },
         "oauth": {
-          "autoLaunch": true,
+          "autoLaunch": false,
           "autoRegister": false,
           "buttonText": "Sign in with Google",
           "clientId": "${config.sops.placeholder."keys/oauth_clients/immich/client_id"}",
@@ -319,7 +335,7 @@
           "storageQuotaClaim": "immich_quota"
         },
         "passwordLogin": {
-          "enabled": true
+          "enabled": false
         },
         "storageTemplate": {
           "enabled": false,
@@ -338,10 +354,10 @@
             "quality": 80
           },
           "colorspace": "p3",
-          "extractEmbedded": false
+          "extractEmbedded": true
         },
         "newVersionCheck": {
-          "enabled": true
+          "enabled": false
         },
         "trash": {
           "enabled": true,
