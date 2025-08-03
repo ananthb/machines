@@ -185,6 +185,8 @@
                   "https://futuraphysio.com"
                   "https://drvibhu.com"
                   "https://lilaartscentre.com"
+                  "https://actual.kedi.dev"
+                  "https://irc.kedi.dev"
                 ];
                 labels.type = "hosted-site";
                 labels.location = "cloud";
