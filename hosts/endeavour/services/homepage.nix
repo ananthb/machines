@@ -9,9 +9,24 @@
       widgets = [
         {
           resources = {
+            label = "System";
             cpu = true;
-            disk = "/srv";
             memory = true;
+            cputemp = true;
+            uptime = true;
+            units = "metrics";
+          };
+        }
+        {
+          resources = {
+            label = "Network";
+            network = true;
+          };
+        }
+        {
+          resources = {
+            label = "Storage";
+            disk = "/srv";
           };
         }
       ];
@@ -29,6 +44,7 @@
                 href = "{{HOMEPAGE_VAR_JELLYFIN_HREF}}";
                 widget = {
                   type = "jellyfin";
+                  url = "http://localhost:8096";
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                   enableBlocks = true;
                 };
@@ -51,7 +67,7 @@
                 href = "{{HOMEPAGE_VAR_IMMICH_HREF}}";
                 widget = {
                   type = "immich";
-                  url = "{{HOMEPAGE_VAR_IMMICH_HREF}}";
+                  url = "http://localhost:2283";
                   key = "{{HOMEPAGE_VAR_IMMICH_API_KEY}}";
                   version = 2;
                 };
@@ -84,12 +100,11 @@
         {
           "Arr" = [
             {
-              "qBittorrent" = {
+              "transmission" = {
                 href = "http://endeavour:9091";
                 widget = {
-                  type = "qbittorrent";
+                  type = "transmission";
                   url = "http://localhost:9091";
-                  enableLeechProgress = true;
                 };
               };
             }
