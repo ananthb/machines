@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  hostname,
   ...
 }:
 
@@ -10,31 +9,33 @@
     ./arr.nix
     ./cloud.nix
     ./hass.nix
+    ./homepage.nix
     ./monitoring.nix
   ];
 
-  services = {
-    openssh.enable = true;
-    openssh.settings.PermitRootLogin = "no";
-    openssh.settings.PasswordAuthentication = false;
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "no";
+    settings.PasswordAuthentication = false;
+  };
 
-    # Yubikey stuff
-    udev.packages = with pkgs; [ yubikey-personalization ];
-    pcscd.enable = true;
+  # Yubikey stuff
+  services.udev.packages = with pkgs; [ yubikey-personalization ];
+  services.pcscd.enable = true;
 
-    # Enable resolved and avahi
-    resolved.enable = true;
-    avahi.enable = true;
-    # Enable tailscale
-    tailscale.enable = true;
+  # Enable resolved and avahi
+  services.resolved.enable = true;
+  services.avahi.enable = true;
 
-    cloudflare-warp.enable = true;
-    cloudflare-warp.openFirewall = false;
+  # Enable tailscale
+  services.tailscale.enable = true;
 
-    tsnsrv = {
-      enable = true;
-      defaults.authKeyPath = config.sops.secrets."tsnsrv/auth_key".path;
-      defaults.urlParts.host = "localhost";
-    };
+  services.cloudflare-warp.enable = true;
+  services.cloudflare-warp.openFirewall = false;
+
+  services.tsnsrv = {
+    enable = true;
+    defaults.authKeyPath = config.sops.secrets."tsnsrv/auth_key".path;
+    defaults.urlParts.host = "localhost";
   };
 }

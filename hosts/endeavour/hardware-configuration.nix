@@ -42,7 +42,6 @@
     options = [
       "subvol=@home"
       "compress=zstd"
-      "relatime"
     ];
   };
 
@@ -52,7 +51,6 @@
     options = [
       "subvol=@nix"
       "compress=zstd"
-      "relatime"
     ];
   };
 
@@ -62,14 +60,12 @@
     options = [
       "subvol=@var"
       "compress=zstd"
-      "relatime"
     ];
   };
 
   fileSystems."/srv" = {
     device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
     fsType = "bcachefs";
-    options = [ "relatime" ];
   };
 
   fileSystems."/boot" = {
