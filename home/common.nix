@@ -22,11 +22,17 @@ in
       [ sshKeyPath ];
     defaultSopsFile = ../secrets.yaml;
 
-    secrets."keys/ssh/id_ed25519_sk" = {
-      path = homeDir + "/.ssh/id_ed25519_sk";
+    secrets."keys/ssh/yubikey_5c" = {
+      path = homeDir + "/.ssh/yubikey_5c";
     };
-    secrets."keys/ssh/id_ed25519_sk.pub" = {
-      path = homeDir + "/.ssh/id_ed25519_sk.pub";
+    secrets."keys/ssh/yubikey_5c.pub" = {
+      path = homeDir + "/.ssh/yubikey_5c.pub";
+    };
+    secrets."keys/ssh/yubikey_5c_nano" = {
+      path = homeDir + "/.ssh/yubikey_5c_nano";
+    };
+    secrets."keys/ssh/yubikey_5c_naon.pub" = {
+      path = homeDir + "/.ssh/yubikey_5c_nano.pub";
     };
   };
 
