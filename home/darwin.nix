@@ -12,7 +12,7 @@
   programs.git.extraConfig = {
     # signing
     gpg.format = "ssh";
-    user.signingkey = "~/.ssh/id_ed25519_sk.pub";
+    user.signingkey = "~/.ssh/yubikey_5c_nano.pub";
     commit.gpgsign = "true";
     credential = {
       helper = "manager";

@@ -14,8 +14,10 @@
   ];
 
   sops.defaultSopsFile = ../secrets.yaml;
-  sops.secrets."keys/ssh/id_ed25519_sk" = { };
-  sops.secrets."keys/ssh/id_ed25519_sk.pub" = { };
+  sops.secrets."keys/ssh/yubikey_5c" = { };
+  sops.secrets."keys/ssh/yubikey_5c.pub" = { };
+  sops.secrets."keys/ssh/yubikey_5c_namo" = { };
+  sops.secrets."keys/ssh/yubikey_5c_nano.pub" = { };
   sops.secrets."tsnsrv/auth_key" = { };
   sops.secrets."tsnsrv/tailnet" = { };
 }
