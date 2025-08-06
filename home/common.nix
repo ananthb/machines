@@ -31,7 +31,7 @@ in
     secrets."keys/ssh/yubikey_5c_nano" = {
       path = homeDir + "/.ssh/yubikey_5c_nano";
     };
-    secrets."keys/ssh/yubikey_5c_naon.pub" = {
+    secrets."keys/ssh/yubikey_5c_nano.pub" = {
       path = homeDir + "/.ssh/yubikey_5c_nano.pub";
     };
   };
