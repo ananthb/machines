@@ -33,9 +33,12 @@
           };
         }
       ];
+      # See https://gethomepage.dev/configs/settings
       settings = {
         title = "Ananth's Hosted Emporium";
         description = "Ananth self-hosts services for (some) people";
+        headerStyle = "clean";
+        target = "_blank";
       };
 
       services = [
@@ -43,20 +46,28 @@
           "Our Cloud" = [
             {
               "Jellyfin" = {
-                description = "Login with your assigned username and password";
+                description = ''
+                  Watch movies and TV shows. Listen to music.
+                  Login with your assigned username and password'';
                 href = "{{HOMEPAGE_VAR_JELLYFIN_HREF}}";
+                icon = "jellyfin";
                 widget = {
                   type = "jellyfin";
                   url = "http://localhost:8096";
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                   enableBlocks = true;
+                  enableMediaControl = false;
                 };
               };
             }
             {
               "Jellyseerr" = {
-                description = "Same login as Jellyfin";
+                description = ''
+                  Request specific movies and TV shows to download and add to Jellyfin.
+                  Same login credentials as Jellyfin.
+                '';
                 href = "{{HOMEPAGE_VAR_JELLYSEERR_HREF}}";
+                icon = "jellyseerr";
                 widget = {
                   type = "jellyseerr";
                   url = "{{HOMEPAGE_VAR_JELLYSEERR_HREF}}";
@@ -66,8 +77,11 @@
             }
             {
               "Immich" = {
-                description = "Sign in with Google";
+                description = ''View and share photos and videos. 
+                Set up automatic backups from your phone. 
+                Sign in with Google'';
                 href = "{{HOMEPAGE_VAR_IMMICH_HREF}}";
+                icon = "immich";
                 widget = {
                   type = "immich";
                   url = "http://localhost:2283";
@@ -78,7 +92,10 @@
             }
             {
               "Copyparty" = {
-                description = "Access via Tailscale";
+                description = ''View and store files.
+                Upload to your personal folder and to a server-wide public folder.
+                Access by turning on Tailscale'';
+                icon = "files";
                 href = "{{HOMEPAGE_VAR_COPYPARTY_HREF}}";
               };
             }
@@ -88,14 +105,18 @@
           "Their Cloud" = [
             {
               "Actual Budget" = {
-                description = "Sign in with Google";
+                description = ''Double-entry bookkeeping software to manage personal budgets.
+                Sign in with Google.'';
                 href = "https://actual.kedi.dev";
+                icon = "actual-budget";
               };
             }
             {
               "The Lounge" = {
-                description = "https://irc.kedi.dev";
-                href = "_blank";
+                description = ''IRC application on the web.
+                Sign in with assigned username and password.'';
+                href = "https://irc.kedi.dev";
+                icon = "thelounge";
               };
             }
           ];
@@ -105,6 +126,8 @@
             {
               "transmission" = {
                 href = "http://endeavour:9091";
+                description = "Download torrents.";
+                icon = "transmission";
                 widget = {
                   type = "transmission";
                   url = "http://localhost:9091";
@@ -114,6 +137,8 @@
             {
               "Radarr" = {
                 href = "http://endeavour:7878";
+                description = "Manage the movie library.";
+                icon = "radarr";
                 widget = {
                   type = "radarr";
                   url = "http://localhost:7878";
@@ -124,6 +149,8 @@
             {
               "Sonarr" = {
                 href = "http://endeavour:8989";
+                description = "Manage the TV show library.";
+                icon = "sonarr";
                 widget = {
                   type = "sonarr";
                   url = "http://localhost:8989";
@@ -134,6 +161,8 @@
             {
               "Prowlarr" = {
                 href = "http://endeavour:9696";
+                description = "Query torrent indexers.";
+                icon = "prowlarr";
                 widget = {
                   type = "prowlarr";
                   url = "http://localhost:9696";
@@ -147,13 +176,16 @@
           "Backend" = [
             {
               "Grafana" = {
-                description = "Login via Tailscale";
+                description = "Monitor services and manage alerts.";
                 href = "https://mon.tail42937.ts.net";
+                icon = "grafana";
               };
             }
             {
               "Victoria Metrics" = {
                 href = "http://endeavour:8428";
+                description = "Collect metrics from everything.";
+                icon = "victoriametrics";
                 widget = {
                   type = "prometheus";
                   url = "http://localhost:8428";
@@ -168,6 +200,8 @@
     tsnsrv.services.home.urlParts.host = "127.0.0.1";
     tsnsrv.services.home.urlParts.port = 16160;
   };
+
+  systemd.services.homepage-dashboard.serviceConfig.BindReadOnlyPaths = "/srv";
 
   systemd.services.tsnsrv-home.wants = [ "homepage-dashboard.service" ];
   systemd.services.tsnsrv-home.after = [ "homepage-dashboard.service" ];
