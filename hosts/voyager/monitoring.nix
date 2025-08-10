@@ -351,6 +351,7 @@
     "tsnsrv/nodes/grafana" = { };
     "tsnsrv/nodes/immich" = { };
     "tsnsrv/nodes/jellyfin" = { };
+    "tsnsrv/nodes/jellyseerr" = { };
   };
 
   sops.templates."fqdns/grafana.txt" = {

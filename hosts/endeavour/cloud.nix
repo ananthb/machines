@@ -198,8 +198,6 @@
   # Secrets
   #
   sops.secrets = {
-    "tsnsrv/nodes/jellyseerr" = { };
-    "tsnsrv/nodes/immich" = { };
     "email/smtp/username" = { };
     "email/smtp/password" = { };
     "email/smtp/host" = { };
