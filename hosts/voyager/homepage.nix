@@ -70,9 +70,10 @@
             }
             {
               "Immich" = {
-                description = ''View and share photos and videos. 
-                Set up automatic backups from your phone. 
-                Sign in with Google'';
+                description = ''
+                  View and share photos and videos. 
+                                  Set up automatic backups from your phone. 
+                                  Sign in with Google'';
                 href = "{{HOMEPAGE_VAR_IMMICH_HREF}}";
                 icon = "immich";
                 widget = {
@@ -85,9 +86,10 @@
             }
             {
               "Copyparty" = {
-                description = ''View and store files.
-                Upload to your personal folder and to a server-wide public folder.
-                Access by turning on Tailscale'';
+                description = ''
+                  View and store files.
+                                  Upload to your personal folder and to a server-wide public folder.
+                                  Access by turning on Tailscale'';
                 icon = "files";
                 href = "{{HOMEPAGE_VAR_COPYPARTY_HREF}}";
               };
@@ -98,16 +100,18 @@
           "Their Cloud" = [
             {
               "Actual Budget" = {
-                description = ''Double-entry bookkeeping software to manage personal budgets.
-                Sign in with Google.'';
+                description = ''
+                  Double-entry bookkeeping software to manage personal budgets.
+                                  Sign in with Google.'';
                 href = "https://actual.kedi.dev";
                 icon = "actual-budget";
               };
             }
             {
               "The Lounge" = {
-                description = ''IRC application on the web.
-                Sign in with assigned username and password.'';
+                description = ''
+                  IRC application on the web.
+                                  Sign in with assigned username and password.'';
                 href = "https://irc.kedi.dev";
                 icon = "thelounge";
               };

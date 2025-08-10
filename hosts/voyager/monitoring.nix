@@ -404,6 +404,7 @@
   };
 
   sops.secrets."tsnsrv/nodes/grafana" = { };
+  sops.secrets."tsnsrv/nodes/immich" = { };
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;

@@ -202,9 +202,9 @@
     "tsnsrv/nodes/jellyfin" = { };
     "tsnsrv/nodes/jellyseerr" = { };
     "tsnsrv/nodes/immich" = { };
-    "email/smtp/username".owner = { };
-    "email/smtp/password".owner = { };
-    "email/smtp/host".owner = { }; 
+    "email/smtp/username" = { };
+    "email/smtp/password" = { };
+    "email/smtp/host" = { };
     "email/from/immich" = { };
     "email/replyTo/immich" = { };
     "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;

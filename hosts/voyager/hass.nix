@@ -65,7 +65,7 @@
           currency = "INR";
           country = "IN";
           external_url = "!include ${config.sops.templates."fqdns/ha-6a.txt".path}";
-          internal_url = "http://endeavour.local:8123";
+          internal_url = "http://voyager.local:8123";
         };
       };
     };
