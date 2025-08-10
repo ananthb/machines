@@ -7,6 +7,7 @@
   nixvim,
   sops-nix,
   hostname,
+  tsnsrv,
   ...
 }:
 
@@ -31,6 +32,7 @@
         inherit username system nixvim;
       };
     }
+    tsnsrv.nixosModules.default
 
     ./common.nix
   ];

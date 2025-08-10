@@ -1,12 +1,10 @@
 {
   config,
-  tsnsrv,
 
   ...
 }:
 {
   imports = [
-    tsnsrv.nixosModules.default
     ./hardware-configuration.nix
     ./hass.nix
     ./homepage.nix

@@ -1,9 +1,7 @@
 {
   lib,
   pkgs,
-  hostname,
   username,
-  tsnsrv,
   ...
 }:
 {
@@ -11,7 +9,6 @@
     ./hardware-configuration.nix
     ./services.nix
     ./cloud.nix
-    tsnsrv.nixosModules.default
   ];
 
   sops.secrets."keys/google_cloud_service_accounts/kopia-hathi-backups.json" = { };
