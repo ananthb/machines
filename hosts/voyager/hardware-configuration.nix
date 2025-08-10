@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   boot = {
-    kernelPackages = [ pkgs.linuxKernel.packages.linux_rpi4 ];
+    kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
     initrd.availableKernelModules = [ "xhci_pci" "usbhid" "usb_storage" "brcmfmac" "brcmutil" "v3d" "vc4" ];
     loader = {
       grub.enable = false;
