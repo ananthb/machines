@@ -50,6 +50,7 @@
     }@inputs:
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+      formatter.aarch64-linux = nixpkgs.legacyPackages.aarch64-linux.nixfmt-rfc-style;
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-rfc-style;
 
       nixosConfigurations = {
@@ -69,7 +70,6 @@
             modules = [
               lanzaboote.nixosModules.lanzaboote
               sops-nix.nixosModules.sops
-              ./hosts/common.nix
               ./hosts/linux.nix
               ./hosts/endeavour
             ];
@@ -90,7 +90,6 @@
 
             modules = [
               sops-nix.nixosModules.sops
-              ./hosts/common.nix
               ./hosts/linux.nix
               ./hosts/voyager
             ];
@@ -113,7 +112,6 @@
 
             modules = [
               sops-nix.darwinModules.sops
-              ./hosts/common.nix
               ./hosts/darwin.nix
               ./hosts/discovery.nix
             ];
@@ -134,7 +132,6 @@
 
             modules = [
               sops-nix.darwinModules.sops
-              ./hosts/common.nix
               ./hosts/darwin.nix
               ./hosts/enterprise.nix
             ];

@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }:
@@ -18,6 +17,4 @@
   sops.secrets."keys/ssh/yubikey_5c.pub" = { };
   sops.secrets."keys/ssh/yubikey_5c_nano" = { };
   sops.secrets."keys/ssh/yubikey_5c_nano.pub" = { };
-  sops.secrets."tsnsrv/auth_key" = { };
-  sops.secrets."tsnsrv/tailnet" = { };
 }

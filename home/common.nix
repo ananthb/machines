@@ -49,8 +49,7 @@ in
     fish
 
     # Tools
-    atool
-    tree
+    nix-output-monitor
     git
     lazygit
     ripgrep
@@ -58,12 +57,8 @@ in
     httpie
     htop
     delta
-    tokei
     fzf
-    unzip
-    nix-output-monitor
     kopia
-    flyctl
     devenv
   ];
 

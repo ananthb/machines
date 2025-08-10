@@ -125,4 +125,7 @@
     pam_rssh
     e2fsprogs
   ];
+
+  sops.secrets."tsnsrv/auth_key" = { };
+  sops.secrets."tsnsrv/tailnet" = { };
 }

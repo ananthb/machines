@@ -1,5 +1,9 @@
 { username, ... }:
 {
+  imports = [
+    ../home/common.nix
+  ];
+
   home.homeDirectory = "/Users/${username}";
 
   programs.fish.interactiveShellInit = ''
