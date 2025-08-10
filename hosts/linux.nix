@@ -77,7 +77,7 @@
     sudo.u2fAuth = true;
   };
 
-  security.pam.services.rssh = {
+  security.pam.rssh = {
     enable = true;
     settings = {
       auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
