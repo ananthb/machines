@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   hostname,
@@ -25,16 +24,6 @@
     "sonarr"
     "transmission"
   ];
-
-  systemd.enableEmergencyMode = false;
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-  '';
-
-  networking.hostName = hostname;
-  networking.firewall.enable = true;
-  networking.firewall.allowPing = true;
 
   # systemd-boot
   boot.loader.systemd-boot.enable = lib.mkForce false;
@@ -66,13 +55,9 @@
   # System packages
   environment.systemPackages = with pkgs; [
     tpm2-tss
-    pam_rssh
-    e2fsprogs
-
     jellyfin
     jellyfin-web
     jellyfin-ffmpeg
-    tsnsrv
   ];
 
   # Set your time zone.
@@ -85,16 +70,6 @@
   #   keyMap = "us";
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
-
-  security = {
-    pam.rssh.enable = true;
-    pam.rssh.settings = {
-      auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
-      loglevel = "debug";
-    };
-    pam.services.sudo.rssh = true;
-    pam.services.sshd.rssh = true;
-  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

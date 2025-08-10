@@ -1,10 +1,7 @@
 {
   config,
-  lib,
-  pkgs,
-  hostname,
-  username,
   tsnsrv,
+
   ...
 }:
 {
@@ -19,23 +16,10 @@
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
-
-  systemd.enableEmergencyMode = false;
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-  '';
-
-  networking.hostName = hostname;
-  networking.firewall.enable = true;
-  networking.firewall.allowPing = true;
+  sops.secrets."tsnsrv/auth_key".owner = { };
 
   # System packages
-  environment.systemPackages = with pkgs; [
-    pam_rssh
-    e2fsprogs
-    tsnsrv
-  ];
+  environment.systemPackages = [ ];
 
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
@@ -47,16 +31,6 @@
   #   keyMap = "us";
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
-
-  security = {
-    pam.rssh.enable = true;
-    pam.rssh.settings = {
-      auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
-      loglevel = "debug";
-    };
-    pam.services.sudo.rssh = true;
-    pam.services.sshd.rssh = true;
-  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

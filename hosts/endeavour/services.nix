@@ -25,27 +25,7 @@
   services.cloudflare-warp.enable = true;
   services.cloudflare-warp.openFirewall = false;
 
-  services.tsnsrv = {
-    enable = true;
-    defaults.authKeyPath = config.sops.secrets."tsnsrv/auth_key".path;
-    defaults.urlParts.host = "localhost";
-  };
-
   services.prometheus.exporters = {
-    node = {
-      enable = true;
-      openFirewall = true;
-      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
-      enabledCollectors = [
-        "ethtool"
-        "perf"
-        "systemd"
-        "tcpstat"
-        "wifi"
-      ];
-      disabledCollectors = [ "textfile" ];
-    };
-
     postgres.enable = true;
 
     redis.enable = true;
