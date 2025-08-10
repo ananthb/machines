@@ -53,6 +53,8 @@
           ;
       };
     }
+
+    ./common.nix
   ];
 
   nix.settings.trusted-users = [ username ];

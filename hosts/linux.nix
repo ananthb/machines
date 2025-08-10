@@ -32,6 +32,7 @@
       };
     }
 
+    ./common.nix
   ];
 
   sops.age.sshKeyPaths = [
