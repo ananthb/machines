@@ -199,7 +199,6 @@
   #
   sops.secrets = {
     "tsnsrv/nodes/copyparty" = { };
-    "tsnsrv/nodes/jellyfin" = { };
     "tsnsrv/nodes/jellyseerr" = { };
     "tsnsrv/nodes/immich" = { };
     "email/smtp/username" = { };

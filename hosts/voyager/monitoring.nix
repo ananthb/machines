@@ -342,15 +342,15 @@
     GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
   };
 
-  sops.secrets."tsnsrv/nodes/grafana" = { };
-  sops.secrets."tsnsrv/nodes/immich" = { };
-  sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
-  sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
-  sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
-  sops.secrets."email/from/grafana".owner = config.users.users.grafana.name;
-  sops.secrets."keys/arr_apis/radarr".mode = "0444";
-  sops.secrets."keys/arr_apis/sonarr".mode = "0444";
-  sops.secrets."keys/arr_apis/prowlarr".mode = "0444";
+  sops.secrets = {
+    "tsnsrv/nodes/grafana" = { };
+    "tsnsrv/nodes/immich" = { };
+    "tsnsrv/nodes/jellyfin" = { };
+    "email/smtp/username".owner = config.users.users.grafana.name;
+    "email/smtp/password".owner = config.users.users.grafana.name;
+    "email/smtp/host".owner = config.users.users.grafana.name;
+    "email/from/grafana".owner = config.users.users.grafana.name;
+  };
 
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;
