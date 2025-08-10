@@ -189,6 +189,7 @@
               {
                 targets = [
                   "endeavour.local:9100"
+                  "voyager.local:9100"
                 ];
                 labels.type = "node";
                 labels.os = "linux";
