@@ -343,13 +343,14 @@
   };
 
   sops.secrets = {
-    "tsnsrv/nodes/grafana" = { };
-    "tsnsrv/nodes/immich" = { };
-    "tsnsrv/nodes/jellyfin" = { };
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/from/grafana".owner = config.users.users.grafana.name;
+    "tsnsrv/nodes/copyparty" = { };
+    "tsnsrv/nodes/grafana" = { };
+    "tsnsrv/nodes/immich" = { };
+    "tsnsrv/nodes/jellyfin" = { };
   };
 
   sops.templates."fqdns/grafana.txt" = {
