@@ -8,7 +8,10 @@ let
   homeDir = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username;
 in
 {
-  imports = [ nixvim.homeManagerModules.nixvim ];
+  imports = [
+    nixvim.homeManagerModules.nixvim
+    ./programs
+  ];
 
   home.homeDirectory = homeDir;
   home.username = username;
