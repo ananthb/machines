@@ -404,6 +404,9 @@
   };
 
   sops.secrets."tsnsrv/nodes/grafana" = { };
+  sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
+  sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
+  sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
   sops.secrets."email/from/grafana".owner = config.users.users.grafana.name;
   sops.secrets."keys/arr_apis/radarr".mode = "0444";
   sops.secrets."keys/arr_apis/sonarr".mode = "0444";
