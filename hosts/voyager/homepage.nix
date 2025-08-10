@@ -25,13 +25,6 @@
             refresh = 10000;
           };
         }
-        {
-          resources = {
-            label = "Storage";
-            disk = "/srv";
-            refresh = 60000;
-          };
-        }
       ];
       # See https://gethomepage.dev/configs/settings
       settings = {
@@ -53,7 +46,7 @@
                 icon = "jellyfin";
                 widget = {
                   type = "jellyfin";
-                  url = "http://localhost:8096";
+                  url = "http://endeavour:8096";
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                   enableBlocks = true;
                   enableMediaControl = false;
@@ -84,7 +77,7 @@
                 icon = "immich";
                 widget = {
                   type = "immich";
-                  url = "http://localhost:2283";
+                  url = "{{HOMEPAGE_VAR_IMMICH_HREF}}";
                   key = "{{HOMEPAGE_VAR_IMMICH_API_KEY}}";
                   version = 2;
                 };
@@ -130,7 +123,7 @@
                 icon = "transmission";
                 widget = {
                   type = "transmission";
-                  url = "http://localhost:9091";
+                  url = "http://endeavour:9091";
                 };
               };
             }
@@ -141,7 +134,7 @@
                 icon = "radarr";
                 widget = {
                   type = "radarr";
-                  url = "http://localhost:7878";
+                  url = "http://endeavour:7878";
                   key = "{{HOMEPAGE_VAR_RADARR_API_KEY}}";
                 };
               };
@@ -153,7 +146,7 @@
                 icon = "sonarr";
                 widget = {
                   type = "sonarr";
-                  url = "http://localhost:8989";
+                  url = "http://endeavour:8989";
                   key = "{{HOMEPAGE_VAR_SONARR_API_KEY}}";
                 };
               };
@@ -165,7 +158,7 @@
                 icon = "prowlarr";
                 widget = {
                   type = "prowlarr";
-                  url = "http://localhost:9696";
+                  url = "http://endeavour:9696";
                   key = "{{HOMEPAGE_VAR_PROWLARR_API_KEY}}";
                 };
               };

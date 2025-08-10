@@ -9,25 +9,16 @@
 }:
 {
   imports = [
-    ./hardware-configuration.nix
-    ./services.nix
-    ./cloud.nix
     tsnsrv.nixosModules.default
+    ./hardware-configuration.nix
+    ./hass.nix
+    ./homepage.nix
+    ./monitoring.nix
   ];
 
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
-  sops.secrets."keys/google_cloud_service_accounts/kopia-hathi-backups.json" = { };
-
-  users.groups.media.members = [
-    username
-    "copyparty"
-    "jellyfin"
-    "radarr"
-    "sonarr"
-    "transmission"
-  ];
 
   systemd.enableEmergencyMode = false;
   systemd.sleep.extraConfig = ''
@@ -39,42 +30,10 @@
   networking.firewall.enable = true;
   networking.firewall.allowPing = true;
 
-  # systemd-boot
-  boot.loader.systemd-boot.enable = lib.mkForce false;
-  boot.initrd.systemd.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
-  };
-
-  # hardware accelerated graphics
-  # used by immich and jellyfin
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
-  };
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver # previously vaapiIntel
-      intel-ocl
-      vaapiVdpau
-      libvdpau-va-gl
-      intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
-      vpl-gpu-rt # QSV on 11th gen or newer
-    ];
-  };
-
   # System packages
   environment.systemPackages = with pkgs; [
-    tpm2-tss
     pam_rssh
     e2fsprogs
-
-    jellyfin
-    jellyfin-web
-    jellyfin-ffmpeg
     tsnsrv
   ];
 
@@ -116,5 +75,5 @@
   # and migrated your data accordingly.
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
 }

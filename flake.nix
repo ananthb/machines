@@ -74,6 +74,27 @@
               ./hosts/endeavour
             ];
           };
+
+        voyager =
+          let
+            system = "aarch64-linux";
+            username = "ananth";
+            hostname = "voyager";
+          in
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+
+            specialArgs = inputs // {
+              inherit system hostname username;
+            };
+
+            modules = [
+              sops-nix.nixosModules.sops
+              ./hosts/common.nix
+              ./hosts/linux.nix
+              ./hosts/voyager
+            ];
+          };
       };
 
       darwinConfigurations = {
