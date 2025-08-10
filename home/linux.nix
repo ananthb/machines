@@ -4,7 +4,7 @@
 }:
 {
   imports = [
-    ../home/common.nix
+    ./common.nix
   ];
 
   sops.secrets."keys/Yubico/u2f_keys" = {
