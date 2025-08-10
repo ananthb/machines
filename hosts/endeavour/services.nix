@@ -31,6 +31,47 @@
     defaults.urlParts.host = "localhost";
   };
 
+  services.prometheus.exporters = {
+    node = {
+      enable = true;
+      openFirewall = true;
+      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
+      enabledCollectors = [
+        "ethtool"
+        "perf"
+        "systemd"
+        "tcpstat"
+        "wifi"
+      ];
+      disabledCollectors = [ "textfile" ];
+    };
+
+    postgres.enable = true;
+
+    redis.enable = true;
+
+    exportarr-radarr = {
+      enable = true;
+      url = "http://localhost:7878";
+      port = 9708;
+      apiKeyFile = config.sops.secrets."keys/arr_apis/radarr".path;
+    };
+
+    exportarr-sonarr = {
+      enable = true;
+      url = "http://localhost:8989";
+      port = 9709;
+      apiKeyFile = config.sops.secrets."keys/arr_apis/sonarr".path;
+    };
+
+    exportarr-prowlarr = {
+      enable = true;
+      url = "http://localhost:9696";
+      port = 9710;
+      apiKeyFile = config.sops.secrets."keys/arr_apis/prowlarr".path;
+    };
+  };
+
   # arr stack
   services.transmission = {
     enable = true;

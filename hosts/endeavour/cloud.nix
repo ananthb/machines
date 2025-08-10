@@ -399,7 +399,7 @@
           }
         },
         "user": {
-          "deleteDelay": 1
+          "deleteDelay": 7
         }
       }
     '';
