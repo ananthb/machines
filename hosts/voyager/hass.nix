@@ -44,6 +44,10 @@
         # https://www.home-assistant.io/integrations/default_config/
         default_config = { };
 
+        recorder = {
+          db_url = "postgresql://@/hass";
+        };
+
         http = {
           trusted_proxies = [
             "::1"
@@ -87,6 +91,18 @@
         "-prometheusAddr=[::1]:9094"
       ];
     };
+  };
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "hass" ];
+    ensureUsers = [
+      {
+        name = "hass";
+        ensureDBOwnership = true;
+        ensureClauses.login = true;
+      }
+    ];
   };
 
   sops.secrets."tsnsrv/nodes/ha-6a" = { };
