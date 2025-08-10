@@ -147,6 +147,8 @@
     e2fsprogs
   ];
 
+  zramSwap.enable = true;
+
   sops.secrets = {
     "tsnsrv/auth_key" = { };
     "tsnsrv/tailnet" = { };
