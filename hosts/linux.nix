@@ -129,6 +129,11 @@
     e2fsprogs
   ];
 
-  sops.secrets."tsnsrv/auth_key" = { };
-  sops.secrets."tsnsrv/tailnet" = { };
+  sops.secrets = {
+    "tsnsrv/auth_key" = { };
+    "tsnsrv/tailnet" = { };
+    "email/smtp/host" = { };
+    "email/smtp/password" = { };
+    "email/smtp/username" = { };
+  };
 }

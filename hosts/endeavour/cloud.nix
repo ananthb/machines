@@ -200,9 +200,6 @@
   sops.secrets = {
     "email/from/immich" = { };
     "email/replyTo/immich" = { };
-    "email/smtp/host" = { };
-    "email/smtp/password" = { };
-    "email/smtp/username" = { };
     "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
