@@ -3,7 +3,7 @@
   nixvim,
   username,
   ...
-}@args:
+}:
 let
   homeDir = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username;
 in
@@ -38,8 +38,6 @@ in
       path = homeDir + "/.ssh/yubikey_5c_nano.pub";
     };
   };
-
-  programs = import ./programs args;
 
   home.packages = with pkgs; [
     # Fonts
