@@ -5,15 +5,20 @@
     home-assistant = {
       enable = true;
       openFirewall = true;
+      extraPackages = python3Packages: with python3Packages; [
+        psycopg2
+      ];
       extraComponents = [
-        "default_config"
-        "dhcp"
-
         # Components required to complete the onboarding
         "analytics"
         "google_translate"
         "met"
-        "mobile_app"
+        "radio_browser"
+        "shopping_list"
+
+        "default_config"
+        "dhcp"
+
         # "radio_browser"
         # "shopping_list"
         # Recommended for fast zlib compression
