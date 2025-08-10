@@ -198,16 +198,17 @@
   # Secrets
   #
   sops.secrets = {
-    "email/smtp/username" = { };
-    "email/smtp/password" = { };
-    "email/smtp/host" = { };
     "email/from/immich" = { };
     "email/replyTo/immich" = { };
+    "email/smtp/host" = { };
+    "email/smtp/password" = { };
+    "email/smtp/username" = { };
     "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
+    "tsnsrv/nodes/immich" = { };
   };
 
   sops.templates."immich/config.json" = {
