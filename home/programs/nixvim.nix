@@ -4,6 +4,10 @@
 
     nixpkgs.useGlobalPackages = true;
 
+    opts = {
+      number = true;
+    };
+
     globals.mapleader = " ";
 
     colorschemes.oxocarbon.enable = true;
@@ -30,6 +34,7 @@
       glow.enable = true;
       illuminate.enable = true;
       leap.enable = true;
+      numbertoggle.enable = true;
 
       # Language server
       lsp = {
