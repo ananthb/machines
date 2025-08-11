@@ -114,13 +114,12 @@
   # Enable tailscale
   services.tailscale.enable = true;
 
-
-  services.fwupd.enable = true;
   services.tsnsrv = {
     enable = true;
     defaults.authKeyPath = config.sops.secrets."tsnsrv/auth_key".path;
     defaults.urlParts.host = "localhost";
   };
+
   services.prometheus.exporters = {
     node = {
       enable = true;

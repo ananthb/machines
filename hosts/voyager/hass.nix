@@ -5,9 +5,10 @@
     home-assistant = {
       enable = true;
       openFirewall = true;
-      extraPackages = python3Packages: with python3Packages; [
-        psycopg2
-      ];
+      extraPackages =
+        python3Packages: with python3Packages; [
+          psycopg2
+        ];
       extraComponents = [
         # Components required to complete the onboarding
         "analytics"
