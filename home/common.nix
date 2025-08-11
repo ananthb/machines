@@ -39,6 +39,10 @@ in
     };
   };
 
+  programs.fish.interactiveShellInit = ''
+    set fish_greeting ""
+  '';
+
   home.packages = with pkgs; [
     # Fonts
     hack-font

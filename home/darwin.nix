@@ -4,12 +4,6 @@
     ./common.nix
   ];
 
-  home.homeDirectory = "/Users/${username}";
-
-  programs.fish.interactiveShellInit = ''
-    set fish_greeting ""
-  '';
-
   programs.git.extraConfig = {
     # signing
     gpg.format = "ssh";
