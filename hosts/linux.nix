@@ -103,6 +103,8 @@
     settings.PasswordAuthentication = false;
   };
 
+  services.glances.enable = true;
+
   # Yubikey stuff
   services.udev.packages = with pkgs; [ yubikey-personalization ];
   services.pcscd.enable = true;
