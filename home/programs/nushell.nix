@@ -61,8 +61,6 @@
       if (false in (ls -l `/nix/var/nix`| where type == dir | where name == "/nix/var/nix/db" | get mode | str contains "w")) {
         $env.NIX_REMOTE = "daemon"
       }
-
-      $env.DOCKER_HOST = (limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')
     '';
   };
 }
