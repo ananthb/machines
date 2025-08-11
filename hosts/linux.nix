@@ -106,7 +106,6 @@
   services.glances.enable = true;
   services.glances.extraArgs = [
     "--webserver"
-    "--disable-webui"
   ];
 
   # Yubikey stuff

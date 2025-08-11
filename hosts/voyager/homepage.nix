@@ -10,6 +10,7 @@
         {
           glances = {
             url = "http://endeavour:61208";
+            href = "http://endeavour:61208";
             version = 4;
             cputemp = true;
             uptime = true;
@@ -24,6 +25,7 @@
         {
           glances = {
             url = "http://localhost:61208";
+            href = "http://voyager:61208";
             version = 4;
             cputemp = true;
             uptime = true;
