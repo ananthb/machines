@@ -10,6 +10,7 @@
         {
           glances = {
             url = "http://endeavour:61208";
+            version = 4;
             cputemp = true;
             uptime = true;
             disk = [
@@ -17,15 +18,18 @@
               "/srv"
             ];
             label = "endeavour";
+            refreshInterval = 5000;
           };
         }
         {
           glances = {
             url = "http://localhost:61208";
+            version = 4;
             cputemp = true;
             uptime = true;
             disk = "/";
             label = "voyager";
+            refreshInterval = 5000;
           };
         }
       ];
