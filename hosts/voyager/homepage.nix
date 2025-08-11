@@ -8,21 +8,24 @@
       environmentFile = config.sops.templates."homepage-dashboard/env".path;
       widgets = [
         {
-          resources = {
-            label = "System";
-            cpu = true;
-            memory = true;
+          glances = {
+            url = "http://endeavour:61208";
             cputemp = true;
             uptime = true;
-            units = "metrics";
-            refresh = 30000;
+            disk = [
+              "/"
+              "/srv"
+            ];
+            label = "endeavour";
           };
         }
         {
-          resources = {
-            label = "Network";
-            network = true;
-            refresh = 10000;
+          glances = {
+            url = "http://localhost:61208";
+            cputemp = true;
+            uptime = true;
+            disk = "/";
+            label = "voyager";
           };
         }
       ];
