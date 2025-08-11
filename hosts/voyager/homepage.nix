@@ -6,41 +6,25 @@
       enable = true;
       listenPort = 16160;
       environmentFile = config.sops.templates."homepage-dashboard/env".path;
-      widgets = [
-        {
-          glances = {
-            url = "http://endeavour:61208";
-            href = "http://endeavour:61208";
-            version = 4;
-            cputemp = true;
-            uptime = true;
-            disk = [
-              "/"
-              "/srv"
-            ];
-            label = "endeavour";
-            refreshInterval = 5000;
-          };
-        }
-        {
-          glances = {
-            url = "http://localhost:61208";
-            href = "http://voyager:61208";
-            version = 4;
-            cputemp = true;
-            uptime = true;
-            disk = "/";
-            label = "voyager";
-            refreshInterval = 5000;
-          };
-        }
-      ];
+      widgets = [ ]; # TODO: add weather
       # See https://gethomepage.dev/configs/settings
       settings = {
         title = "Ananth's Hosted Emporium";
         description = "Ananth self-hosts services for (some) people";
         headerStyle = "clean";
         target = "_blank";
+        layout = {
+          "Our Cloud" = {
+            style = "row";
+            columns = 4;
+          };
+          "Their Cloud" = { };
+          "Backend" = { };
+          "Arr" = {
+            style = "row";
+            columns = "4";
+          };
+        };
       };
 
       services = [
@@ -106,28 +90,6 @@
           ];
         }
         {
-          "Their Cloud" = [
-            {
-              "Actual Budget" = {
-                description = ''
-                  Double-entry bookkeeping software to manage personal budgets.
-                                  Sign in with Google.'';
-                href = "https://actual.kedi.dev";
-                icon = "actual-budget";
-              };
-            }
-            {
-              "The Lounge" = {
-                description = ''
-                  IRC application on the web.
-                                  Sign in with assigned username and password.'';
-                href = "https://irc.kedi.dev";
-                icon = "thelounge";
-              };
-            }
-          ];
-        }
-        {
           "Arr" = [
             {
               "transmission" = {
@@ -179,6 +141,28 @@
           ];
         }
         {
+          "Their Cloud" = [
+            {
+              "Actual Budget" = {
+                description = ''
+                  Double-entry bookkeeping software to manage personal budgets.
+                                  Sign in with Google.'';
+                href = "https://actual.kedi.dev";
+                icon = "actual-budget";
+              };
+            }
+            {
+              "The Lounge" = {
+                description = ''
+                  IRC application on the web.
+                                  Sign in with assigned username and password.'';
+                href = "https://irc.kedi.dev";
+                icon = "thelounge";
+              };
+            }
+          ];
+        }
+        {
           "Backend" = [
             {
               "Grafana" = {
@@ -192,10 +176,6 @@
                 href = "http://endeavour:8428";
                 description = "Collect metrics from everything.";
                 icon = "victoriametrics";
-                widget = {
-                  type = "prometheus";
-                  url = "http://localhost:8428";
-                };
               };
             }
           ];

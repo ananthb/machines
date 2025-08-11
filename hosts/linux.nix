@@ -103,11 +103,6 @@
     settings.PasswordAuthentication = false;
   };
 
-  services.glances.enable = true;
-  services.glances.extraArgs = [
-    "--webserver"
-  ];
-
   # Yubikey stuff
   services.udev.packages = with pkgs; [ yubikey-personalization ];
   services.pcscd.enable = true;
