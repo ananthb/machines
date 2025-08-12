@@ -37,7 +37,7 @@
 
   # arr stack
   services.transmission = {
-    enable = true;
+    enable = false;
     package = pkgs.transmission_4;
     group = "media";
     downloadDirPermissions = "775";
@@ -45,25 +45,51 @@
       rpc-bind-address = "[::]";
       rpc-whitelist = "*";
       rpc-host-whitelist = "*";
-
       umask = "002";
-      proxy_url = "socks5://localhost:8080";
-
+      proxy_url = "socks5://localhost:8888";
       download-dir = "/srv/media/Downloads";
+    };
+  };
+  services.qbittorrent = {
+    enable = true;
+    group = "media";
+    serverConfig = {
+      LegalNotice.Accepted = true;
+      BitTorrent = {
+        MergeTrackersEnabled = true;
+        Session = {
 
-      alt-speed-up = 1000; # 1000KB/s
-      alt-speed-down = 1000; # 1000KB/s
-
-      # Scheduling option docs:
-      # https://github.com/transmission/transmission/blob/main/docs/Editing-Configuration-Files.md#scheduling
-      alt-speed-time-enabled = true;
-      alt-speed-time-begin = 540; # 9am
-      alt-speed-time-end = 1020; # 5pm
-      alt-speed-time-day = 127; # all days of the week
+          AddTorrentStopped = false;
+          DefaultSavePath = "/srv/media/Downloads";
+          QueueingSystemEnabled = true;
+        };
+      };
+      Preferences = {
+        WebUI = {
+          AuthSubnetWhitelist = "0.0.0.0/0";
+          AuthSubnetWhitelistEnabled = true;
+          AlternativeUIEnabled = true;
+          RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
+        };
+      };
+      Network = {
+        Proxy = {
+          AuthEnabled = false;
+          IP = "localhost";
+          Port = 8888;
+          Type = "SOCKS5";
+          Profiles = {
+            BitTorrent = true;
+            Misc = true;
+            RSS = true;
+          };
+        };
+      };
     };
   };
 
-  systemd.services.transmission.unitConfig.RequiresMountsFor = "/srv";
+  systemd.services.qbittorrent.unitConfig.RequiresMountsFor = "/srv";
+  systemd.services.qbittorrent.serviceConfig.UMask = "0002";
 
   services.radarr.enable = true;
   services.radarr.group = "media";

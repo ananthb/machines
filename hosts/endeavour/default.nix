@@ -19,7 +19,7 @@
     "jellyfin"
     "radarr"
     "sonarr"
-    "transmission"
+    "qbittorrent"
   ];
 
   # systemd-boot

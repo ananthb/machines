@@ -100,13 +100,13 @@
         {
           "Arr" = [
             {
-              "transmission" = {
-                href = "http://endeavour:9091";
+              "qBittorrent" = {
+                href = "http://endeavour:8080";
                 description = "Download torrents.";
-                icon = "transmission";
+                icon = "qbittorrent";
                 widget = {
-                  type = "transmission";
-                  url = "http://endeavour:9091";
+                  type = "qbittorrent";
+                  url = "http://endeavour:8080";
                 };
               };
             }
