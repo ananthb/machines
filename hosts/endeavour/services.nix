@@ -36,20 +36,6 @@
   };
 
   # arr stack
-  services.transmission = {
-    enable = false;
-    package = pkgs.transmission_4;
-    group = "media";
-    downloadDirPermissions = "775";
-    settings = {
-      rpc-bind-address = "[::]";
-      rpc-whitelist = "*";
-      rpc-host-whitelist = "*";
-      umask = "002";
-      proxy_url = "socks5://localhost:8888";
-      download-dir = "/srv/media/Downloads";
-    };
-  };
   services.qbittorrent = {
     enable = true;
     group = "media";
@@ -58,10 +44,11 @@
       BitTorrent = {
         MergeTrackersEnabled = true;
         Session = {
-
           AddTorrentStopped = false;
           DefaultSavePath = "/srv/media/Downloads";
           QueueingSystemEnabled = true;
+          MaxActiveTorrents = -1;
+          MaxActiveUploads = -1;
         };
       };
       Preferences = {
@@ -75,7 +62,7 @@
       Network = {
         Proxy = {
           AuthEnabled = false;
-          IP = "localhost";
+          IP = "127.0.0.1";
           Port = 8888;
           Type = "SOCKS5";
           Profiles = {
