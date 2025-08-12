@@ -13,18 +13,26 @@
         description = "Ananth self-hosts services for (some) people";
         headerStyle = "clean";
         target = "_blank";
-        layout = {
-          "Our Cloud" = {
-            style = "row";
-            columns = 4;
-          };
-          "Their Cloud" = { };
-          "Backend" = { };
-          "Arr" = {
-            style = "row";
-            columns = "4";
-          };
-        };
+        layout = [
+          {
+            "Our Cloud" = {
+              style = "row";
+              columns = 4;
+            };
+          }
+          {
+            "Their Cloud" = { };
+          }
+          {
+            "Backend" = { };
+          }
+          {
+            "Arr" = {
+              style = "row";
+              columns = "4";
+            };
+          }
+        ];
       };
 
       services = [
