@@ -58,12 +58,8 @@ in
     git
     lazygit
     ripgrep
-    curl
-    httpie
-    htop
     delta
     fzf
-    kopia
     devenv
   ];
 
