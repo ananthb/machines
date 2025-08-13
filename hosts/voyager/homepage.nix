@@ -47,7 +47,7 @@
                 icon = "jellyfin";
                 widget = {
                   type = "jellyfin";
-                  url = "http://endeavour:8096";
+                  url = "{{HOMEPAGE_VAR_JELLYFIN_HREF}}";
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                   enableBlocks = true;
                   enableMediaControl = false;
@@ -181,7 +181,7 @@
             }
             {
               "Victoria Metrics" = {
-                href = "http://endeavour:8428";
+                href = "http://voyager:8428";
                 description = "Collect metrics from everything.";
                 icon = "victoriametrics";
               };
