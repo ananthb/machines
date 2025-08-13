@@ -214,10 +214,10 @@
     "keys/jellyseerr_api" = { };
     "keys/jellyfin_api/homepage-dashboard" = { };
     "keys/immich_api/homepage-dashboard" = { };
+    "keys/openweathermap_api/homepage-dashboard" = { };
     "keys/radarr_api" = { };
     "keys/sonarr_api" = { };
     "keys/prowlarr_api" = { };
-    "keys/openweathermap_api" = { };
     "tsnsrv/nodes/homepage-dashboard" = { };
   };
   sops.templates."homepage-dashboard/env" = {
@@ -243,7 +243,9 @@
       HOMEPAGE_VAR_RADARR_API_KEY="${config.sops.placeholder."keys/radarr_api"}"
       HOMEPAGE_VAR_SONARR_API_KEY="${config.sops.placeholder."keys/sonarr_api"}"
       HOMEPAGE_VAR_PROWLARR_API_KEY="${config.sops.placeholder."keys/prowlarr_api"}"
-      HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY="${config.sops.placeholder."keys/openweathermap_api"}"
+      HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY="${
+        config.sops.placeholder."keys/openweathermap_api/homepage-dashboard"
+      }"
     '';
   };
 }
