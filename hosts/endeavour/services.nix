@@ -46,9 +46,10 @@
         Session = {
           AddTorrentStopped = false;
           DefaultSavePath = "/srv/media/Downloads";
-          QueueingSystemEnabled = true;
           MaxActiveTorrents = -1;
           MaxActiveUploads = -1;
+          QueueingSystemEnabled = true;
+          ProxyPeerConnections = true;
         };
       };
       Preferences = {
@@ -62,6 +63,7 @@
       Network = {
         Proxy = {
           AuthEnabled = false;
+          HostnameLookupEnabled = true;
           IP = "127.0.0.1";
           Port = 8888;
           Type = "SOCKS5";
