@@ -6,7 +6,17 @@
       enable = true;
       listenPort = 16160;
       environmentFile = config.sops.templates."homepage-dashboard/env".path;
-      widgets = [ ]; # TODO: add weather
+      widgets = [
+        {
+          "openweathermap" = {
+            label = "Weather";
+            units = "metric";
+            provider = "openweathermap";
+            apiKey = "{{HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY}}";
+            cache = 5; # minutes
+          };
+        }
+      ];
       # See https://gethomepage.dev/configs/settings
       settings = {
         title = "Ananth's Hosted Emporium";
@@ -207,6 +217,7 @@
     "keys/radarr_api" = { };
     "keys/sonarr_api" = { };
     "keys/prowlarr_api" = { };
+    "keys/openweathermap_api" = { };
     "tsnsrv/nodes/homepage-dashboard" = { };
   };
   sops.templates."homepage-dashboard/env" = {
@@ -232,6 +243,7 @@
       HOMEPAGE_VAR_RADARR_API_KEY="${config.sops.placeholder."keys/radarr_api"}"
       HOMEPAGE_VAR_SONARR_API_KEY="${config.sops.placeholder."keys/sonarr_api"}"
       HOMEPAGE_VAR_PROWLARR_API_KEY="${config.sops.placeholder."keys/prowlarr_api"}"
+      HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY="${config.sops.placeholder."keys/openweathermap_api"}"
     '';
   };
 }
