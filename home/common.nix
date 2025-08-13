@@ -61,6 +61,7 @@ in
     delta
     fzf
     devenv
+    gnupg
   ];
 
   home.stateVersion = "24.05";
