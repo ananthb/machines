@@ -47,7 +47,7 @@
                 icon = "jellyfin";
                 widget = {
                   type = "jellyfin";
-                  url = "{{HOMEPAGE_VAR_JELLYFIN_HREF}}";
+                  url = "http://endeavour:8096";
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                   enableBlocks = true;
                   enableMediaControl = false;
