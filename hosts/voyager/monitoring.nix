@@ -210,7 +210,7 @@
             static_configs = [
               {
                 targets = [
-                  "localhost:9187" # postgres exporter
+                  "voyager:9187"   # postgres exporter
                   "endeavour:9187" # postgres exporter
                   "endeavour:9121" # redis exporter
                   "endeavour:9708" # radarr exporter
