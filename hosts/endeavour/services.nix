@@ -10,6 +10,7 @@
 
   services.prometheus.exporters = {
     postgres.enable = true;
+    postgres.runAsLocalSuperUser = true;
 
     redis.enable = true;
 

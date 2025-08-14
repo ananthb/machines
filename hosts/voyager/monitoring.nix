@@ -229,6 +229,7 @@
 
     prometheus.exporters = {
       postgres.enable = true;
+      postgres.runAsLocalSuperUser = true;
 
       blackbox = {
         enable = true;
