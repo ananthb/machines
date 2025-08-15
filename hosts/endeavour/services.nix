@@ -50,7 +50,7 @@
           MaxActiveTorrents = -1;
           MaxActiveUploads = -1;
           QueueingSystemEnabled = true;
-          ProxyPeerConnections = true;
+          ProxyPeerConnections = false;
         };
       };
       Preferences = {
@@ -83,6 +83,7 @@
 
   services.radarr.enable = true;
   services.radarr.group = "media";
+  systemd.services.radarr.serviceConfig.UMask = "0002";
   systemd.services.radarr.wants = [
     "transmission.service"
     "prowlarr.service"
@@ -90,6 +91,7 @@
 
   services.sonarr.enable = true;
   services.sonarr.group = "media";
+  systemd.services.sonarr.serviceConfig.UMask = "0002";
   systemd.services.sonarr.wants = [
     "transmission.service"
     "prowlarr.service"
