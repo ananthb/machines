@@ -180,21 +180,6 @@
   ];
 
   #
-  # Jellyseer
-  #
-  services = {
-    jellyseerr.enable = true;
-
-    tsnsrv.services.see = {
-      funnel = true;
-      urlParts.port = 5055;
-    };
-  };
-
-  systemd.services.tsnsrv-see.wants = [ "jellyseer.service" ];
-  systemd.services.tsnsrv-see.after = [ "jellyseer.service" ];
-
-  #
   # Secrets
   #
   sops.secrets = {

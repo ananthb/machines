@@ -27,7 +27,7 @@
           {
             "Our Cloud" = {
               style = "row";
-              columns = 4;
+              columns = 3;
             };
           }
           {
@@ -61,21 +61,6 @@
                   key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                   enableBlocks = true;
                   enableMediaControl = false;
-                };
-              };
-            }
-            {
-              "Jellyseerr" = {
-                description = ''
-                  Request specific movies and TV shows to download and add to Jellyfin.
-                  Same login credentials as Jellyfin.
-                '';
-                href = "{{HOMEPAGE_VAR_JELLYSEERR_HREF}}";
-                icon = "jellyseerr";
-                widget = {
-                  type = "jellyseerr";
-                  url = "{{HOMEPAGE_VAR_JELLYSEERR_HREF}}";
-                  key = "{{HOMEPAGE_VAR_JELLYSEERR_API_KEY}}";
                 };
               };
             }
@@ -211,7 +196,6 @@
   systemd.services.tsnsrv-home.after = [ "homepage-dashboard.service" ];
 
   sops.secrets = {
-    "keys/jellyseerr_api" = { };
     "keys/jellyfin_api/homepage-dashboard" = { };
     "keys/immich_api/homepage-dashboard" = { };
     "keys/openweathermap_api/homepage-dashboard" = { };
@@ -234,11 +218,7 @@
       HOMEPAGE_VAR_COPYPARTY_HREF="https://${config.sops.placeholder."tsnsrv/nodes/copyparty"}.${
         config.sops.placeholder."tsnsrv/tailnet"
       }"
-      HOMEPAGE_VAR_JELLYSEERR_HREF="https://${config.sops.placeholder."tsnsrv/nodes/jellyseerr"}.${
-        config.sops.placeholder."tsnsrv/tailnet"
-      }"
       HOMEPAGE_VAR_JELLYFIN_API_KEY="${config.sops.placeholder."keys/jellyfin_api/homepage-dashboard"}"
-      HOMEPAGE_VAR_JELLYSEERR_API_KEY="${config.sops.placeholder."keys/jellyseerr_api"}"
       HOMEPAGE_VAR_IMMICH_API_KEY="${config.sops.placeholder."keys/immich_api/homepage-dashboard"}"
       HOMEPAGE_VAR_RADARR_API_KEY="${config.sops.placeholder."keys/radarr_api"}"
       HOMEPAGE_VAR_SONARR_API_KEY="${config.sops.placeholder."keys/sonarr_api"}"

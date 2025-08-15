@@ -339,7 +339,6 @@
     "tsnsrv/nodes/grafana" = { };
     "tsnsrv/nodes/immich" = { };
     "tsnsrv/nodes/jellyfin" = { };
-    "tsnsrv/nodes/jellyseerr" = { };
   };
 
   sops.templates."fqdns/grafana.txt" = {
@@ -355,9 +354,6 @@
           {
               "targets" = [
                 "https://${config.sops.placeholder."tsnsrv/nodes/jellyfin"}.${
-                  config.sops.placeholder."tsnsrv/tailnet"
-                }",
-                "https://${config.sops.placeholder."tsnsrv/nodes/jellyseerr"}.${
                   config.sops.placeholder."tsnsrv/tailnet"
                 }",
                 "https://${config.sops.placeholder."tsnsrv/nodes/ha-6a"}.${
