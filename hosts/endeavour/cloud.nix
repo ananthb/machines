@@ -94,7 +94,7 @@
   };
   
   systemd.targets.seafile.wants = [ "tsnsrv-sf.service" ];
-  systemd.services.seahub.serviceConfig.environmentFile = config.sops.templates."seafile/seahub_settings.env".path;
+  systemd.services.seahub.serviceConfig.EnvironmentFile = config.sops.templates."seafile/seahub_settings.env".path;
 
   sops.secrets = {
     "keys/oauth_clients/seafile/client_id" = { };
