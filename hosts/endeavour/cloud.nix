@@ -358,7 +358,7 @@
           }
         },
         "server": {
-          "externalDomain": "https://imm.${config.sops.placeholder."tsnsrv/tailnet"}",
+          "externalDomain": "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
           "loginPageMessage": ""
         },
         "notifications": {

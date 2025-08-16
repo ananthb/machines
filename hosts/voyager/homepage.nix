@@ -199,21 +199,21 @@
     "keys/jellyfin_api/homepage-dashboard" = { };
     "keys/immich_api/homepage-dashboard" = { };
     "keys/openweathermap_api/homepage-dashboard" = { };
+    "keys/prowlarr_api" = { };
     "keys/radarr_api" = { };
     "keys/sonarr_api" = { };
-    "keys/prowlarr_api" = { };
   };
   sops.templates."homepage-dashboard/env" = {
     content = ''
-      HOMEPAGE_ALLOWED_HOSTS="home.${config.sops.placeholder."tsnsrv/tailnet"}"
-      HOMEPAGE_VAR_IMMICH_HREF="https://imm.${config.sops.placeholder."tsnsrv/tailnet"}"
-      HOMEPAGE_VAR_JELLYFIN_HREF="https://tv.${config.sops.placeholder."tsnsrv/tailnet"}"
-      HOMEPAGE_VAR_COPYPARTY_HREF="https://cp.${config.sops.placeholder."tsnsrv/tailnet"}"
       HOMEPAGE_VAR_JELLYFIN_API_KEY="${config.sops.placeholder."keys/jellyfin_api/homepage-dashboard"}"
       HOMEPAGE_VAR_IMMICH_API_KEY="${config.sops.placeholder."keys/immich_api/homepage-dashboard"}"
+      HOMEPAGE_VAR_PROWLARR_API_KEY="${config.sops.placeholder."keys/prowlarr_api"}"
       HOMEPAGE_VAR_RADARR_API_KEY="${config.sops.placeholder."keys/radarr_api"}"
       HOMEPAGE_VAR_SONARR_API_KEY="${config.sops.placeholder."keys/sonarr_api"}"
-      HOMEPAGE_VAR_PROWLARR_API_KEY="${config.sops.placeholder."keys/prowlarr_api"}"
+      HOMEPAGE_ALLOWED_HOSTS="home.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      HOMEPAGE_VAR_IMMICH_HREF="https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      HOMEPAGE_VAR_JELLYFIN_HREF="https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      HOMEPAGE_VAR_COPYPARTY_HREF="https://cp.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY="${
         config.sops.placeholder."keys/openweathermap_api/homepage-dashboard"
       }"

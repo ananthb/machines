@@ -149,10 +149,10 @@
   zramSwap.enable = true;
 
   sops.secrets = {
-    "tsnsrv/auth_key" = { };
-    "tsnsrv/tailnet" = { };
     "email/smtp/host" = { };
     "email/smtp/password" = { };
     "email/smtp/username" = { };
+    "keys/tailscale_api/auth_key" = { };
+    "keys/tailscale/tailnet" = { };
   };
 }
