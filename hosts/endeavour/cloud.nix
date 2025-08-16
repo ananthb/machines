@@ -24,9 +24,11 @@
       ENABLE_OAUTH = True
       OAUTH_ENABLE_INSECURE_TRANSPORT = True
 
-      OAUTH_CLIENT_ID = "your-client-id"
-      OAUTH_CLIENT_SECRET = "your-client-secret"
-      OAUTH_REDIRECT_URL = 'http{s}://example.com/oauth/callback/'
+      import os
+
+      OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID")
+      OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET")
+      OAUTH_REDIRECT_URL = f"https://{os.environ.get("SEAFILE_FQDN")}/oauth/callback/"
 
       # The following shoud NOT be changed if you are using Google as OAuth provider.
       OAUTH_PROVIDER_DOMAIN = 'google.com'
@@ -43,8 +45,6 @@
           "name": (False, "name"),
           "email": (False, "contact_email"),
       }
-
-      import os
     '';
 
     seafileSettings = {
@@ -92,6 +92,22 @@
       }
     '';
   };
+  
+  systemd.targets.seafile.wants = [ "tsnsrv-sf.service" ];
+  systemd.services.seahub.serviceConfig.environmentFile = config.sops.templates."seafile/seahub_settings.env".path;
+
+  sops.secrets = {
+    "keys/oauth_clients/seafile/client_id" = { };
+    "keys/oauth_clients/seafile/client_secret" = { };
+  };
+  sops.templates."seafile/seahub_settings.env" = {
+    owner = config.users.users.seafile.name;
+    content = ''
+      SEAFILE_FQDN="sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      OAUTH_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/seafile/client_id"}"
+      OAUTH_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/seafile/client_secret"}"
+    '';
+  };
 
   services.tsnsrv.services.sf = {
     urlParts.port = 8383;
@@ -106,7 +122,6 @@
     "seaf-http.service"
     "seahub.service"
   ];
-  systemd.targets.seafile.wants = [ "tsnsrv-sf.service" ];
 
   #
   # Immich
