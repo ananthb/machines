@@ -16,7 +16,36 @@
 
     ccnetSettings.General.SERVICE_URL = "https://sf.tail42937.ts.net";
 
-    seahubExtraConf = '''';
+    seahubExtraConf = ''
+      ENABLE_SETTINGS_VIA_WEB = False
+      TIME_ZONE = "Asia/Kolkata"
+      SITE_NAME = "Ananth's File Server"
+
+      ENABLE_OAUTH = True
+      OAUTH_ENABLE_INSECURE_TRANSPORT = True
+
+      OAUTH_CLIENT_ID = "your-client-id"
+      OAUTH_CLIENT_SECRET = "your-client-secret"
+      OAUTH_REDIRECT_URL = 'http{s}://example.com/oauth/callback/'
+
+      # The following shoud NOT be changed if you are using Google as OAuth provider.
+      OAUTH_PROVIDER_DOMAIN = 'google.com'
+      OAUTH_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
+      OAUTH_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
+      OAUTH_USER_INFO_URL = 'https://www.googleapis.com/oauth2/v1/userinfo'
+      OAUTH_SCOPE = [
+          "openid",
+          "https://www.googleapis.com/auth/userinfo.email",
+          "https://www.googleapis.com/auth/userinfo.profile",
+      ]
+      OAUTH_ATTRIBUTE_MAP = {
+          "sub": (True, "uid"),
+          "name": (False, "name"),
+          "email": (False, "contact_email"),
+      }
+
+      import os
+    '';
 
     seafileSettings = {
       history.keep_days = "14"; # Remove deleted files after 14 days
