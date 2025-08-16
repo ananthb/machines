@@ -202,22 +202,13 @@
     "keys/radarr_api" = { };
     "keys/sonarr_api" = { };
     "keys/prowlarr_api" = { };
-    "tsnsrv/nodes/homepage-dashboard" = { };
   };
   sops.templates."homepage-dashboard/env" = {
     content = ''
-      HOMEPAGE_ALLOWED_HOSTS="${config.sops.placeholder."tsnsrv/nodes/homepage-dashboard"}.${
-        config.sops.placeholder."tsnsrv/tailnet"
-      }"
-      HOMEPAGE_VAR_IMMICH_HREF="https://${config.sops.placeholder."tsnsrv/nodes/immich"}.${
-        config.sops.placeholder."tsnsrv/tailnet"
-      }"
-      HOMEPAGE_VAR_JELLYFIN_HREF="https://${config.sops.placeholder."tsnsrv/nodes/jellyfin"}.${
-        config.sops.placeholder."tsnsrv/tailnet"
-      }"
-      HOMEPAGE_VAR_COPYPARTY_HREF="https://${config.sops.placeholder."tsnsrv/nodes/copyparty"}.${
-        config.sops.placeholder."tsnsrv/tailnet"
-      }"
+      HOMEPAGE_ALLOWED_HOSTS="home.${config.sops.placeholder."tsnsrv/tailnet"}"
+      HOMEPAGE_VAR_IMMICH_HREF="https://imm.${config.sops.placeholder."tsnsrv/tailnet"}"
+      HOMEPAGE_VAR_JELLYFIN_HREF="https://tv.${config.sops.placeholder."tsnsrv/tailnet"}"
+      HOMEPAGE_VAR_COPYPARTY_HREF="https://cp.${config.sops.placeholder."tsnsrv/tailnet"}"
       HOMEPAGE_VAR_JELLYFIN_API_KEY="${config.sops.placeholder."keys/jellyfin_api/homepage-dashboard"}"
       HOMEPAGE_VAR_IMMICH_API_KEY="${config.sops.placeholder."keys/immich_api/homepage-dashboard"}"
       HOMEPAGE_VAR_RADARR_API_KEY="${config.sops.placeholder."keys/radarr_api"}"

@@ -190,7 +190,6 @@
     "keys/oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
-    "tsnsrv/nodes/immich" = { };
   };
 
   sops.templates."immich/config.json" = {
@@ -359,9 +358,7 @@
           }
         },
         "server": {
-          "externalDomain": "https://${config.sops.placeholder."tsnsrv/nodes/immich"}.${
-            config.sops.placeholder."tsnsrv/tailnet"
-          }",
+          "externalDomain": "https://imm.${config.sops.placeholder."tsnsrv/tailnet"}",
           "loginPageMessage": ""
         },
         "notifications": {

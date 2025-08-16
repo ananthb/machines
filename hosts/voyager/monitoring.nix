@@ -335,17 +335,11 @@
     "email/smtp/password".owner = config.users.users.grafana.name;
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/from/grafana".owner = config.users.users.grafana.name;
-    "tsnsrv/nodes/copyparty" = { };
-    "tsnsrv/nodes/grafana" = { };
-    "tsnsrv/nodes/immich" = { };
-    "tsnsrv/nodes/jellyfin" = { };
   };
 
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;
-    content = "${config.sops.placeholder."tsnsrv/nodes/grafana"}.${
-      config.sops.placeholder."tsnsrv/tailnet"
-    }";
+    content = "mon.${config.sops.placeholder."tsnsrv/tailnet"}";
   };
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json" = {
     mode = "0444";
@@ -353,18 +347,10 @@
       [
           {
               "targets" = [
-                "https://${config.sops.placeholder."tsnsrv/nodes/jellyfin"}.${
-                  config.sops.placeholder."tsnsrv/tailnet"
-                }",
-                "https://${config.sops.placeholder."tsnsrv/nodes/ha-6a"}.${
-                  config.sops.placeholder."tsnsrv/tailnet"
-                }",
-                "https://${config.sops.placeholder."tsnsrv/nodes/ha-t1"}.${
-                  config.sops.placeholder."tsnsrv/tailnet"
-                }",
-                "https://${config.sops.placeholder."tsnsrv/nodes/immich"}.${
-                  config.sops.placeholder."tsnsrv/tailnet"
-                }"
+                "https://tv.${config.sops.placeholder."tsnsrv/tailnet"}",
+                "https://6a.${config.sops.placeholder."tsnsrv/tailnet"}",
+                "https://t1.${config.sops.placeholder."tsnsrv/tailnet"}",
+                "https://imm.${config.sops.placeholder."tsnsrv/tailnet"}"
               ],
               "labels" = {
                   "type" = "app",

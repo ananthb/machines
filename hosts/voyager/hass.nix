@@ -111,15 +111,11 @@
     ];
   };
 
-  sops.secrets."tsnsrv/nodes/ha-6a" = { };
-  sops.secrets."tsnsrv/nodes/ha-t1" = { };
   sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;
   sops.secrets."home/6a/longitude".owner = config.users.users.hass.name;
   sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
   sops.templates."fqdns/ha-6a.txt" = {
     owner = config.users.users.hass.name;
-    content = "https://${config.sops.placeholder."tsnsrv/nodes/ha-6a"}.${
-      config.sops.placeholder."tsnsrv/tailnet"
-    }";
+    content = "https://6a.${config.sops.placeholder."tsnsrv/tailnet"}";
   };
 }
