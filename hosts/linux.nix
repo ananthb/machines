@@ -116,7 +116,7 @@
 
   services.tsnsrv = {
     enable = true;
-    defaults.authKeyPath = config.sops.secrets."tsnsrv/auth_key".path;
+    defaults.authKeyPath = config.sops.secrets."keys/tailscale_api/auth_key".path;
     defaults.urlParts.host = "localhost";
   };
 
@@ -153,6 +153,6 @@
     "email/smtp/password" = { };
     "email/smtp/username" = { };
     "keys/tailscale_api/auth_key" = { };
-    "keys/tailscale/tailnet" = { };
+    "keys/tailscale_api/tailnet" = { };
   };
 }

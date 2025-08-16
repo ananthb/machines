@@ -1,108 +1,83 @@
 {
-  lib,
   config,
   pkgs,
-  copyparty,
   ...
 }:
 
 {
   #
-  # Copyparty
+  # Seafile
   #
-  imports = [
-    copyparty.nixosModules.default
-  ];
+  services.seafile = {
+    enable = true;
+    dataDir = "/srv/seafile";
+    adminEmail = "antsub@gmail.com";
+    initialAdminPassword = "change me later";
 
-  services = {
-    copyparty = {
-      enable = true;
-      settings = {
-        name = "Copyparty";
-        ansi = true;
+    ccnetSettings.General.SERVICE_URL = "https://sf.tail42937.ts.net";
 
-        #network
-        i = "unix:777:/dev/shm/party.sock";
+    seahubExtraConf = '''';
 
-        # ssl/tls
-        http-only = true;
-
-        # idp
-        idp-h-usr = "X-Tailscale-User-LoginName";
-        idp-adm = "antsub@gmail.com";
-
-        # zeroconf
-        z = true;
-        z-on = [
-          "enp2s0"
-          "enp4s0"
-        ];
-
-        # upload
-        chmod-f = "664";
-        chmod-d = "775";
-        df = "10"; # reject uploads if we have less than 10GiB free
-        nosubtle = "137"; # enable wasm hasher on chrome > 137
-
-        # general db
-        e2dsa = true;
-        e2ts = true;
-      };
-      volumes = {
-        "/" = {
-          path = "/srv/drive/public";
-          access = {
-            rw = "*";
-            A = "antsub@gmail.com";
-          };
-        };
-        "/media" = {
-          path = "/srv/media";
-          access = {
-            r = "*";
-          };
-        };
-        "/ananth" = {
-          path = "/srv/drive/ananth";
-          access = {
-            A = "antsub@gmail.com";
-          };
-        };
-        "/arul" = {
-          path = "/srv/drive/arul";
-          access = {
-            A = "arulpriya93@gmail.com";
-          };
-        };
-        "/bhaskar" = {
-          path = "/srv/drive/bhaskar";
-          access = {
-            A = "bhaskar.yampet@gmail.com";
-          };
-        };
-        "/anu" = {
-          path = "/srv/drive/anu";
-          access = {
-            A = "anu.bhsrmn@gmail.com";
-          };
-        };
+    seafileSettings = {
+      history.keep_days = "14"; # Remove deleted files after 14 days
+      fileserver = {
+        host = "unix:/run/seafile/server.sock";
       };
     };
 
-    tsnsrv.services.cp = {
-      urlParts.port = 3923; # ignored
-      upstreamUnixAddr = "/dev/shm/party.sock";
+    # Enable weekly collection of freed blocks
+    gc = {
+      enable = true;
+      dates = [ "Sun 03:00:00" ];
     };
   };
 
-  systemd.services.tsnsrv-cp.wants = [ "copyparty.service" ];
-  systemd.services.tsnsrv-cp.after = [ "copyparty.service" ];
-  systemd.services.tsnsrv-cp.serviceConfig.BindPaths = "/dev/shm";
+  services.caddy.enable = true;
+  services.caddy.globalConfig = ''
+    auto_https off
 
-  systemd.services.copyparty.serviceConfig.BindPaths = "/srv/drive";
-  systemd.services.copyparty.serviceConfig.Group = lib.mkForce "media";
-  systemd.services.copyparty.serviceConfig.UMask = lib.mkForce "0007";
-  systemd.services.copyparty.unitConfig.requiresmountsfor = "/srv";
+    servers {
+      trusted_proxies static ::1
+    }
+  '';
+  services.caddy.virtualHosts.":8383" = {
+    extraConfig = ''
+      handle_path /seafhttp* {
+        uri strip_prefix /seafhttp
+
+        reverse_proxy unix//run/seafile/server.sock {
+          transport http {
+            dial_timeout 36000s
+            read_timeout 36000s
+            write_timeout 36000s
+          }
+        }
+      }
+
+      handle {
+        reverse_proxy unix//run/seahub/gunicorn.sock {
+          transport http {
+            read_timeout 1200s
+          }
+        }
+      }
+    '';
+  };
+
+  services.tsnsrv.services.sf = {
+    urlParts.port = 8383;
+  };
+  systemd.services.tsnsrv-sf.wants = [
+    "seaf-server.service"
+    "seaf-http.service"
+    "seahub.service"
+  ];
+  systemd.services.tsnsrv-sf.after = [
+    "seaf-server.service"
+    "seaf-http.service"
+    "seahub.service"
+  ];
+  systemd.targets.seafile.wants = [ "tsnsrv-sf.service" ];
 
   #
   # Immich
@@ -135,53 +110,6 @@
   systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
   systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
 
-  #
-  # Jellyfin
-  #
-  services = {
-    jellyfin.enable = true;
-    jellyfin.group = "media";
-    jellyfin.openFirewall = true;
-
-    meilisearch.enable = true;
-    meilisearch.package = pkgs.meilisearch;
-
-    tsnsrv.services.tv = {
-      funnel = true;
-      urlParts.port = 8096;
-    };
-  };
-
-  systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
-  systemd.services.tsnsrv-tv.after = [ "jellyfin.service" ];
-
-  nixpkgs.overlays = [
-    copyparty.overlays.default
-
-    # Modify jellyfin-web index.html for the intro-skipper plugin to work.
-    # intro skipper plugin has to be installed from the UI.
-    (final: prev: {
-      jellyfin-web = prev.jellyfin-web.overrideAttrs (
-        finalAttrs: previousAttrs: {
-          installPhase = ''
-            runHook preInstall
-
-            # this is the important line
-            sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
-
-            mkdir -p $out/share
-            cp -a dist $out/share/jellyfin-web
-
-            runHook postInstall
-          '';
-        }
-      );
-    })
-  ];
-
-  #
-  # Secrets
-  #
   sops.secrets = {
     "email/from/immich" = { };
     "email/replyTo/immich" = { };
@@ -380,5 +308,47 @@
       }
     '';
   };
+
+  #
+  # Jellyfin
+  #
+  services = {
+    jellyfin.enable = true;
+    jellyfin.group = "media";
+    jellyfin.openFirewall = true;
+
+    meilisearch.enable = true;
+    meilisearch.package = pkgs.meilisearch;
+
+    tsnsrv.services.tv = {
+      funnel = true;
+      urlParts.port = 8096;
+    };
+  };
+
+  systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
+  systemd.services.tsnsrv-tv.after = [ "jellyfin.service" ];
+
+  nixpkgs.overlays = [
+    # Modify jellyfin-web index.html for the intro-skipper plugin to work.
+    # intro skipper plugin has to be installed from the UI.
+    (final: prev: {
+      jellyfin-web = prev.jellyfin-web.overrideAttrs (
+        finalAttrs: previousAttrs: {
+          installPhase = ''
+            runHook preInstall
+
+            # this is the important line
+            sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
+
+            mkdir -p $out/share
+            cp -a dist $out/share/jellyfin-web
+
+            runHook postInstall
+          '';
+        }
+      );
+    })
+  ];
 
 }
