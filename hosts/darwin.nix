@@ -141,6 +141,9 @@
       "ddpm"
       "vlc"
       "logi-options+"
+      "tomatobar"
+      "jellyfin-media-player"
+      "yubico-yubikey-manager"
     ];
     masApps = {
       "GarageBand" = 682658836;
