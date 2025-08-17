@@ -81,13 +81,14 @@
               };
             }
             {
-              "Copyparty" = {
+              "Seafile" = {
                 description = ''
-                  View and store files.
-                                  Upload to your personal folder and to a server-wide public folder.
-                                  Access by turning on Tailscale'';
+                  Upload your files. Organise them into libraries.
+                  Share files with people.
+                  Sign in with Google.
+                '';
                 icon = "files";
-                href = "{{HOMEPAGE_VAR_COPYPARTY_HREF}}";
+                href = "{{HOMEPAGE_VAR_SEAFILE_HREF}}";
               };
             }
           ];
@@ -213,7 +214,7 @@
       HOMEPAGE_ALLOWED_HOSTS="home.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_IMMICH_HREF="https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_JELLYFIN_HREF="https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
-      HOMEPAGE_VAR_COPYPARTY_HREF="https://cp.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      HOMEPAGE_VAR_SEAFILE_HREF="https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY="${
         config.sops.placeholder."keys/openweathermap_api/homepage-dashboard"
       }"
