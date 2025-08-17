@@ -339,7 +339,7 @@
 
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;
-    content = "mon.${config.sops.placeholder."tsnsrv/tailnet"}";
+    content = "mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}";
   };
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json" = {
     mode = "0444";
@@ -347,10 +347,10 @@
       [
           {
               "targets" = [
-                "https://tv.${config.sops.placeholder."tsnsrv/tailnet"}",
-                "https://6a.${config.sops.placeholder."tsnsrv/tailnet"}",
-                "https://t1.${config.sops.placeholder."tsnsrv/tailnet"}",
-                "https://imm.${config.sops.placeholder."tsnsrv/tailnet"}"
+                "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+                "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
               ],
               "labels" = {
                   "type" = "app",

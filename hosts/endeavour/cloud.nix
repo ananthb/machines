@@ -18,7 +18,7 @@
 
     seahubExtraConf = ''
       import os
- 
+
       ENABLE_SETTINGS_VIA_WEB = False
       TIME_ZONE = "Asia/Kolkata"
       SITE_NAME = "Ananth's File Server"
