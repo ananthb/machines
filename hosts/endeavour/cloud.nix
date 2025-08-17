@@ -11,7 +11,7 @@
   services.seafile = {
     enable = true;
     dataDir = "/srv/seafile";
-    adminEmail = "antsub@gmail.com";
+    adminEmail = "admin@example.com";
     initialAdminPassword = "change me later";
 
     ccnetSettings.General.SERVICE_URL = "https://sf.tail42937.ts.net";
@@ -41,7 +41,7 @@
           "https://www.googleapis.com/auth/userinfo.profile",
       ]
       OAUTH_ATTRIBUTE_MAP = {
-          "sub": (True, "uid"),
+          "id": (True, "uid"),
           "name": (False, "name"),
           "email": (False, "contact_email"),
       }
