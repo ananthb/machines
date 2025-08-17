@@ -5,6 +5,87 @@
 }:
 
 {
+  virtualisation.quadlet =
+    let
+      inherit (config.virtualisation.quadlet) networks pods volumes;
+    in
+    {
+      pods = {
+        seafile-server = {
+          networks = [ "podman" ];
+        };
+      };
+      volumes = {
+        seafile-server-mysql-data.volumeConfig = {
+          type = "bind";
+        };
+        seafile-data.volumeConfig = {
+          type = "bind";
+        };
+      };
+      containers = {
+        db = {
+          containerConfig = {
+            name = "seafile-mysql";
+            image = "docker.io/library/mariadb:10.11";
+            pod = pods.seafile-server.ref;
+            environments = {
+              MYSQL_LOG_CONSOLE = true;
+              MARIADB_AUTO_UPGRADE = 1;
+              MYSQL_ROOT_PASSWORD = "password";
+            };
+            volumes = [
+              "${volumes.seafile-server-mysql-data.ref}:/var/lib/mysql"
+            ];
+          };
+        };
+        redis.containerConfig = {
+          name = "seafile-redis";
+          image = "docker.io/library/redis";
+        };
+        seafile = {
+          containerConfig = {
+            name = "seafile";
+            image = "docker.io/seafileltd/seafile-mc:13.0-latest";
+            volumes = [
+              "${volumes.seafile-data.ref}:/shared"
+            ];
+            environments = {
+              SEAFILE_MYSQL_DB_HOST = "127.0.0.1";
+              SEAFILE_MYSQL_DB_PORT = 3306;
+              SEAFILE_MYSQL_DB_USER = "seafile";
+              SEAFILE_MYSQL_DB_PASSWORD = "password";
+              INIT_SEAFILE_MYSQL_ROOT_PASSWORD = "password";
+              SEAFILE_MYSQL_DB_CCNET_DB_NAME = "ccnet_db";
+              SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
+              SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
+              TIME_ZONE = "Asia/Kolkata";
+              INIT_SEAFILE_ADMIN_EMAIL = "antsub@gmail.com";
+              INIT_SEAFILE_ADMIN_PASSWORD = "change me soon";
+              SEAFILE_SERVER_HOSTNAME = "https://sf.tail42937.ts.net";
+              SEAFILE_SERVER_PROTOCOL = "http";
+              SITE_ROOT = "/";
+              NON_ROOT = false;
+              JWT_PRIVATE_KEY = "some-key";
+              SEAFILE_LOG_TO_STDOUT = false;
+              ENABLE_SEADOC = true;
+              SEADOC_SERVER_URL = "${SEAFILE_SERVER_PROTOCOL}://${SEAFILE_SERVER_HOSTNAME}/sdoc-server";
+              CACHE_PROVIDER = "redis";
+              REDIS_HOST = "127.0.0.1";
+              REDIS_PORT = 6379;
+              ENABLE_NOTIFICATION_SERVER = false;
+              INNER_NOTIFICATIN_SERVER_URL = "http://notification-server:8083";
+              NOTIFICATION_SERVER_URL = "${SEAFILE_SERVER_PROTOCOL}://${SEAFILE_SERVER_HOSTNAME}/notification";
+              ENABLE_SEAFILE_AI = false;
+              SEAFILE_AI_SERVER_URL = "http://seafile-ai:8888";
+              SEAFILE_AI_SECRET_KEY = "key";
+              MD_FILE_COUNT_LIMIT = 100000;
+            };
+          };
+        };
+      };
+    };
+
   #
   # Immich
   #

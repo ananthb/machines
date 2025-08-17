@@ -29,6 +29,8 @@
   inputs.tsnsrv.url = "github:boinkor-net/tsnsrv";
   inputs.tsnsrv.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+
   outputs =
     {
       self,
@@ -43,6 +45,7 @@
       homebrew-core,
       homebrew-cask,
       tsnsrv,
+      quadlet-nix,
       ...
     }@inputs:
     {
@@ -67,6 +70,7 @@
             modules = [
               lanzaboote.nixosModules.lanzaboote
               sops-nix.nixosModules.sops
+              quadlet-nix.nixosModules.quadlet
               ./hosts/linux.nix
               ./hosts/endeavour
             ];
