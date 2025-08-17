@@ -11,24 +11,45 @@
   services.seafile = {
     enable = true;
     dataDir = "/srv/seafile";
-    adminEmail = "admin@example.com";
+    adminEmail = "antsub@gmail.com";
     initialAdminPassword = "change me later";
 
     ccnetSettings.General.SERVICE_URL = "https://sf.tail42937.ts.net";
 
     seahubExtraConf = ''
+      import os
+ 
       ENABLE_SETTINGS_VIA_WEB = False
       TIME_ZONE = "Asia/Kolkata"
       SITE_NAME = "Ananth's File Server"
+      SITE_TITLE = "Our Cloud"
 
+      fqdn = os.environ.get("SEAFILE_FQDN")
+
+      # Security Settings
+      # Please refer https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts for details.
+      ALLOWED_HOSTS = [f".{fqdn}"]
+
+
+      # Whether to use a secure cookie for the CSRF cookie
+      # https://docs.djangoproject.com/en/3.2/ref/settings/#csrf-cookie-secure
+      CSRF_COOKIE_SECURE = True
+
+      # The value of the SameSite flag on the CSRF cookie
+      # https://docs.djangoproject.com/en/3.2/ref/settings/#csrf-cookie-samesite
+      CSRF_COOKIE_SAMESITE = 'Strict'
+
+      # https://docs.djangoproject.com/en/3.2/ref/settings/#csrf-trusted-origins
+      CSRF_TRUSTED_ORIGINS = [f"https://{fqdn}"]
+
+
+      # OAuth Settings
       ENABLE_OAUTH = True
       OAUTH_ENABLE_INSECURE_TRANSPORT = True
 
-      import os
-
       OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID")
       OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET")
-      OAUTH_REDIRECT_URL = f"https://{os.environ.get("SEAFILE_FQDN")}/oauth/callback/"
+      OAUTH_REDIRECT_URL = f"https://{fqdn}/oauth/callback/"
 
       # The following shoud NOT be changed if you are using Google as OAuth provider.
       OAUTH_PROVIDER_DOMAIN = 'google.com'
@@ -45,6 +66,16 @@
           "name": (False, "name"),
           "email": (False, "contact_email"),
       }
+
+
+      # SMTP Settings
+      EMAIL_USE_TLS = True
+      EMAIL_HOST = os.environ.get("EMAIL_HOST")
+      EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+      EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+      EMAIL_PORT = os.environ.get("EMAIL_PORT")
+      DEFAULT_FROM_EMAIL = os.environ.get("SEAFILE_FROM_EMAIL")
+      SERVER_EMAIL = os.environ.get("SEAFILE_REPLY_TO_EMAIL")
     '';
 
     seafileSettings = {
@@ -92,13 +123,16 @@
       }
     '';
   };
-  
+
   systemd.targets.seafile.wants = [ "tsnsrv-sf.service" ];
-  systemd.services.seahub.serviceConfig.EnvironmentFile = config.sops.templates."seafile/seahub_settings.env".path;
+  systemd.services.seahub.serviceConfig.EnvironmentFile =
+    config.sops.templates."seafile/seahub_settings.env".path;
 
   sops.secrets = {
     "keys/oauth_clients/seafile/client_id" = { };
     "keys/oauth_clients/seafile/client_secret" = { };
+    "email/from/seafile" = { };
+    "email/replyTo/seafile" = { };
   };
   sops.templates."seafile/seahub_settings.env" = {
     owner = config.users.users.seafile.name;
@@ -106,6 +140,12 @@
       SEAFILE_FQDN="sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       OAUTH_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/seafile/client_id"}"
       OAUTH_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/seafile/client_secret"}"
+      EMAIL_HOST="${config.sops.placeholder."email/smtp/host"}"
+      EMAIL_PORT="587"
+      EMAIL_HOST_USER="${config.sops.placeholder."email/smtp/username"}"
+      EMAIL_HOST_PASSWORD="${config.sops.placeholder."email/smtp/password"}"
+      SEAFILE_FROM_EMAIL="${config.sops.placeholder."email/from/seafile"}"
+      SEAFILE_REPLY_TO_EMAIL="${config.sops.placeholder."email/replyTo/seafile"}"
     '';
   };
 
@@ -158,9 +198,6 @@
     "email/from/immich" = { };
     "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
-    "keys/oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
-    "keys/oauth_clients/immich/redirect_uris/mobile".owner = config.users.users.immich.name;
-    "keys/oauth_clients/immich/redirect_uris/web".owner = config.users.users.immich.name;
   };
 
   sops.templates."immich/config.json" = {
@@ -276,11 +313,11 @@
           "clientSecret": "${config.sops.placeholder."keys/oauth_clients/immich/client_secret"}",
           "defaultStorageQuota": null,
           "enabled": true,
-          "issuerUrl": "${config.sops.placeholder."keys/oauth_clients/immich/issuer_url"}",
+          "issuerUrl": "https://accounts.google.com/.well-known/openid-configuration",
           "mobileOverrideEnabled": true,
-          "mobileRedirectUri": "${
-            config.sops.placeholder."keys/oauth_clients/immich/redirect_uris/mobile"
-          }",
+          "mobileRedirectUri": "https://imm.${
+            config.sops.placeholder."keys/tailscale_api/tailnet"
+          }/api/oauth/mobile-redirect",
           "scope": "openid email profile",
           "signingAlgorithm": "RS256",
           "profileSigningAlgorithm": "none",
