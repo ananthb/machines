@@ -74,8 +74,8 @@
       EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
       EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
       EMAIL_PORT = os.environ.get("EMAIL_PORT")
-      DEFAULT_FROM_EMAIL = os.environ.get("SEAFILE_FROM_EMAIL")
-      SERVER_EMAIL = os.environ.get("SEAFILE_REPLY_TO_EMAIL")
+      DEFAULT_FROM_EMAIL = os.environ.get("SEAFILE_EMAIL")
+      SERVER_EMAIL = os.environ.get("SEAFILE_EMAIL")
     '';
 
     seafileSettings = {
@@ -132,7 +132,6 @@
     "keys/oauth_clients/seafile/client_id" = { };
     "keys/oauth_clients/seafile/client_secret" = { };
     "email/from/seafile" = { };
-    "email/replyTo/seafile" = { };
   };
   sops.templates."seafile/seahub_settings.env" = {
     owner = config.users.users.seafile.name;
@@ -144,8 +143,7 @@
       EMAIL_PORT="587"
       EMAIL_HOST_USER="${config.sops.placeholder."email/smtp/username"}"
       EMAIL_HOST_PASSWORD="${config.sops.placeholder."email/smtp/password"}"
-      SEAFILE_FROM_EMAIL="${config.sops.placeholder."email/from/seafile"}"
-      SEAFILE_REPLY_TO_EMAIL="${config.sops.placeholder."email/replyTo/seafile"}"
+      SEAFILE_EMAIL="${config.sops.placeholder."email/from/seafile"}"
     '';
   };
 
