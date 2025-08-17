@@ -44,6 +44,7 @@
 
 
       # OAuth Settings
+      ENABLE_SIGNUP = True
       ENABLE_OAUTH = True
       OAUTH_ENABLE_INSECURE_TRANSPORT = True
 
