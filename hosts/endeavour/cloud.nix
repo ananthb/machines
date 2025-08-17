@@ -156,7 +156,6 @@
 
   sops.secrets = {
     "email/from/immich" = { };
-    "email/replyTo/immich" = { };
     "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
     "keys/oauth_clients/immich/issuer_url".owner = config.users.users.immich.name;
@@ -337,7 +336,7 @@
           "smtp": {
             "enabled": false,
             "from": "${config.sops.placeholder."email/from/immich"}",
-            "replyTo": "${config.sops.placeholder."email/replyTo/immich"}",
+            "replyTo": "${config.sops.placeholder."email/from/immich"}",
             "transport": {
               "ignoreCert": false,
               "host": "${config.sops.placeholder."email/smtp/host"}",
