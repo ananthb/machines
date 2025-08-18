@@ -2,6 +2,7 @@
 {
   boot = {
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
+    kernelModules = [ "gpio_fan" ];
     initrd.availableKernelModules = [
       "xhci_pci"
       "usbhid"
@@ -25,5 +26,29 @@
     };
   };
 
-  hardware.enableRedistributableFirmware = true;
+  hardware = {
+    raspberry-pi."4" = {
+      apply-overlays-dtmerge.enable = true;
+      i2c1.enable = true;
+      fkms-3d.enable = true;
+    };
+
+    deviceTree.enable = true;
+
+    enableAllFirmware = true;
+
+    # Required for the Wireless firmware
+    enableRedistributableFirmware = true;
+
+    bluetooth = {
+      package = pkgs.bluez;
+      enable = true;
+      powerOnBoot = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+        };
+      };
+    };
+  };
 }

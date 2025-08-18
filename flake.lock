@@ -188,11 +188,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1755375334,
-        "narHash": "sha256-GaJmvWDIlYQSzupEN1ar/kfCEs2EOp1euFRYXdecQX0=",
+        "lastModified": 1755516105,
+        "narHash": "sha256-6z8gmBCbTcJVQMCOzY5gtPEivzr46EqNDilE/ugsq8U=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "93ebefe0cfe81cb3e376c69ebb32a9cb1d55ceb1",
+        "rev": "25933a9ac7abb3db190915aea04888338a14de2a",
         "type": "github"
       },
       "original": {
@@ -204,11 +204,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1755377261,
-        "narHash": "sha256-NNObuqQxiW119YnTfwL0GlrPllUM87URoDMeib9eoGE=",
+        "lastModified": 1755517757,
+        "narHash": "sha256-hN64hzZEw0WiGfSM+AHjhTIxuTbu7iCGIBXzKdKXaaY=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "0b7fa99fd134c55ed80dfe0ae32038f3517401ae",
+        "rev": "e2fa660e13b8cd76e1eb5984f19aa0da02f5929b",
         "type": "github"
       },
       "original": {
@@ -307,6 +307,22 @@
       "original": {
         "owner": "zhaofengli-wip",
         "repo": "nix-homebrew",
+        "type": "github"
+      }
+    },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1755330281,
+        "narHash": "sha256-aJHFJWP9AuI8jUGzI77LYcSlkA9wJnOIg4ZqftwNGXA=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "3dac8a872557e0ca8c083cdcfc2f218d18e113b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixos-hardware",
         "type": "github"
       }
     },
@@ -455,6 +471,7 @@
         "lanzaboote": "lanzaboote",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
         "quadlet-nix": "quadlet-nix",

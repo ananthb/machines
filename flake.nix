@@ -1,6 +1,8 @@
 {
   description = "A SecureBoot-enabled NixOS configurations";
 
+  inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
   inputs.sops-nix.url = "github:Mic92/sops-nix";
@@ -34,6 +36,7 @@
   outputs =
     {
       self,
+      nixos-hardware,
       nixpkgs,
       sops-nix,
       lanzaboote,
@@ -90,6 +93,7 @@
             };
 
             modules = [
+              nixos-hardware.nixosModules.raspberry-pi-4
               sops-nix.nixosModules.sops
               ./hosts/linux.nix
               ./hosts/voyager
