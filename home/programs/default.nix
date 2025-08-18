@@ -10,10 +10,7 @@
   programs = {
     home-manager.enable = true;
 
-    nix-index = {
-      enable = true;
-      enableFishIntegration = true;
-    };
+    nix-index-database.comma.enable = true;
 
     fish.enable = true;
 

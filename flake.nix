@@ -8,6 +8,9 @@
   inputs.sops-nix.url = "github:Mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.nix-index-database.url = "github:nix-community/nix-index-database";
+  inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
   inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
   inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -39,6 +42,7 @@
       nixos-hardware,
       nixpkgs,
       sops-nix,
+      nix-index-database,
       lanzaboote,
       home-manager,
       nixvim,

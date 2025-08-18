@@ -10,6 +10,7 @@
   homebrew-bundle,
   home-manager,
   sops-nix,
+  nix-index-database,
   ...
 }:
 
@@ -35,6 +36,7 @@
     {
       home-manager.sharedModules = [
         sops-nix.homeManagerModules.sops
+        nix-index-database.homeModules.nix-index
       ];
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
