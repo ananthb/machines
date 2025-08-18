@@ -5,6 +5,7 @@
 }:
 
 {
+  /* TODO: finish setting up seafile containers
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) networks pods volumes;
@@ -85,6 +86,7 @@
         };
       };
     };
+  */
 
   #
   # Immich
