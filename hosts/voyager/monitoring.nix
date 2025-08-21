@@ -9,7 +9,7 @@
         "-enableTCP6"
       ];
       prometheusConfig = {
-        global.scrape_interval = "15s";
+        global.scrape_interval = "10s";
         scrape_configs = [
           {
             job_name = "blackbox_exporter";
