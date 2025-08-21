@@ -355,5 +355,35 @@
       );
     })
   ];
+  
+  #
+  # Open WebUI
+  #
+  services.open-webui.enable = true;
+  services.open-webui.package = pkgs.unstable.open-webui;
+  services.open-webui.port = 8090;
+  services.open-webui.environmentFile = config.sops.templates."open-webui/env".path;
+
+  sops.secrets."keys/oauth_clients/open-webui/client_id" = { };
+  sops.secrets."keys/oauth_clients/open-webui/client_secret" = { };
+
+  sops.templates."open-webui/env" = {
+    mode = 0444;
+    content = ''
+      ENABLE_PERSISTENT_CONFIG="False"
+      OLLAMA_API_BASE_URL="http://enterprise:11434"
+      ENABLE_SIGNUP="True"
+      ENABLE_OAUTH_SIGNUP="True"
+      ENABLE_OAUTH_PERSISTENT_CONFIG="False"
+      GOOGLE_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/open-webui/client_id"}"
+      GOOGLE_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/open-webui/client_secret"}"
+      GOOGLE_REDIRECT_URI="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}/oauth/google/callback"
+    '';
+  };
+  
+  services.tsnsrv.services.ai = {
+    # funnel = true;
+    urlParts.port = 8090;
+  };
 
 }

@@ -4,6 +4,7 @@
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   inputs.sops-nix.url = "github:Mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -41,6 +42,7 @@
       self,
       nixos-hardware,
       nixpkgs,
+      nixpkgs-unstable,
       sops-nix,
       nix-index-database,
       lanzaboote,
