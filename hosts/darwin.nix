@@ -145,7 +145,7 @@
       "logi-options+"
       "tomatobar"
       "jellyfin-media-player"
-      "yubico-yubikey-manager"
+      "yubico-authenticator"
     ];
     masApps = {
       "GarageBand" = 682658836;
@@ -155,6 +155,7 @@
       "Pages" = 409201541;
       "Tailscale" = 1475387142;
       "Velja" = 1607635845;
+      "WhatsApp" = 310633997;
     };
   };
 }

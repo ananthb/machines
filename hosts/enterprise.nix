@@ -5,7 +5,7 @@
   homebrew.casks = [
     "kopiaui"
     "utm"
-    "jellyfin-media-player"
+    "ollama-app"
   ];
   homebrew.masApps = { };
 }

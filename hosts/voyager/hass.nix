@@ -87,15 +87,9 @@
     tsnsrv.services."6a" = {
       funnel = true;
       urlParts.port = 8123;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9098"
-      ];
     };
     tsnsrv.services.esp = {
       urlParts.port = 6053;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9094"
-      ];
     };
   };
 

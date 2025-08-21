@@ -311,9 +311,6 @@
     tsnsrv.services.mon = {
       funnel = true;
       urlParts.port = 3000;
-      extraArgs = [
-        "-prometheusAddr=[::1]:9099"
-      ];
     };
   };
 
