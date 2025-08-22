@@ -371,13 +371,20 @@
     mode = "0444";
     content = ''
       ENV="prod"
+      WEBUI_URL="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
       OLLAMA_API_BASE_URL="http://enterprise:11434"
-      ENABLE_SIGNUP="False"
+      BYPASS_MODEL_ACCESS_CONTROL="True"
+
+      # Auth
       ENABLE_LOGIN_FORM="False"
-      ENABLE_OAUTH_SIGNUP="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
+      ENABLE_SIGNUP="True"
+      ENABLE_OAUTH_SIGNUP="True"
+      OAUTH_UPDATE_PICTURE_ON_LOGIN="True"
+
+      # Google OpenID
       GOOGLE_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/open-webui/client_id"}"
       GOOGLE_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/open-webui/client_secret"}"
       GOOGLE_REDIRECT_URI="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}/oauth/google/callback"
