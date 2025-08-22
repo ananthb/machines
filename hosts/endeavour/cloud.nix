@@ -368,21 +368,46 @@
   sops.secrets."keys/oauth_clients/open-webui/client_secret" = { };
 
   sops.templates."open-webui/env" = {
-    mode = 0444;
+    mode = "0444";
     content = ''
+      ENV="prod"
+      DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
       OLLAMA_API_BASE_URL="http://enterprise:11434"
-      ENABLE_SIGNUP="True"
-      ENABLE_OAUTH_SIGNUP="True"
+      ENABLE_SIGNUP="False"
+      ENABLE_LOGIN_FORM="False"
+      ENABLE_OAUTH_SIGNUP="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
       GOOGLE_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/open-webui/client_id"}"
       GOOGLE_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/open-webui/client_secret"}"
       GOOGLE_REDIRECT_URI="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}/oauth/google/callback"
+      OPENID_PROVIDER_URL="https://accounts.google.com/.well-known/openid-configuration"
+
+      # See http://github.com/open-webui/open-webui/discussions/10571
+      HF_ENDPOINT=https://hf-mirror.com/ 
+
+      # See https://github.com/nixos/nixpkgs/issues/430433
+      FRONTEND_BUILD_DIR = "${config.services.open-webui.stateDir}/build";
+      DATA_DIR = "${config.services.open-webui.stateDir}/data";
+      STATIC_DIR = "${config.services.open-webui.stateDir}/static";
     '';
   };
   
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "open-webui" ];
+    ensureUsers = [
+      {
+        name = "open-webui";
+        ensureDBOwnership = true;
+        ensureClauses.login = true;
+      }
+    ];
+  };
+  
   services.tsnsrv.services.ai = {
-    # funnel = true;
+    funnel = true;
+    urlParts.host = "127.0.0.1";
     urlParts.port = 8090;
   };
 
