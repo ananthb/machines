@@ -146,6 +146,7 @@
       "tomatobar"
       "jellyfin-media-player"
       "yubico-authenticator"
+      "ollama-app"
     ];
     masApps = {
       "GarageBand" = 682658836;

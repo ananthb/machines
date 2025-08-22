@@ -370,14 +370,19 @@
   sops.templates."open-webui/env" = {
     mode = "0444";
     content = ''
+      # general
       ENV="prod"
       WEBUI_URL="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
-      OLLAMA_API_BASE_URL="http://enterprise:11434"
       BYPASS_MODEL_ACCESS_CONTROL="True"
 
-      # Auth
+      # ollama api
+      ENABLE_OLLAMA_API
+      OLLAMA_BASE_URLS="http://enterprise:11434;http://discovery:11434"
+      EMABLE_OPENAI_API="False"
+
+      # auth
       ENABLE_LOGIN_FORM="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
       ENABLE_SIGNUP="True"
@@ -387,7 +392,7 @@
       # Google OpenID
       GOOGLE_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/open-webui/client_id"}"
       GOOGLE_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/open-webui/client_secret"}"
-      GOOGLE_REDIRECT_URI="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}/oauth/google/callback"
+      GOOGLE_REDIRECT_URI="https://ai.''${WEBUI_URL}/oauth/google/callback"
       OPENID_PROVIDER_URL="https://accounts.google.com/.well-known/openid-configuration"
 
       # See http://github.com/open-webui/open-webui/discussions/10571
