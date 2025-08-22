@@ -147,6 +147,7 @@
       "jellyfin-media-player"
       "yubico-authenticator"
       "ollama-app"
+      "jordanbaird-ice"
     ];
     masApps = {
       "GarageBand" = 682658836;
