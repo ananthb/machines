@@ -364,13 +364,19 @@
   services.open-webui.port = 8090;
   services.open-webui.environmentFile = config.sops.templates."open-webui/env".path;
 
-  sops.secrets."keys/oauth_clients/open-webui/client_id" = { };
-  sops.secrets."keys/oauth_clients/open-webui/client_secret" = { };
+  sops.secrets = {
+    "keys/oauth_clients/open-webui/client_id" = { };
+    "keys/oauth_clients/open-webui/client_secret" = { };
+    "keys/google_cloud_search_api" = { };
+  };
 
   sops.templates."open-webui/env" = {
     mode = "0444";
     content = ''
       # general
+      # TODO: fix this
+      #http_proxy="socks5://localhost:8888"
+      #https_proxy="socks5://localhost:8888"
       ENV="prod"
       WEBUI_URL="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
@@ -402,6 +408,15 @@
       FRONTEND_BUILD_DIR="${config.services.open-webui.stateDir}/build";
       DATA_DIR="${config.services.open-webui.stateDir}/data";
       STATIC_DIR="${config.services.open-webui.stateDir}/static";
+
+      # web search
+      ENABLE_WEB_SEARCH="True"
+      WEB_SEARCH_TRUST_ENV="True"
+      WEB_SEARCH_ENGINE="google_pse"
+      GOOGLE_PSE_API_KEY="${config.sops.placeholder."keys/google_cloud_search_api"}"
+
+      # RAG
+      PDF_EXTRACT_IMAGES="True"
     '';
   };
   
