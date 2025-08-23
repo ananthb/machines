@@ -19,7 +19,8 @@
     };
 
     upsd.listen = [
-      { address = "::"; }
+      { address = "::0"; }
+      { address = "0.0.0.0"; }
     ];
 
     ups."apc1" = {
