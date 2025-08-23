@@ -56,7 +56,6 @@
                 targets = [
                   "atlantis.local"
                   "intrepid.local"
-                  "phoenix.local"
                 ];
                 labels.type = "node";
                 labels.os = "openwrt";
@@ -111,7 +110,6 @@
                 targets = [
                   "http://atlantis.local"
                   "http://intrepid.local"
-                  "http://phoenix.local"
                 ];
                 labels.type = "node";
                 labels.os = "openwrt";
@@ -175,7 +173,6 @@
                 targets = [
                   "atlantis.local:9100"
                   "intrepid.local:9100"
-                  "phoenix.local:9100"
                 ];
                 labels.type = "node";
                 labels.os = "openwrt";
