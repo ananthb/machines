@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   ...
 }:
 {
@@ -36,7 +35,7 @@
       };
     };
 
-    upsmon.monitor."apc1" = {
+    upsmon.monitor."apc1@endeavour" = {
       powerValue = 1;
       user = "nutmon";
     };
