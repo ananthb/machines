@@ -214,10 +214,25 @@
                   "endeavour:9709" # sonarr exporter
                   "endeavour:9710" # prowlarr exporter
                   "endeavour:8081" # immich exporter
-                  "endeavour:9199" # nut exporter
                 ];
                 labels.type = "exporter";
                 labels.role = "server";
+              }
+            ];
+          }
+          {
+            job_name = "nut";
+            static_configs = [
+              {
+                metrics_path = "/ups_metrics";
+                targets = [ "endeavour:9199" ]; # nut exporter
+                labels.type = "exporter";
+                labels.role = "ups";
+              }
+              {
+                targets = [ "endeavour:9199" ]; # nut exporter meta metrics
+                labels.type = "exporter";
+                labels.role = "ups";
               }
             ];
           }
