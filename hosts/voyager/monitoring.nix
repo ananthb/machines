@@ -218,19 +218,19 @@
                 labels.type = "exporter";
                 labels.role = "server";
               }
+              {
+                targets = [ "endeavour:9199" ]; # nut exporter meta metrics
+                labels.type = "exporter";
+                labels.role = "ups";
+              }
             ];
           }
           {
             job_name = "nut";
+            metrics_path = "/ups_metrics";
             static_configs = [
               {
-                metrics_path = "/ups_metrics";
                 targets = [ "endeavour:9199" ]; # nut exporter
-                labels.type = "exporter";
-                labels.role = "ups";
-              }
-              {
-                targets = [ "endeavour:9199" ]; # nut exporter meta metrics
                 labels.type = "exporter";
                 labels.role = "ups";
               }
