@@ -6,9 +6,10 @@
 }:
 {
   imports = [
-    ./hardware-configuration.nix
-    ./services.nix
     ./cloud.nix
+    ./hardware-configuration.nix
+    ./power.nix
+    ./services.nix
   ];
 
   sops.secrets."keys/google_cloud_service_accounts/kopia-hathi-backups.json" = { };
