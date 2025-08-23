@@ -14,6 +14,12 @@
 
     redis.enable = true;
 
+    nut = {
+      enable = true;
+      nutUser = "nutmon";
+      passwordPath = config.sops.secrets."passwords/nut/nutmon".path;
+    };
+
     exportarr-radarr = {
       enable = true;
       url = "http://localhost:7878";

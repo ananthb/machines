@@ -214,6 +214,7 @@
                   "endeavour:9709" # sonarr exporter
                   "endeavour:9710" # prowlarr exporter
                   "endeavour:8081" # immich exporter
+                  "endeavour:9199" # nut exporter
                 ];
                 labels.type = "exporter";
                 labels.role = "server";
