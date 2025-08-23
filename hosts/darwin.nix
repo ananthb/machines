@@ -135,19 +135,26 @@
       }
     ];
     casks = [
+      # hardware support
+      "ddpm"
+      "logi-options+"
+      "yubico-authenticator"
+
+      # tools
+      "rectangle-pro"
+      "scroll-reverser"
+      "jordanbaird-ice"
+      "tomatobar"
+      "ollama-app"
+
+      # dailies
       "google-chrome"
       "visual-studio-code"
       "ghostty"
-      "rectangle-pro"
-      "scroll-reverser"
-      "ddpm"
+
+      # media
       "vlc"
-      "logi-options+"
-      "tomatobar"
       "jellyfin-media-player"
-      "yubico-authenticator"
-      "ollama-app"
-      "jordanbaird-ice"
     ];
     masApps = {
       "GarageBand" = 682658836;

@@ -8,16 +8,12 @@
     "flyctl"
   ];
   homebrew.casks = [
-    "discord"
     "slack"
     "slack-cli"
     "1password"
     "raspberry-pi-imager"
     "ledger-live"
-    "google-drive"
-    "zed"
     "gimp"
-    "vlc"
     "handbrake-app"
   ];
   homebrew.masApps = {
