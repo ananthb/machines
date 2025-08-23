@@ -385,8 +385,8 @@
       # auth
       ENABLE_LOGIN_FORM="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
-      ENABLE_SIGNUP="True"
-      ENABLE_OAUTH_SIGNUP="True"
+      ENABLE_SIGNUP="False"
+      ENABLE_OAUTH_SIGNUP="False"
       OAUTH_UPDATE_PICTURE_ON_LOGIN="True"
 
       # Google OpenID
@@ -399,9 +399,9 @@
       HF_ENDPOINT=https://hf-mirror.com/ 
 
       # See https://github.com/nixos/nixpkgs/issues/430433
-      FRONTEND_BUILD_DIR = "${config.services.open-webui.stateDir}/build";
-      DATA_DIR = "${config.services.open-webui.stateDir}/data";
-      STATIC_DIR = "${config.services.open-webui.stateDir}/static";
+      FRONTEND_BUILD_DIR="${config.services.open-webui.stateDir}/build";
+      DATA_DIR="${config.services.open-webui.stateDir}/data";
+      STATIC_DIR="${config.services.open-webui.stateDir}/static";
     '';
   };
   
