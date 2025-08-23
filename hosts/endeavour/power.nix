@@ -25,7 +25,7 @@
     ups."apc1" = {
       driver = "usbhid-ups";
       port = "auto";
-      description = "Server UPS";
+      description = "APC BackUPS Pro 1000 in Imagine";
     };
 
     upsmon.monitor."apc1" = {
@@ -35,5 +35,4 @@
   };
 
   sops.secrets."passwords/nut/admin" = { };
-  sops.secrets."passwords/nut/nutmon" = { };
 }

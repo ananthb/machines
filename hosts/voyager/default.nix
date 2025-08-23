@@ -25,6 +25,23 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
+  power.ups = {
+    enable = true;
+    mode = "netclient";
+
+    users = {
+      "nutmon" = {
+        passwordFile = config.sops.secrets."passwords/nut/nutmon".path;
+        upsmon = "primary";
+      };
+    };
+
+    upsmon.monitor."apc1" = {
+      powerValue = 1;
+      user = "nutmon";
+    };
+  };
+
   # secrets
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;

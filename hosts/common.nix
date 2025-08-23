@@ -22,8 +22,11 @@
   ];
 
   sops.defaultSopsFile = ../secrets.yaml;
-  sops.secrets."keys/ssh/yubikey_5c" = { };
-  sops.secrets."keys/ssh/yubikey_5c.pub" = { };
-  sops.secrets."keys/ssh/yubikey_5c_nano" = { };
-  sops.secrets."keys/ssh/yubikey_5c_nano.pub" = { };
+  sops.secrets = {
+    "keys/ssh/yubikey_5c" = { };
+    "keys/ssh/yubikey_5c.pub" = { };
+    "keys/ssh/yubikey_5c_nano" = { };
+    "keys/ssh/yubikey_5c_nano.pub" = { };
+    "passwords/nut/nutmon" = { };
+  };
 }
