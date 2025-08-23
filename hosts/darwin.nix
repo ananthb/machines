@@ -149,8 +149,8 @@
 
       # dailies
       "google-chrome"
-      "visual-studio-code"
       "ghostty"
+      "neovide"
 
       # media
       "vlc"
