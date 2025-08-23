@@ -1,12 +1,7 @@
 { ... }:
 
 {
-  homebrew.brews = [
-    "docker"
-    "docker-compose"
-    "magic-wormhole"
-    "flyctl"
-  ];
+  homebrew.brews = [ ];
   homebrew.casks = [
     "slack"
     "slack-cli"
