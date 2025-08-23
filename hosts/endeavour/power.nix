@@ -9,11 +9,12 @@
     users = {
       "admin" = {
         passwordFile = config.sops.secrets."passwords/nut/admin".path;
-        instcmds = "ALL";
-        actions = "SET";
+        upsmon = "primary";
+        instcmds = [ "ALL" ];
+        actions = [ "SET" ];
       };
-      "upsmon" = {
-        passwordFile = config.sops.secrets."passwords/nut/upsmon".path;
+      "nutmon" = {
+        passwordFile = config.sops.secrets."passwords/nut/nutmon".path;
         upsmon = "primary";
       };
     };
@@ -34,5 +35,6 @@
     };
   };
 
-  sops.secrets."passwords/nut/upsmon" = { };
+  sops.secrets."passwords/nut/admin" = { };
+  sops.secrets."passwords/nut/nutmon" = { };
 }
