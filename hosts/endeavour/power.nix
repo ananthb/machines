@@ -7,8 +7,14 @@
     openFirewall = true;
 
     users = {
+      "admin" = {
+        passwordFile = config.sops.secrets."passwords/nut/admin".path;
+        instcmds = "ALL";
+        actions = "SET";
+      };
       "upsmon" = {
         passwordFile = config.sops.secrets."passwords/nut/upsmon".path;
+        upsmon = "primary";
       };
     };
 
