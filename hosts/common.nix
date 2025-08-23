@@ -27,6 +27,8 @@
     "keys/ssh/yubikey_5c.pub" = { };
     "keys/ssh/yubikey_5c_nano" = { };
     "keys/ssh/yubikey_5c_nano.pub" = { };
-    "passwords/nut/nutmon" = { };
+    "passwords/nut/nutmon" = {
+      mode = "0444";
+    };
   };
 }
