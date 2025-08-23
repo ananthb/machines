@@ -392,7 +392,7 @@
       # Google OpenID
       GOOGLE_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/open-webui/client_id"}"
       GOOGLE_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/open-webui/client_secret"}"
-      GOOGLE_REDIRECT_URI="https://ai.''${WEBUI_URL}/oauth/google/callback"
+      GOOGLE_REDIRECT_URI="https://ai.${config.sops.placeholder."keys/tailscape_api/tailnet"}/oauth/google/callback"
       OPENID_PROVIDER_URL="https://accounts.google.com/.well-known/openid-configuration"
 
       # See http://github.com/open-webui/open-webui/discussions/10571
