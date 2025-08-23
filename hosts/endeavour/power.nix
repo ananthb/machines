@@ -4,7 +4,6 @@
   power.ups = {
     enable = true;
     mode = "netserver";
-    openFirewall = true;
 
     users = {
       "admin" = {
@@ -31,7 +30,7 @@
 
     upsmon.monitor."apc1" = {
       powerValue = 1;
-      user = "upsmon";
+      user = "nutmon";
     };
   };
 
