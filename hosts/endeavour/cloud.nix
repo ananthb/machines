@@ -360,24 +360,40 @@
   #
   # Open WebUI
   #
-  services.open-webui.enable = true;
-  services.open-webui.package = pkgs.unstable.open-webui;
-  services.open-webui.port = 8090;
-  services.open-webui.environmentFile = config.sops.templates."open-webui/env".path;
+  services.open-webui = {
+    enable = true;
+    package = pkgs.unstable.open-webui.overrideAttrs (old: {
+      propagatedBuildInputs =
+        old.propagatedBuildInputs
+        ++ (with pkgs.unstable.python313Packages; [
+          # Socks Proxy
+          pysocks
+          socksio
+          httpx
+          httpx-socks
+
+          # Youtube transcription plugin
+          yt-dlp
+        ]);
+    });
+    port = 8090;
+    environmentFile = config.sops.templates."open-webui/env".path;
+  };
 
   sops.secrets = {
     "keys/oauth_clients/open-webui/client_id" = { };
     "keys/oauth_clients/open-webui/client_secret" = { };
-    "keys/google_cloud_search_api" = { };
+    "keys/google_pse_api/id" = { };
+    "keys/google_pse_api/key" = { };
   };
 
   sops.templates."open-webui/env" = {
     mode = "0444";
     content = ''
       # general
-      # TODO: fix this
-      #http_proxy="socks5://localhost:8888"
-      #https_proxy="socks5://localhost:8888"
+      http_proxy="socks5://localhost:8888"
+      https_proxy="socks5://localhost:8888"
+      no_proxy=".${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       ENV="prod"
       WEBUI_URL="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
@@ -386,7 +402,9 @@
 
       # ollama api
       ENABLE_OLLAMA_API
-      OLLAMA_BASE_URLS="http://enterprise:11434;http://discovery:11434"
+      OLLAMA_BASE_URLS="http://enterprise.${
+        config.sops.placeholder."keys/tailscale_api/tailnet"
+      }:11434;http://discovery.${config.sops.placeholder."keys/tailscale_api/tailnet"}:11434"
       EMABLE_OPENAI_API="False"
 
       # auth
@@ -416,7 +434,8 @@
       ENABLE_WEB_SEARCH="True"
       WEB_SEARCH_TRUST_ENV="True"
       WEB_SEARCH_ENGINE="google_pse"
-      GOOGLE_PSE_API_KEY="${config.sops.placeholder."keys/google_cloud_search_api"}"
+      GOOGLE_PSE_ENGINE_ID="${config.sops.placeholder."keys/google_pse_api/id"}"
+      GOOGLE_PSE_API_KEY="${config.sops.placeholder."keys/google_pse_api/key"}"
 
       # RAG
       PDF_EXTRACT_IMAGES="True"
