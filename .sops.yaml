@@ -10,10 +10,6 @@ keys:
   - &host_voyager age1zwnfhqacmpssr67s9rfqsz8a80pp9tgv3n557tlxm7esfppxlvyqh55wez
   - &host_voyager_user_ananth age1d0dgdq2glj67lg59f2xurs05zjpdhjh5xzmsfu3066x2zmhjdsasc7faqv
 creation_rules:
-  - path_regex: fly\-apps\/.*\.toml$
-    key_groups:
-      - pgp:
-        - *admin_ananth
   - path_regex: secrets.yaml$
     key_groups:
       - pgp:
