@@ -5,7 +5,6 @@
 }:
 
 {
-  # TODO: finish setting up seafile containers
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) networks pods volumes;
@@ -150,6 +149,8 @@
       }/notification"
     '';
   };
+
+  sops.secrets."keys/seafile/jwt_private_key" = { };
 
   #
   # Immich
