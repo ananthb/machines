@@ -69,7 +69,6 @@
             {
               "Open WebUI" = {
                 description = ''
-                  Our personal ChatGPT basically.
                   Converse with chat LLMs, search the web and feed the results to models for analysis,
                   and generate code with specialised models.
                 '';
@@ -80,8 +79,8 @@
             {
               "Actual Budget" = {
                 description = ''
-                  Double-entry bookkeeping software to manage personal budgets.
-                                  Sign in with Google.'';
+                  Maintain personal and shared books of accounts.
+                  Sign in with Google.'';
                 href = "https://actual.kedi.dev";
                 icon = "actual-budget";
               };
