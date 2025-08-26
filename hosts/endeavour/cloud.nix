@@ -20,6 +20,7 @@
 
       volumes = {
         seafile-mysql-data = { };
+        seafile-caddy-data = { };
       };
 
       pods = {
@@ -29,14 +30,21 @@
             networks.seafile-internal.ref
           ];
           volumes = [
-            "/srv/seafile:/shared"
+            "/srv/seafile/seafile-data:/shared"
+            "/srv/seafile/caddy:/etc/caddy"
             "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
           ];
-          publishPorts = [ "8000:80" ];
+          publishPorts = [ "4000:4000" ];
         };
       };
 
       containers = {
+        seafile-caddy.containerConfig = {
+          name = "seafile-caddy";
+          image = "docker.io/library/caddy:2";
+          pod = pods.seafile.ref;
+        };
+
         seafile-mysql.containerConfig = {
           name = "seafile-mysql";
           image = "docker.io/library/mariadb:10.11";
@@ -63,7 +71,7 @@
             TIME_ZONE = "Asia/Kolkata";
             INIT_SEAFILE_ADMIN_EMAIL = "admin@example.com";
             INIT_SEAFILE_ADMIN_PASSWORD = "change me soon";
-            SEAFILE_SERVER_PROTOCOL = "http";
+            SEAFILE_SERVER_PROTOCOL = "https";
             SITE_ROOT = "/";
             NON_ROOT = "false";
             SEAFILE_LOG_TO_STDOUT = "true";
@@ -96,23 +104,22 @@
           name = "seadoc";
           image = "docker.io/seafileltd/sdoc-server:2.0-latest";
           volumes = [
-            "/srv/seadoc:/shared"
+            "/srv/seafile/seadoc:/shared"
           ];
           networks = [
             networks.seafile.ref
             networks.seafile-internal.ref
           ];
-          publishPorts = [ "8001:80" ];
           environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
           environments = {
             DB_HOST = "seafile-mysql";
             DB_PORT = "3306";
             DB_USER = "root";
             DB_PASSWORD = "password";
-            DB_NAME = "seahub_db";
+            DB_NAME = "seadoc_db";
             TIME_ZONE = "Asia/Kolkata";
             NON_ROOT = "false";
-            SEAHUB_SERVICE_URL = "http://seafile-server";
+            SEAHUB_SERVICE_URL = "http://seafile-server:8000";
           };
         };
       };
@@ -122,27 +129,22 @@
     sf = {
       funnel = true;
       urlParts.host = "127.0.0.1";
-      urlParts.port = 8000;
-    };
-
-    doc = {
-      funnel = true;
-      urlParts.host = "127.0.0.1";
-      urlParts.port = 8001;
+      urlParts.port = 4000;
     };
   };
 
   sops.templates."seafile/seadoc.env" = {
     content = ''
-      JWT_PRIVATE_KEY="${config.sops.placeholder."keys/seafile/jwt_privkey"}"
-      SDOC_SERVER_HOSTNAME="doc.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      JWT_PRIVATE_KEY="${config.sops.placeholder."keys/seafile/jwt_private_key"}"
+      SEAFILE_SERVER_HOSTNAME="sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      SEAFILE_SERVER_PROTOCOL = "https";
     '';
   };
 
   sops.templates."seafile/seafile.env" = {
     content = ''
-      JWT_PRIVATE_KEY="${config.sops.placeholder."keys/seafile/jwt_privkey"}"
-      SEADOC_SERVER_URL="https://doc.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server"
+      JWT_PRIVATE_KEY="${config.sops.placeholder."keys/seafile/jwt_private_key"}"
+      SEADOC_SERVER_URL="https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server"
       SEAFILE_SERVER_HOSTNAME="sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       NOTIFICATION_SERVER_URL="https://sf.${
         config.sops.placeholder."keys/tailscale_api/tailnet"
