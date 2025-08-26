@@ -5,29 +5,29 @@
 }:
 
 {
-  environment.etc."caddy/seafile/Caddyfile" = {
-    text = ''
-      :4000 {
-        reverse_proxy 127.0.0.1:8000
-
-        handle_path /seafhttp/* {
-          reverse_proxy 127.0.0.1:8082
-        }
-
-        handle_path /notification/* {
-          reverse_proxy 127.0.0.1:8083
-        }
-
-        reverse_proxy /seafdav/* 127.0.0.1:8080
-
-        reverse_proxy /media/* 127.0.0.1:80
-      }
-    '';
-  };
-
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) networks pods volumes;
+      caddyfile = pkgs.writeText "Caddyfile" ''
+        :4000 {
+          reverse_proxy 127.0.0.1:8000
+
+          handle_path /seafhttp/* {
+            reverse_proxy 127.0.0.1:8082
+          }
+
+          handle_path /notification/* {
+            reverse_proxy 127.0.0.1:8083
+          }
+
+          reverse_proxy /seafdav/* 127.0.0.1:8080
+
+          reverse_proxy /media/* 127.0.0.1:80
+
+          reverse_proxy /seadoc/* seadoc:7070
+        }
+      '';
+
     in
     {
       autoEscape = true;
@@ -51,7 +51,7 @@
           ];
           volumes = [
             "/srv/seafile/seafile-data:/shared"
-            "/etc/caddy/seafile:/etc/caddy"
+            "${caddyfile}:/etc/caddy/Caddyfile"
             "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
           ];
           publishPorts = [ "4000:4000" ];
