@@ -453,8 +453,8 @@
       # auth
       ENABLE_LOGIN_FORM="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
-      ENABLE_SIGNUP="True"
-      ENABLE_OAUTH_SIGNUP="True"
+      ENABLE_SIGNUP="False"
+      ENABLE_OAUTH_SIGNUP="False"
       OAUTH_UPDATE_PICTURE_ON_LOGIN="True"
 
       # Google OpenID
