@@ -12,17 +12,17 @@
         :4000 {
           reverse_proxy 127.0.0.1:8000
 
-          handle_path /seafhttp/* {
+          handle_path /seafhttp* {
             reverse_proxy 127.0.0.1:8082
           }
 
-          handle_path /notification/* {
+          handle_path /notification* {
             reverse_proxy 127.0.0.1:8083
           }
 
-          reverse_proxy /seafdav/* 127.0.0.1:8080
+          reverse_proxy /seafdav* 127.0.0.1:8080
 
-          reverse_proxy /media/* 127.0.0.1:80
+          reverse_proxy /media* 127.0.0.1:80
 
           reverse_proxy /sdoc-server* seadoc:7070
           reverse_proxy /socket.io seadoc:7070
