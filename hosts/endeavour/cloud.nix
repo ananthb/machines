@@ -36,7 +36,6 @@
 
       networks = {
         seafile = { };
-        seafile-internal.networkConfig.internal = true;
       };
 
       volumes = {
@@ -48,7 +47,6 @@
         seafile.podConfig = {
           networks = [
             networks.seafile.ref
-            networks.seafile-internal.ref
           ];
           volumes = [
             "/srv/seafile/seafile-data:/shared"
@@ -129,7 +127,6 @@
           ];
           networks = [
             networks.seafile.ref
-            networks.seafile-internal.ref
           ];
           environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
           environments = {
@@ -140,7 +137,6 @@
             DB_NAME = "seadoc_db";
             TIME_ZONE = "Asia/Kolkata";
             NON_ROOT = "false";
-            SEAHUB_SERVICE_URL = "http://seafile-server:8000";
           };
         };
       };
@@ -165,8 +161,9 @@
   sops.templates."seafile/seafile.env" = {
     content = ''
       JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
-      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server
       SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      SEAFILE_SERVER_PROTOCOL=https
+      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server
       NOTIFICATION_SERVER_URL=https://sf.${
         config.sops.placeholder."keys/tailscale_api/tailnet"
       }/notification
