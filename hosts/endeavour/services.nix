@@ -85,8 +85,5 @@
 
   services.prowlarr.enable = true;
 
-  sops.secrets."keys/arr_apis/radarr".mode = "0444";
-  sops.secrets."keys/arr_apis/sonarr".mode = "0444";
-  sops.secrets."keys/arr_apis/prowlarr".mode = "0444";
   sops.secrets."passwords/nut/nutmon".mode = "0444";
 }
