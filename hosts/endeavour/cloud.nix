@@ -24,7 +24,7 @@
 
           reverse_proxy /media/* 127.0.0.1:80
 
-          reverse_proxy /sdoc-server/* seadoc:7070
+          reverse_proxy /sdoc-server* seadoc:7070
           reverse_proxy /socket.io seadoc:7070
         }
       '';
