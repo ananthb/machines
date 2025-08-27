@@ -210,9 +210,9 @@
                   "voyager:9187" # postgres exporter
                   "endeavour:9187" # postgres exporter
                   "endeavour:9121" # redis exporter
-                  "endeavour:9708" # radarr exporter
-                  "endeavour:9709" # sonarr exporter
-                  "endeavour:9710" # prowlarr exporter
+                  "voyager:9708" # radarr exporter
+                  "voyager:9709" # sonarr exporter
+                  "voyager:9710" # prowlarr exporter
                   "endeavour:8081" # immich exporter
                 ];
                 labels.type = "exporter";
@@ -243,6 +243,27 @@
     prometheus.exporters = {
       postgres.enable = true;
       postgres.runAsLocalSuperUser = true;
+
+      exportarr-radarr = {
+        enable = true;
+        url = "http://endeavour:7878";
+        port = 9708;
+        apiKeyFile = config.sops.secrets."keys/arr_apis/radarr".path;
+      };
+
+      exportarr-sonarr = {
+        enable = true;
+        url = "http://endeavour:8989";
+        port = 9709;
+        apiKeyFile = config.sops.secrets."keys/arr_apis/sonarr".path;
+      };
+
+      exportarr-prowlarr = {
+        enable = true;
+        url = "http://endeavour:9696";
+        port = 9710;
+        apiKeyFile = config.sops.secrets."keys/arr_apis/prowlarr".path;
+      };
 
       blackbox = {
         enable = true;
