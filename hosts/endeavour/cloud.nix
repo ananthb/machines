@@ -24,7 +24,8 @@
 
           reverse_proxy /media/* 127.0.0.1:80
 
-          reverse_proxy /seadoc/* seadoc:7070
+          reverse_proxy /sdoc-server/* seadoc:7070
+          reverse_proxy /socket.io seadoc:7070
         }
       '';
 
@@ -155,20 +156,20 @@
 
   sops.templates."seafile/seadoc.env" = {
     content = ''
-      JWT_PRIVATE_KEY="${config.sops.placeholder."keys/seafile/jwt_private_key"}"
-      SEAFILE_SERVER_HOSTNAME="sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
-      SEAFILE_SERVER_PROTOCOL = "https";
+      JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
+      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      SEAFILE_SERVER_PROTOCOL=https
     '';
   };
 
   sops.templates."seafile/seafile.env" = {
     content = ''
-      JWT_PRIVATE_KEY="${config.sops.placeholder."keys/seafile/jwt_private_key"}"
-      SEADOC_SERVER_URL="https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server"
-      SEAFILE_SERVER_HOSTNAME="sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
-      NOTIFICATION_SERVER_URL="https://sf.${
+      JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
+      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server
+      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      NOTIFICATION_SERVER_URL=https://sf.${
         config.sops.placeholder."keys/tailscale_api/tailnet"
-      }/notification"
+      }/notification
     '';
   };
 
