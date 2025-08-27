@@ -11,10 +11,11 @@
       prometheusConfig = {
         global.scrape_interval = "10s";
 
-        /** Label definitions:
-         *
-         *  1. type: node|app|exporter|internet-dns|internet-host
-         *  2. role: server|router|canary|ups
+        /**
+          Label definitions:
+
+          1. type: node|app|exporter|internet-dns|internet-host
+          2. role: server|router|canary|ups
         */
 
         scrape_configs = [
