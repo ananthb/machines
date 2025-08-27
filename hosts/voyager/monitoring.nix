@@ -10,12 +10,20 @@
       ];
       prometheusConfig = {
         global.scrape_interval = "10s";
+
+        /** Label definitions:
+         *
+         *  1. type: node|app|exporter|internet-dns|internet-host
+         *  2. role: server|router|canary|ups
+        */
+
         scrape_configs = [
           {
             job_name = "blackbox_exporter";
             static_configs = [
               {
                 targets = [ "localhost:9115" ];
+                labels.type = "exporter";
               }
             ];
           }
@@ -111,8 +119,8 @@
                   "http://atlantis.local"
                   "http://intrepid.local"
                 ];
-                labels.type = "node";
                 labels.os = "openwrt";
+                labels.type = "node";
                 labels.role = "router";
               }
             ];
@@ -143,18 +151,16 @@
                   "https://futuraphysio.com"
                   "https://drvibhu.com"
                   "https://lilaartscentre.com"
-                  "https://actual.kedi.dev"
-                  "https://irc.kedi.dev"
                 ];
-                labels.type = "hosted-site";
-                labels.location = "cloud";
+                labels.type = "internet-host";
+                labels.role = "server";
               }
               {
                 targets = [
                   "https://www.google.com"
                   "https://www.cloudflare.com"
                 ];
-                labels.type = "internet-site";
+                labels.type = "internet-host";
                 labels.role = "canary";
               }
             ];
@@ -174,8 +180,8 @@
                   "atlantis.local:9100"
                   "intrepid.local:9100"
                 ];
-                labels.type = "node";
                 labels.os = "openwrt";
+                labels.type = "exporter";
                 labels.role = "router";
               }
             ];
@@ -188,8 +194,8 @@
                   "endeavour.local:9100"
                   "voyager.local:9100"
                 ];
-                labels.type = "node";
                 labels.os = "linux";
+                labels.type = "exporter";
                 labels.role = "server";
               }
               {
@@ -381,10 +387,12 @@
       [
           {
               "targets" = [
-                "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
-                "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+                "https://actual.kedi.dev",
+                "https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
               ],
               "labels" = {
                   "type" = "app",
