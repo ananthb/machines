@@ -20,26 +20,6 @@
       passwordPath = config.sops.secrets."passwords/nut/nutmon".path;
     };
 
-    exportarr-radarr = {
-      enable = true;
-      url = "http://localhost:7878";
-      port = 9708;
-      apiKeyFile = config.sops.secrets."keys/arr_apis/radarr".path;
-    };
-
-    exportarr-sonarr = {
-      enable = true;
-      url = "http://localhost:8989";
-      port = 9709;
-      apiKeyFile = config.sops.secrets."keys/arr_apis/sonarr".path;
-    };
-
-    exportarr-prowlarr = {
-      enable = true;
-      url = "http://localhost:9696";
-      port = 9710;
-      apiKeyFile = config.sops.secrets."keys/arr_apis/prowlarr".path;
-    };
   };
 
   # arr stack
