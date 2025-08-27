@@ -347,6 +347,10 @@
     };
   };
 
+  sops.secrets."keys/arr_apis/radarr".mode = "0444";
+  sops.secrets."keys/arr_apis/sonarr".mode = "0444";
+  sops.secrets."keys/arr_apis/prowlarr".mode = "0444";
+
   systemd.services.grafana.environment = {
     GF_AUTH_DISABLE_LOGIN_FORM = "true";
     GF_AUTH_BASIC_ENABLED = "false";
