@@ -143,9 +143,8 @@
       # tools
       "rectangle-pro"
       "scroll-reverser"
-      "jordanbaird-ice"
-      "tomatobar"
       "ollama-app"
+      "seadrive"
 
       # dailies
       "google-chrome"
