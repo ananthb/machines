@@ -111,7 +111,7 @@
             REDIS_PORT = "6379";
 
             ENABLE_NOTIFICATION_SERVER = "false";
-            INNER_NOTIFICATIN_SERVER_URL = "http://127.0.0.1:8083";
+            INNER_NOTIFICATION_SERVER_URL = "http://127.0.0.1:8083";
             ENABLE_SEAFILE_AI = "false";
             SEAFILE_AI_SERVER_URL = "http://seafile-ai:8888";
             SEAFILE_AI_SECRET_KEY = "key";
@@ -137,6 +137,7 @@
             DB_NAME = "seadoc_db";
             TIME_ZONE = "Asia/Kolkata";
             NON_ROOT = "false";
+            SEAHUB_SERVICE_URL = "http://seafile:4000";
           };
         };
       };
@@ -150,14 +151,6 @@
     };
   };
 
-  sops.templates."seafile/seadoc.env" = {
-    content = ''
-      JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
-      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
-      SEAFILE_SERVER_PROTOCOL=https
-    '';
-  };
-
   sops.templates."seafile/seafile.env" = {
     content = ''
       JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
@@ -167,6 +160,14 @@
       NOTIFICATION_SERVER_URL=https://sf.${
         config.sops.placeholder."keys/tailscale_api/tailnet"
       }/notification
+    '';
+  };
+
+  sops.templates."seafile/seadoc.env" = {
+    content = ''
+      JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
+      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      SEAFILE_SERVER_PROTOCOL=https
     '';
   };
 
