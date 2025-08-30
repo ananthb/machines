@@ -5,6 +5,7 @@
   homebrew.casks = [
     "slack"
     "slack-cli"
+    "steam"
     "1password"
     "raspberry-pi-imager"
     "ledger-live"
