@@ -8,27 +8,6 @@
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) networks pods volumes;
-      caddyfile = pkgs.writeText "Caddyfile" ''
-        :4000 {
-          reverse_proxy 127.0.0.1:8000
-
-          handle_path /seafhttp* {
-            reverse_proxy 127.0.0.1:8082
-          }
-
-          handle_path /notification* {
-            reverse_proxy 127.0.0.1:8083
-          }
-
-          reverse_proxy /seafdav* 127.0.0.1:8080
-
-          reverse_proxy /media* 127.0.0.1:80
-
-          reverse_proxy /sdoc-server* seadoc:7070
-          reverse_proxy /socket.io seadoc:7070
-        }
-      '';
-
     in
     {
       autoEscape = true;
@@ -50,7 +29,7 @@
           ];
           volumes = [
             "/srv/seafile/seafile-data:/shared"
-            "${caddyfile}:/etc/caddy/Caddyfile"
+            "${config.sops.templates."seafile/Caddyfile".path}:/etc/caddy/Caddyfile"
             "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
           ];
           publishPorts = [ "4000:4000" ];
@@ -149,6 +128,32 @@
       urlParts.host = "127.0.0.1";
       urlParts.port = 4000;
     };
+  };
+
+  sops.templates."seafile/Caddyfile" = {
+    content = ''
+        :4000 {
+          header Access-Control-Allow-Origin https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+
+          handle_path /seafhttp* {
+            reverse_proxy 127.0.0.1:8082
+          }
+
+          handle_path /notification* {
+            reverse_proxy 127.0.0.1:8083
+          }
+
+          redir /seafdav /seafdav/ permanent
+          reverse_proxy /seafdav/* 127.0.0.1:8080
+
+          reverse_proxy /media* 127.0.0.1:80
+
+          reverse_proxy /sdoc-server/* seadoc:7070
+          reverse_proxy /socket.io seadoc:7070
+
+          reverse_proxy 127.0.0.1:8000
+        }
+      '';
   };
 
   sops.templates."seafile/seafile.env" = {
