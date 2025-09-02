@@ -132,28 +132,38 @@
 
   sops.templates."seafile/Caddyfile" = {
     content = ''
-        :4000 {
-          header Access-Control-Allow-Origin https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      :4000 {
+        header Access-Control-Allow-Origin
 
-          handle_path /seafhttp* {
-            reverse_proxy 127.0.0.1:8082
-          }
-
-          handle_path /notification* {
-            reverse_proxy 127.0.0.1:8083
-          }
-
-          redir /seafdav /seafdav/ permanent
-          reverse_proxy /seafdav/* 127.0.0.1:8080
-
-          reverse_proxy /media* 127.0.0.1:80
-
-          reverse_proxy /sdoc-server/* seadoc:7070
-          reverse_proxy /socket.io seadoc:7070
-
-          reverse_proxy 127.0.0.1:8000
+        handle_path /seafhttp* {
+          reverse_proxy 127.0.0.1:8082
         }
-      '';
+
+        handle_path /notification* {
+          reverse_proxy 127.0.0.1:8083
+        }
+
+        redir /seafdav /seafdav/ permanent
+        reverse_proxy /seafdav/* 127.0.0.1:8080
+
+        reverse_proxy /media* 127.0.0.1:80 {
+          header_down -Access-Control-Allow-Origin
+        }
+
+        reverse_proxy /sdoc-server/* seadoc:7070 {
+          header_down Access-Control-Allow-Origin "https://sf.${
+            config.sops.placeholder."keys/tailscale_api/tailnet"
+          }"
+        }
+        reverse_proxy /socket.io seadoc:7070 {
+          header_down Access-Control-Allow-Origin "https://sf.${
+            config.sops.placeholder."keys/tailscale_api/tailnet"
+          }"
+        }
+
+        reverse_proxy 127.0.0.1:8000
+      }
+    '';
   };
 
   sops.templates."seafile/seafile.env" = {
