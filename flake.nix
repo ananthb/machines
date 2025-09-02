@@ -80,7 +80,6 @@
               lanzaboote.nixosModules.lanzaboote
               sops-nix.nixosModules.sops
               quadlet-nix.nixosModules.quadlet
-              ./hosts/linux.nix
               ./hosts/endeavour
             ];
           };
@@ -123,7 +122,6 @@
 
             modules = [
               sops-nix.darwinModules.sops
-              ./hosts/darwin.nix
               ./hosts/discovery.nix
             ];
           };
@@ -143,7 +141,6 @@
 
             modules = [
               sops-nix.darwinModules.sops
-              ./hosts/darwin.nix
               ./hosts/enterprise.nix
             ];
           };

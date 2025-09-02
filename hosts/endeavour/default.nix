@@ -6,6 +6,7 @@
 }:
 {
   imports = [
+    ../linux.nix
     ./cloud.nix
     ./hardware-configuration.nix
     ./power.nix

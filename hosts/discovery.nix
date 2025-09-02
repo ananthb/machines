@@ -1,6 +1,10 @@
 { ... }:
 
 {
+  imports = [
+    ./darwin.nix
+  ];
+
   homebrew.brews = [ ];
   homebrew.casks = [
     "slack"
