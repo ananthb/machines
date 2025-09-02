@@ -4,6 +4,7 @@
 }:
 {
   imports = [
+    ../linux.nix
     ./hardware-configuration.nix
     ./hass.nix
     ./homepage.nix
