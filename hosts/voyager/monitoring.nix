@@ -111,11 +111,13 @@
                   "http://endeavour:9696" # prowlarr
                   "http://endeavour:7878" # radarr
                   "http://endeavour:8989" # sonarr
+                  "http://endeavour:8096" # jellyfin
                 ];
+                labels.type = "app";
+                labels.role = "server";
               }
               {
                 targets = [
-                  "http://endeavour:8096" # jellyfin
                 ];
                 labels.app = "jellyfin";
                 labels.type = "app";
@@ -292,7 +294,6 @@
 
       blackbox = {
         enable = true;
-        listenAddress = "[::1]";
         configFile = pkgs.writeText "blackbox_exporter.conf" ''
           modules:
             icmp:
@@ -411,7 +412,6 @@
                 "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
               ],
               "labels": {
                   "type": "app",
