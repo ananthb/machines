@@ -107,10 +107,11 @@
             static_configs = [
               {
                 targets = [
-                  "http://endeavour:7878"
-                  "http://endeavour:8989"
-                  "http://endeavour:9696"
-                  "http://localhost:2283"
+                  "http://endeavour:8096" # jellyfin
+                  "http://localhost:2283" # immich-server
+                  "http://endeavour:9696" # prowlarr
+                  "http://endeavour:7878" # radarr
+                  "http://endeavour:8989" # sonarr
                 ];
                 labels.type = "app";
                 labels.role = "server";
@@ -147,11 +148,15 @@
             static_configs = [
               {
                 targets = [
-                  "https://devhuman.net"
+                  "https://actual.kedi.dev"
                   "https://bhaskararaman.com"
-                  "https://futuraphysio.com"
+                  "https://calculon.tech"
+                  "https://coredump.blog"
+                  "https://devhuman.net"
                   "https://drvibhu.com"
+                  "https://futuraphysio.com"
                   "https://lilaartscentre.com"
+                  "https://shakthipalace.com"
                 ];
                 labels.type = "internet-host";
                 labels.role = "server";
@@ -387,17 +392,17 @@
     content = ''
       [
           {
-              "targets" = [
+              "targets": [
                 "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://actual.kedi.dev",
                 "https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
               ],
-              "labels" = {
-                  "type" = "app",
-                  "role" = "server"
+              "labels": {
+                  "type": "app",
+                  "role": "server"
               }
           }
       ]
