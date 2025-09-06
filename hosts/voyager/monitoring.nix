@@ -107,12 +107,17 @@
             static_configs = [
               {
                 targets = [
-                  "http://endeavour:8096" # jellyfin
                   "http://localhost:2283" # immich-server
                   "http://endeavour:9696" # prowlarr
                   "http://endeavour:7878" # radarr
                   "http://endeavour:8989" # sonarr
                 ];
+              }
+              {
+                targets = [
+                  "http://endeavour:8096" # jellyfin
+                ];
+                labels.app = "jellyfin";
                 labels.type = "app";
                 labels.role = "server";
               }
@@ -220,7 +225,6 @@
               {
                 targets = [
                   "endeavour:8081" # immich exporter
-                  "endeavour:8096" # jellyfin
                   "endeavour:9187" # postgres exporter
                   "endeavour:9121" # redis exporter
                   "voyager:9187"   # postgres exporter
@@ -230,6 +234,14 @@
                 ];
                 labels.type = "exporter";
                 labels.role = "server";
+              }
+              {
+                targets = [
+                  "endeavour:8096" # jellyfin
+                ];
+                labels.type = "exporter";
+                labels.role = "server";
+                labels.app = "jellyfin";
               }
               {
                 targets = [ "endeavour:9199" ]; # nut exporter meta metrics
@@ -404,6 +416,16 @@
               "labels": {
                   "type": "app",
                   "role": "server"
+              }
+          }
+          {
+              "targets": [
+                "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "jellyfin"
               }
           }
       ]
