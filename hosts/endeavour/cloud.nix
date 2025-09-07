@@ -461,10 +461,10 @@
   #
   services.open-webui = {
     enable = true;
-    package = pkgs.unstable.open-webui.overrideAttrs (old: {
+    package = pkgs.open-webui.overrideAttrs (old: {
       propagatedBuildInputs =
         old.propagatedBuildInputs
-        ++ (with pkgs.unstable.python313Packages; [
+        ++ (with pkgs.python3Packages; [
           # Socks Proxy
           pysocks
           socksio
