@@ -9,19 +9,19 @@
   services.cloudflare-warp.openFirewall = false;
 
   services.prometheus.exporters = {
-      blackbox = {
-        enable = true;
-        configFile = pkgs.writeText "blackbox_exporter.conf" ''
-          modules:
-            https_2xx_via_warp:
-              prober: http
-              http:
-                proxy_url: socks5://localhost:8888
-                method: GET
-                no_follow_redirects: true
-                fail_if_not_ssl: true
-        '';
-      };
+    blackbox = {
+      enable = true;
+      configFile = pkgs.writeText "blackbox_exporter.conf" ''
+        modules:
+          https_2xx_via_warp:
+            prober: http
+            http:
+              proxy_url: socks5://localhost:8888
+              method: GET
+              no_follow_redirects: true
+              fail_if_not_ssl: true
+      '';
+    };
 
     postgres.enable = true;
     postgres.runAsLocalSuperUser = true;
