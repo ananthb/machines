@@ -23,7 +23,10 @@
             job_name = "blackbox_exporter";
             static_configs = [
               {
-                targets = [ "endeavour.local:9115" "voyager.local:9115" ];
+                targets = [
+                  "endeavour:9115"
+                  "voyager:9115"
+                ];
                 labels.type = "exporter";
               }
             ];
@@ -161,7 +164,7 @@
               }
               {
                 target_label = "__address__";
-                replacement = "voyager.local:9115";
+                replacement = "voyager:9115";
               }
             ];
             static_configs = [
@@ -196,7 +199,8 @@
                 ];
               }
             ];
-          }{
+          }
+          {
             job_name = "blackbox_https_2xx_via_warp";
             metrics_path = "/probe";
             params.module = [ "https_2xx_via_warp" ];
@@ -211,10 +215,10 @@
               }
               {
                 target_label = "__address__";
-                replacement = "endeavour.local:9115";
+                replacement = "endeavour:9115";
               }
               {
-                source_labels = "__address__";
+                source_labels = [ "__address__" ];
                 regex = ".*";
                 replacement = "warp";
                 target_label = "via";
