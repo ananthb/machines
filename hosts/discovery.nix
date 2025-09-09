@@ -7,19 +7,21 @@
 
   homebrew.brews = [ ];
   homebrew.casks = [
+    "1password"
+    "discord"
+    "gimp"
+    "handbrake-app"
+    "jordanbaird-ice"
+    "ledger-live"
+    "raspberry-pi-imager"
     "slack"
     "slack-cli"
     "steam"
-    "1password"
-    "raspberry-pi-imager"
-    "ledger-live"
-    "gimp"
-    "handbrake-app"
-    "visual-studio-code"
-    "jordanbaird-ice"
     "tomatobar"
+    "visual-studio-code"
   ];
   homebrew.masApps = {
     "1Password for Safari" = 1569813296;
+    "Telegram" = 747648890;
   };
 }
