@@ -332,7 +332,7 @@
         },
         "oauth": {
           "autoLaunch": false,
-          "autoRegister": true,
+          "autoRegister": false,
           "buttonText": "Sign in with Google",
           "clientId": "${config.sops.placeholder."keys/oauth_clients/immich/client_id"}",
           "clientSecret": "${config.sops.placeholder."keys/oauth_clients/immich/client_secret"}",
@@ -423,6 +423,7 @@
     jellyfin.openFirewall = true;
 
     meilisearch.enable = true;
+    meilisearch.package = pkgs.meilisearch;
 
     tsnsrv.services.tv = {
       funnel = true;
