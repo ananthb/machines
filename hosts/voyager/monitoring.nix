@@ -192,10 +192,29 @@
                 labels.role = "canary";
               }
             ];
+          }
+          {
+            job_name = "blackbox_https_2xx_private";
+            metrics_path = "/probe";
+            params.module = [ "https_2xx" ];
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "voyager:9115";
+              }
+            ];
             file_sd_configs = [
               {
                 files = [
-                  config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json".path
+                  config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
                 ];
               }
             ];
@@ -250,10 +269,36 @@
                 labels.role = "canary";
               }
             ];
+          }
+          {
+            job_name = "blackbox_https_2xx_via_warp_private";
+            metrics_path = "/probe";
+            params.module = [ "https_2xx_via_warp" ];
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "endeavour:9115";
+              }
+              {
+                source_labels = [ "__address__" ];
+                regex = ".*";
+                replacement = "warp";
+                target_label = "via";
+                action = "replace";
+              }
+            ];
             file_sd_configs = [
               {
                 files = [
-                  config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json".path
+                  config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
                 ];
               }
             ];
@@ -483,7 +528,7 @@
     content = "mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}";
   };
 
-  sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json" = {
+  sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
     mode = "0444";
     content = ''
       [
