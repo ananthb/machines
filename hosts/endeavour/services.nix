@@ -49,6 +49,7 @@
           DefaultSavePath = "/srv/media/Downloads";
           MaxActiveTorrents = -1;
           MaxActiveUploads = -1;
+          MaxConnections = -1;
           QueueingSystemEnabled = true;
           ProxyPeerConnections = false;
         };
