@@ -424,6 +424,7 @@
 
     meilisearch.enable = true;
     meilisearch.package = pkgs.meilisearch;
+    meilisearch.listenAddress = "[::]";
 
     tsnsrv.services.tv = {
       funnel = true;

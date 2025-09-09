@@ -23,7 +23,7 @@
             job_name = "blackbox_exporter";
             static_configs = [
               {
-                targets = [ "localhost:9115" ];
+                targets = [ "endeavour.local:9115" "voyager.local:9115" ];
                 labels.type = "exporter";
               }
             ];
@@ -42,7 +42,7 @@
               }
               {
                 target_label = "__address__";
-                replacement = "localhost:9115";
+                replacement = "voyager.local:9115";
               }
             ];
             params.module = [ "icmp" ];
@@ -105,13 +105,12 @@
               }
               {
                 target_label = "__address__";
-                replacement = "localhost:9115";
+                replacement = "voyager.local:9115";
               }
             ];
             static_configs = [
               {
                 targets = [
-                  "http://localhost:2283" # immich-server
                   "http://endeavour:9696" # prowlarr
                   "http://endeavour:7878" # radarr
                   "http://endeavour:8989" # sonarr
@@ -121,7 +120,16 @@
               }
               {
                 targets = [
+                  "http://endeavour:2283" # immich-server
+                ];
+                labels.type = "app";
+                labels.role = "server";
+                labels.app = "immich";
+              }
+              {
+                targets = [
                   "http://endeavour:8096" # jellyfin
+                  "http://endeavour:7700" # meilisearch
                 ];
                 labels.app = "jellyfin";
                 labels.type = "app";
@@ -153,7 +161,64 @@
               }
               {
                 target_label = "__address__";
-                replacement = "localhost:9115";
+                replacement = "voyager.local:9115";
+              }
+            ];
+            static_configs = [
+              {
+                targets = [
+                  "https://actual.kedi.dev"
+                  "https://bhaskararaman.com"
+                  "https://calculon.tech"
+                  "https://coredump.blog"
+                  "https://devhuman.net"
+                  "https://drvibhu.com"
+                  "https://futuraphysio.com"
+                  "https://lilaartscentre.com"
+                  "https://shakthipalace.com"
+                ];
+                labels.type = "internet-host";
+                labels.role = "server";
+              }
+              {
+                targets = [
+                  "https://www.google.com"
+                  "https://www.cloudflare.com"
+                ];
+                labels.type = "internet-host";
+                labels.role = "canary";
+              }
+            ];
+            file_sd_configs = [
+              {
+                files = [
+                  config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json".path
+                ];
+              }
+            ];
+          }{
+            job_name = "blackbox_https_2xx_via_warp";
+            metrics_path = "/probe";
+            params.module = [ "https_2xx_via_warp" ];
+            relabel_configs = [
+              {
+                source_labels = [ "__address__" ];
+                target_label = "__param_target";
+              }
+              {
+                source_labels = [ "__param_target" ];
+                target_label = "instance";
+              }
+              {
+                target_label = "__address__";
+                replacement = "endeavour.local:9115";
+              }
+              {
+                source_labels = "__address__";
+                regex = ".*";
+                replacement = "warp";
+                target_label = "via";
+                action = "replace";
               }
             ];
             static_configs = [
@@ -230,7 +295,6 @@
             static_configs = [
               {
                 targets = [
-                  "endeavour:8081" # immich exporter
                   "endeavour:9187" # postgres exporter
                   "endeavour:9121" # redis exporter
                   "voyager:9187" # postgres exporter
@@ -243,7 +307,16 @@
               }
               {
                 targets = [
+                  "endeavour:8081" # immich exporter
+                ];
+                labels.type = "exporter";
+                labels.role = "server";
+                labels.app = "immich";
+              }
+              {
+                targets = [
                   "endeavour:8096" # jellyfin
+                  "endeavour:7700" # meilisearch
                 ];
                 labels.type = "exporter";
                 labels.role = "server";
@@ -405,6 +478,7 @@
     owner = config.users.users.grafana.name;
     content = "mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}";
   };
+
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx.json" = {
     mode = "0444";
     content = ''
@@ -413,13 +487,31 @@
               "targets": [
                 "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
               ],
               "labels": {
                   "type": "app",
                   "role": "server"
+              }
+          }
+          {
+              "targets": [
+                "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "immich"
+              }
+          }
+          {
+              "targets": [
+                "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "seafile"
               }
           }
           {
