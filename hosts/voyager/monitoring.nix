@@ -229,10 +229,10 @@
                   "endeavour:8081" # immich exporter
                   "endeavour:9187" # postgres exporter
                   "endeavour:9121" # redis exporter
-                  "voyager:9187"   # postgres exporter
-                  "voyager:9708"   # radarr exporter
-                  "voyager:9709"   # sonarr exporter
-                  "voyager:9710"   # prowlarr exporter
+                  "voyager:9187" # postgres exporter
+                  "voyager:9708" # radarr exporter
+                  "voyager:9709" # sonarr exporter
+                  "voyager:9710" # prowlarr exporter
                 ];
                 labels.type = "exporter";
                 labels.role = "server";
