@@ -423,7 +423,6 @@
     jellyfin.openFirewall = true;
 
     meilisearch.enable = true;
-    meilisearch.package = pkgs.meilisearch;
 
     tsnsrv.services.tv = {
       funnel = true;
