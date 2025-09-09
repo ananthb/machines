@@ -115,13 +115,13 @@
                   "http://endeavour:9696" # prowlarr
                   "http://endeavour:7878" # radarr
                   "http://endeavour:8989" # sonarr
-                  "http://endeavour:8096" # jellyfin
                 ];
                 labels.type = "app";
                 labels.role = "server";
               }
               {
                 targets = [
+                  "http://endeavour:8096" # jellyfin
                 ];
                 labels.app = "jellyfin";
                 labels.type = "app";
