@@ -48,7 +48,11 @@
             params.module = [ "icmp" ];
             static_configs = [
               {
-                targets = [ "endeavour.local" ];
+                targets = [
+                  "endeavour.local"
+                  "voyager.local"
+                  "kvm1"
+                ];
                 labels.type = "node";
                 labels.os = "linux";
                 labels.role = "server";

@@ -332,7 +332,7 @@
         },
         "oauth": {
           "autoLaunch": false,
-          "autoRegister": false,
+          "autoRegister": true,
           "buttonText": "Sign in with Google",
           "clientId": "${config.sops.placeholder."keys/oauth_clients/immich/client_id"}",
           "clientSecret": "${config.sops.placeholder."keys/oauth_clients/immich/client_secret"}",
@@ -509,8 +509,8 @@
       # auth
       ENABLE_LOGIN_FORM="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
-      ENABLE_SIGNUP="False"
-      ENABLE_OAUTH_SIGNUP="False"
+      ENABLE_SIGNUP="True"
+      ENABLE_OAUTH_SIGNUP="True"
       OAUTH_UPDATE_PICTURE_ON_LOGIN="True"
 
       # Google OpenID
