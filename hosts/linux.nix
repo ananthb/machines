@@ -4,6 +4,7 @@
   system,
   username,
   home-manager,
+  bcachefs-tools,
   nixvim,
   sops-nix,
   hostname,
@@ -37,6 +38,12 @@
     tsnsrv.nixosModules.default
 
     ./common.nix
+  ];
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      bcachefs-tools = bcachefs-tools.packages.${pkgs.system}.bcachefs-tools;
+    })
   ];
 
   sops.age.sshKeyPaths = [
