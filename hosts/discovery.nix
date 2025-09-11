@@ -17,7 +17,7 @@
     "slack"
     "slack-cli"
     "steam"
-    "tomatobar"
+    "timemator"
     "visual-studio-code"
   ];
   homebrew.masApps = {
