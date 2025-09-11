@@ -50,8 +50,11 @@
           MaxActiveTorrents = -1;
           MaxActiveUploads = -1;
           MaxConnections = -1;
-          QueueingSystemEnabled = true;
+          MaxConnectionsPerTorrent = -1;
+          MaxUploads = -1;
+          MaxUploadsPerTorrent = -1;
           ProxyPeerConnections = false;
+          QueueingSystemEnabled = true;
         };
       };
       Preferences = {
