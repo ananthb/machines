@@ -13,7 +13,7 @@
     ./services.nix
   ];
 
-  sops.secrets."keys/google_cloud_service_accounts/kopia-hathi-backups.json" = { };
+  sops.secrets."gcloud/service_accounts/kopia-hathi-backups.json" = { };
 
   users.groups.media.members = [
     username

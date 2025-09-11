@@ -221,8 +221,8 @@
 
   sops.secrets = {
     "email/from/immich" = { };
-    "keys/oauth_clients/immich/client_id".owner = config.users.users.immich.name;
-    "keys/oauth_clients/immich/client_secret".owner = config.users.users.immich.name;
+    "gcloud/oauth_self-hosted_clients/id".owner = config.users.users.immich.name;
+    "gcloud/oauth_self-hosted_clients/secret".owner = config.users.users.immich.name;
   };
 
   sops.templates."immich/config.json" = {
@@ -334,8 +334,8 @@
           "autoLaunch": false,
           "autoRegister": false,
           "buttonText": "Sign in with Google",
-          "clientId": "${config.sops.placeholder."keys/oauth_clients/immich/client_id"}",
-          "clientSecret": "${config.sops.placeholder."keys/oauth_clients/immich/client_secret"}",
+          "clientId": "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}",
+          "clientSecret": "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}",
           "defaultStorageQuota": null,
           "enabled": true,
           "issuerUrl": "https://accounts.google.com/.well-known/openid-configuration",
@@ -481,10 +481,10 @@
   };
 
   sops.secrets = {
-    "keys/oauth_clients/open-webui/client_id" = { };
-    "keys/oauth_clients/open-webui/client_secret" = { };
     "keys/google_pse_api/id" = { };
     "keys/google_pse_api/key" = { };
+    "gcloud/oauth_self-hosted_clients/id" = { };
+    "gcloud/oauth_self-hosted_clients/secret" = { };
   };
 
   sops.templates."open-webui/env" = {
@@ -515,8 +515,8 @@
       OAUTH_UPDATE_PICTURE_ON_LOGIN="True"
 
       # Google OpenID
-      GOOGLE_CLIENT_ID="${config.sops.placeholder."keys/oauth_clients/open-webui/client_id"}"
-      GOOGLE_CLIENT_SECRET="${config.sops.placeholder."keys/oauth_clients/open-webui/client_secret"}"
+      GOOGLE_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
+      GOOGLE_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
       GOOGLE_REDIRECT_URI="https://ai.${
         config.sops.placeholder."keys/tailscale_api/tailnet"
       }/oauth/google/callback"
@@ -534,8 +534,8 @@
       ENABLE_WEB_SEARCH="True"
       WEB_SEARCH_TRUST_ENV="True"
       WEB_SEARCH_ENGINE="google_pse"
-      GOOGLE_PSE_ENGINE_ID="${config.sops.placeholder."keys/google_pse_api/id"}"
-      GOOGLE_PSE_API_KEY="${config.sops.placeholder."keys/google_pse_api/key"}"
+      GOOGLE_PSE_ENGINE_ID="${config.sops.placeholder."gcloud/pse_api/id"}"
+      GOOGLE_PSE_API_KEY="${config.sops.placeholder."gcloud/pse_api/key"}"
 
       # RAG
       PDF_EXTRACT_IMAGES="True"
