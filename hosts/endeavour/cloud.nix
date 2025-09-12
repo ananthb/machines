@@ -481,10 +481,10 @@
   };
 
   sops.secrets = {
-    "keys/google_pse_api/id" = { };
-    "keys/google_pse_api/key" = { };
     "gcloud/oauth_self-hosted_clients/id" = { };
     "gcloud/oauth_self-hosted_clients/secret" = { };
+    "gcloud/pse_api/id" = { };
+    "gcloud/pse_api/key" = { };
   };
 
   sops.templates."open-webui/env" = {
