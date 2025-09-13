@@ -249,8 +249,8 @@
           "preferredHwDevice": "auto",
           "transcode": "required",
           "tonemap": "hable",
-          "accel": "disabled",
-          "accelDecode": false
+          "accel": "qsv",
+          "accelDecode": true
         },
         "backup": {
           "database": {
