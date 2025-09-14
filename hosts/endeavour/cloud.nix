@@ -29,7 +29,7 @@
           ];
           volumes = [
             "${config.sops.templates."seafile/Caddyfile".path}:/etc/caddy/Caddyfile"
-            "${config.sops.templates."seafile/seahub_settings.py"}:/opt/seafile/conf/seahub_settings.py"
+            "${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
             "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
             "/srv/seafile/seafile-data:/shared"
           ];
@@ -236,7 +236,11 @@
     '';
   };
 
-  sops.secrets."keys/seafile/jwt_private_key" = { };
+  sops.secrets = {
+    "email/from/seafile" = { };
+    "keys/seafile/jwt_private_key" = { };
+    "keys/seafile/seahub_secret_key" = { };
+  };
 
   #
   # Immich
