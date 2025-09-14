@@ -28,9 +28,10 @@
             networks.seafile.ref
           ];
           volumes = [
-            "/srv/seafile/seafile-data:/shared"
             "${config.sops.templates."seafile/Caddyfile".path}:/etc/caddy/Caddyfile"
+            "${config.sops.templates."seafile/seahub_settings.py"}:/opt/seafile/conf/seahub_settings.py"
             "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
+            "/srv/seafile/seafile-data:/shared"
           ];
           publishPorts = [ "4000:4000" ];
         };
@@ -175,6 +176,55 @@
       NOTIFICATION_SERVER_URL=https://sf.${
         config.sops.placeholder."keys/tailscale_api/tailnet"
       }/notification
+    '';
+  };
+
+  sops.templates."seafile/seahub_settings.py" = {
+    content = ''
+      # -*- coding: utf-8 -*-
+      SECRET_KEY = "${config.sops.placeholder."keys/seafile/seahub_secret_key"}"
+
+      TIME_ZONE = 'Asia/Kolkata'
+
+      CSRF_TRUSTED_ORIGINS = ["https://*.${config.sops.placeholder."keys/tailscale_api/tailnet"}"]
+      USE_X_FORWARDED_HOST = True
+      SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+      SECURE_SSL_REDIRECT = True
+      SESSION_COOKIE_SECURE = True
+      CSRF_COOKIE_SECURE = True
+
+      # OAuth Setup
+      ENABLE_OAUTH = True
+      OAUTH_CREATE_UNKNOWN_USER = True
+      OAUTH_ACTIVATE_USER_AFTER_CREATION = False
+      OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
+      OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
+      OAUTH_REDIRECT_URL = 'https://sf.${
+        config.sops.placeholder."keys/tailscale_api/tailnet"
+      }/oauth/callback/'
+      OAUTH_PROVIDER_DOMAIN = 'google.com'
+      OAUTH_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
+      OAUTH_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
+      OAUTH_USER_INFO_URL = 'https://www.googleapis.com/oauth2/v1/userinfo'
+      OAUTH_SCOPE = [
+          "openid",
+          "https://www.googleapis.com/auth/userinfo.email",
+          "https://www.googleapis.com/auth/userinfo.profile",
+      ]
+      OAUTH_ATTRIBUTE_MAP = {
+          "id": (True, "uid"),
+          "name": (False, "name"),
+          "email": (False, "contact_email"),
+      }
+
+      # SMTP
+      EMAIL_USE_TLS = True
+      EMAIL_HOST = '${config.sops.placeholder."email/smtp/host"}'
+      EMAIL_HOST_USER = '${config.sops.placeholder."email/smtp/username"}'
+      EMAIL_HOST_PASSWORD = '${config.sops.placeholder."email/smtp/password"}'
+      EMAIL_PORT = 25
+      DEFAULT_FROM_EMAIL = '${config.sops.placeholder."email/from/seafile"}'
+      SERVER_EMAIL = DEFAULT_FROM_EMAIL
     '';
   };
 
