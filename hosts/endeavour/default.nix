@@ -8,10 +8,13 @@
 {
   imports = [
     ../linux.nix
+    ./arr.nix
     ./cloud.nix
     ./hardware-configuration.nix
+    ./immich.nix
+    ./open-webui.nix
     ./power.nix
-    ./services.nix
+    ./seafile.nix
   ];
 
   sops.secrets."gcloud/service_accounts/kopia-hathi-backups.json" = { };
