@@ -9,7 +9,6 @@
   imports = [
     ../linux.nix
     ./arr.nix
-    ./cloud.nix
     ./hardware-configuration.nix
     ./immich.nix
     ./open-webui.nix
