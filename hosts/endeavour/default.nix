@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   username,
@@ -70,6 +71,78 @@
   #   keyMap = "us";
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
+
+  # Prometheus Exporter
+  services.prometheus.exporters = {
+    blackbox = {
+      enable = true;
+      configFile = pkgs.writeText "blackbox_exporter.conf" ''
+        modules:
+          https_2xx_via_warp:
+            prober: http
+            http:
+              proxy_url: socks5://localhost:8888
+              method: GET
+              no_follow_redirects: true
+              fail_if_not_ssl: true
+      '';
+    };
+
+    postgres.enable = true;
+    postgres.runAsLocalSuperUser = true;
+
+    redis.enable = true;
+
+    nut = {
+      enable = true;
+      nutUser = "nutmon";
+      passwordPath = config.sops.secrets."passwords/nut/nutmon".path;
+    };
+
+  };
+
+  sops.secrets."passwords/nut/nutmon".mode = "0444";
+
+  # Jellyfin
+  services = {
+    jellyfin.enable = true;
+    jellyfin.group = "media";
+    jellyfin.openFirewall = true;
+
+    meilisearch.enable = true;
+    meilisearch.package = pkgs.meilisearch;
+    meilisearch.listenAddress = "[::]";
+
+    tsnsrv.services.tv = {
+      funnel = true;
+      urlParts.port = 8096;
+    };
+  };
+
+  systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
+  systemd.services.tsnsrv-tv.after = [ "jellyfin.service" ];
+
+  nixpkgs.overlays = [
+    # Modify jellyfin-web index.html for the intro-skipper plugin to work.
+    # intro skipper plugin has to be installed from the UI.
+    (final: prev: {
+      jellyfin-web = prev.jellyfin-web.overrideAttrs (
+        finalAttrs: previousAttrs: {
+          installPhase = ''
+            runHook preInstall
+
+            # this is the important line
+            sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
+
+            mkdir -p $out/share
+            cp -a dist $out/share/jellyfin-web
+
+            runHook postInstall
+          '';
+        }
+      );
+    })
+  ];
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
