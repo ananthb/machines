@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }:
@@ -7,34 +6,6 @@
 {
   services.cloudflare-warp.enable = true;
   services.cloudflare-warp.openFirewall = false;
-
-  services.prometheus.exporters = {
-    blackbox = {
-      enable = true;
-      configFile = pkgs.writeText "blackbox_exporter.conf" ''
-        modules:
-          https_2xx_via_warp:
-            prober: http
-            http:
-              proxy_url: socks5://localhost:8888
-              method: GET
-              no_follow_redirects: true
-              fail_if_not_ssl: true
-      '';
-    };
-
-    postgres.enable = true;
-    postgres.runAsLocalSuperUser = true;
-
-    redis.enable = true;
-
-    nut = {
-      enable = true;
-      nutUser = "nutmon";
-      passwordPath = config.sops.secrets."passwords/nut/nutmon".path;
-    };
-
-  };
 
   # arr stack
   services.qbittorrent = {
@@ -102,6 +73,4 @@
   ];
 
   services.prowlarr.enable = true;
-
-  sops.secrets."passwords/nut/nutmon".mode = "0444";
 }
