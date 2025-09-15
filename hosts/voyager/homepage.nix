@@ -81,7 +81,7 @@
                 description = ''
                   Maintain personal and shared books of accounts.
                   Sign in with Google.'';
-                href = "https://actual.kedi.dev";
+                href = "{{HOMEPAGE_VAR_AB_HREF}}";
                 icon = "actual-budget";
               };
             }
@@ -112,6 +112,7 @@
       HOMEPAGE_VAR_JELLYFIN_HREF="https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_SEAFILE_HREF="https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_OPENWEBUI_HREF="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      HOMEPAGE_VAR_AB_HREF="https://ab.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY="${
         config.sops.placeholder."keys/openweathermap_api/homepage-dashboard"
       }"
