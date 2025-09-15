@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   ...
 }:
 {
@@ -44,14 +45,15 @@
 
   # Actual Budget
   services.actual.enable = true;
+  services.actual.package = pkgs.unstable.actual-server;
   services.actual.settings.port = 3100;
   services.tsnsrv.services.ab = {
     funnel = true;
+    urlParts.host = "localhost";
     urlParts.port = 3100;
   };
-  systemd.services.actual.environmentFiles = [
-    config.sops.templates."actual/config.env".path 
-  ];
+  systemd.services.actual.serviceConfig.EnvironmentFile =
+    config.sops.templates."actual/config.env".path;
 
   sops.templates."actual/config.env" = {
     content = ''
