@@ -42,6 +42,26 @@
     };
   };
 
+  # Actual Budget
+  services.actual.enable = true;
+  services.actual.settings.port = 3100;
+  services.tsnsrv.services.ab = {
+    funnel = true;
+    urlParts.port = 3100;
+  };
+  systemd.services.actual.environmentFiles = [
+    config.sops.templates."actual/config.env".path 
+  ];
+
+  sops.templates."actual/config.env" = {
+    content = ''
+      ACTUAL_OPENID_DISCOVERY_URL="https://accounts.google.com/.well-known/openid-configuration"
+      ACTUAL_OPENID_SERVER_HOSTNAME="https://ab.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      ACTUAL_OPENID_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
+      ACTUAL_OPENID_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
+    '';
+  };
+
   # secrets
   sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
   sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;

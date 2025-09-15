@@ -158,6 +158,8 @@
     "email/smtp/host" = { };
     "email/smtp/password" = { };
     "email/smtp/username" = { };
+    "gcloud/oauth_self-hosted_clients/id" = { };
+    "gcloud/oauth_self-hosted_clients/secret" = { };
     "keys/tailscale_api/auth_key" = { };
     "keys/tailscale_api/tailnet" = { };
   };

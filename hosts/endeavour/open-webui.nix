@@ -29,8 +29,6 @@
   };
 
   sops.secrets = {
-    "gcloud/oauth_self-hosted_clients/id" = { };
-    "gcloud/oauth_self-hosted_clients/secret" = { };
     "gcloud/pse_api/id" = { };
     "gcloud/pse_api/key" = { };
   };

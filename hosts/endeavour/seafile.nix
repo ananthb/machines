@@ -149,12 +149,12 @@
           header_down -Access-Control-Allow-Origin
         }
 
-        reverse_proxy /sdoc-server/* seadoc:7070 {
+        reverse_proxy /sdoc-server* seadoc:7070 {
           header_down Access-Control-Allow-Origin "https://sf.${
             config.sops.placeholder."keys/tailscale_api/tailnet"
           }"
         }
-        reverse_proxy /socket.io seadoc:7070 {
+        reverse_proxy /socket.io* seadoc:7070 {
           header_down Access-Control-Allow-Origin "https://sf.${
             config.sops.placeholder."keys/tailscale_api/tailnet"
           }"
