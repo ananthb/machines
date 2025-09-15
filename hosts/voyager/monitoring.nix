@@ -170,11 +170,9 @@
             static_configs = [
               {
                 targets = [
-                  "https://actual.kedi.dev"
                   "https://bhaskararaman.com"
                   "https://calculon.tech"
                   "https://coredump.blog"
-                  "https://devhuman.net"
                   "https://drvibhu.com"
                   "https://futuraphysio.com"
                   "https://lilaartscentre.com"
@@ -247,11 +245,9 @@
             static_configs = [
               {
                 targets = [
-                  "https://actual.kedi.dev"
                   "https://bhaskararaman.com"
                   "https://calculon.tech"
                   "https://coredump.blog"
-                  "https://devhuman.net"
                   "https://drvibhu.com"
                   "https://futuraphysio.com"
                   "https://lilaartscentre.com"
@@ -537,6 +533,7 @@
                 "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
                 "https://mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://ab.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
               ],
               "labels": {
                   "type": "app",
