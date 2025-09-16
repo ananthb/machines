@@ -59,9 +59,6 @@
   # System packages
   environment.systemPackages = with pkgs; [
     tpm2-tss
-    jellyfin
-    jellyfin-web
-    jellyfin-ffmpeg
   ];
 
   # Set your time zone.
@@ -89,7 +86,10 @@
               no_follow_redirects: true
               fail_if_not_ssl: true
       '';
+
     };
+
+    smartctl.enable = true;
 
     postgres.enable = true;
     postgres.runAsLocalSuperUser = true;
@@ -106,7 +106,6 @@
 
   sops.secrets."passwords/nut/nutmon".mode = "0444";
 
-  # Jellyfin
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #

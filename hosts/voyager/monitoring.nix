@@ -372,6 +372,11 @@
                 labels.type = "exporter";
                 labels.role = "ups";
               }
+              {
+                targets = [ "endeavour:9633" ]; # smartctl exporter
+                labels.type = "exporter";
+                labels.role = "disks";
+              }
             ];
           }
           {

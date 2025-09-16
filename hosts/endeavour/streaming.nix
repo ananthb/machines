@@ -3,6 +3,11 @@
   ...
 }:
 {
+  environment.systemPackages = with pkgs; [
+    jellyfin-web
+    jellyfin-ffmpeg
+  ];
+
   services = {
     jellyfin.enable = true;
     jellyfin.group = "media";
@@ -74,5 +79,13 @@
       );
     })
   ];
+
+  services.nfs.server = {
+    enable = true;
+    exports = ''
+      /export         *(ro,fsid=0)
+      /export/media   *(ro)
+    '';
+  };
 
 }
