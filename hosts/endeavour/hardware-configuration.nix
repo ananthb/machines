@@ -5,7 +5,6 @@
   config,
   lib,
   modulesPath,
-  pkgs,
   ...
 }:
 
@@ -76,6 +75,11 @@
       "fmask=0022"
       "dmask=0022"
     ];
+  };
+
+  fileSystems."/export/media" = {
+    device = "/srv/media";
+    options = [ "bind" ];
   };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
