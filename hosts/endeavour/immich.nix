@@ -6,6 +6,7 @@
   services = {
     immich = {
       enable = true;
+      group = "media";
       environment = {
         "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
       };
