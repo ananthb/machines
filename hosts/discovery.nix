@@ -10,6 +10,7 @@
     "1password"
     "discord"
     "gimp"
+    "google-drive"
     "handbrake-app"
     "jordanbaird-ice"
     "ledger-live"
