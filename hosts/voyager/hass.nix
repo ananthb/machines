@@ -4,6 +4,9 @@
   services = {
     home-assistant = {
       enable = true;
+      package = pkgs.unstable.home-assistant.overrideAttrs (oldAttrs: {
+        doInstallCheck = false;
+      });
       openFirewall = true;
       extraPackages =
         python3Packages: with python3Packages; [
@@ -40,10 +43,11 @@
         "esphome"
         "luci"
       ];
-      customComponents = with pkgs.home-assistant-custom-components; [
-        smartir
+      customComponents = with pkgs.unstable.home-assistant-custom-components; [
         frigate
+        miraie
         prometheus_sensor
+        smartir
       ];
       config = {
         # Includes dependencies for a basic setup
