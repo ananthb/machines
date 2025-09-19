@@ -22,37 +22,6 @@
       urlParts.port = 8096;
     };
 
-    jellyseerr.enable = true;
-
-    tsnsrv.services.watch = {
-      funnel = true;
-      urlParts.port = 5055;
-    };
-
-    postgresql = {
-      enable = true;
-      ensureDatabases = [ "jellyseerr" ];
-      ensureUsers = [
-        {
-          name = "jellyseerr";
-          ensureDBOwnership = true;
-          ensureClauses.login = true;
-        }
-      ];
-    };
-
-  };
-
-  systemd.services = {
-    tsnsrv-watch.wants = [ "jellyseerr.service" ];
-    tsnsrv-watch.after = [ "jellyseerr.service" ];
-
-    jellyseerr.environment = {
-      DB_TYPE = "postgres";
-      DB_SOCKET_PATH = "/var/run/postgresql";
-      DB_USER = "jellyseerr";
-      DB_NAME = "jellyseerr";
-    };
   };
 
   systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
