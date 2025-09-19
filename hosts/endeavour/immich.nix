@@ -83,37 +83,37 @@
         },
         "job": {
           "backgroundTask": {
-            "concurrency": 2
+            "concurrency": 1
           },
           "smartSearch": {
             "concurrency": 1
           },
           "metadataExtraction": {
-            "concurrency": 2
+            "concurrency": 1
           },
           "faceDetection": {
             "concurrency": 1
           },
           "search": {
-            "concurrency": 4
+            "concurrency": 1
           },
           "sidecar": {
-            "concurrency": 4
+            "concurrency": 1
           },
           "library": {
-            "concurrency": 4
+            "concurrency": 1
           },
           "migration": {
-            "concurrency": 4
+            "concurrency": 1
           },
           "thumbnailGeneration": {
-            "concurrency": 4
+            "concurrency": 1
           },
           "videoConversion": {
             "concurrency": 1
           },
           "notifications": {
-            "concurrency": 4
+            "concurrency": 1
           }
         },
         "logging": {
