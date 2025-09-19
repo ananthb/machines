@@ -1,11 +1,13 @@
 {
   config,
+  pkgs,
   ...
 }:
 {
   services = {
     immich = {
       enable = true;
+      package = pkgs.unstable.immich;
       group = "render";
       environment = {
         "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
