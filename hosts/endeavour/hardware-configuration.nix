@@ -35,11 +35,14 @@
 
   boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/E445-A150";
-      fsType = "vfat";
-      options = [ "fmask=0077" "dmask=0077" ];
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/E445-A150";
+    fsType = "vfat";
+    options = [
+      "fmask=0077"
+      "dmask=0077"
+    ];
+  };
 
   fileSystems."/srv" = {
     device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
