@@ -8,11 +8,11 @@
     immich = {
       enable = true;
       package = pkgs.unstable.immich;
-      group = "render";
       environment = {
         "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
       };
       mediaLocation = "/srv/immich";
+      accelerationDevices = [ "/dev/dri/renderD128" ];
     };
 
     tsnsrv.services.imm = {
@@ -33,6 +33,11 @@
 
   systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
   systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
+
+  services.immich.machine-learning.environment = {
+    MPLCONFIGDIR = "/var/cache/immich/matplotlib";
+    HF_XET_CACHE = "/var/cache/immich/huggingface-xet";
+  };
 
   sops.secrets = {
     "email/from/immich" = { };
