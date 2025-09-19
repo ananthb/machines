@@ -14,10 +14,10 @@
   # Open WebUI
   services.open-webui = {
     enable = true;
-    package = pkgs.open-webui.overrideAttrs (old: {
+    package = pkgs.unstable.open-webui.overrideAttrs (old: {
       propagatedBuildInputs =
         old.propagatedBuildInputs
-        ++ (with pkgs.python3Packages; [
+        ++ (with pkgs.unstable.python3Packages; [
           # Socks Proxy
           pysocks
           socksio
