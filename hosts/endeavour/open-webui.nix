@@ -18,6 +18,9 @@
       propagatedBuildInputs =
         old.propagatedBuildInputs
         ++ (with pkgs.unstable.python3Packages; [
+          # postgres
+          psycopg2
+
           # Socks Proxy
           pysocks
           socksio
