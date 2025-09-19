@@ -34,6 +34,8 @@
   systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
   systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
 
+  # Workaround for this issue:
+  # https://github.com/NixOS/nixpkgs/issues/418799
   services.immich.machine-learning.environment = {
     MPLCONFIGDIR = "/var/cache/immich/matplotlib";
     HF_XET_CACHE = "/var/cache/immich/huggingface-xet";
