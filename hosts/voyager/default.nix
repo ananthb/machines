@@ -9,7 +9,6 @@
     ./hardware-configuration.nix
     ./hass.nix
     ./monitoring.nix
-    ./open-webui.nix
   ];
 
   # System packages

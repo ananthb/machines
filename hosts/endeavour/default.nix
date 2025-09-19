@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ./immich.nix
     ./jellyfin.nix
+    ./open-webui.nix
     ./power.nix
     ./seafile.nix
   ];
