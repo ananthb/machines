@@ -29,52 +29,21 @@
   boot.supportedFilesystems = [ "bcachefs" ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
+    device = "/dev/disk/by-uuid/63de0249-73cc-4608-b228-a9d26f8b110c";
     fsType = "btrfs";
-    options = [ "subvol=@" ];
   };
 
-  boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/cc6a5172-3299-494d-b0ec-c23ae75f0bf6";
+  boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
 
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
-    fsType = "btrfs";
-    options = [
-      "subvol=@home"
-      "compress=zstd"
-    ];
-  };
-
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
-    fsType = "btrfs";
-    options = [
-      "subvol=@nix"
-      "compress=zstd"
-    ];
-  };
-
-  fileSystems."/var" = {
-    device = "/dev/disk/by-uuid/ba19dc35-0edc-4769-a69a-a947410a8a60";
-    fsType = "btrfs";
-    options = [
-      "subvol=@var"
-      "compress=zstd"
-    ];
-  };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/E445-A150";
+      fsType = "vfat";
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
 
   fileSystems."/srv" = {
     device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
     fsType = "bcachefs";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/E8B1-45C7";
-    fsType = "vfat";
-    options = [
-      "fmask=0022"
-      "dmask=0022"
-    ];
   };
 
   fileSystems."/export/media" = {
