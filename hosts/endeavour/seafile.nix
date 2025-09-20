@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   ...
 }:
 {
@@ -126,6 +127,41 @@
       funnel = true;
       urlParts.host = "127.0.0.1";
       urlParts.port = 4000;
+    };
+  };
+
+  systemd.timers."seafile-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+      Unit = "seafile-backup.service";
+    };
+  };
+
+  systemd.services."seafile-backup" = {
+    script = ''
+      #!/bin/bash
+
+      set -euo pipefail
+
+      BACKUP_DIR="/srv/seafile/backups"
+      TIMESTAMP=$(date --utc --iso-8601=seconds)
+
+      # Delete tar archives in the backup directory older than 14 days
+      DELETED_FILES=$(find "$BACKUP_DIR" -type f -name "*.tar" -mtime +13 -print -delete)
+      if [[ -n "$DELETED_FILES" ]]; then
+        printf 'deleted old volume backups %s' "$DELETED_FILES"
+      fi
+
+      # Create new backups
+      ${pkgs.podman}/bin/podman volume export seafile-mysql-data -o "$BACKUP_DIR/seafile-mysql-data-$TIMESTAMP.tar"
+      ${pkgs.podman}/bin/podman volume export seafile-caddy-data -o "$BACKUP_DIR/seafile-caddy-data-$TIMESTAMP.tar"
+      echo "backed up seafile data volumes"
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
     };
   };
 
