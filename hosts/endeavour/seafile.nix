@@ -18,7 +18,6 @@
 
       volumes = {
         seafile-mysql-data = { };
-        seafile-caddy-data = { };
       };
 
       pods = {
@@ -145,19 +144,25 @@
 
       set -euo pipefail
 
-      BACKUP_DIR="/srv/seafile/backups"
-      TIMESTAMP=$(date --utc --iso-8601=seconds)
+      backup_dir="/srv/seafile/backups"
 
-      # Delete tar archives in the backup directory older than 14 days
-      DELETED_FILES=$(find "$BACKUP_DIR" -type f -name "*.tar" -mtime +13 -print -delete)
-      if [[ -n "$DELETED_FILES" ]]; then
-        printf 'deleted old volume backups %s' "$DELETED_FILES"
+      # Delete mysql data volume backups in the backup directory older than 4 days
+      deleted_files=$(find "$backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
+      if [[ -n "$deleted_files" ]]; then
+        printf 'deleted old volume backups %s' "$deleted_files"
       fi
 
-      # Create new backups
-      ${pkgs.podman}/bin/podman volume export seafile-mysql-data -o "$BACKUP_DIR/seafile-mysql-data-$TIMESTAMP.tar"
-      ${pkgs.podman}/bin/podman volume export seafile-caddy-data -o "$BACKUP_DIR/seafile-caddy-data-$TIMESTAMP.tar"
-      echo "backed up seafile data volumes"
+      backup_timestamp=$(date --utc --iso-8601=seconds)
+
+      # Create a new mysql data volume backup
+      ${pkgs.podman}/bin/podman volume export seafile-mysql-data -o "$backup_dir/seafile-mysql-data-$backup_timestamp.tar"
+
+      # Snapshot seafile bcachefs subvolume
+      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r /srv/seafile "/srv/seafile-$backup_timestamp"
+
+      ${pkgs.kopia}/bin/kopia snapshot
+
+      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot delete "/srv/seafile-$TIMESTAMP"
     '';
     serviceConfig = {
       Type = "oneshot";

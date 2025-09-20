@@ -21,12 +21,6 @@
           # postgres
           psycopg2
 
-          # Socks Proxy
-          pysocks
-          socksio
-          httpx
-          httpx-socks
-
           # Youtube transcription plugin
           yt-dlp
         ]);
@@ -44,9 +38,10 @@
     mode = "0444";
     content = ''
       # general
-      http_proxy="socks5://localhost:8888"
-      https_proxy="socks5://localhost:8888"
-      no_proxy=".${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      # https://github.com/open-webui/open-webui/discussions/7008 needs fixing before we can proxy requests
+      #http_proxy="http://localhost:8888"
+      #https_proxy="http://localhost:8888"
+      #no_proxy=".${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       ENV="prod"
       WEBUI_URL="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
