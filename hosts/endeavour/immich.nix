@@ -77,7 +77,7 @@
         "backup": {
           "database": {
             "enabled": true,
-            "cronExpression": "0 02 * * *",
+            "cronExpression": "50 23 * * *",
             "keepLastAmount": 14
           }
         },
