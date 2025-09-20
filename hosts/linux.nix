@@ -122,7 +122,7 @@
 
   services.tsnsrv = {
     enable = true;
-    defaults.authKeyPath = config.sops.secrets."keys/tailscale_api/auth_key".path;
+    defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
     defaults.urlParts.host = "localhost";
   };
 
@@ -160,7 +160,7 @@
     "email/smtp/username" = { };
     "gcloud/oauth_self-hosted_clients/id" = { };
     "gcloud/oauth_self-hosted_clients/secret" = { };
-    "keys/tailscale_api/auth_key" = { };
-    "keys/tailscale_api/tailnet" = { };
+    "tailscale_api/auth_key" = { };
+    "tailscale_api/tailnet" = { };
   };
 }

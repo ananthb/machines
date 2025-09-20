@@ -192,12 +192,12 @@
 
         reverse_proxy /sdoc-server* seadoc:7070 {
           header_down Access-Control-Allow-Origin "https://sf.${
-            config.sops.placeholder."keys/tailscale_api/tailnet"
+            config.sops.placeholder."tailscale_api/tailnet"
           }"
         }
         reverse_proxy /socket.io* seadoc:7070 {
           header_down Access-Control-Allow-Origin "https://sf.${
-            config.sops.placeholder."keys/tailscale_api/tailnet"
+            config.sops.placeholder."tailscale_api/tailnet"
           }"
         }
 
@@ -208,24 +208,22 @@
 
   sops.templates."seafile/seafile.env" = {
     content = ''
-      JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
-      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
       SEAFILE_SERVER_PROTOCOL=https
-      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}/sdoc-server
-      NOTIFICATION_SERVER_URL=https://sf.${
-        config.sops.placeholder."keys/tailscale_api/tailnet"
-      }/notification
+      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/sdoc-server
+      NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
     '';
   };
 
   sops.templates."seafile/seahub_settings.py" = {
     content = ''
       # -*- coding: utf-8 -*-
-      SECRET_KEY = "${config.sops.placeholder."keys/seafile/seahub_secret_key"}"
+      SECRET_KEY = "${config.sops.placeholder."seafile/seahub_secret_key"}"
 
       TIME_ZONE = 'Asia/Kolkata'
 
-      CSRF_TRUSTED_ORIGINS = ["https://*.${config.sops.placeholder."keys/tailscale_api/tailnet"}"]
+      CSRF_TRUSTED_ORIGINS = ["https://*.${config.sops.placeholder."tailscale_api/tailnet"}"]
       USE_X_FORWARDED_HOST = True
       SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
       SECURE_SSL_REDIRECT = True
@@ -238,9 +236,7 @@
       OAUTH_ACTIVATE_USER_AFTER_CREATION = False
       OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
-      OAUTH_REDIRECT_URL = 'https://sf.${
-        config.sops.placeholder."keys/tailscale_api/tailnet"
-      }/oauth/callback/'
+      OAUTH_REDIRECT_URL = 'https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/oauth/callback/'
       OAUTH_PROVIDER_DOMAIN = 'google.com'
       OAUTH_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
       OAUTH_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
@@ -269,16 +265,16 @@
 
   sops.templates."seafile/seadoc.env" = {
     content = ''
-      JWT_PRIVATE_KEY=${config.sops.placeholder."keys/seafile/jwt_private_key"}
-      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
       SEAFILE_SERVER_PROTOCOL=https
     '';
   };
 
   sops.secrets = {
     "email/from/seafile" = { };
-    "keys/seafile/jwt_private_key" = { };
-    "keys/seafile/seahub_secret_key" = { };
+    "seafile/jwt_private_key" = { };
+    "seafile/seahub_secret_key" = { };
   };
 
 }

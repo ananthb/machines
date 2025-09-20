@@ -114,6 +114,6 @@
   sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
   sops.templates."fqdns/ha-6a.txt" = {
     owner = config.users.users.hass.name;
-    content = "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}";
+    content = "https://6a.${config.sops.placeholder."tailscale_api/tailnet"}";
   };
 }

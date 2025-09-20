@@ -41,9 +41,9 @@
       # https://github.com/open-webui/open-webui/discussions/7008 needs fixing before we can proxy requests
       #http_proxy="http://localhost:8888"
       #https_proxy="http://localhost:8888"
-      #no_proxy=".${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      #no_proxy=".${config.sops.placeholder."tailscale_api/tailnet"}"
       ENV="prod"
-      WEBUI_URL="https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      WEBUI_URL="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
       BYPASS_MODEL_ACCESS_CONTROL="True"
@@ -51,8 +51,8 @@
       # ollama api
       ENABLE_OLLAMA_API
       OLLAMA_BASE_URLS="http://enterprise.${
-        config.sops.placeholder."keys/tailscale_api/tailnet"
-      }:11434;http://discovery.${config.sops.placeholder."keys/tailscale_api/tailnet"}:11434"
+        config.sops.placeholder."tailscale_api/tailnet"
+      }:11434;http://discovery.${config.sops.placeholder."tailscale_api/tailnet"}:11434"
       EMABLE_OPENAI_API="False"
 
       # auth
@@ -66,7 +66,7 @@
       GOOGLE_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       GOOGLE_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
       GOOGLE_REDIRECT_URI="https://ai.${
-        config.sops.placeholder."keys/tailscale_api/tailnet"
+        config.sops.placeholder."tailscale_api/tailnet"
       }/oauth/google/callback"
       OPENID_PROVIDER_URL="https://accounts.google.com/.well-known/openid-configuration"
 

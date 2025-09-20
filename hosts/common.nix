@@ -30,10 +30,10 @@
 
   sops.defaultSopsFile = ../secrets.yaml;
   sops.secrets = {
-    "keys/ssh/yubikey_5c" = { };
-    "keys/ssh/yubikey_5c.pub" = { };
-    "keys/ssh/yubikey_5c_nano" = { };
-    "keys/ssh/yubikey_5c_nano.pub" = { };
+    "ssh/yubikey_5c" = { };
+    "ssh/yubikey_5c.pub" = { };
+    "ssh/yubikey_5c_nano" = { };
+    "ssh/yubikey_5c_nano.pub" = { };
     "passwords/nut/nutmon" = { };
   };
 }

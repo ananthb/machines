@@ -57,7 +57,7 @@
   sops.templates."actual/config.env" = {
     content = ''
       ACTUAL_OPENID_DISCOVERY_URL="https://accounts.google.com/.well-known/openid-configuration"
-      ACTUAL_OPENID_SERVER_HOSTNAME="https://ab.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+      ACTUAL_OPENID_SERVER_HOSTNAME="https://ab.${config.sops.placeholder."tailscale_api/tailnet"}"
       ACTUAL_OPENID_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       ACTUAL_OPENID_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
     '';

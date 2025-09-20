@@ -402,21 +402,21 @@
         enable = true;
         url = "http://endeavour:7878";
         port = 9708;
-        apiKeyFile = config.sops.secrets."keys/arr_apis/radarr".path;
+        apiKeyFile = config.sops.secrets."arr_apis/radarr".path;
       };
 
       exportarr-sonarr = {
         enable = true;
         url = "http://endeavour:8989";
         port = 9709;
-        apiKeyFile = config.sops.secrets."keys/arr_apis/sonarr".path;
+        apiKeyFile = config.sops.secrets."arr_apis/sonarr".path;
       };
 
       exportarr-prowlarr = {
         enable = true;
         url = "http://endeavour:9696";
         port = 9710;
-        apiKeyFile = config.sops.secrets."keys/arr_apis/prowlarr".path;
+        apiKeyFile = config.sops.secrets."arr_apis/prowlarr".path;
       };
 
       blackbox = {
@@ -500,9 +500,9 @@
     };
   };
 
-  sops.secrets."keys/arr_apis/radarr".mode = "0444";
-  sops.secrets."keys/arr_apis/sonarr".mode = "0444";
-  sops.secrets."keys/arr_apis/prowlarr".mode = "0444";
+  sops.secrets."arr_apis/radarr".mode = "0444";
+  sops.secrets."arr_apis/sonarr".mode = "0444";
+  sops.secrets."arr_apis/prowlarr".mode = "0444";
 
   systemd.services.grafana.environment = {
     GF_AUTH_DISABLE_LOGIN_FORM = "true";
@@ -526,7 +526,7 @@
 
   sops.templates."fqdns/grafana.txt" = {
     owner = config.users.users.grafana.name;
-    content = "mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}";
+    content = "mon.${config.sops.placeholder."tailscale_api/tailnet"}";
   };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
@@ -535,10 +535,10 @@
       [
           {
               "targets": [
-                "https://6a.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://ai.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://mon.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
-                "https://ab.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+                "https://6a.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://ai.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://ab.${config.sops.placeholder."tailscale_api/tailnet"}"
               ],
               "labels": {
                   "type": "app",
@@ -547,7 +547,7 @@
           }
           {
               "targets": [
-                "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}",
               ],
               "labels": {
                   "type": "app",
@@ -557,7 +557,7 @@
           }
           {
               "targets": [
-                "https://sf.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+                "https://sf.${config.sops.placeholder."tailscale_api/tailnet"}",
               ],
               "labels": {
                   "type": "app",
@@ -567,7 +567,7 @@
           }
           {
               "targets": [
-                "https://tv.${config.sops.placeholder."keys/tailscale_api/tailnet"}"
+                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}"
               ],
               "labels": {
                   "type": "app",

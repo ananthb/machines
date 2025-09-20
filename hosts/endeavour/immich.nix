@@ -163,7 +163,7 @@
           "issuerUrl": "https://accounts.google.com/.well-known/openid-configuration",
           "mobileOverrideEnabled": true,
           "mobileRedirectUri": "https://imm.${
-            config.sops.placeholder."keys/tailscale_api/tailnet"
+            config.sops.placeholder."tailscale_api/tailnet"
           }/api/oauth/mobile-redirect",
           "scope": "openid email profile",
           "signingAlgorithm": "RS256",
@@ -213,7 +213,7 @@
           }
         },
         "server": {
-          "externalDomain": "https://imm.${config.sops.placeholder."keys/tailscale_api/tailnet"}",
+          "externalDomain": "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}",
           "loginPageMessage": ""
         },
         "notifications": {
