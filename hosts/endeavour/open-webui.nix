@@ -38,10 +38,9 @@
     mode = "0444";
     content = ''
       # general
-      # https://github.com/open-webui/open-webui/discussions/7008 needs fixing before we can proxy requests
-      #http_proxy="http://localhost:8888"
-      #https_proxy="http://localhost:8888"
-      #no_proxy=".${config.sops.placeholder."tailscale_api/tailnet"}"
+      http_proxy="http://localhost:8888"
+      https_proxy="http://localhost:8888"
+      no_proxy=".${config.sops.placeholder."tailscale_api/tailnet"}"
       ENV="prod"
       WEBUI_URL="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
