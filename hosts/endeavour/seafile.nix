@@ -132,7 +132,7 @@
   systemd.timers."seafile-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "daily";
+      OnCalendar = "weekly";
       Persistent = true;
       Unit = "seafile-backup.service";
     };
@@ -144,25 +144,39 @@
 
       set -euo pipefail
 
-      backup_dir="/srv/seafile/backups"
+      backup_source_dir="/srv/seafile"
+      mysql_backup_dir="$backup_source_dir/backups"
 
       # Delete mysql data volume backups in the backup directory older than 4 days
-      deleted_files=$(find "$backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
+      deleted_files=$(find "$mysql_backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
       if [[ -n "$deleted_files" ]]; then
-        printf 'deleted old volume backups %s' "$deleted_files"
+        printf 'deleted old volume backups %s\n' "$deleted_files"
       fi
 
       backup_timestamp=$(date --utc --iso-8601=seconds)
 
       # Create a new mysql data volume backup
-      ${pkgs.podman}/bin/podman volume export seafile-mysql-data -o "$backup_dir/seafile-mysql-data-$backup_timestamp.tar"
+      ${pkgs.podman}/bin/podman volume export seafile-mysql-data -o "$mysql_backup_dir/seafile-mysql-data-$backup_timestamp.tar"
 
-      # Snapshot seafile bcachefs subvolume
-      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r /srv/seafile "/srv/seafile-$backup_timestamp"
+      # Snapshot bcachefs subvolume
+      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r "$backup_source_dir" "$backup_source_dir-$backup_timestamp"
 
-      ${pkgs.kopia}/bin/kopia snapshot
+      ${pkgs.kopia}/bin/kopia repository connect gcs \
+        --bucket hathi-backups \
+        --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
+        --password $(cat /run/secrets/kopia/gcs/hathi-backups)
 
-      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot delete "/srv/seafile-$TIMESTAMP"
+      cleanup() {
+        ${pkgs.kopia}/bin/kopia repository disconnect
+        ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot delete "$backup_source_dir-$backup_timestamp"
+      }
+
+      trap cleanup EXIT
+
+      printf 'starting kopia snapshot of %s' "$backup_source_dir-$backup_timestamp"
+      ${pkgs.kopia}/bin/kopia snapshot create "$backup_source_dir-$backup_timestamp"
+
+      printf 'backed up "%s" at %s\n' "$backup_source_dir" "$backup_timestamp"
     '';
     serviceConfig = {
       Type = "oneshot";

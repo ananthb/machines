@@ -18,6 +18,7 @@
   ];
 
   sops.secrets."gcloud/service_accounts/kopia-hathi-backups.json" = { };
+  sops.secrets."kopia/gcs/hathi-backups" = { };
 
   users.groups.media.members = [
     username
