@@ -49,12 +49,4 @@
     })
   ];
 
-  services.nfs.server = {
-    enable = true;
-    exports = ''
-      /export         *(ro,fsid=0)
-      /export/media   *(ro)
-    '';
-  };
-
 }

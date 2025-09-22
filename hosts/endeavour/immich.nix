@@ -75,7 +75,7 @@
       trap cleanup EXIT
 
       printf 'starting kopia snapshot of %s' "$backup_source_dir-$backup_timestamp"
-      ${pkgs.kopia}/bin/kopia snapshot create "$backup_source_dir-$backup_timestamp"
+      ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$backup_source_dir-$backup_timestamp"
 
       printf 'backed up "%s" at %s\n' "$backup_source_dir" "$backup_timestamp"
     '';
