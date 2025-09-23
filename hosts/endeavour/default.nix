@@ -102,7 +102,6 @@
       nutUser = "nutmon";
       passwordPath = config.sops.secrets."passwords/nut/nutmon".path;
     };
-
   };
 
   sops.secrets."passwords/nut/nutmon".mode = "0444";

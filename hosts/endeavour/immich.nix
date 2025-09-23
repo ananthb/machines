@@ -51,37 +51,11 @@
   };
 
   systemd.services."immich-backup" = {
-    script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
-      backup_source_dir="/srv/immich"
-      backup_timestamp=$(date --utc --iso-8601=seconds)
-
-      # Snapshot bcachefs subvolume
-      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r "$backup_source_dir" "$backup_source_dir-$backup_timestamp"
-
-      ${pkgs.kopia}/bin/kopia repository connect gcs \
-        --bucket hathi-backups \
-        --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
-        --password $(cat /run/secrets/kopia/gcs/hathi-backups)
-
-      cleanup() {
-        ${pkgs.kopia}/bin/kopia repository disconnect
-        ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot delete "$backup_source_dir-$backup_timestamp"
-      }
-
-      trap cleanup EXIT
-
-      printf 'starting kopia snapshot of %s' "$backup_source_dir-$backup_timestamp"
-      ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$backup_source_dir-$backup_timestamp"
-
-      printf 'backed up "%s" at %s\n' "$backup_source_dir" "$backup_timestamp"
-    '';
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStart = "${config.my-scripts.srv-snapshot-backup} immich";
     };
   };
 
