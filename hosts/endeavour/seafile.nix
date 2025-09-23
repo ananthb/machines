@@ -40,12 +40,14 @@
           name = "seafile-caddy";
           image = "docker.io/library/caddy:2";
           pod = pods.seafile.ref;
+          autoUpdate = true;
         };
 
         seafile-mysql.containerConfig = {
           name = "seafile-mysql";
           image = "docker.io/library/mariadb:10.11";
           pod = pods.seafile.ref;
+          autoUpdate = true;
           environments = {
             MYSQL_LOG_CONSOLE = "true";
             MARIADB_AUTO_UPGRADE = "1";
@@ -57,12 +59,14 @@
           name = "seafile-redis";
           image = "docker.io/library/redis";
           pod = pods.seafile.ref;
+          autoUpdate = true;
         };
 
         seafile-server.containerConfig = {
           name = "seafile";
           image = "docker.io/seafileltd/seafile-mc:13.0-latest";
           pod = pods.seafile.ref;
+          autoUpdate = true;
           environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
           environments = {
             TIME_ZONE = "Asia/Kolkata";
@@ -100,6 +104,7 @@
         seadoc.containerConfig = {
           name = "seadoc";
           image = "docker.io/seafileltd/sdoc-server:2.0-latest";
+          autoUpdate = true;
           volumes = [
             "/srv/seafile/seadoc:/shared"
           ];
@@ -139,13 +144,13 @@
   };
 
   systemd.services."seafile-backup" = {
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       #!/bin/bash
 
       set -euo pipefail
 
-      backup_source_dir="/srv/seafile"
-      mysql_backup_dir="$backup_source_dir/backups"
+      mysql_backup_dir="/srv/seafile/backups"
 
       # Delete mysql data volume backups in the backup directory older than 4 days
       deleted_files=$(find "$mysql_backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
@@ -153,30 +158,12 @@
         printf 'deleted old volume backups %s\n' "$deleted_files"
       fi
 
-      backup_timestamp=$(date --utc --iso-8601=seconds)
-
       # Create a new mysql data volume backup
-      ${pkgs.podman}/bin/podman volume export seafile-mysql-data -o "$mysql_backup_dir/seafile-mysql-data-$backup_timestamp.tar"
+      ${pkgs.podman}/bin/podman volume export \
+        seafile-mysql-data \
+        -o "$mysql_backup_dir/seafile-mysql-data-$(date --utc --iso-8601=seconds).tar"
 
-      # Snapshot bcachefs subvolume
-      ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r "$backup_source_dir" "$backup_source_dir-$backup_timestamp"
-
-      ${pkgs.kopia}/bin/kopia repository connect gcs \
-        --bucket hathi-backups \
-        --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
-        --password $(cat /run/secrets/kopia/gcs/hathi-backups)
-
-      cleanup() {
-        ${pkgs.kopia}/bin/kopia repository disconnect
-        ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot delete "$backup_source_dir-$backup_timestamp"
-      }
-
-      trap cleanup EXIT
-
-      printf 'starting kopia snapshot of %s' "$backup_source_dir-$backup_timestamp"
-      ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$backup_source_dir-$backup_timestamp"
-
-      printf 'backed up "%s" at %s\n' "$backup_source_dir" "$backup_timestamp"
+      ${config.my-scripts.srv-snapshot-backup} seafile
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -204,15 +191,20 @@
           header_down -Access-Control-Allow-Origin
         }
 
-        reverse_proxy /sdoc-server* seadoc:7070 {
-          header_down Access-Control-Allow-Origin "https://sf.${
-            config.sops.placeholder."tailscale_api/tailnet"
-          }"
+        handle_path /sdoc-server/* {
+          reverse_proxy seadoc:7070 {
+            header_down Access-Control-Allow-Origin "https://sf.${
+              config.sops.placeholder."tailscale_api/tailnet"
+            }"
+          }
         }
-        reverse_proxy /socket.io* seadoc:7070 {
-          header_down Access-Control-Allow-Origin "https://sf.${
-            config.sops.placeholder."tailscale_api/tailnet"
-          }"
+
+        handle_path /socket.io* {
+          reverse_proxy seadoc:7070 {
+            header_down Access-Control-Allow-Origin "https://sf.${
+              config.sops.placeholder."tailscale_api/tailnet"
+            }"
+          }
         }
 
         reverse_proxy 127.0.0.1:8000
