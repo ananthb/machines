@@ -137,7 +137,8 @@
   systemd.timers."seafile-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "weekly";
+      # Runs on the first and the fifteenth of each month
+      OnCalendar = "*-*-1,15 00:00:00";
       Persistent = true;
       Unit = "seafile-backup.service";
     };
