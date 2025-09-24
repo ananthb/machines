@@ -15,6 +15,7 @@
     ./open-webui.nix
     ./power.nix
     ./seafile.nix
+    ./scripts.nix
   ];
 
   sops.secrets."gcloud/service_accounts/kopia-hathi-backups.json" = { };
