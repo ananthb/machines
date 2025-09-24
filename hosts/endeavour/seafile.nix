@@ -40,14 +40,14 @@
           name = "seafile-caddy";
           image = "docker.io/library/caddy:2";
           pod = pods.seafile.ref;
-          autoUpdate = true;
+          autoUpdate = "registry";
         };
 
         seafile-mysql.containerConfig = {
           name = "seafile-mysql";
           image = "docker.io/library/mariadb:10.11";
           pod = pods.seafile.ref;
-          autoUpdate = true;
+          autoUpdate = "registry";
           environments = {
             MYSQL_LOG_CONSOLE = "true";
             MARIADB_AUTO_UPGRADE = "1";
@@ -59,14 +59,14 @@
           name = "seafile-redis";
           image = "docker.io/library/redis";
           pod = pods.seafile.ref;
-          autoUpdate = true;
+          autoUpdate = "registry";
         };
 
         seafile-server.containerConfig = {
           name = "seafile";
           image = "docker.io/seafileltd/seafile-mc:13.0-latest";
           pod = pods.seafile.ref;
-          autoUpdate = true;
+          autoUpdate = "registry";
           environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
           environments = {
             TIME_ZONE = "Asia/Kolkata";
@@ -104,7 +104,7 @@
         seadoc.containerConfig = {
           name = "seadoc";
           image = "docker.io/seafileltd/sdoc-server:2.0-latest";
-          autoUpdate = true;
+          autoUpdate = "registry";
           volumes = [
             "/srv/seafile/seadoc:/shared"
           ];
