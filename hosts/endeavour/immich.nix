@@ -41,15 +41,15 @@
     HF_XET_CACHE = "/var/cache/immich/huggingface-xet";
   };
 
-  systemd.timers."immich-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      # Runs on the first and the fifteenth of each month
-      OnCalendar = "*-*-1,15 00:00:00";
-      Persistent = true;
-      Unit = "immich-backup.service";
-    };
-  };
+  # TODO: re-enable after we've trimmed down unnecessary files
+  #systemd.timers."immich-backup" = {
+  #  wantedBy = [ "timers.target" ];
+  #  timerConfig = {
+  #    # Runs on the first and the fifteenth of each month
+  #    OnCalendar = "*-*-1,15 00:00:00";
+  #    Persistent = true;
+  #  };
+  #};
 
   systemd.services."immich-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
@@ -233,7 +233,8 @@
         },
         "server": {
           "externalDomain": "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}",
-          "loginPageMessage": ""
+          "loginPageMessage": "Welcome to Ananth's Immich server",
+          "publicUsers": false
         },
         "notifications": {
           "smtp": {

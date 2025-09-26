@@ -134,15 +134,15 @@
     };
   };
 
-  systemd.timers."seafile-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      # Runs on the first and the fifteenth of each month
-      OnCalendar = "*-*-1,15 00:00:00";
-      Persistent = true;
-      Unit = "seafile-backup.service";
-    };
-  };
+  # TODO: re-enable after we've trimmed down unnecessary files
+  #systemd.timers."seafile-backup" = {
+  #  wantedBy = [ "timers.target" ];
+  #  timerConfig = {
+  #    # Runs on the first and the fifteenth of each month
+  #    OnCalendar = "*-*-1,15 00:00:00";
+  #    Persistent = true;
+  #  };
+  #};
 
   systemd.services."seafile-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
