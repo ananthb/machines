@@ -45,8 +45,8 @@
   #systemd.timers."immich-backup" = {
   #  wantedBy = [ "timers.target" ];
   #  timerConfig = {
-  #    # Runs on the first and the fifteenth of each month
-  #    OnCalendar = "*-*-1,15 00:00:00";
+  #    # Runs on the 28th of each month
+  #    OnCalendar = "*-*-28 00:00:00";
   #    Persistent = true;
   #  };
   #};
