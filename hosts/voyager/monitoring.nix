@@ -536,9 +536,11 @@
           {
               "targets": [
                 "https://6a.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://ai.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://ab.${config.sops.placeholder."tailscale_api/tailnet"}"
+                "https://ai.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://cal.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://vault.${config.sops.placeholder."tailscale_api/tailnet"}",
               ],
               "labels": {
                   "type": "app",
@@ -568,6 +570,7 @@
           {
               "targets": [
                 "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}"
+                "https://watch.${config.sops.placeholder."tailscale_api/tailnet"}"
               ],
               "labels": {
                   "type": "app",
