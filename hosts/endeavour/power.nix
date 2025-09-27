@@ -7,13 +7,13 @@
 
     users = {
       "admin" = {
-        passwordFile = config.sops.secrets."passwords/nut/admin".path;
+        passwordFile = config.sops.secrets."nut/users/admin".path;
         upsmon = "primary";
         instcmds = [ "ALL" ];
         actions = [ "SET" ];
       };
       "nutmon" = {
-        passwordFile = config.sops.secrets."passwords/nut/nutmon".path;
+        passwordFile = config.sops.secrets."nut/users/nutmon".path;
         upsmon = "primary";
       };
     };
@@ -35,5 +35,5 @@
     };
   };
 
-  sops.secrets."passwords/nut/admin" = { };
+  sops.secrets."nut/users/admin" = { };
 }
