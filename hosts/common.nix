@@ -34,6 +34,6 @@
     "ssh/yubikey_5c.pub" = { };
     "ssh/yubikey_5c_nano" = { };
     "ssh/yubikey_5c_nano.pub" = { };
-    "passwords/nut/nutmon" = { };
+    "nut/users/nutmon" = { };
   };
 }

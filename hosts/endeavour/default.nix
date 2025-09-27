@@ -101,11 +101,11 @@
     nut = {
       enable = true;
       nutUser = "nutmon";
-      passwordPath = config.sops.secrets."passwords/nut/nutmon".path;
+      passwordPath = config.sops.secrets."nut/users/nutmon".path;
     };
   };
 
-  sops.secrets."passwords/nut/nutmon".mode = "0444";
+  sops.secrets."nut/users/nutmon".mode = "0444";
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
