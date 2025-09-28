@@ -5,7 +5,8 @@
 }:
 {
   imports = [
-    ../linux.nix
+    ../linux
+
     ./hardware-configuration.nix
     ./hass.nix
     ./monitoring.nix

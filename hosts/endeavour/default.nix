@@ -7,7 +7,8 @@
 }:
 {
   imports = [
-    ../linux.nix
+    ../linux
+
     ./arr.nix
     ./hardware-configuration.nix
     ./immich.nix
