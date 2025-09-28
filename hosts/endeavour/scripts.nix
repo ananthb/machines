@@ -19,60 +19,51 @@
 
       set -euo pipefail
 
-      if [[ ! -d "$1" ]] || [[ ! "$1" =~ ^(/srv|/var)/ ]]; then
-      fi
-
-      btrfs_snapshot=0
-      bcachefs_snapshot=0
-      if [[ $1 == "/srv/"* ]]; then
-        bcachefs_snapshot=1
-      elif [[ $1 == "/var/"* ]]; then
-        btrfs_snapshot=1
-      else
-        printf '%s is not a directory under /srv or /var' "$1" >&2
+      backup_source="$1"
+      if [[ ! -d "$backup_source" ]] || [[ ! "$backup_source" =~ ^(/srv|/var)/ ]]; then
+        printf '%s is not a directory under /srv or /var' "$backup_source" >&2
         exit 1
       fi
 
+      snapshot_target="$backup_source-$(date --utc --iso-8601=seconds)"
+      if [[ $1 == "/srv/"* ]]; then
+        # snapshot bcachefs subvolume
+        if ! ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r \
+          "$backup_source" "$snapshot_target"; then
+          printf '%s might not be a bcachefs subvolume' "$backup_source" >&2
+          exit 1
+        fi
+      else
+        # snapshot btrfs subvolume
+        if ! ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r \
+          "$backup_source" "$snapshot_target"; then
+          printf '%s might not be a btrfs subvolume' "$backup_source" >&2
+          exit 1
+        fi
+      fi
+      
+      # Open remote kopia repository
       ${pkgs.kopia}/bin/kopia repository connect gcs \
         --bucket hathi-backups \
         --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
         --password $(cat /run/secrets/kopia/gcs/hathi-backups)
 
-      backup_timestamp=$(date --utc --iso-8601=seconds)
-
-      if [[ $1 == "/srv/"* ]]; then
-        # snapshot bcachefs subvolume
-        if ! ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r \
-          "$1" "$1-$backup_timestamp"; then
-          printf '%s might not be a bcachefs subvolume' "$1" >&2
-          exit 1
-        fi
-      else
-        # snapshot btrfs subvolume
-        if ! ${pkgs.btrfs-tools}/bin/btrfs subvolume snapshot -r \
-          "$1" "$1-$backup_timestamp"; then
-          printf '%s might not be a btrfs subvolume' "$1" >&2
-          exit 1
-        fi
-      fi
-
       cleanup() {
         ${pkgs.kopia}/bin/kopia repository disconnect
-        if [[ $1 == "/srv/"* ]]; then
+        if [[ $backup_source == "/srv/"* ]]; then
           ${pkgs.bcachefs-tools}/bin/bcachefs subvolume delete \
-            "$1-$backup_timestamp"
+            "$snapshot_target"
         else
-          ${pkgs.btrfs-tools}/bin/btrfs subvolume delete \
-            "$1-$backup_timestamp"
+          ${pkgs.btrfs-progs}/bin/btrfs subvolume delete \
+            "$snapshot_target"
         fi
       }
 
       trap cleanup EXIT
 
-      printf 'starting kopia snapshot of %s' "$1-$backup_timestamp"
-      ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$1-$backup_timestamp"
-
-      printf 'backed up "%s" at %s\n' "$1" "$backup_timestamp"
+      printf 'starting kopia snapshot of %s' "$snapshot_target"
+      ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$snapshot_target"
+      printf 'backed up "%s"\n' "$snapshot_target"
     '';
   };
 }
