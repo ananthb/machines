@@ -60,8 +60,12 @@
       fi
 
       # Dump database
-      ${pkgs.sudo-rs}/bin/sudo -u vaultwarden ${pkgs.postgresql_15}/bin/pg_dump -U vaultwarden vaultwarden > \
-        "$db_backup_dir/vaultwarden_db-$(date --utc --iso-8601=second).dump"
+      dump_file="$db_backup_dir/vaultwarden_db-$(date --utc --iso-8601=second).dump"
+      ${pkgs.sudo-rs}/bin/sudo -u vaultwarden \
+        ${pkgs.postgresql_15}/bin/pg_dump \
+          -Fc -U vaultwarden vaultwarden > "$dump_file"
+
+      printf 'Dumped vaultwarden database to %s' "$dump_file"
 
       ${config.my-scripts.snapshot-backup} /var/lib/bitwarden_rs
     '';

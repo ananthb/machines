@@ -61,9 +61,7 @@
 
       trap cleanup EXIT
 
-      printf 'starting kopia snapshot of %s' "$snapshot_target"
       ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$snapshot_target"
-      printf 'backed up "%s"\n' "$snapshot_target"
     '';
   };
 }
