@@ -60,7 +60,7 @@
       fi
 
       # Dump database
-      ${pkgs.postgresql_15}/bin/pg_dump -U postgres vaultwarden > \
+      ${pkgs.sudo-rs}/bin/sudo -u vaultwarden ${pkgs.postgresql_15}/bin/pg_dump -U vaultwarden vaultwarden > \
         "$db_backup_dir/vaultwarden_db-$(date --utc --iso-8601=second).dump"
 
       ${config.my-scripts.snapshot-backup} /var/lib/bitwarden_rs
