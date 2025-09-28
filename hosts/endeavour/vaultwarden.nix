@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   services.vaultwarden = {
@@ -33,6 +33,42 @@
   services.tsnsrv.services."vault" = {
     funnel = true;
     urlParts.port = 8222;
+  };
+
+  systemd.timers."vaultwarden-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+  };
+
+  systemd.services."vaultwarden-backup" = {
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    script = ''
+      #!/bin/bash
+
+      set -euo pipefail
+
+      db_backup_dir="/var/lib/bitwarden_rs/backups"
+      mkdir -p "$db_backup_dir"
+
+      # Prune old backups from the backup directory
+      deleted_files=$(find "$db_backup_dir" -type f -name "*.dump" -mtime +3 -print -delete)
+      if [[ -n "$deleted_files" ]]; then
+        printf 'deleted old volume backups %s\n' "$deleted_files"
+      fi
+
+      # Dump database
+      ${pkgs.postgresql_15}/bin/pg_dump -U postgres vaultwarden > \
+        "$db_backup_dir/vaultwarden_db-$(date --utc --iso-8601=second).dump"
+
+      ${config.my-scripts.snapshot-backup} /var/lib/bitwarden_rs
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   sops.templates."vaultwarden/secrets.env" = {

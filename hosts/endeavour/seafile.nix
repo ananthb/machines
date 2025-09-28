@@ -151,10 +151,11 @@
 
       set -euo pipefail
 
-      mysql_backup_dir="/srv/seafile/backups"
+      db_backup_dir="/srv/seafile/backups"
+      mkdir -p "$db_backup_dir"
 
-      # Delete mysql data volume backups in the backup directory older than 4 days
-      deleted_files=$(find "$mysql_backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
+      # Prune old backups from the backup directory
+      deleted_files=$(find "$db_backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
       if [[ -n "$deleted_files" ]]; then
         printf 'deleted old volume backups %s\n' "$deleted_files"
       fi
@@ -162,9 +163,9 @@
       # Create a new mysql data volume backup
       ${pkgs.podman}/bin/podman volume export \
         seafile-mysql-data \
-        -o "$mysql_backup_dir/seafile-mysql-data-$(date --utc --iso-8601=seconds).tar"
+        -o "$db_backup_dir/seafile-mysql-data-$(date --utc --iso-8601=seconds).tar"
 
-      ${config.my-scripts.srv-snapshot-backup} seafile
+      ${config.my-scripts.snapshot-backup} /srv/seafile
     '';
     serviceConfig = {
       Type = "oneshot";

@@ -56,7 +56,7 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
-      ExecStart = "${config.my-scripts.srv-snapshot-backup} immich";
+      ExecStart = "${config.my-scripts.snapshot-backup} /srv/immich";
     };
   };
 
