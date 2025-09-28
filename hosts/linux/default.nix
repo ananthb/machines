@@ -1,15 +1,15 @@
 {
-  config,
-  pkgs,
-  system,
-  username,
-  home-manager,
   bcachefs-tools,
-  nixvim,
-  sops-nix,
+  config,
+  home-manager,
   hostname,
-  tsnsrv,
   nix-index-database,
+  nixvim,
+  pkgs,
+  sops-nix,
+  system,
+  tsnsrv,
+  username,
   ...
 }:
 
@@ -27,8 +27,8 @@
       home-manager.useUserPackages = true;
       home-manager.users.${username} = {
         imports = [
-          ../home/common.nix
-          ../home/linux.nix
+          ../../home/common.nix
+          ../../home/linux.nix
         ];
       };
       home-manager.extraSpecialArgs = {
@@ -37,7 +37,8 @@
     }
     tsnsrv.nixosModules.default
 
-    ./common.nix
+    ../common.nix
+    ./scripts.nix
   ];
 
   nixpkgs.overlays = [

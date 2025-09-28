@@ -41,7 +41,7 @@
           exit 1
         fi
       fi
-      
+
       # Open remote kopia repository
       ${pkgs.kopia}/bin/kopia repository connect gcs \
         --bucket hathi-backups \
