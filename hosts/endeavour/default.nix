@@ -16,7 +16,6 @@
     ./open-webui.nix
     ./power.nix
     ./seafile.nix
-    ./scripts.nix
     ./vaultwarden.nix
   ];
 
