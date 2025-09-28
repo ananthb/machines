@@ -7,6 +7,8 @@
   services = {
     immich = {
       enable = true;
+      host = "::";
+      openFirewall = true;
       package = pkgs.unstable.immich;
       environment = {
         "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
