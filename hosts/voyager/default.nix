@@ -31,7 +31,7 @@
 
     users = {
       "nutmon" = {
-        passwordFile = config.sops.secrets."passwords/nut/nutmon".path;
+        passwordFile = config.sops.secrets."nut/users/nutmon".path;
         upsmon = "primary";
       };
     };
