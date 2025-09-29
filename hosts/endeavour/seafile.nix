@@ -151,21 +151,21 @@
 
       set -euo pipefail
 
-      db_backup_dir="/srv/seafile/backups"
-      mkdir -p "$db_backup_dir"
+      backup_target="/srv/seafile"
+      dump_file="$backup_target/seafile-mysql-data.tar"
 
-      # Prune old backups from the backup directory
-      deleted_files=$(find "$db_backup_dir" -type f -name "*.tar" -mtime +3 -print -delete)
-      if [[ -n "$deleted_files" ]]; then
-        printf 'deleted old volume backups %s\n' "$deleted_files"
-      fi
-
-      # Create a new mysql data volume backup
+      # Dump database volume
+      systemctl stop seafile-pod.service
       ${pkgs.podman}/bin/podman volume export \
-        seafile-mysql-data \
-        -o "$db_backup_dir/seafile-mysql-data-$(date --utc --iso-8601=seconds).tar"
+        seafile-mysql-data -o "$dump_file"
+      systemctl start seafile-pod.service
 
-      ${config.my-scripts.snapshot-backup} /srv/seafile
+      cleanup() {
+        rm "$dump_file"
+      }
+      trap cleanup EXIT
+
+      ${config.my-scripts.snapshot-backup} "$backup_target"
     '';
     serviceConfig = {
       Type = "oneshot";

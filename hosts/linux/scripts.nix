@@ -58,7 +58,6 @@
             "$snapshot_target"
         fi
       }
-
       trap cleanup EXIT
 
       ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$snapshot_target"
