@@ -50,24 +50,21 @@
 
       set -euo pipefail
 
-      db_backup_dir="/var/lib/bitwarden_rs/backups"
-      mkdir -p "$db_backup_dir"
-
-      # Prune old backups from the backup directory
-      deleted_files=$(find "$db_backup_dir" -type f -name "*.dump" -mtime +3 -print -delete)
-      if [[ -n "$deleted_files" ]]; then
-        printf 'deleted old volume backups %s\n' "$deleted_files"
-      fi
+      backup_target="/var/lib/bitwarden_rs"
+      dump_file="$backup_target/vaultwarden_db.dump"
 
       # Dump database
-      dump_file="$db_backup_dir/vaultwarden_db-$(date --utc --iso-8601=second).dump"
       ${pkgs.sudo-rs}/bin/sudo -u vaultwarden \
         ${pkgs.postgresql_15}/bin/pg_dump \
           -Fc -U vaultwarden vaultwarden > "$dump_file"
-
       printf 'Dumped vaultwarden database to %s' "$dump_file"
 
-      ${config.my-scripts.snapshot-backup} /var/lib/bitwarden_rs
+      cleanup() {
+        rm "$dump_file"
+      }
+      trap cleanup EXIT
+
+      ${config.my-scripts.snapshot-backup} "$backup_target"
     '';
     serviceConfig = {
       Type = "oneshot";
