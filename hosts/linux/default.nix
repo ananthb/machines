@@ -161,6 +161,8 @@
     "email/smtp/username" = { };
     "gcloud/oauth_self-hosted_clients/id" = { };
     "gcloud/oauth_self-hosted_clients/secret" = { };
+    "gcloud/service_accounts/kopia-hathi-backups.json" = { };
+    "kopia/gcs/hathi-backups" = { };
     "tailscale_api/auth_key" = { };
     "tailscale_api/tailnet" = { };
   };
