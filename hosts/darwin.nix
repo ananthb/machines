@@ -144,7 +144,7 @@
       # dailies
       "google-chrome"
       "ghostty"
-      "neovide"
+      "neovide-app"
 
       # media
       "vlc"
