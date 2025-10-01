@@ -19,6 +19,7 @@
     "slack-cli"
     "steam"
     "timemator"
+    "utm"
     "visual-studio-code"
   ];
   homebrew.masApps = {
