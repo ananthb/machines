@@ -1,5 +1,4 @@
 {
-  bcachefs-tools,
   config,
   home-manager,
   hostname,
@@ -39,12 +38,6 @@
 
     ../common.nix
     ./scripts.nix
-  ];
-
-  nixpkgs.overlays = [
-    (final: prev: {
-      bcachefs-tools = bcachefs-tools.packages.${pkgs.system}.bcachefs-tools;
-    })
   ];
 
   sops.age.sshKeyPaths = [
