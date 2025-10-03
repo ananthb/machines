@@ -15,9 +15,6 @@
   inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
   inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.bcachefs-tools.url = "github:koverstreet/bcachefs-tools";
-  inputs.bcachefs-tools.inputs.nixpkgs.follows = "nixpkgs";
-
   inputs.nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
   inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -48,7 +45,6 @@
       nixpkgs-unstable,
       sops-nix,
       nix-index-database,
-      bcachefs-tools,
       lanzaboote,
       home-manager,
       nixvim,
