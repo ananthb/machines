@@ -11,15 +11,13 @@
     "discord"
     "gimp"
     "google-drive"
-    "handbrake-app"
     "jordanbaird-ice"
     "ledger-live"
-    "raspberry-pi-imager"
+    "signal"
     "slack"
     "slack-cli"
     "steam"
     "timemator"
-    "utm"
     "visual-studio-code"
   ];
   homebrew.masApps = {
