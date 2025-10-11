@@ -1,54 +1,59 @@
 {
   config,
-  pkgs,
   ...
 }:
 
 {
-  # WARP must be manually set up in proxy mode listening on port 8888.
-  # This involves registering a new identity, accepting the tos,
-  # setting the mode to proxy, and then setting proxy port to 8888.
-  services.cloudflare-warp.enable = true;
-  services.cloudflare-warp.openFirewall = false;
+  virtualisation.quadlet =
+    let
+      inherit (config.virtualisation.quadlet) volumes;
+    in
+    {
+      autoEscape = true;
+      autoUpdate.enable = true;
 
-  # Open WebUI
-  services.open-webui = {
-    enable = true;
-    package = pkgs.unstable.open-webui.overrideAttrs (old: {
-      propagatedBuildInputs =
-        old.propagatedBuildInputs
-        ++ (with pkgs.unstable.python3Packages; [
-          # postgres
-          psycopg2
+      volumes = {
+        open-webui-data = { };
+      };
 
-          # Youtube transcription plugin
-          yt-dlp
-        ]);
-    });
-    port = 8090;
-    environmentFile = config.sops.templates."open-webui/env".path;
-  };
+      containers = {
+        open-webui.containerConfig = {
+          name = "open-webui";
+          image = "ghcr.io/open-webui/open-webui:main";
+          autoUpdate = "registry";
+          environmentFiles = [ config.sops.templates."open-webui/env".path ];
+          volumes = [
+            "${volumes.open-webui-data.ref}:/app/backend/data"
+          ];
+        };
+
+      };
+    };
 
   sops.secrets = {
     "gcloud/pse_api/id" = { };
     "gcloud/pse_api/key" = { };
+    "open-webui/postgres/user" = { };
+    "open-webui/postgres/password" = { };
   };
 
   sops.templates."open-webui/env" = {
-    mode = "0444";
     content = ''
       # general
-      http_proxy="http://localhost:8888"
-      https_proxy="http://localhost:8888"
+      http_proxy="http://host.containers.internal:8888"
+      https_proxy="http://host.containers.internal:8888"
       no_proxy=".${config.sops.placeholder."tailscale_api/tailnet"}"
       ENV="prod"
+      PORT = 8090
       WEBUI_URL="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
-      DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
+      DATABASE_URL="postgresql://${config.sops.placeholder."open-webui/postgres/user"}:${
+        config.sops.placeholder."open-webui/postgres/password"
+      }@host.containers.internal:5432/open-webui"
       ENABLE_PERSISTENT_CONFIG="False"
       BYPASS_MODEL_ACCESS_CONTROL="True"
 
       # ollama api
-      ENABLE_OLLAMA_API
+      ENABLE_OLLAMA_API="True"
       OLLAMA_BASE_URLS="http://enterprise.${
         config.sops.placeholder."tailscale_api/tailnet"
       }:11434;http://discovery.${config.sops.placeholder."tailscale_api/tailnet"}:11434"
