@@ -11,7 +11,6 @@
     "discord"
     "gimp"
     "google-drive"
-    "jordanbaird-ice"
     "ledger-live"
     "signal"
     "slack"
