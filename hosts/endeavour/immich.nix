@@ -58,7 +58,7 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
-      ExecStart = "${config.my-scripts.snapshot-backup} /srv/immich";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
     };
   };
 

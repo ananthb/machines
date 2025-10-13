@@ -51,20 +51,20 @@
       set -euo pipefail
 
       backup_target="/var/lib/bitwarden_rs"
-      dump_file="$backup_target/vaultwarden_db.dump"
+      dump_file="$backup_target/db.dump"
 
       # Dump database
       ${pkgs.sudo-rs}/bin/sudo -u vaultwarden \
         ${pkgs.postgresql_15}/bin/pg_dump \
           -Fc -U vaultwarden vaultwarden > "$dump_file"
-      printf 'Dumped vaultwarden database to %s' "$dump_file"
+      printf 'Dumped database to %s' "$dump_file"
 
       cleanup() {
         rm "$dump_file"
       }
       trap cleanup EXIT
 
-      ${config.my-scripts.snapshot-backup} "$backup_target"
+      ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
     '';
     serviceConfig = {
       Type = "oneshot";

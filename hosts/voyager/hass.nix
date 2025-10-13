@@ -109,6 +109,49 @@
     ];
   };
 
+  systemd.timers."home-assistant-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
+    };
+  };
+
+  systemd.services."home-assistant-backup" = {
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    script = ''
+      #!/bin/bash
+
+      set -euo pipefail
+
+      backup_target="/var/lib/hass"
+      snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+      dump_file="$snapshot_target/db.dump"
+
+      # Dump database
+      ${pkgs.sudo-rs}/bin/sudo -u hass \
+        ${pkgs.postgresql_16}/bin/pg_dump \
+          -Fc -U hass hass > "$dump_file"
+      printf 'Dumped database to %s' "$dump_file"
+
+      systemctl stop home-assistant.service
+      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
+
+      cleanup() {
+        rm "$dump_file"
+        rm -rf "$snapshot_target"
+        systemctl start home-assistant.service
+      }
+      trap cleanup EXIT
+
+      ${config.my-scripts.kopia-backup} "$snapshot_target"
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
   sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;
   sops.secrets."home/6a/longitude".owner = config.users.users.hass.name;
   sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
