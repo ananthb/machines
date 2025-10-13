@@ -165,7 +165,7 @@
       }
       trap cleanup EXIT
 
-      ${config.my-scripts.snapshot-backup} "$backup_target"
+      ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
     '';
     serviceConfig = {
       Type = "oneshot";

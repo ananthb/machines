@@ -63,6 +63,38 @@
       ACTUAL_OPENID_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
     '';
   };
+  systemd.timers."actual-budget-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+  };
+  systemd.services."actual-budget-backup" = {
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    script = ''
+      #!/bin/bash
+
+      set -euo pipefail
+
+      backup_target="/var/lib/actual"
+      systemctl stop actual-budget.service
+      snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+
+      cleanup() {
+        rm -rf "$snapshot_target"
+        systemctl start actual-budget.service
+      }
+      trap cleanup EXIT
+
+      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
+      ${config.my-scripts.kopia-backup} "$snapshot_target"
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
 
   # Radicale
   services = {
@@ -81,6 +113,38 @@
     tsnsrv.services.cal = {
       funnel = true;
       urlParts.port = 5232;
+    };
+  };
+  systemd.timers."radicale-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+  };
+  systemd.services."radicale-backup" = {
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    script = ''
+      #!/bin/bash
+
+      set -euo pipefail
+
+      backup_target="/var/lib/radicale"
+      systemctl stop radicale.service
+      snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+
+      cleanup() {
+        rm -rf "$snapshot_target"
+        systemctl start radicale.service
+      }
+      trap cleanup EXIT
+
+      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
+      ${config.my-scripts.kopia-backup} "$snapshot_target"
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
     };
   };
 
