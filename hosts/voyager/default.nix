@@ -63,14 +63,14 @@
       ACTUAL_OPENID_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
     '';
   };
-  systemd.timers."actual-budget-backup" = {
+  systemd.timers."actual-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnCalendar = "daily";
       Persistent = true;
     };
   };
-  systemd.services."actual-budget-backup" = {
+  systemd.services."actual-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       #!/bin/bash
@@ -78,12 +78,12 @@
       set -euo pipefail
 
       backup_target="/var/lib/actual"
-      systemctl stop actual-budget.service
+      systemctl stop actual.service
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
 
       cleanup() {
         rm -rf "$snapshot_target"
-        systemctl start actual-budget.service
+        systemctl start actual.service
       }
       trap cleanup EXIT
 
