@@ -1,10 +1,15 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  pkgs-unstable,
+  ...
+}:
 
 {
   services = {
     home-assistant = {
       enable = true;
-      package = pkgs.unstable.home-assistant.overrideAttrs (oldAttrs: {
+      package = pkgs-unstable.home-assistant.overrideAttrs (oldAttrs: {
         doInstallCheck = false;
       });
       openFirewall = true;
@@ -43,7 +48,7 @@
         "esphome"
         "luci"
       ];
-      customComponents = with pkgs.unstable.home-assistant-custom-components; [
+      customComponents = with pkgs-unstable.home-assistant-custom-components; [
         frigate
         miraie
         prometheus_sensor

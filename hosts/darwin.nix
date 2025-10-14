@@ -1,42 +1,36 @@
 {
+  config,
+  hostname,
+  inputs,
   pkgs,
   system,
   username,
-  config,
-  nixvim,
-  nix-homebrew,
-  homebrew-core,
-  homebrew-cask,
-  homebrew-bundle,
-  home-manager,
-  sops-nix,
-  nix-index-database,
   ...
 }:
 
 {
 
   imports = [
-    nix-homebrew.darwinModules.nix-homebrew
+    inputs.nix-homebrew.darwinModules.nix-homebrew
     {
       nix-homebrew = {
         user = username;
         enable = true;
         taps = {
-          "homebrew/homebrew-core" = homebrew-core;
-          "homebrew/homebrew-cask" = homebrew-cask;
-          "homebrew/homebrew-bundle" = homebrew-bundle;
+          "homebrew/homebrew-core" = inputs.homebrew-core;
+          "homebrew/homebrew-cask" = inputs.homebrew-cask;
+          "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
         };
         mutableTaps = false;
         autoMigrate = true;
       };
     }
 
-    home-manager.darwinModules.home-manager
+    inputs.home-manager.darwinModules.home-manager
     {
       home-manager.sharedModules = [
-        sops-nix.homeManagerModules.sops
-        nix-index-database.homeModules.nix-index
+        inputs.sops-nix.homeManagerModules.sops
+        inputs.nix-index-database.homeModules.nix-index
       ];
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
@@ -48,11 +42,13 @@
       };
       home-manager.extraSpecialArgs = {
         inherit
-          username
-          system
+          hostname
           pkgs
-          nixvim
+          system
+          username
           ;
+
+        inputs = inputs;
       };
     }
 
