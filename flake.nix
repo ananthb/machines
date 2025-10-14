@@ -72,8 +72,15 @@
           nixpkgs.lib.nixosSystem {
             inherit system;
 
-            specialArgs = inputs // {
+            specialArgs = {
               inherit system hostname username;
+
+              inputs = inputs;
+
+              pkgs-unstable = import nixpkgs-unstable {
+               inherit system;
+               config.allowUnfree = true;
+              };
             };
 
             modules = [
@@ -93,8 +100,15 @@
           nixpkgs.lib.nixosSystem {
             inherit system;
 
-            specialArgs = inputs // {
+            specialArgs = {
               inherit system hostname username;
+
+              inputs = inputs;
+              
+              pkgs-unstable = import nixpkgs-unstable {
+               inherit system;
+               config.allowUnfree = true;
+              };
             };
 
             modules = [
@@ -115,8 +129,10 @@
           nix-darwin.lib.darwinSystem {
             inherit system;
 
-            specialArgs = inputs // {
+            specialArgs = {
               inherit system hostname username;
+
+              inputs = inputs;
             };
 
             modules = [
@@ -134,8 +150,10 @@
           nix-darwin.lib.darwinSystem {
             inherit system;
 
-            specialArgs = inputs // {
+            specialArgs = {
               inherit system hostname username;
+
+              inputs = inputs;
             };
 
             modules = [

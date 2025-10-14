@@ -1,13 +1,9 @@
 {
   config,
-  home-manager,
   hostname,
-  nix-index-database,
-  nixvim,
+  inputs,
   pkgs,
-  sops-nix,
   system,
-  tsnsrv,
   username,
   ...
 }:
@@ -16,11 +12,11 @@
 
   imports = [
 
-    home-manager.nixosModules.home-manager
+    inputs.home-manager.nixosModules.home-manager
     {
       home-manager.sharedModules = [
-        sops-nix.homeManagerModules.sops
-        nix-index-database.homeModules.nix-index
+        inputs.sops-nix.homeManagerModules.sops
+        inputs.nix-index-database.homeModules.nix-index
       ];
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
@@ -31,10 +27,13 @@
         ];
       };
       home-manager.extraSpecialArgs = {
-        inherit username system nixvim;
+        inherit hostname system username;
+
+        inputs = inputs;
       };
     }
-    tsnsrv.nixosModules.default
+
+    inputs.tsnsrv.nixosModules.default
 
     ../common.nix
     ./scripts.nix
@@ -141,7 +140,6 @@
   environment.systemPackages = with pkgs; [
     nixfmt-rfc-style
     ghostty.terminfo
-    tsnsrv
     pam_rssh
     e2fsprogs
   ];

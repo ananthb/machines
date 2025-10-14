@@ -1,15 +1,17 @@
 {
   config,
-  pkgs,
   ...
 }:
 {
   imports = [
     ../linux
 
+    ./actual.nix
+    ./davis.nix
     ./hardware-configuration.nix
     ./hass.nix
     ./monitoring.nix
+    ./radicale.nix
   ];
 
   # System packages
@@ -42,113 +44,6 @@
       user = "nutmon";
     };
   };
-
-  # Actual Budget
-  services.actual.enable = true;
-  services.actual.package = pkgs.unstable.actual-server;
-  services.actual.settings.port = 3100;
-  services.tsnsrv.services.ab = {
-    funnel = true;
-    urlParts.host = "localhost";
-    urlParts.port = 3100;
-  };
-  systemd.services.actual.serviceConfig.EnvironmentFile =
-    config.sops.templates."actual/config.env".path;
-
-  sops.templates."actual/config.env" = {
-    content = ''
-      ACTUAL_OPENID_DISCOVERY_URL="https://accounts.google.com/.well-known/openid-configuration"
-      ACTUAL_OPENID_SERVER_HOSTNAME="https://ab.${config.sops.placeholder."tailscale_api/tailnet"}"
-      ACTUAL_OPENID_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
-      ACTUAL_OPENID_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
-    '';
-  };
-  systemd.timers."actual-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Persistent = true;
-    };
-  };
-  systemd.services."actual-backup" = {
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
-      backup_target="/var/lib/actual"
-      systemctl stop actual.service
-      snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-      cleanup() {
-        rm -rf "$snapshot_target"
-        systemctl start actual.service
-      }
-      trap cleanup EXIT
-
-      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
-      ${config.my-scripts.kopia-backup} "$snapshot_target"
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
-  };
-
-  # Radicale
-  services = {
-    radicale = {
-      enable = true;
-      settings = {
-        server.hosts = [ "[::]:5232" ];
-        auth = {
-          type = "htpasswd";
-          htpasswd_filename = "${config.sops.secrets."radicale/htpasswd".path}";
-          htpasswd_encryption = "autodetect";
-        };
-      };
-    };
-
-    tsnsrv.services.cal = {
-      funnel = true;
-      urlParts.port = 5232;
-    };
-  };
-  systemd.timers."radicale-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Persistent = true;
-    };
-  };
-  systemd.services."radicale-backup" = {
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
-      backup_target="/var/lib/radicale"
-      systemctl stop radicale.service
-      snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-      cleanup() {
-        rm -rf "$snapshot_target"
-        systemctl start radicale.service
-      }
-      trap cleanup EXIT
-
-      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
-      ${config.my-scripts.kopia-backup} "$snapshot_target"
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
-  };
-
-  sops.secrets."radicale/htpasswd".owner = "radicale";
 
   # Jellyseerr
   services = {
