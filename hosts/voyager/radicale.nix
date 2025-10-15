@@ -18,6 +18,12 @@
       urlParts.port = 5232;
     };
   };
+
+  systemd.services.tsnsrv-cal = {
+    wants = [ "radicale.service" ];
+    after = [ "radicale.service" ];
+  };
+
   systemd.timers."radicale-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

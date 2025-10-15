@@ -16,6 +16,11 @@
   systemd.services.actual.serviceConfig.EnvironmentFile =
     config.sops.templates."actual/config.env".path;
 
+  systemd.services.tsnsrv-ab = {
+    wants = [ "actual.service" ];
+    after = [ "actual.service" ];
+  };
+
   sops.templates."actual/config.env" = {
     content = ''
       ACTUAL_OPENID_DISCOVERY_URL="https://accounts.google.com/.well-known/openid-configuration"

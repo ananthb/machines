@@ -114,6 +114,11 @@
     ];
   };
 
+  systemd.services.tsnsrv-6a = {
+    wants = [ "home-assistant.service" ];
+    after = [ "home-assistant.service" ];
+  };
+
   systemd.timers."home-assistant-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {

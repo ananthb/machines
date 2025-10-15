@@ -11,6 +11,7 @@
     # ./davis.nix
     ./hardware-configuration.nix
     ./hass.nix
+    ./mealie.nix
     ./monitoring.nix
     ./radicale.nix
     ./vaultwarden.nix
@@ -68,7 +69,6 @@
       ];
     };
   };
-
   systemd.services = {
     tsnsrv-watch.wants = [ "jellyseerr.service" ];
     tsnsrv-watch.after = [ "jellyseerr.service" ];
