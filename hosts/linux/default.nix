@@ -50,6 +50,16 @@
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
+  system.autoUpgrade = {
+    enable = true;
+    flake = inputs.self.outPath;
+    flags = [
+      "-L" # print build logs
+    ];
+    dates = "02:00";
+    randomizedDelaySec = "45min";
+  };
+
   systemd.enableEmergencyMode = false;
   systemd.sleep.extraConfig = ''
     AllowSuspend=no
