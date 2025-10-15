@@ -7,7 +7,8 @@
     ../linux
 
     ./actual.nix
-    ./davis.nix
+    # re-enable davis when we have postgresql.target
+    # ./davis.nix
     ./hardware-configuration.nix
     ./hass.nix
     ./monitoring.nix

@@ -1,7 +1,6 @@
 {
   config,
   inputs,
-  lib,
   pkgs-unstable,
   ...
 }:
@@ -27,13 +26,13 @@
       dsnFile = config.sops.templates."davis/mail-dsn".path;
       inviteFromAddress = "davis@kedi.dev";
     };
-    nginx = lib.mkForce null;
+    nginx = null;
   };
 
   services.tsnsrv.services.dav = {
     funnel = true;
     urlParts.port = 8080;
-    upstreamUnixAddr = "/run/php-fpm.sock";
+    upstreamUnixAddr = "/run/phpfpm/davis.sock";
   };
 
   sops.secrets = {
