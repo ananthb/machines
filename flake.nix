@@ -78,8 +78,8 @@
               inputs = inputs;
 
               pkgs-unstable = import nixpkgs-unstable {
-               inherit system;
-               config.allowUnfree = true;
+                inherit system;
+                config.allowUnfree = true;
               };
             };
 
@@ -104,10 +104,10 @@
               inherit system hostname username;
 
               inputs = inputs;
-              
+
               pkgs-unstable = import nixpkgs-unstable {
-               inherit system;
-               config.allowUnfree = true;
+                inherit system;
+                config.allowUnfree = true;
               };
             };
 

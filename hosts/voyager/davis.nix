@@ -8,7 +8,7 @@
 
   imports = [
     {
-      disabledModules = ["services/web-apps/davis.nix"];
+      disabledModules = [ "services/web-apps/davis.nix" ];
     }
 
     "${inputs.nixpkgs-unstable}/nixos/modules/services/web-apps/davis.nix"

@@ -13,6 +13,7 @@
     ./hass.nix
     ./monitoring.nix
     ./radicale.nix
+    ./vaultwarden.nix
   ];
 
   # System packages
