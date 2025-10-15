@@ -50,7 +50,7 @@
 
       set -euo pipefail
 
-      backup_target="/var/lib/bitwarden_rs"
+      backup_target="/var/lib/vaultwarden"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
         
