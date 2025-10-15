@@ -35,6 +35,11 @@
     urlParts.port = 8222;
   };
 
+  systemd.services.tsnsrv-vault = {
+    wants = [ "vaultwarden.service" ];
+    after = [ "vaultwarden.service" ];
+  };
+
   systemd.timers."vaultwarden-backup" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
