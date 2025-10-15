@@ -15,7 +15,6 @@
     ./jellyfin.nix
     ./power.nix
     ./seafile.nix
-    ./vaultwarden.nix
   ];
 
   users.groups.media.members = [
