@@ -92,12 +92,12 @@
 
       kopia-backup = pkgs.writeShellScript "kopia-backup" ''
         # Backs up a directory to the kopia hathi-backups GCS remote repository.
-        # Usage: kopia-backup <directory> [<instance>]
+        # Usage: kopia-backup <directory> [<source>]
         # <directory> is the directory to back up.
-        # <instance> is an optional value (default: <directory>) that sets the instance prometheus metric label.
+        # <source> is an optional value (default: <directory>) that overrides the kopia snapshot source directory.
         
         usage() {
-          echo 'Usage: kopia-backup <directory> [<instance>]' >&2
+          echo 'Usage: kopia-backup <directory> [<source>]' >&2
           echo 'Example: kopia-backup /tmp/my-app/data-snapshot /var/lib/my-app/data' >&2
         }
 
@@ -115,11 +115,11 @@
         source ${write-metric}
 
         backup_target="$1"
-        instance="''${2:-$1}"
+        source="''${2:-$1}"
 
-        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_connect" 1
+        write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_connect" 1
         trap '{
-          write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_connect" 0
+          write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_connect" 0
         }' EXIT
 
         # Open remote kopia repository
@@ -128,16 +128,19 @@
           --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
           --password $(cat /run/secrets/kopia/gcs/hathi-backups)
 
-        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_connect" 0
+        write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_connect" 0
 
         trap '{
           ${pkgs.kopia}/bin/kopia repository disconnect
-          write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_snapshot" 0
+          write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_snapshot" 0
         }' EXIT
 
-        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_snapshot" 1
-        ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$backup_target"
-        write_metric kopia_backups_total "job=hathi-backups,instance=$instance" 1
+        write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_snapshot" 1
+        ${pkgs.kopia}/bin/kopia snapshot create \
+          --parallel 4 \
+          --override-source "$source" \
+          "$backup_target"
+        write_metric kopia_backups_total "job=hathi-backups,instance=$source" 1
       '';
 
       write-metric = pkgs.writeShellScript "write-metric" ''
@@ -179,7 +182,11 @@
           local payload="{\"metric\":$metric_json, \"values\":[$value], \"timestamps\":[$timestamp_ms]}"
  
           # Send the data using httpie
-          echo "$payload" | http POST "$vm_url/api/v1/write"
+          echo "$payload" | ${pkgs.httpie}/bin/http --check-status --timeout=2.5 POST "$vm_url/api/v1/write"
+          write_exit_code=$?
+          if [[ $write_exit_code -gt 0 ]]; then
+            printf 'metric write failed with exit code %d' "$write_exit_code" >&2
+          fi
         }
       '';
     };
