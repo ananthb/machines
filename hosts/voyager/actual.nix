@@ -39,10 +39,6 @@
   systemd.services."actual-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
       backup_target="/var/lib/actual"
       systemctl stop actual.service
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"

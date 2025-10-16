@@ -1,4 +1,4 @@
-{ config, pkgs-unstable, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 {
   services.mealie = {
     enable = true;
@@ -25,7 +25,48 @@
     tsnsrv-mle.after = [ "mealie.service" ];
   };
 
-  sops.secrets."email/from/mealie" = { };
+  systemd.timers."mealie-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
+    };
+  };
+  systemd.services."mealie-backup" = {
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    script = ''
+      backup_api_url="http://localhost:9000/api/admin/backups"
+
+      http() {
+        ${pkgs.httpie}/bin/http -A bearer -a "$backups_key" \
+          --check-status \
+          --ignore-stdin \
+          --timeout=2.5 \
+          "$@"
+      }
+
+      # Delete all backups
+       http GET "$backup_api_url" \
+        | ${pkgs.jq}/bin/jq -r '.imports[].name' \
+        | ${pkgs.findutils}/bin/xargs -I {} http DELETE "$backup_api_url/"{}
+
+      # Create new backup
+      http POST "$backup_api_url"
+
+      # Upload new backup
+      ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      EnvironmentFile = "${config.sops.secrets."mealie/api_keys".path}";
+    };
+  };
+
+  sops.secrets = {
+    "email/from/mealie" = { };
+    "mealie/api_keys" = { };
+  };
 
   sops.templates."mealie/env" = {
     content = ''

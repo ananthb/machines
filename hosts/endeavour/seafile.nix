@@ -147,10 +147,6 @@
   systemd.services."seafile-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
       backup_target="/srv/seafile"
       dump_file="$backup_target/seafile-mysql-data.tar"
 

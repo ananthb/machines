@@ -34,10 +34,6 @@
   systemd.services."radicale-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
       backup_target="/var/lib/radicale"
       systemctl stop radicale.service
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
