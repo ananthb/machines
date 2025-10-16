@@ -51,10 +51,6 @@
   systemd.services."vaultwarden-backup" = {
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
-      #!/bin/bash
-
-      set -euo pipefail
-
       backup_target="/var/lib/vaultwarden"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
