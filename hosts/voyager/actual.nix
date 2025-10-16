@@ -50,7 +50,7 @@
       trap cleanup EXIT
 
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
-      ${config.my-scripts.kopia-backup} "$snapshot_target"
+      ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
     serviceConfig = {
       Type = "oneshot";
