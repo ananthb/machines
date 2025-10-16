@@ -48,7 +48,12 @@
       # Delete all backups
        http GET "$backup_api_url" \
         | ${pkgs.jq}/bin/jq -r '.imports[].name' \
-        | ${pkgs.findutils}/bin/xargs -I {} http DELETE "$backup_api_url/"{}
+        | ${pkgs.findutils}/bin/xargs -I{} \
+          ${pkgs.httpie}/bin/http -A bearer -a "$backups_key" \
+            --check-status \
+            --ignore-stdin \
+            --timeout=2.5 \
+            DELETE "$backup_api_url/"{}
 
       # Create new backup
       http POST "$backup_api_url"
