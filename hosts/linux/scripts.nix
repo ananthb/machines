@@ -6,22 +6,15 @@
       type = lib.types.package;
       default = null;
       description = ''
-        It takes a bcachefs or btrfs subvolume (mounted under /srv or /var respectively)
-        as its first argument.
-        It creates a filesystem snapshot of the subvolume.
-        It then creates a kopia snapshot of the new fs snapshot, backing up
-        its contents to the hathi-backups GCS bucket.
       '';
     };
     kopia-backup = lib.mkOption {
       type = lib.types.package;
       default = null;
       description = ''
-        It takes a directory as its first argument and creates a kopia snapshot of the directory,
-        backing up its contents to the hathi-backups GCS bucket.
       '';
     };
-    write-metrics = lib.mkOption {
+    write-metric = lib.mkOption {
       type = lib.types.package;
       default = null;
       description = ''
@@ -33,30 +26,58 @@
   config = {
     my-scripts = rec {
       kopia-snapshot-backup = pkgs.writeShellScript "kopia-snapshot-backup" ''
-        if [[ ! -d $1 ]] || [[ ! $1 =~ ^(/srv|/var)/ ]]; then
-          printf '%s is not a directory under /srv or /var' "$1" >&2
+        # Snapshot backs up a bcachefs/btrfs subvolume to the kopia hathi-backups GCS remote repository.
+        # Usage: kopia-snapshot-backup <subvol-dir>
+        # <subvol-dir> is a bcachefs or btrfs subvolume (mounted under /srv or /var respectively).
+        # Creates a filesystem snapshot of <subvol-dir> and creates a kopia snapshot of that fs snapshot.
+
+        usage() {
+          echo 'Usage: kopia-snapshot-backup <subvol-dir>' >&2
+          echo 'Example: kopia-snapshot-backup /srv/my-data/dir' >&2
+        }
+
+        if [[ $# -lt 1 ]]; then
+          usage
           exit 1
         fi
 
+        if [[ ! -d $1 ]] || [[ ! $1 =~ ^(/srv|/var)/ ]]; then
+          printf '%s is not a directory under /srv or /var\n' "$1" >&2
+          usage
+          exit 1
+        fi
+
+        source ${write-metric}
+
         backup_source="$1"
         snapshot_target="$backup_source-$(date --utc --iso-8601=seconds)"
+
+        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 1
+        trap '{
+          write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 0
+        }' EXIT
+
         if [[ $1 == "/srv/"* ]]; then
           # snapshot bcachefs subvolume
           if ! ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r \
             "$backup_source" "$snapshot_target"; then
-            printf '%s might not be a bcachefs subvolume' "$backup_source" >&2
+            printf '%s might not be a bcachefs subvolume\n' "$backup_source" >&2
+            usage
             exit 1
           fi
         else
           # snapshot btrfs subvolume
           if ! ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r \
             "$backup_source" "$snapshot_target"; then
-            printf '%s might not be a btrfs subvolume' "$backup_source" >&2
+            printf '%s might not be a btrfs subvolume\n' "$backup_source" >&2
+            usage
             exit 1
           fi
         fi
 
-        cleanup() {
+        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 0
+
+        trap '{
           if [[ $backup_source == "/srv/"* ]]; then
             ${pkgs.bcachefs-tools}/bin/bcachefs subvolume delete \
               "$snapshot_target"
@@ -64,21 +85,42 @@
             ${pkgs.btrfs-progs}/bin/btrfs subvolume delete \
               "$snapshot_target"
           fi
-        }
-        trap cleanup EXIT
+        }' EXIT
 
-        ${kopia-backup} "$snapshot_target"
+        ${kopia-backup} "$snapshot_target" "$backup_source"
       '';
 
       kopia-backup = pkgs.writeShellScript "kopia-backup" ''
-        if [[ ! -d $1 ]]; then
-          printf '%s is not a directory under /srv or /var' "$1" >&2
+        # Backs up a directory to the kopia hathi-backups GCS remote repository.
+        # Usage: kopia-backup <directory> [<instance>]
+        # <directory> is the directory to back up.
+        # <instance> is an optional value (default: <directory>) that sets the instance prometheus metric label.
+        
+        usage() {
+          echo 'Usage: kopia-backup <directory> [<instance>]' >&2
+          echo 'Example: kopia-backup /tmp/my-app/data-snapshot /var/lib/my-app/data' >&2
+        }
+
+        if [[ $# -lt 1 ]]; then
+          usage
           exit 1
         fi
 
-        source ${write-metrics}
+        if [[ ! -d $1 ]]; then
+          printf '%s is not a directory under /srv or /var\n' "$1" >&2
+          usage
+          exit 1
+        fi
+
+        source ${write-metric}
 
         backup_target="$1"
+        instance="''${2:-$1}"
+
+        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_connect" 1
+        trap '{
+          write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_connect" 0
+        }' EXIT
 
         # Open remote kopia repository
         ${pkgs.kopia}/bin/kopia repository connect gcs \
@@ -86,31 +128,35 @@
           --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
           --password $(cat /run/secrets/kopia/gcs/hathi-backups)
 
-        cleanup() {
-          ${pkgs.kopia}/bin/kopia repository disconnect
-        }
-        trap cleanup EXIT
+        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_connect" 0
 
+        trap '{
+          ${pkgs.kopia}/bin/kopia repository disconnect
+          write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_snapshot" 0
+        }' EXIT
+
+        write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=kopia_snapshot" 1
         ${pkgs.kopia}/bin/kopia snapshot create --parallel 4 "$backup_target"
-        write_metrics kopia_backups_total "job=hathi-backups,instance=$backup_target" 1
+        write_metric kopia_backups_total "job=hathi-backups,instance=$instance" 1
       '';
 
-      write-metrics = pkgs.writeShellScript "write-metrics" ''
+      write-metric = pkgs.writeShellScript "write-metric" ''
         # Sends a metric to VictoriaMetrics in JSON format.
         # Usage: write_metrics <metric_name> <labels> <value>
         # <labels> should be a comma-separated string like "job=api,instance=server1"
-        # Set VictoriaMetrics URL in the VM_URL environment variable (default: localhost:8428).
-        write_metrics() {
+        # VM_URL environment variable (default: http://voyager:8428) selects
+        # the VictoriaMetrics endpoint to send metrics to.
+        write_metric() {
           local metric_name="$1"
           local labels_str="$2"
           local value="$3"
           # Use environment variable for URL or default
-          local vm_url="''${VM_URL:-http://localhost:8428}"
+          local vm_url="''${VM_URL:-http://voyager:8428}"
 
           if [[ $# -lt 3 ]]; then
-            echo "Usage: write_metrics <metric_name> <labels> <value>"
-            echo 'Example: write_metrics http_requests_total "job=httpie-test,instance=localhost" 15'
-            return 1
+            echo 'Usage: write_metrics <metric_name> <labels> <value>' >&2
+            echo 'Example: write_metrics http_requests_total "job=httpie-test,instance=localhost" 15' >&2
+            exit 1
           fi
 
           # Start building the JSON for the metric object
