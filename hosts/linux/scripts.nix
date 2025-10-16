@@ -5,14 +5,12 @@
     kopia-snapshot-backup = lib.mkOption {
       type = lib.types.package;
       default = null;
-      description = ''
-      '';
+      description = '''';
     };
     kopia-backup = lib.mkOption {
       type = lib.types.package;
       default = null;
-      description = ''
-      '';
+      description = '''';
     };
     write-metric = lib.mkOption {
       type = lib.types.package;
@@ -95,7 +93,7 @@
         # Usage: kopia-backup <directory> [<source>]
         # <directory> is the directory to back up.
         # <source> is an optional value (default: <directory>) that overrides the kopia snapshot source directory.
-        
+
         usage() {
           echo 'Usage: kopia-backup <directory> [<source>]' >&2
           echo 'Example: kopia-backup /tmp/my-app/data-snapshot /var/lib/my-app/data' >&2
@@ -162,31 +160,38 @@
             exit 1
           fi
 
-          # Start building the JSON for the metric object
-          local metric_json="{\"__name__\":\"$metric_name\""
-
-          # Convert comma-separated labels to JSON key-value pairs
+          local prom_labels=""
           if [ -n "$labels_str" ]; then
+            # Convert comma-separated "key=value" to Prometheus "{key=\"value\",...}" format
+            prom_labels="{"
             IFS=',' read -ra labels_arr <<< "$labels_str"
-            for label in "''${labels_arr[@]}"; do
+            for i in "''${!labels_arr[@]}"; do
+              label="''${labels_arr[$i]}"
               IFS='=' read -ra pair <<< "$label"
-              metric_json="$metric_json, \"''${pair[0]}\":\"''${pair[1]}\""
+              prom_labels+="''${pair[0]}=\"''${pair[1]}\""
+              # Add a comma if it's not the last label
+              if [[ $i -lt $((''${#labels_arr[@]} - 1)) ]]; then
+                prom_labels+=","
+              fi
             done
+            prom_labels+="}"
           fi
-          metric_json="$metric_json}"
 
           # Get current timestamp in milliseconds
           local timestamp_ms="$(date +%s%3N)"
 
-          # Construct the final payload
-          local payload="{\"metric\":$metric_json, \"values\":[$value], \"timestamps\":[$timestamp_ms]}"
- 
-          # Send the data using httpie
-          echo "$payload" | ${pkgs.httpie}/bin/http --check-status --timeout=2.5 POST "$vm_url/api/v1/write"
-          write_exit_code=$?
-          if [[ $write_exit_code -gt 0 ]]; then
-            printf 'metric write failed with exit code %d' "$write_exit_code" >&2
-          fi
+          # Construct the Prometheus text format line
+          local line="''${metric_name}''${prom_labels} ''${value} ''${timestamp_ms}"
+
+          # Send the data using httpie to the prometheus write endpoint
+          printf 'Sending line to %s: %s\n' "$vm_url" "$line" >&2
+
+          # Send the data using httpie, ignoring errors
+          echo "$line" | ${pkgs.httpie}/bin/http \
+            --check-status \
+            --timeout=1 \
+            --ignore-stdin \
+            POST "$vm_url/api/v1/import/prometheus" || true
         }
       '';
     };
