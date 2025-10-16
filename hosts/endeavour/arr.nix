@@ -76,4 +76,30 @@
   ];
 
   services.prowlarr.enable = true;
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [
+      "radarr-main"
+      "radarr-log"
+      "sonarr-main"
+      "sonarr-log"
+      "prowlarr-main"
+      "prowlarr-log"
+    ];
+    ensureUsers = [
+      {
+        name = "radarr";
+        ensureClauses.login = true;
+      }
+      {
+        name = "sonarr";
+        ensureClauses.login = true;
+      }
+      {
+        name = "prowlarr";
+        ensureClauses.login = true;
+      }
+    ];
+  };
 }
