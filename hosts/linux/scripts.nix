@@ -5,12 +5,17 @@
     kopia-snapshot-backup = lib.mkOption {
       type = lib.types.package;
       default = null;
-      description = '''';
+      description = ''
+        Takes snapshot backups of filesystem subvolumes to remote storage.
+        Supports btrfs and bcachefs subvolumes.
+      '';
     };
     kopia-backup = lib.mkOption {
       type = lib.types.package;
       default = null;
-      description = '''';
+      description = ''
+        Takes snapshot backups of regular directories to remote storage.
+      '';
     };
     write-metric = lib.mkOption {
       type = lib.types.package;
@@ -191,7 +196,7 @@
             --check-status \
             --timeout=1 \
             --ignore-stdin \
-            POST "$vm_url/api/v1/import/prometheus" || true
+            POST "$vm_url/api/v1/import/prometheus"
         }
       '';
     };
