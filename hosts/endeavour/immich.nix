@@ -143,7 +143,7 @@
         },
         "machineLearning": {
           "enabled": true,
-          "urls": ["http://localhost:3003"],
+          "urls": ["http://enterprise:3003", "http://localhost:3003"],
           "clip": {
             "enabled": true,
             "modelName": "ViT-B-32__openai"

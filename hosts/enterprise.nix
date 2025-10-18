@@ -5,9 +5,10 @@
     ./darwin.nix
   ];
 
-  homebrew.brews = [ ];
+  homebrew.brews = [ "podman" "podman-compose" ];
   homebrew.casks = [
-    "kopiaui"
+    "chrome-remote-desktop-host"
+    "podman-desktop"
   ];
   homebrew.masApps = { };
 }
