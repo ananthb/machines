@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   ...
 }:
 
@@ -59,23 +60,32 @@
   systemd.services.qbittorrent.unitConfig.RequiresMountsFor = "/srv";
   systemd.services.qbittorrent.serviceConfig.UMask = "0002";
 
-  services.radarr.enable = true;
-  services.radarr.group = "media";
+  services.radarr = {
+    enable = true;
+    package = pkgs-unstable.radarr;
+    group = "media";
+  };
   systemd.services.radarr.serviceConfig.UMask = "0002";
   systemd.services.radarr.wants = [
     "transmission.service"
     "prowlarr.service"
   ];
 
-  services.sonarr.enable = true;
-  services.sonarr.group = "media";
+  services.sonarr = {
+    enable = true;
+    package = pkgs-unstable.sonarr;
+    group = "media";
+  };
   systemd.services.sonarr.serviceConfig.UMask = "0002";
   systemd.services.sonarr.wants = [
     "transmission.service"
     "prowlarr.service"
   ];
 
-  services.prowlarr.enable = true;
+  services.prowlarr = {
+    enable = true;
+    package = pkgs-unstable.prowlarr;
+  };
 
   services.postgresql = {
     enable = true;
