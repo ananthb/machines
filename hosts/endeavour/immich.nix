@@ -15,6 +15,7 @@
       };
       mediaLocation = "/srv/immich";
       accelerationDevices = [ "/dev/dri/renderD128" ];
+      machine-learning.enable = false;
     };
 
     tsnsrv.services.imm = {
@@ -35,13 +36,6 @@
 
   systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
   systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
-
-  # Workaround for this issue:
-  # https://github.com/NixOS/nixpkgs/issues/418799
-  services.immich.machine-learning.environment = {
-    MPLCONFIGDIR = "/var/cache/immich/matplotlib";
-    HF_XET_CACHE = "/var/cache/immich/huggingface-xet";
-  };
 
   # TODO: re-enable after we've trimmed down unnecessary files
   #systemd.timers."immich-backup" = {
@@ -107,13 +101,13 @@
             "concurrency": 1
           },
           "smartSearch": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "metadataExtraction": {
             "concurrency": 1
           },
           "faceDetection": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "search": {
             "concurrency": 1
@@ -143,7 +137,7 @@
         },
         "machineLearning": {
           "enabled": true,
-          "urls": ["http://enterprise:3003", "http://localhost:3003"],
+          "urls": ["http://enterprise:3003"],
           "clip": {
             "enabled": true,
             "modelName": "ViT-B-32__openai"
