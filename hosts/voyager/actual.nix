@@ -13,8 +13,10 @@
     urlParts.host = "localhost";
     urlParts.port = 3100;
   };
-  systemd.services.actual.serviceConfig.EnvironmentFile =
-    config.sops.templates."actual/config.env".path;
+  systemd.services.actual = {
+    unitConfig.Conflicts = "actual-backup.service";
+    serviceConfig.EnvironmentFile = config.sops.templates."actual/config.env".path;
+  };
 
   systemd.services.tsnsrv-ab = {
     wants = [ "actual.service" ];
@@ -40,14 +42,11 @@
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       backup_target="/var/lib/actual"
-      systemctl stop actual.service
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
 
-      cleanup() {
+      trap '{
         rm -rf "$snapshot_target"
-        systemctl start actual.service
-      }
-      trap cleanup EXIT
+      }' EXIT
 
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"

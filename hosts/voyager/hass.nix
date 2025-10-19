@@ -114,6 +114,8 @@
     ];
   };
 
+  systemd.services.home-assistant.unitConfig.Conflicts = "home-assistant-backup.service";
+
   systemd.services.tsnsrv-6a = {
     wants = [ "home-assistant.service" ];
     after = [ "home-assistant.service" ];
@@ -134,12 +136,9 @@
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
 
-      systemctl stop home-assistant.service
-
       cleanup() {
         rm -f "$dump_file"
         rm -rf "$snapshot_target"
-        systemctl start home-assistant.service
       }
       trap cleanup EXIT
 
