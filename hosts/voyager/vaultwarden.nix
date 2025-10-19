@@ -35,6 +35,8 @@
     urlParts.port = 8222;
   };
 
+  systemd.services.vaultwarden.unitConfig.Conflicts = "vaultwarden-backup.service";
+
   systemd.services.tsnsrv-vault = {
     wants = [ "vaultwarden.service" ];
     after = [ "vaultwarden.service" ];
@@ -55,12 +57,9 @@
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
         
-      systemctl stop vaultwarden.service
-
       cleanup() {
         rm -f "$dump_file"
         rm -rf "$snapshot_target"
-        systemctl start vaultwarden.service
       }
       trap cleanup EXIT
 

@@ -19,6 +19,7 @@
     };
   };
 
+  systemd.services.radicale.unitConfig.Conflicts = "radicale-backup.service";
   systemd.services.tsnsrv-cal = {
     wants = [ "radicale.service" ];
     after = [ "radicale.service" ];
@@ -35,14 +36,11 @@
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       backup_target="/var/lib/radicale"
-      systemctl stop radicale.service
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
 
-      cleanup() {
+      trap '{
         rm -rf "$snapshot_target"
-        systemctl start radicale.service
-      }
-      trap cleanup EXIT
+      }' EXIT
 
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"

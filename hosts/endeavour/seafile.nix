@@ -156,10 +156,9 @@
         seafile-mysql-data -o "$dump_file"
       systemctl start seafile-pod.service
 
-      cleanup() {
-        rm "$dump_file"
-      }
-      trap cleanup EXIT
+      trap '{
+        rm -f "$dump_file"
+      }' EXIT
 
       ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
     '';
