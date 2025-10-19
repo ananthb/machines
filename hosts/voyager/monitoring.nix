@@ -539,6 +539,7 @@
                 "https://ab.${config.sops.placeholder."tailscale_api/tailnet"}"
                 "https://ai.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://cal.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://mle.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://vault.${config.sops.placeholder."tailscale_api/tailnet"}",
               ],
