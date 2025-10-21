@@ -29,10 +29,10 @@
     "render"
   ];
 
-  systemd.services.immich-server.environment = {
-    IMMICH_TELEMETRY_INCLUDE = "all";
+  systemd.services.immich-server = {
+    environment.IMMICH_TELEMETRY_INCLUDE = "all";
+    unitConfig.RequiresMountsFor = "/srv";
   };
-  systemd.services.immich.unitConfig.requiresmountsfor = "/srv";
 
   systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
   systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
@@ -41,8 +41,7 @@
   #systemd.timers."immich-backup" = {
   #  wantedBy = [ "timers.target" ];
   #  timerConfig = {
-  #    # Runs on the 28th of each month
-  #    OnCalendar = "*-*-28 00:00:00";
+  #    OnCalendar = "weekly";
   #    Persistent = true;
   #  };
   #};

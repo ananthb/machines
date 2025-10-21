@@ -13,10 +13,9 @@
     urlParts.host = "localhost";
     urlParts.port = 3100;
   };
-  systemd.services.actual = {
-    unitConfig.Conflicts = "actual-backup.service";
-    serviceConfig.EnvironmentFile = config.sops.templates."actual/config.env".path;
-  };
+
+  systemd.services.actual.serviceConfig.EnvironmentFile =
+    config.sops.templates."actual/config.env".path;
 
   systemd.services.tsnsrv-ab = {
     wants = [ "actual.service" ];
@@ -54,6 +53,8 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStartPre = "systemctl stop actual.service";
+      ExecStartPost = "systemctl start actual.service";
     };
   };
 
