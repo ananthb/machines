@@ -36,92 +36,107 @@
       };
 
       containers = {
-        seafile-caddy.containerConfig = {
-          name = "seafile-caddy";
-          image = "docker.io/library/caddy:2";
-          pod = pods.seafile.ref;
-          autoUpdate = "registry";
-        };
-
-        seafile-mysql.containerConfig = {
-          name = "seafile-mysql";
-          image = "docker.io/library/mariadb:10.11";
-          pod = pods.seafile.ref;
-          autoUpdate = "registry";
-          environments = {
-            MYSQL_LOG_CONSOLE = "true";
-            MARIADB_AUTO_UPGRADE = "1";
-            MYSQL_ROOT_PASSWORD = "password";
+        seafile-caddy = {
+          containerConfig = {
+            name = "seafile-caddy";
+            image = "docker.io/library/caddy:2";
+            pod = pods.seafile.ref;
+            autoUpdate = "registry";
           };
+          serviceConfig.Restart = "on-failure";
         };
 
-        seafile-redis.containerConfig = {
-          name = "seafile-redis";
-          image = "docker.io/library/redis";
-          pod = pods.seafile.ref;
-          autoUpdate = "registry";
-        };
-
-        seafile-server.containerConfig = {
-          name = "seafile";
-          image = "docker.io/seafileltd/seafile-mc:13.0-latest";
-          pod = pods.seafile.ref;
-          autoUpdate = "registry";
-          environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
-          environments = {
-            TIME_ZONE = "Asia/Kolkata";
-            INIT_SEAFILE_ADMIN_EMAIL = "admin@example.com";
-            INIT_SEAFILE_ADMIN_PASSWORD = "change me soon";
-            SEAFILE_SERVER_PROTOCOL = "https";
-            SITE_ROOT = "/";
-            NON_ROOT = "false";
-            SEAFILE_LOG_TO_STDOUT = "true";
-
-            ENABLE_SEADOC = "true";
-
-            SEAFILE_MYSQL_DB_HOST = "127.0.0.1";
-            SEAFILE_MYSQL_DB_PORT = "3306";
-            SEAFILE_MYSQL_DB_USER = "root";
-            SEAFILE_MYSQL_DB_PASSWORD = "password";
-            INIT_SEAFILE_MYSQL_ROOT_PASSWORD = "password";
-            SEAFILE_MYSQL_DB_CCNET_DB_NAME = "ccnet_db";
-            SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
-            SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
-
-            CACHE_PROVIDER = "redis";
-            REDIS_HOST = "127.0.0.1";
-            REDIS_PORT = "6379";
-
-            ENABLE_NOTIFICATION_SERVER = "false";
-            INNER_NOTIFICATION_SERVER_URL = "http://127.0.0.1:8083";
-            ENABLE_SEAFILE_AI = "false";
-            SEAFILE_AI_SERVER_URL = "http://seafile-ai:8888";
-            SEAFILE_AI_SECRET_KEY = "key";
-            MD_FILE_COUNT_LIMIT = "100000";
+        seafile-mysql = {
+          containerConfig = {
+            name = "seafile-mysql";
+            image = "docker.io/library/mariadb:10.11";
+            pod = pods.seafile.ref;
+            autoUpdate = "registry";
+            environments = {
+              MYSQL_LOG_CONSOLE = "true";
+              MARIADB_AUTO_UPGRADE = "1";
+              MYSQL_ROOT_PASSWORD = "password";
+            };
           };
+          serviceConfig.Restart = "on-failure";
         };
 
-        seadoc.containerConfig = {
-          name = "seadoc";
-          image = "docker.io/seafileltd/sdoc-server:2.0-latest";
-          autoUpdate = "registry";
-          volumes = [
-            "/srv/seafile/seadoc:/shared"
-          ];
-          networks = [
-            networks.seafile.ref
-          ];
-          environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
-          environments = {
-            DB_HOST = "seafile-mysql";
-            DB_PORT = "3306";
-            DB_USER = "root";
-            DB_PASSWORD = "password";
-            DB_NAME = "seadoc_db";
-            TIME_ZONE = "Asia/Kolkata";
-            NON_ROOT = "false";
-            SEAHUB_SERVICE_URL = "http://seafile:4000";
+        seafile-redis = {
+          containerConfig = {
+            name = "seafile-redis";
+            image = "docker.io/library/redis";
+            pod = pods.seafile.ref;
+            autoUpdate = "registry";
           };
+          serviceConfig.Restart = "on-failure";
+        };
+
+        seafile-server = {
+          containerConfig = {
+            name = "seafile";
+            image = "docker.io/seafileltd/seafile-mc:13.0-latest";
+            pod = pods.seafile.ref;
+            autoUpdate = "registry";
+            environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
+            environments = {
+              TIME_ZONE = "Asia/Kolkata";
+              INIT_SEAFILE_ADMIN_EMAIL = "admin@example.com";
+              INIT_SEAFILE_ADMIN_PASSWORD = "change me soon";
+              SEAFILE_SERVER_PROTOCOL = "https";
+              SITE_ROOT = "/";
+              NON_ROOT = "false";
+              SEAFILE_LOG_TO_STDOUT = "true";
+
+              ENABLE_SEADOC = "true";
+
+              SEAFILE_MYSQL_DB_HOST = "127.0.0.1";
+              SEAFILE_MYSQL_DB_PORT = "3306";
+              SEAFILE_MYSQL_DB_USER = "root";
+              SEAFILE_MYSQL_DB_PASSWORD = "password";
+              INIT_SEAFILE_MYSQL_ROOT_PASSWORD = "password";
+              SEAFILE_MYSQL_DB_CCNET_DB_NAME = "ccnet_db";
+              SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
+              SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
+
+              CACHE_PROVIDER = "redis";
+              REDIS_HOST = "127.0.0.1";
+              REDIS_PORT = "6379";
+
+              ENABLE_NOTIFICATION_SERVER = "false";
+              INNER_NOTIFICATION_SERVER_URL = "http://127.0.0.1:8083";
+              ENABLE_SEAFILE_AI = "false";
+              SEAFILE_AI_SERVER_URL = "http://seafile-ai:8888";
+              SEAFILE_AI_SECRET_KEY = "key";
+              MD_FILE_COUNT_LIMIT = "100000";
+            };
+          };
+          serviceConfig.Restart = "on-failure";
+        };
+
+        seadoc = {
+          containerConfig = {
+            name = "seadoc";
+            image = "docker.io/seafileltd/sdoc-server:2.0-latest";
+            autoUpdate = "registry";
+            volumes = [
+              "/srv/seafile/seadoc:/shared"
+            ];
+            networks = [
+              networks.seafile.ref
+            ];
+            environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
+            environments = {
+              DB_HOST = "seafile-mysql";
+              DB_PORT = "3306";
+              DB_USER = "root";
+              DB_PASSWORD = "password";
+              DB_NAME = "seadoc_db";
+              TIME_ZONE = "Asia/Kolkata";
+              NON_ROOT = "false";
+              SEAHUB_SERVICE_URL = "http://seafile:4000";
+            };
+          };
+          serviceConfig.Restart = "on-failure";
         };
       };
     };
@@ -139,7 +154,7 @@
   #  wantedBy = [ "timers.target" ];
   #  timerConfig = {
   #    # Runs on the 28th of each month
-  #    OnCalendar = "*-*-28 00:00:00";
+  #    OnCalendar = "weekly";
   #    Persistent = true;
   #  };
   #};

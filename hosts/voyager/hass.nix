@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   pkgs-unstable,
   ...
@@ -114,8 +115,6 @@
     ];
   };
 
-  systemd.services.home-assistant.unitConfig.Conflicts = "home-assistant-backup.service";
-
   systemd.services.tsnsrv-6a = {
     wants = [ "home-assistant.service" ];
     after = [ "home-assistant.service" ];
@@ -155,6 +154,8 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStartPre = "systemctl stop home-assistant.service";
+      ExecStartPost = "systemctl start home-assistant.service";
     };
   };
 

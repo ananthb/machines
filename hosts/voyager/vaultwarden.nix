@@ -35,8 +35,6 @@
     urlParts.port = 8222;
   };
 
-  systemd.services.vaultwarden.unitConfig.Conflicts = "vaultwarden-backup.service";
-
   systemd.services.tsnsrv-vault = {
     wants = [ "vaultwarden.service" ];
     after = [ "vaultwarden.service" ];
@@ -57,11 +55,10 @@
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
         
-      cleanup() {
+      trap '{
         rm -f "$dump_file"
         rm -rf "$snapshot_target"
-      }
-      trap cleanup EXIT
+      }' EXIT
 
       # Dump database
       ${pkgs.sudo-rs}/bin/sudo -u vaultwarden \
@@ -76,6 +73,8 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStartPre = "systemctl stop vaultwarden.service";
+      ExecStartPost = "systemctl start vaultwarden.service";
     };
   };
 

@@ -19,7 +19,6 @@
     };
   };
 
-  systemd.services.radicale.unitConfig.Conflicts = "radicale-backup.service";
   systemd.services.tsnsrv-cal = {
     wants = [ "radicale.service" ];
     after = [ "radicale.service" ];
@@ -48,6 +47,8 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStartPre = "systemctl stop radicale.service";
+      ExecStartPost = "systemctl start radicale.service";
     };
   };
 

@@ -27,6 +27,11 @@
   systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
   systemd.services.tsnsrv-tv.after = [ "jellyfin.service" ];
 
+  systemd.service.jellyfin.serviceConfig = {
+    Restart = "always";
+    RestartSec = "2s";
+  };
+
   nixpkgs.overlays = [
     # Modify jellyfin-web index.html for the intro-skipper plugin to work.
     # intro skipper plugin has to be installed from the UI.
