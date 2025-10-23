@@ -89,11 +89,9 @@
 
               ENABLE_SEADOC = "true";
 
+              #SEAFILE_MYSQL_DB_HOST = "host.containers.internal";
               SEAFILE_MYSQL_DB_HOST = "127.0.0.1";
               SEAFILE_MYSQL_DB_PORT = "3306";
-              SEAFILE_MYSQL_DB_USER = "root";
-              SEAFILE_MYSQL_DB_PASSWORD = "password";
-              INIT_SEAFILE_MYSQL_ROOT_PASSWORD = "password";
               SEAFILE_MYSQL_DB_CCNET_DB_NAME = "ccnet_db";
               SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
               SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
@@ -102,7 +100,7 @@
               REDIS_HOST = "127.0.0.1";
               REDIS_PORT = "6379";
 
-              ENABLE_NOTIFICATION_SERVER = "false";
+              ENABLE_NOTIFICATION_SERVER = "true";
               INNER_NOTIFICATION_SERVER_URL = "http://127.0.0.1:8083";
               ENABLE_SEAFILE_AI = "false";
               SEAFILE_AI_SERVER_URL = "http://seafile-ai:8888";
@@ -126,10 +124,9 @@
             ];
             environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
             environments = {
+              #DB_HOST = "host.containers.internal";
               DB_HOST = "seafile-mysql";
               DB_PORT = "3306";
-              DB_USER = "root";
-              DB_PASSWORD = "password";
               DB_NAME = "seadoc_db";
               TIME_ZONE = "Asia/Kolkata";
               NON_ROOT = "false";
@@ -140,6 +137,40 @@
         };
       };
     };
+
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    settings.mysqld = {
+      # localhost and podman bridge network
+      bind-address = "::1,10.89.0.1";
+    };
+    ensureUsers = [
+      {
+        name = "seafile";
+        ensurePermissions = {
+          "ccnet_db.*" = "ALL PRIVILEGES";
+          "seafile_db.*" = "ALL PRIVILEGES";
+          "seahub_db.*" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+    ensureDatabases = [
+      "ccnet_db"
+      "seafile_db"
+      "seahub_db"
+    ];
+  };
+
+  services.redis.servers.seafile = {
+    enable = true;
+    bind = "10.89.0.1";
+    port = 6400;
+    unixSocket = null;
+  };
+
+  # Let seafile access redis and mysql
+  networking.firewall.interfaces.podman1.allowedTCPPorts = [ 3306 6400 ];
 
   services.tsnsrv.services = {
     sf = {
@@ -231,6 +262,9 @@
       SEAFILE_SERVER_PROTOCOL=https
       SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/sdoc-server
       NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
+      SEAFILE_MYSQL_DB_USER=root
+      SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      INIT_SEAFILE_MYSQL_ROOT_PASSWORD=${config.sops.placeholder."seafile/mysql/root_password"}
     '';
   };
 
@@ -286,12 +320,17 @@
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
       SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
       SEAFILE_SERVER_PROTOCOL=https
+      DB_USER=root
+      DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
     '';
   };
 
   sops.secrets = {
     "email/from/seafile" = { };
     "seafile/jwt_private_key" = { };
+    "seafile/mysql/username" = { };
+    "seafile/mysql/password" = { };
+    "seafile/mysql/root_password" = { };
     "seafile/seahub_secret_key" = { };
   };
 
