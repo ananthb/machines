@@ -43,7 +43,7 @@
   systemd.services."vaultwarden-backup" = {
     startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    preStart = "systemctl stop vaultwarden.service";
+    preStart = "systemctl is-active vaultwarden.service && systemctl stop vaultwarden.service";
     script = ''
       backup_target="/var/lib/vaultwarden"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"

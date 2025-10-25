@@ -122,7 +122,7 @@
   systemd.services."home-assistant-backup" = {
     startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    preStart = "systemctl stop home-assistant.service";
+    preStart = "systemctl is-active home-assistant.service && systemctl stop home-assistant.service";
     script = ''
       backup_target="/var/lib/hass"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
