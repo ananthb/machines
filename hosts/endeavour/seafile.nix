@@ -6,7 +6,7 @@
 {
   virtualisation.quadlet =
     let
-      inherit (config.virtualisation.quadlet) networks pods volumes;
+      inherit (config.virtualisation.quadlet) networks volumes;
     in
     {
       autoEscape = true;
@@ -20,53 +20,38 @@
         seafile-mysql-data = { };
       };
 
-      pods = {
-        seafile.podConfig = {
-          networks = [
-            networks.seafile.ref
-          ];
-          volumes = [
-            "${config.sops.templates."seafile/Caddyfile".path}:/etc/caddy/Caddyfile"
-            "${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
-            "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
-            "/srv/seafile/seafile-data:/shared"
-          ];
-          publishPorts = [ "4000:4000" ];
-        };
-      };
-
       containers = {
-        seafile-caddy = {
-          containerConfig = {
-            name = "seafile-caddy";
-            image = "docker.io/library/caddy:2";
-            pod = pods.seafile.ref;
-            autoUpdate = "registry";
-          };
-          serviceConfig.Restart = "on-failure";
-        };
-
         seafile-mysql = {
           containerConfig = {
             name = "seafile-mysql";
             image = "docker.io/library/mariadb:10.11";
-            pod = pods.seafile.ref;
+            networks = [ networks.seafile.ref ];
             autoUpdate = "registry";
             environments = {
               MYSQL_LOG_CONSOLE = "true";
               MARIADB_AUTO_UPGRADE = "1";
               MYSQL_ROOT_PASSWORD = "password";
             };
+            volumes = [
+              "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
+            ];
           };
           serviceConfig.Restart = "on-failure";
         };
 
-        seafile-server = {
+        seafile = {
           containerConfig = {
             name = "seafile";
             image = "docker.io/seafileltd/seafile-mc:13.0-latest";
-            pod = pods.seafile.ref;
             autoUpdate = "registry";
+            volumes = [
+              "${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
+              "/srv/seafile/seafile-data:/shared"
+            ];
+            networks = [
+              networks.seafile.ref
+            ];
+            publishPorts = [ "4000:80" ];
             environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
             environments = {
               TIME_ZONE = "Asia/Kolkata";
@@ -80,7 +65,7 @@
               ENABLE_SEADOC = "true";
 
               #SEAFILE_MYSQL_DB_HOST = "host.containers.internal";
-              SEAFILE_MYSQL_DB_HOST = "127.0.0.1";
+              SEAFILE_MYSQL_DB_HOST = "seafile-mysql";
               SEAFILE_MYSQL_DB_PORT = "3306";
               SEAFILE_MYSQL_DB_CCNET_DB_NAME = "ccnet_db";
               SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
