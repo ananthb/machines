@@ -24,15 +24,10 @@
     after = [ "radicale.service" ];
   };
 
-  systemd.timers."radicale-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Persistent = true;
-    };
-  };
   systemd.services."radicale-backup" = {
+    startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    preStart = "systemctl stop radicale.service";
     script = ''
       backup_target="/var/lib/radicale"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
@@ -44,12 +39,8 @@
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStartPre = "systemctl stop radicale.service";
-      ExecStartPost = "systemctl start radicale.service";
-    };
+    postStop = "systemctl start radicale.service";
+    serviceConfig.Type = "oneshot";
   };
 
   sops.secrets."radicale/htpasswd".owner = "radicale";

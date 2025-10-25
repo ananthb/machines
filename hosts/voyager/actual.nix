@@ -30,15 +30,11 @@
       ACTUAL_OPENID_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
     '';
   };
-  systemd.timers."actual-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Persistent = true;
-    };
-  };
+
   systemd.services."actual-backup" = {
+    startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    preStart = "systemctl stop actual.service";
     script = ''
       backup_target="/var/lib/actual"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
@@ -50,12 +46,8 @@
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStartPre = "systemctl stop actual.service";
-      ExecStartPost = "systemctl start actual.service";
-    };
+    postStop = "systemctl start actual.service";
+    serviceConfig.Type = "oneshot";
   };
 
 }
