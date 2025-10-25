@@ -45,7 +45,7 @@
             image = "docker.io/seafileltd/seafile-mc:13.0-latest";
             autoUpdate = "registry";
             volumes = [
-              "${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
+              #"${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
               "/srv/seafile/seafile-data:/shared"
             ];
             networks = [
@@ -53,37 +53,15 @@
             ];
             publishPorts = [ "4001:80" ];
             environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
-            environments = {
-              TIME_ZONE = "Asia/Kolkata";
-              INIT_SEAFILE_ADMIN_EMAIL = "admin@example.com";
-              INIT_SEAFILE_ADMIN_PASSWORD = "change me soon";
-              SEAFILE_SERVER_PROTOCOL = "https";
-              SITE_ROOT = "/";
-              NON_ROOT = "false";
-              SEAFILE_LOG_TO_STDOUT = "true";
-
-              ENABLE_SEADOC = "true";
-
-              #SEAFILE_MYSQL_DB_HOST = "host.containers.internal";
-              SEAFILE_MYSQL_DB_HOST = "seafile-mysql";
-              SEAFILE_MYSQL_DB_PORT = "3306";
-              SEAFILE_MYSQL_DB_CCNET_DB_NAME = "ccnet_db";
-              SEAFILE_MYSQL_DB_SEAFILE_DB_NAME = "seafile_db";
-              SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
-
-              CACHE_PROVIDER = "redis";
-              REDIS_HOST = "host.containers.internal";
-              REDIS_PORT = "6400";
-
-              ENABLE_NOTIFICATION_SERVER = "true";
-              INNER_NOTIFICATION_SERVER_URL = "http://127.0.0.1:8083";
-              ENABLE_SEAFILE_AI = "false";
-              SEAFILE_AI_SERVER_URL = "http://seafile-ai:8888";
-              SEAFILE_AI_SECRET_KEY = "key";
-              MD_FILE_COUNT_LIMIT = "100000";
-            };
           };
-          serviceConfig.Restart = "on-failure";
+          serviceConfig = {
+            Restart = "on-failure";
+            ExecStartPre = ''
+              ${pkgs.coreutils}/bin/cp \
+                ${config.sops.templates."seafile/seahub_settings.py".path} \
+                /srv/seafile/seafile-data/seafile/conf/seahub_settings.py
+            '';
+          };
         };
 
         seadoc = {
@@ -99,15 +77,6 @@
             ];
             publishPorts = [ "4002:80" ];
             environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
-            environments = {
-              #DB_HOST = "host.containers.internal";
-              DB_HOST = "seafile-mysql";
-              DB_PORT = "3306";
-              DB_NAME = "seadoc_db";
-              TIME_ZONE = "Asia/Kolkata";
-              NON_ROOT = "false";
-              SEAHUB_SERVICE_URL = "http://seafile";
-            };
           };
           serviceConfig.Restart = "on-failure";
         };
@@ -220,15 +189,57 @@
     serviceConfig.Type = "oneshot";
   };
 
+  #
+  # Config files
+  #
   sops.templates."seafile/seafile.env" = {
     content = ''
-      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      # startup parameters
       SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
       SEAFILE_SERVER_PROTOCOL=https
-      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/sdoc-server
-      NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      TIME_ZONE=Asia/Kolkata
+
+      # database
+      #SEAFILE_MYSQL_DB_HOST=host.containers.internal
+      SEAFILE_MYSQL_DB_HOST=seafile-mysql
       SEAFILE_MYSQL_DB_USER=root
       SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      SEAFILE_MYSQL_DB_PORT=3306
+      SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      SEAFILE_MYSQL_DB_SEAHUB_DB_NAME=seahub_db
+
+      # redis
+      CACHE_PROVIDER=redis
+      REDIS_HOST=host.containers.internal
+      REDIS_PORT=6400
+
+      # initial variables (valid only during first-time init)
+      INIT_SEAFILE_ADMIN_EMAIL=admin@example.com
+      INIT_SEAFILE_ADMIN_PASSWORD=change me soon
+
+
+      SITE_ROOT=/
+      NON_ROOT=false
+      SEAFILE_LOG_TO_STDOUT=true
+
+      # seadoc
+      ENABLE_SEADOC=true
+      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/sdoc-server
+
+      # metadata server
+      MD_FILE_COUNT_LIMIT=100000
+
+      # notification server
+      ENABLE_NOTIFICATION_SERVER=true
+      INNER_NOTIFICATION_SERVER_URL=http://127.0.0.1:8083
+      NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
+
+      # ai server
+      ENABLE_SEAFILE_AI=false
+      SEAFILE_AI_SERVER_URL=http://seafile-ai:8888
+      SEAFILE_AI_SECRET_KEY=key
     '';
   };
 
@@ -237,11 +248,11 @@
       # -*- coding: utf-8 -*-
       SECRET_KEY = "${config.sops.placeholder."seafile/seahub_secret_key"}"
 
-      TIME_ZONE = 'Asia/Kolkata'
+      TIME_ZONE = "Asia/Kolkata"
 
       CSRF_TRUSTED_ORIGINS = ["https://*.${config.sops.placeholder."tailscale_api/tailnet"}"]
       USE_X_FORWARDED_HOST = True
-      SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+      SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
       SECURE_SSL_REDIRECT = True
       SESSION_COOKIE_SECURE = True
       CSRF_COOKIE_SECURE = True
@@ -252,11 +263,11 @@
       OAUTH_ACTIVATE_USER_AFTER_CREATION = False
       OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
-      OAUTH_REDIRECT_URL = 'https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/oauth/callback/'
-      OAUTH_PROVIDER_DOMAIN = 'google.com'
-      OAUTH_AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth'
-      OAUTH_TOKEN_URL = 'https://www.googleapis.com/oauth2/v4/token'
-      OAUTH_USER_INFO_URL = 'https://www.googleapis.com/oauth2/v1/userinfo'
+      OAUTH_REDIRECT_URL = "https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/oauth/callback/"
+      OAUTH_PROVIDER_DOMAIN = "google.com"
+      OAUTH_AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+      OAUTH_TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token"
+      OAUTH_USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo"
       OAUTH_SCOPE = [
           "openid",
           "https://www.googleapis.com/auth/userinfo.email",
@@ -270,11 +281,11 @@
 
       # SMTP
       EMAIL_USE_TLS = True
-      EMAIL_HOST = '${config.sops.placeholder."email/smtp/host"}'
-      EMAIL_HOST_USER = '${config.sops.placeholder."email/smtp/username"}'
-      EMAIL_HOST_PASSWORD = '${config.sops.placeholder."email/smtp/password"}'
+      EMAIL_HOST = "${config.sops.placeholder."email/smtp/host"}"
+      EMAIL_HOST_USER = "${config.sops.placeholder."email/smtp/username"}"
+      EMAIL_HOST_PASSWORD = "${config.sops.placeholder."email/smtp/password"}"
       EMAIL_PORT = 25
-      DEFAULT_FROM_EMAIL = '${config.sops.placeholder."email/from/seafile"}'
+      DEFAULT_FROM_EMAIL = "${config.sops.placeholder."email/from/seafile"}"
       SERVER_EMAIL = DEFAULT_FROM_EMAIL
     '';
   };
@@ -284,8 +295,17 @@
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
       SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
       SEAFILE_SERVER_PROTOCOL=https
+      TIME_ZONE=Asia/Kolkata
+      SEAHUB_SERVICE_URL=http://seafile
+
       DB_USER=root
       DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      #DB_HOST=host.containers.internal
+      DB_HOST=seafile-mysql
+      DB_PORT=3306
+      DB_NAME=seadoc_db
+
+      NON_ROOT=false
     '';
   };
 
