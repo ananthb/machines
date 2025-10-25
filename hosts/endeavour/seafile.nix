@@ -51,7 +51,7 @@
             networks = [
               networks.seafile.ref
             ];
-            publishPorts = [ "4000:80" ];
+            publishPorts = [ "4001:80" ];
             environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
             environments = {
               TIME_ZONE = "Asia/Kolkata";
@@ -97,6 +97,7 @@
             networks = [
               networks.seafile.ref
             ];
+            publishPorts = [ "4002:80" ];
             environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
             environments = {
               #DB_HOST = "host.containers.internal";
@@ -112,6 +113,35 @@
         };
       };
     };
+
+  services.caddy = {
+    enable = true;
+    virtualHosts.":4000" = {
+      listenAddresses = [ "::1" ];
+      extraConfig = ''
+        # seafile
+        reverse_proxy http://localhost:4001
+
+        # seadoc
+        @ws {
+          header Connection *Upgrade*
+          header Upgrade    websocket
+        }
+
+        reverse_proxy @ws http://localhost:4002
+
+        handle_path /socket.io/* {
+          rewrite * /socket.io{uri}
+          reverse_proxy http://localhost:4002
+        }
+
+        handle_path /sdoc-server/* {
+          rewrite * {uri}
+          reverse_proxy http://localhost:4002
+        }
+      '';
+    };
+  };
 
   services.mysql = {
     enable = true;
@@ -163,7 +193,6 @@
   services.tsnsrv.services = {
     sf = {
       funnel = true;
-      urlParts.host = "127.0.0.1";
       urlParts.port = 4000;
     };
   };
@@ -189,47 +218,6 @@
       ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
     '';
     serviceConfig.Type = "oneshot";
-  };
-
-  sops.templates."seafile/Caddyfile" = {
-    content = ''
-      :4000 {
-        header Access-Control-Allow-Origin
-
-        handle_path /seafhttp* {
-          reverse_proxy 127.0.0.1:8082
-        }
-
-        handle_path /notification* {
-          reverse_proxy 127.0.0.1:8083
-        }
-
-        redir /seafdav /seafdav/ permanent
-        reverse_proxy /seafdav/* 127.0.0.1:8080
-
-        reverse_proxy /media* 127.0.0.1:80 {
-          header_down -Access-Control-Allow-Origin
-        }
-
-        handle_path /sdoc-server/* {
-          reverse_proxy seadoc:7070 {
-            header_down Access-Control-Allow-Origin "https://sf.${
-              config.sops.placeholder."tailscale_api/tailnet"
-            }"
-          }
-        }
-
-        handle_path /socket.io* {
-          reverse_proxy seadoc:7070 {
-            header_down Access-Control-Allow-Origin "https://sf.${
-              config.sops.placeholder."tailscale_api/tailnet"
-            }"
-          }
-        }
-
-        reverse_proxy 127.0.0.1:8000
-      }
-    '';
   };
 
   sops.templates."seafile/seafile.env" = {
