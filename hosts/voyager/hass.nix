@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   pkgs-unstable,
   ...
@@ -120,16 +119,10 @@
     after = [ "home-assistant.service" ];
   };
 
-  systemd.timers."home-assistant-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "weekly";
-      Persistent = true;
-    };
-  };
-
   systemd.services."home-assistant-backup" = {
+    startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    preStart = "systemctl stop home-assistant.service";
     script = ''
       backup_target="/var/lib/hass"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
@@ -151,12 +144,8 @@
 
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStartPre = "systemctl stop home-assistant.service";
-      ExecStartPost = "systemctl start home-assistant.service";
-    };
+    postStop = "systemctl start home-assistant.service";
+    serviceConfig.Type = "oneshot";
   };
 
   sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;

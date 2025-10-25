@@ -37,20 +37,12 @@
   systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
   systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
 
-  # TODO: re-enable after we've trimmed down unnecessary files
-  #systemd.timers."immich-backup" = {
-  #  wantedBy = [ "timers.target" ];
-  #  timerConfig = {
-  #    OnCalendar = "weekly";
-  #    Persistent = true;
-  #  };
-  #};
-
   systemd.services."immich-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    # startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     serviceConfig = {
       Type = "oneshot";
-      User = "root";
       ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
     };
   };

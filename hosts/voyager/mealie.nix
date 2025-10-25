@@ -30,14 +30,8 @@
     tsnsrv-mle.after = [ "mealie.service" ];
   };
 
-  systemd.timers."mealie-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "weekly";
-      Persistent = true;
-    };
-  };
   systemd.services."mealie-backup" = {
+    startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       backup_api_url="http://localhost:9000/api/admin/backups"
@@ -68,7 +62,6 @@
     '';
     serviceConfig = {
       Type = "oneshot";
-      User = "root";
       EnvironmentFile = "${config.sops.secrets."mealie/api_keys".path}";
     };
   };

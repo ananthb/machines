@@ -61,16 +61,6 @@
           serviceConfig.Restart = "on-failure";
         };
 
-        seafile-redis = {
-          containerConfig = {
-            name = "seafile-redis";
-            image = "docker.io/library/redis";
-            pod = pods.seafile.ref;
-            autoUpdate = "registry";
-          };
-          serviceConfig.Restart = "on-failure";
-        };
-
         seafile-server = {
           containerConfig = {
             name = "seafile";
@@ -97,8 +87,8 @@
               SEAFILE_MYSQL_DB_SEAHUB_DB_NAME = "seahub_db";
 
               CACHE_PROVIDER = "redis";
-              REDIS_HOST = "127.0.0.1";
-              REDIS_PORT = "6379";
+              REDIS_HOST = "host.containers.internal";
+              REDIS_PORT = "6400";
 
               ENABLE_NOTIFICATION_SERVER = "true";
               INNER_NOTIFICATION_SERVER_URL = "http://127.0.0.1:8083";
@@ -141,9 +131,18 @@
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    settings.mysqld = {
-      # localhost and podman bridge network
-      bind-address = "::1,10.89.0.1";
+    settings = {
+      client = {
+        default-character-set = "utf8mb4";
+      };
+      mysqld = {
+        skip-name-resolve = 1;
+        # localhost and podman bridge network
+        bind-address = "::1,10.89.0.1";
+        # See https://github.com/MariaDB/mariadb-docker/issues/560#issuecomment-1956517890
+        character-set-server = "utf8mb4";
+        collation-server = "utf8mb4_bin";
+      };
     };
     ensureUsers = [
       {
@@ -167,10 +166,14 @@
     bind = "10.89.0.1";
     port = 6400;
     unixSocket = null;
+    settings.protected-mode = "no";
   };
 
   # Let seafile access redis and mysql
-  networking.firewall.interfaces.podman1.allowedTCPPorts = [ 3306 6400 ];
+  networking.firewall.interfaces.podman1.allowedTCPPorts = [
+    3306
+    6400
+  ];
 
   services.tsnsrv.services = {
     sf = {
@@ -180,17 +183,9 @@
     };
   };
 
-  # TODO: re-enable after we've trimmed down unnecessary files
-  #systemd.timers."seafile-backup" = {
-  #  wantedBy = [ "timers.target" ];
-  #  timerConfig = {
-  #    # Runs on the 28th of each month
-  #    OnCalendar = "weekly";
-  #    Persistent = true;
-  #  };
-  #};
-
   systemd.services."seafile-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    #startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       backup_target="/srv/seafile"
@@ -208,10 +203,7 @@
 
       ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
     '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
+    serviceConfig.Type = "oneshot";
   };
 
   sops.templates."seafile/Caddyfile" = {
@@ -264,7 +256,6 @@
       NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
       SEAFILE_MYSQL_DB_USER=root
       SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
-      INIT_SEAFILE_MYSQL_ROOT_PASSWORD=${config.sops.placeholder."seafile/mysql/root_password"}
     '';
   };
 
@@ -330,7 +321,6 @@
     "seafile/jwt_private_key" = { };
     "seafile/mysql/username" = { };
     "seafile/mysql/password" = { };
-    "seafile/mysql/root_password" = { };
     "seafile/seahub_secret_key" = { };
   };
 

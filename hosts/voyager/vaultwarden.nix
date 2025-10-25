@@ -40,16 +40,10 @@
     after = [ "vaultwarden.service" ];
   };
 
-  systemd.timers."vaultwarden-backup" = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "daily";
-      Persistent = true;
-    };
-  };
-
   systemd.services."vaultwarden-backup" = {
+    startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    preStart = "systemctl stop vaultwarden.service";
     script = ''
       backup_target="/var/lib/vaultwarden"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
@@ -70,12 +64,8 @@
 
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStartPre = "systemctl stop vaultwarden.service";
-      ExecStartPost = "systemctl start vaultwarden.service";
-    };
+    postStop = "systemctl start vaultwarden.service";
+    serviceConfig.Type = "oneshot";
   };
 
   sops.templates."vaultwarden/secrets.env" = {
