@@ -105,7 +105,7 @@
               DB_NAME = "seadoc_db";
               TIME_ZONE = "Asia/Kolkata";
               NON_ROOT = "false";
-              SEAHUB_SERVICE_URL = "http://seafile:4000";
+              SEAHUB_SERVICE_URL = "http://seafile";
             };
           };
           serviceConfig.Restart = "on-failure";
