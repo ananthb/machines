@@ -46,7 +46,7 @@
             autoUpdate = "registry";
             volumes = [
               #"${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
-              "/srv/seafile/seafile-data:/shared"
+              "/srv/seafile/seafile:/shared"
             ];
             networks = [
               networks.seafile.ref
@@ -59,7 +59,7 @@
             ExecStartPre = ''
               ${pkgs.coreutils}/bin/cp \
                 ${config.sops.templates."seafile/seahub_settings.py".path} \
-                /srv/seafile/seafile-data/seafile/conf/seahub_settings.py
+                /srv/seafile/seafile/seafile/conf/seahub_settings.py
             '';
           };
         };
