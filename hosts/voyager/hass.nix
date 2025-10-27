@@ -145,7 +145,10 @@
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
     postStop = "systemctl start home-assistant.service";
-    serviceConfig.Type = "oneshot";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;

@@ -40,7 +40,10 @@
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
     postStop = "systemctl start radicale.service";
-    serviceConfig.Type = "oneshot";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   sops.secrets."radicale/htpasswd".owner = "radicale";

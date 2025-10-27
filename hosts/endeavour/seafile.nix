@@ -186,7 +186,10 @@
 
       ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
     '';
-    serviceConfig.Type = "oneshot";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   #
@@ -293,8 +296,8 @@
   sops.templates."seafile/seadoc.env" = {
     content = ''
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
-      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
-      SEAFILE_SERVER_PROTOCOL=https
+      SEAFILE_SERVER_HOSTNAME=seafile
+      SEAFILE_SERVER_PROTOCOL=http
       TIME_ZONE=Asia/Kolkata
       SEAHUB_SERVICE_URL=http://seafile
 
