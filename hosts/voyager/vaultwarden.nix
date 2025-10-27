@@ -65,7 +65,10 @@
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
     postStop = "systemctl start vaultwarden.service";
-    serviceConfig.Type = "oneshot";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   sops.templates."vaultwarden/secrets.env" = {

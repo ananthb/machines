@@ -43,6 +43,7 @@
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     serviceConfig = {
       Type = "oneshot";
+      User = "root";
       ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
     };
   };
