@@ -134,6 +134,7 @@
         ensurePermissions = {
           "ccnet_db.*" = "ALL PRIVILEGES";
           "seafile_db.*" = "ALL PRIVILEGES";
+          "seadoc_db.*" = "ALL PRIVILEGES";
           "seahub_db.*" = "ALL PRIVILEGES";
         };
       }
@@ -141,6 +142,7 @@
     ensureDatabases = [
       "ccnet_db"
       "seafile_db"
+      "seadoc_db"
       "seahub_db"
     ];
   };
@@ -296,15 +298,15 @@
   sops.templates."seafile/seadoc.env" = {
     content = ''
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
-      SEAFILE_SERVER_HOSTNAME=seafile
-      SEAFILE_SERVER_PROTOCOL=http
+      SEAFILE_SERVER_HOSTNAME=tv.${config.sops.placeholder."tailscale_api/tailnet"}
+      SEAFILE_SERVER_PROTOCOL=https
       TIME_ZONE=Asia/Kolkata
       SEAHUB_SERVICE_URL=http://seafile
 
-      DB_USER=root
+      # database
+      DB_HOST=host.containers.internal
+      DB_USER=${config.sops.placeholder."seafile/mysql/username"}
       DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
-      #DB_HOST=host.containers.internal
-      DB_HOST=seafile-mysql
       DB_PORT=3306
       DB_NAME=seadoc_db
 
