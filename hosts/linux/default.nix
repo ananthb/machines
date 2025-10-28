@@ -3,6 +3,7 @@
   hostname,
   inputs,
   pkgs,
+  pkgs-unstable,
   system,
   username,
   ...
@@ -121,7 +122,10 @@
   services.avahi.enable = true;
 
   # Enable tailscale
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    package = pkgs-unstable.tailscale;
+  };
 
   services.tsnsrv = {
     enable = true;
