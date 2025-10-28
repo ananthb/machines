@@ -140,7 +140,7 @@
 
         write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_snapshot" 1
         ${pkgs.kopia}/bin/kopia snapshot create \
-          --parallel 4 \
+          --parallel 10 \
           --override-source "$source" \
           "$backup_target"
         write_metric kopia_backups_total "job=hathi-backups,instance=$source" 1
