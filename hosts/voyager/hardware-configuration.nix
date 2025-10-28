@@ -1,8 +1,6 @@
 { pkgs, ... }:
 {
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
-    kernelModules = [ "gpio_fan" ];
     initrd.availableKernelModules = [
       "xhci_pci"
       "usbhid"
@@ -16,6 +14,14 @@
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
     };
+
+    kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+    };
+
+    kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
+    kernelModules = [ "gpio_fan" ];
   };
 
   fileSystems = {

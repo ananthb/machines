@@ -24,8 +24,11 @@
     "sr_mod"
   ];
   boot.initrd.kernelModules = [ "bcachefs" ];
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
+  };
   boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
   boot.supportedFilesystems = [ "bcachefs" ];
 
   fileSystems."/" = {
