@@ -133,16 +133,16 @@
         name = "seafile";
         ensurePermissions = {
           "ccnet_db.*" = "ALL PRIVILEGES";
+          "sdoc_db.*" = "ALL PRIVILEGES";
           "seafile_db.*" = "ALL PRIVILEGES";
-          "seadoc_db.*" = "ALL PRIVILEGES";
           "seahub_db.*" = "ALL PRIVILEGES";
         };
       }
     ];
     ensureDatabases = [
       "ccnet_db"
+      "sdoc_db"
       "seafile_db"
-      "seadoc_db"
       "seahub_db"
     ];
   };
@@ -308,7 +308,7 @@
       DB_USER=${config.sops.placeholder."seafile/mysql/username"}
       DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
       DB_PORT=3306
-      DB_NAME=seadoc_db
+      DB_NAME=sdoc_db
 
       NON_ROOT=false
     '';
