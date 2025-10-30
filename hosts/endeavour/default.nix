@@ -94,18 +94,21 @@
 
     };
 
-    smartctl.enable = true;
-
-    postgres.enable = true;
-    postgres.runAsLocalSuperUser = true;
-
-    redis.enable = true;
+    mysqld.enable = true;
 
     nut = {
       enable = true;
       nutUser = "nutmon";
       passwordPath = config.sops.secrets."nut/users/nutmon".path;
     };
+    
+    postgres.enable = true;
+    postgres.runAsLocalSuperUser = true;
+
+    redis.enable = true;
+    
+    smartctl.enable = true;
+
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";
