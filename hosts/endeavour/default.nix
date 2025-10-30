@@ -94,8 +94,6 @@
 
     };
 
-    mysqld.enable = true;
-
     nut = {
       enable = true;
       nutUser = "nutmon";
