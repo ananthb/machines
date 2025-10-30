@@ -6,7 +6,7 @@
 {
   virtualisation.quadlet =
     let
-      inherit (config.virtualisation.quadlet) networks volumes;
+      inherit (config.virtualisation.quadlet) networks;
     in
     {
       autoEscape = true;
@@ -16,29 +16,7 @@
         seafile = { };
       };
 
-      volumes = {
-        seafile-mysql-data = { };
-      };
-
       containers = {
-        seafile-mysql = {
-          containerConfig = {
-            name = "seafile-mysql";
-            image = "docker.io/library/mariadb:10.11";
-            networks = [ networks.seafile.ref ];
-            autoUpdate = "registry";
-            environments = {
-              MYSQL_LOG_CONSOLE = "true";
-              MARIADB_AUTO_UPGRADE = "1";
-              MYSQL_ROOT_PASSWORD = "password";
-            };
-            volumes = [
-              "${volumes.seafile-mysql-data.ref}:/var/lib/mysql"
-            ];
-          };
-          serviceConfig.Restart = "on-failure";
-        };
-
         seafile = {
           containerConfig = {
             name = "seafile";
@@ -174,13 +152,11 @@
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
       backup_target="/srv/seafile"
-      dump_file="$backup_target/seafile-mysql-data.tar"
+      dump_file="$backup_target/seafile-dbs.sql"
 
-      # Dump database volume
-      systemctl stop seafile-pod.service
-      ${pkgs.podman}/bin/podman volume export \
-        seafile-mysql-data -o "$dump_file"
-      systemctl start seafile-pod.service
+      # Dump databases
+      ${pkgs.sudo}/bin/sudo ${pkgs.mariadb}/bin/mysqldump \
+        --databases ccnet_db sdoc_db seafile_db seahub_db > "$dump_file"
 
       trap '{
         rm -f "$dump_file"
@@ -206,9 +182,8 @@
       TIME_ZONE=Asia/Kolkata
 
       # database
-      #SEAFILE_MYSQL_DB_HOST=host.containers.internal
-      SEAFILE_MYSQL_DB_HOST=seafile-mysql
-      SEAFILE_MYSQL_DB_USER=root
+      SEAFILE_MYSQL_DB_HOST=host.containers.internal
+      SEAFILE_MYSQL_DB_USER=${config.sops.placeholder."seafile/mysql/username"}
       SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
       SEAFILE_MYSQL_DB_PORT=3306
       SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
