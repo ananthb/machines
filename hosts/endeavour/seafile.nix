@@ -154,7 +154,9 @@
 
       # Delete everything but the n newest files.
       # n is the integer after `tail -n +`
-      ls -t "$backup_dir" | tail -n +4 | tr '\n' '\0' | xargs -0 rm --
+      pushd "$backup_dir"
+      ls -t | tail -n +4 | tr '\n' '\0' | xargs -0 rm --
+      popd
 
       dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
       # Dump databases
