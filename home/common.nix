@@ -57,6 +57,7 @@ in
     nix-output-monitor
     git
     lazygit
+    jujutsu
     ripgrep
     delta
     fzf
