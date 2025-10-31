@@ -161,7 +161,8 @@
       dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
       # Dump databases
       ${pkgs.sudo}/bin/sudo ${pkgs.mariadb}/bin/mysqldump \
-        --databases ccnet_db sdoc_db seafile_db seahub_db > "$dump_file"
+        --databases ccnet_db sdoc_db seafile_db seahub_db | \
+          ${pkgs.zstd}/bin/zstd > "$dump_file.zst"
     '';
   };
 
