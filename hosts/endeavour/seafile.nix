@@ -146,27 +146,29 @@
     };
   };
 
+  systemd.services."seafile-mysql-backup" = {
+    startAt = "daily";
+    script = ''
+      backup_dir="/srv/seafile/backups"
+      mkdir -p "$backup_dir"
+
+      ${pkgs.findutils}/bin/find "$backup_dir" -type f -mtime +3 -delete
+
+      dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
+      # Dump databases
+      ${pkgs.sudo}/bin/sudo ${pkgs.mariadb}/bin/mysqldump \
+        --databases ccnet_db sdoc_db seafile_db seahub_db > "$dump_file"
+    '';
+  };
+
   systemd.services."seafile-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
     #startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    script = ''
-      backup_target="/srv/seafile"
-      dump_file="$backup_target/seafile-dbs.sql"
-
-      # Dump databases
-      ${pkgs.sudo}/bin/sudo ${pkgs.mariadb}/bin/mysqldump \
-        --databases ccnet_db sdoc_db seafile_db seahub_db > "$dump_file"
-
-      trap '{
-        rm -f "$dump_file"
-      }' EXIT
-
-      ${config.my-scripts.kopia-snapshot-backup} "$backup_target"
-    '';
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/seafile";
     };
   };
 
