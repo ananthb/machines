@@ -99,12 +99,12 @@
       nutUser = "nutmon";
       passwordPath = config.sops.secrets."nut/users/nutmon".path;
     };
-    
+
     postgres.enable = true;
     postgres.runAsLocalSuperUser = true;
 
     redis.enable = true;
-    
+
     smartctl.enable = true;
 
   };
