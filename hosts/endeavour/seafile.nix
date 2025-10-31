@@ -147,12 +147,15 @@
   };
 
   systemd.services."seafile-mysql-backup" = {
-    startAt = "daily";
+    startAt = "hourly";
     script = ''
       backup_dir="/srv/seafile/backups"
       mkdir -p "$backup_dir"
 
-      ${pkgs.findutils}/bin/find "$backup_dir" -type f -mtime +3 -delete
+      # Delete files older than 3 hours
+      # Easy way to keep just three backups around since we run hourly
+      # If the timer interval changes, this will probably have to change with it
+      ${pkgs.findutils}/bin/find "$backup_dir" -type f -cmin +180 -delete
 
       dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
       # Dump databases
@@ -164,11 +167,14 @@
   systemd.services."seafile-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
     #startAt = "weekly";
+    script = ''
+      systemctl start seafile-mysql-backup.service
+      ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
+    '';
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     serviceConfig = {
       Type = "oneshot";
       User = "root";
-      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/seafile";
     };
   };
 

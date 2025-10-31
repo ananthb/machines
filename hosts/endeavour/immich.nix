@@ -85,7 +85,7 @@
           "database": {
             "enabled": true,
             "cronExpression": "50 23 * * *",
-            "keepLastAmount": 14
+            "keepLastAmount": 3
           }
         },
         "job": {
