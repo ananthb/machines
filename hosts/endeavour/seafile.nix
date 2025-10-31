@@ -152,10 +152,9 @@
       backup_dir="/srv/seafile/backups"
       mkdir -p "$backup_dir"
 
-      # Delete files older than 3 hours
-      # Easy way to keep just three backups around since we run hourly
-      # If the timer interval changes, this will probably have to change with it
-      ${pkgs.findutils}/bin/find "$backup_dir" -type f -cmin +180 -delete
+      # Delete everything but the n newest files.
+      # n is the integer after `tail -n +`
+      ls -t "$backup_dir" | tail -n +4 | tr '\n' '\0' | xargs -0 rm --
 
       dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
       # Dump databases
