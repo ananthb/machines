@@ -13,10 +13,17 @@
         ++ (
           with pkgs-unstable.python3Packages;
           [
+            # Run code
+            pydantic
             # Youtube transcription plugin
             yt-dlp
           ]
           ++ pkgs-unstable.open-webui.optional-dependencies.postgres
+          ++ (with pkgs-unstable; [
+            bash
+            gvisor
+            util-linux
+          ])
         );
     });
     port = 8090;
