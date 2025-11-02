@@ -84,7 +84,7 @@
         "backup": {
           "database": {
             "enabled": true,
-            "cronExpression": "50 23 * * *",
+            "cronExpression": "50 * * * *",
             "keepLastAmount": 3
           }
         },

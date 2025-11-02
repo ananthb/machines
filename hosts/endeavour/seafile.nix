@@ -152,10 +152,9 @@
       backup_dir="/srv/seafile/backups"
       mkdir -p "$backup_dir"
 
-      # Delete everything but the n newest files.
-      # n is the integer after `tail -n +`
+      # Removes all but 2 files starting from the oldest
       pushd "$backup_dir"
-      ls -t | tail -n +4 | tr '\n' '\0' | xargs -0 rm --
+      ls -t | tail -n +3 | tr '\n' '\0' | xargs -0 rm --
       popd
 
       dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"

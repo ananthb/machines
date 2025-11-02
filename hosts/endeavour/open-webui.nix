@@ -10,13 +10,14 @@
     package = pkgs-unstable.open-webui.overrideAttrs (old: {
       propagatedBuildInputs =
         old.propagatedBuildInputs
-        ++ (with pkgs-unstable.python3Packages; [
-          # postgres
-          psycopg2
-
-          # Youtube transcription plugin
-          yt-dlp
-        ]);
+        ++ (
+          with pkgs-unstable.python3Packages;
+          [
+            # Youtube transcription plugin
+            yt-dlp
+          ]
+          ++ pkgs-unstable.open-webui.optional-dependencies.postgres
+        );
     });
     port = 8090;
     environmentFile = config.sops.templates."open-webui/env".path;
