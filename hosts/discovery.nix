@@ -10,7 +10,6 @@
     "1password"
     "discord"
     "gimp"
-    "google-drive"
     "ledger-live"
     "signal"
     "slack"
