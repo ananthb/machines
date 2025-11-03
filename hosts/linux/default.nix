@@ -152,10 +152,10 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    nixfmt-rfc-style
-    ghostty.terminfo
-    pam_rssh
     e2fsprogs
+    ghostty.terminfo
+    nixfmt-rfc-style
+    pam_rssh
   ];
 
   zramSwap.enable = true;
