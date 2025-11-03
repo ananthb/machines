@@ -494,6 +494,10 @@
     ];
   };
 
+  services.tsnsrv.services.mon = {
+      urlParts.port = 3000;
+  };
+
   sops.secrets."arr_apis/radarr".mode = "0444";
   sops.secrets."arr_apis/sonarr".mode = "0444";
   sops.secrets."arr_apis/prowlarr".mode = "0444";

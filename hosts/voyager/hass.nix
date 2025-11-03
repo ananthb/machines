@@ -48,6 +48,7 @@
       "luci"
     ];
     customComponents = with pkgs-unstable.home-assistant-custom-components; [
+      ecoflow_cloud
       frigate
       miraie
       prometheus_sensor
