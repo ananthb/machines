@@ -86,7 +86,7 @@
         collabora-code = {
           containerConfig = {
             name = "collabora-code";
-            image = "docker.io/collabora/code:24.04.5.1.1";
+            image = "docker.io/collabora/code:latest";
             podmanArgs = [ "--privileged" ];
             autoUpdate = "registry";
             networks = [
