@@ -86,7 +86,7 @@
         collabora-code = {
           containerConfig = {
             name = "collabora-code";
-            image = "docker.io/collabora/code:latest";
+            image = "docker.io/collabora/code:24.04.5.1.1";
             podmanArgs = [ "--privileged" ];
             autoUpdate = "registry";
             networks = [
@@ -113,10 +113,7 @@
         reverse_proxy http://localhost:4001
 
         # seadoc
-        handle_path /socket.io/* {
-          rewrite * /socket.io{uri}
-          reverse_proxy http://localhost:4002
-        }
+        reverse_proxy /socket.io/* http://localhost:4002
         handle_path /sdoc-server/* {
           rewrite * {uri}
           reverse_proxy http://localhost:4002
@@ -129,10 +126,7 @@
         }
 
         # collabora code
-        handle_path /collabora-code/* {
-          rewrite * /collabora-code{uri}
-          reverse_proxy http://localhost:9980
-        }
+        reverse_proxy /collabora-code/* http://localhost:9980
       '';
     };
   };
@@ -246,11 +240,18 @@
   #
   sops.templates."seafile/seafile.env" = {
     content = ''
+      # initial variables (valid only during first-time init)
+      INIT_SEAFILE_ADMIN_EMAIL=admin@example.com
+      INIT_SEAFILE_ADMIN_PASSWORD=change me soon
+
       # startup parameters
+      SEAFILE_LOG_TO_STDOUT=true
       SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
       SEAFILE_SERVER_PROTOCOL=https
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
       TIME_ZONE=Asia/Kolkata
+      SITE_ROOT=/
+      NON_ROOT=false
 
       # database
       SEAFILE_MYSQL_DB_HOST=host.containers.internal
@@ -266,15 +267,6 @@
       REDIS_HOST=host.containers.internal
       REDIS_PORT=6400
 
-      # initial variables (valid only during first-time init)
-      INIT_SEAFILE_ADMIN_EMAIL=admin@example.com
-      INIT_SEAFILE_ADMIN_PASSWORD=change me soon
-
-
-      SITE_ROOT=/
-      NON_ROOT=false
-      SEAFILE_LOG_TO_STDOUT=true
-
       # seadoc
       ENABLE_SEADOC=true
       SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/sdoc-server
@@ -284,6 +276,7 @@
 
       # notification server
       ENABLE_NOTIFICATION_SERVER=true
+      INNER_NOTIFICATION_SERVER_URL=http://seafile-notification-server:8083
       NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
 
       # ai server
@@ -427,11 +420,12 @@
   sops.templates."collabora/code.env" = {
     content = ''
       server_name=sf.${config.sops.placeholder."tailscale_api/tailnet"}
+      aliasgroup1=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}:443
       username=${config.sops.placeholder."collabora/code/username"}
       password=${config.sops.placeholder."collabora/code/password"}
       DONT_GEN_SSL_CERT=true
       TZ=Asia/Kolkata
-      extra_params=--o:logging.file[@enable]=false --o:logging.file.property[0]=/opt/cool/logs/coolwsd.log --o:admin_console.enable=true --o:ssl.enable=false --o:ssl.termination=true --o:net.service_root=/collabora-code
+      extra_params=--o:logging.file[@enable]=false --o:admin_console.enable=true --o:ssl.enable=false --o:ssl.termination=true --o:net.service_root=/collabora-code
     '';
   };
 
