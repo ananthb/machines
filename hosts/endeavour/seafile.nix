@@ -42,8 +42,27 @@
           };
           unitConfig = {
             Before = "caddy.service";
-            After = "mysql.service redis-seafile.service seadoc.service";
-            Wants = "mysql.service redis-seafile.service seadoc.service caddy.service collabora-code.service";
+            After = "mysql.service redis-seafile.service seafile-notification-server.service seadoc.service collabora-code.service";
+            Wants = "mysql.service redis-seafile.service seafile-notification-server.service seadoc.service collabora-code.service caddy.service";
+          };
+        };
+
+        seafile-notification-server = {
+          containerConfig = {
+            name = "seafile-notification-server";
+            image = "docker.io/seafileltd/notification-server:13.0-latest";
+            autoUpdate = "registry";
+            networks = [
+              networks.seafile.ref
+            ];
+            publishPorts = [ "8083:8083" ];
+            environmentFiles = [ config.sops.templates."seafile/notification-server.env".path ];
+          };
+          serviceConfig.Restart = "on-failure";
+          unitConfig = {
+            Before = "caddy.service";
+            After = "mysql.service";
+            Wants = "mysql.service caddy.service";
           };
         };
 
@@ -94,26 +113,30 @@
         reverse_proxy http://localhost:4001
 
         # seadoc
-        @ws {
-          header Connection *Upgrade*
-          header Upgrade    websocket
-        }
-
-        reverse_proxy @ws http://localhost:4002
-
         handle_path /socket.io/* {
           rewrite * /socket.io{uri}
           reverse_proxy http://localhost:4002
         }
-
         handle_path /sdoc-server/* {
           rewrite * {uri}
           reverse_proxy http://localhost:4002
         }
+
+        # notification server
+        handle_path /notification* {
+          rewrite * {uri}
+          reverse_proxy http://localhost:8083
+        }
+
+        # collabora code
+        handle_path /collabora-code/* {
+          rewrite * /collabora-code{uri}
+          reverse_proxy http://localhost:9980
+        }
       '';
     };
   };
-  
+
   services.tsnsrv.services.sf = {
     funnel = true;
     urlParts.port = 4000;
@@ -328,13 +351,43 @@
       # You can change this value according to your preferences
       # And of course you should make sure your LibreOffice Online supports to preview
       # the files with the specified extensions
-      OFFICE_WEB_APP_FILE_EXTENSION = ('odp', 'ods', 'odt', 'xls', 'xlsb', 'xlsm', 'xlsx','ppsx', 'ppt', 'pptm', 'pptx', 'doc', 'docm', 'docx')
+      OFFICE_WEB_APP_FILE_EXTENSION = (
+          'odp',
+          'ods',
+          'odt',
+          'xls',
+          'xlsb',
+          'xlsm',
+          'xlsx',
+          'ppsx',
+          'ppt',
+          'pptm',
+          'pptx',
+          'doc',
+          'docm',
+          'docx',
+      )
 
       # Enable edit files through LibreOffice Online
       ENABLE_OFFICE_WEB_APP_EDIT = True
 
       # types of files should be editable through LibreOffice Online
-      OFFICE_WEB_APP_EDIT_FILE_EXTENSION = ('odp', 'ods', 'odt', 'xls', 'xlsb', 'xlsm', 'xlsx','ppsx', 'ppt', 'pptm', 'pptx', 'doc', 'docm', 'docx')
+      OFFICE_WEB_APP_EDIT_FILE_EXTENSION = (
+          'odp',
+          'ods',
+          'odt',
+          'xls',
+          'xlsb',
+          'xlsm',
+          'xlsx',
+          'ppsx',
+          'ppt',
+          'pptm',
+          'pptx',
+          'doc',
+          'docm',
+          'docx',
+      )
     '';
   };
 
@@ -356,7 +409,21 @@
       NON_ROOT=false
     '';
   };
-  
+
+  sops.templates."seafile/notification-server.env" = {
+    content = ''
+      SEAFILE_MYSQL_DB_HOST=host.containers.internal
+      SEAFILE_MYSQL_DB_USER=${config.sops.placeholder."seafile/mysql/username"}
+      SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      SEAFILE_MYSQL_DB_PORT=3306
+      SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      SEAFILE_LOG_TO_STDOUT=true
+      NOTIFICATION_SERVER_LOG_LEVEL=info
+    '';
+  };
+
   sops.templates."collabora/code.env" = {
     content = ''
       server_name=sf.${config.sops.placeholder."tailscale_api/tailnet"}
