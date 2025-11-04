@@ -40,6 +40,11 @@
                 /srv/seafile/seafile/seafile/conf/seahub_settings.py
             '';
           };
+          unitConfig = {
+            Before = "caddy.service";
+            After = "mysql.service redis-seafile.service seadoc.service";
+            Wants = "mysql.service redis-seafile.service seadoc.service caddy.service collabora-code.service";
+          };
         };
 
         seadoc = {
@@ -57,6 +62,25 @@
             environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
           };
           serviceConfig.Restart = "on-failure";
+        };
+
+        collabora-code = {
+          containerConfig = {
+            name = "collabora-code";
+            image = "docker.io/collabora/code:latest";
+            podmanArgs = [ "--privileged" ];
+            autoUpdate = "registry";
+            networks = [
+              networks.seafile.ref
+            ];
+            publishPorts = [ "9980:9980" ];
+            environmentFiles = [ config.sops.templates."collabora/code.env".path ];
+          };
+          serviceConfig.Restart = "on-failure";
+          unitConfig = {
+            Before = "caddy.service";
+            Wants = "caddy.service";
+          };
         };
       };
     };
@@ -87,6 +111,28 @@
           reverse_proxy http://localhost:4002
         }
       '';
+    };
+  };
+  
+  services.tsnsrv.services.sf = {
+    funnel = true;
+    urlParts.port = 4000;
+  };
+
+  systemd.services = {
+    tsnsrv-sf = {
+      wants = [
+        "caddy.service"
+        "collabora-code.service"
+        "seadoc.service"
+        "seafile.service"
+      ];
+      after = [
+        "caddy.service"
+        "collabora-code.service"
+        "seadoc.service"
+        "seafile.service"
+      ];
     };
   };
 
@@ -138,13 +184,6 @@
     3306
     6400
   ];
-
-  services.tsnsrv.services = {
-    sf = {
-      funnel = true;
-      urlParts.port = 4000;
-    };
-  };
 
   systemd.services."seafile-mysql-backup" = {
     startAt = "hourly";
@@ -222,13 +261,10 @@
 
       # notification server
       ENABLE_NOTIFICATION_SERVER=true
-      INNER_NOTIFICATION_SERVER_URL=http://127.0.0.1:8083
       NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
 
       # ai server
       ENABLE_SEAFILE_AI=false
-      SEAFILE_AI_SERVER_URL=http://seafile-ai:8888
-      SEAFILE_AI_SECRET_KEY=key
     '';
   };
 
@@ -276,6 +312,29 @@
       EMAIL_PORT = 25
       DEFAULT_FROM_EMAIL = "${config.sops.placeholder."email/from/seafile"}"
       SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+      # Collabora Code
+      OFFICE_SERVER_TYPE = 'CollaboraOffice'
+      ENABLE_OFFICE_WEB_APP = True
+      OFFICE_WEB_APP_BASE_URL = 'http://collabora-code:9980/collabora-code/hosting/discovery'
+
+      # Expiration of WOPI access token
+      # WOPI access token is a string used by Seafile to determine the file's
+      # identity and permissions when use LibreOffice Online view it online
+      # And for security reason, this token should expire after a set time period
+      WOPI_ACCESS_TOKEN_EXPIRATION = 30 * 60   # seconds
+
+      # List of file formats that you want to view through LibreOffice Online
+      # You can change this value according to your preferences
+      # And of course you should make sure your LibreOffice Online supports to preview
+      # the files with the specified extensions
+      OFFICE_WEB_APP_FILE_EXTENSION = ('odp', 'ods', 'odt', 'xls', 'xlsb', 'xlsm', 'xlsx','ppsx', 'ppt', 'pptm', 'pptx', 'doc', 'docm', 'docx')
+
+      # Enable edit files through LibreOffice Online
+      ENABLE_OFFICE_WEB_APP_EDIT = True
+
+      # types of files should be editable through LibreOffice Online
+      OFFICE_WEB_APP_EDIT_FILE_EXTENSION = ('odp', 'ods', 'odt', 'xls', 'xlsb', 'xlsm', 'xlsx','ppsx', 'ppt', 'pptm', 'pptx', 'doc', 'docm', 'docx')
     '';
   };
 
@@ -297,8 +356,21 @@
       NON_ROOT=false
     '';
   };
+  
+  sops.templates."collabora/code.env" = {
+    content = ''
+      server_name=sf.${config.sops.placeholder."tailscale_api/tailnet"}
+      username=${config.sops.placeholder."collabora/code/username"}
+      password=${config.sops.placeholder."collabora/code/password"}
+      DONT_GEN_SSL_CERT=true
+      TZ=Asia/Kolkata
+      extra_params=--o:logging.file[@enable]=false --o:logging.file.property[0]=/opt/cool/logs/coolwsd.log --o:admin_console.enable=true --o:ssl.enable=false --o:ssl.termination=true --o:net.service_root=/collabora-code
+    '';
+  };
 
   sops.secrets = {
+    "collabora/code/username" = { };
+    "collabora/code/password" = { };
     "email/from/seafile" = { };
     "seafile/jwt_private_key" = { };
     "seafile/mysql/username" = { };

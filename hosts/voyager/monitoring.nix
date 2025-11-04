@@ -495,7 +495,7 @@
   };
 
   services.tsnsrv.services.mon = {
-      urlParts.port = 3000;
+    urlParts.port = 3000;
   };
 
   sops.secrets."arr_apis/radarr".mode = "0444";
