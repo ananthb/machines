@@ -35,5 +35,11 @@
     };
   };
 
+  services.prometheus.exporters.nut = {
+    enable = true;
+    nutUser = "nutmon";
+    passwordPath = config.sops.secrets."nut/users/nutmon".path;
+  };
+
   sops.secrets."nut/users/admin" = { };
 }

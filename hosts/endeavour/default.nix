@@ -77,7 +77,7 @@
   services.cloudflare-warp.enable = true;
   services.cloudflare-warp.openFirewall = false;
 
-  # Prometheus Exporter
+  # Prometheus Exporters
   services.prometheus.exporters = {
     blackbox = {
       enable = true;
@@ -94,16 +94,8 @@
 
     };
 
-    nut = {
-      enable = true;
-      nutUser = "nutmon";
-      passwordPath = config.sops.secrets."nut/users/nutmon".path;
-    };
-
     postgres.enable = true;
     postgres.runAsLocalSuperUser = true;
-
-    redis.enable = true;
 
     smartctl.enable = true;
 
