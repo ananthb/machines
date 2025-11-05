@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -23,7 +24,6 @@
             image = "docker.io/seafileltd/seafile-mc:13.0-latest";
             autoUpdate = "registry";
             volumes = [
-              #"${config.sops.templates."seafile/seahub_settings.py".path}:/shared/seafile/conf/seahub_settings.py"
               "/srv/seafile/seafile:/shared"
             ];
             networks = [
@@ -42,8 +42,21 @@
           };
           unitConfig = {
             Before = "caddy.service";
-            After = "mysql.service redis-seafile.service seafile-notification-server.service seadoc.service collabora-code.service";
-            Wants = "mysql.service redis-seafile.service seafile-notification-server.service seadoc.service collabora-code.service caddy.service";
+            After = lib.concatStringsSep " " [
+              "collabora-code.service"
+              "mysql.service"
+              "redis-seafile.service"
+              "seadoc.service"
+              "seafile-notification-server.service"
+            ];
+            Wants = lib.concatStringsSep " " [
+              "caddy.service"
+              "collabora-code.service"
+              "mysql.service"
+              "redis-seafile.service"
+              "seadoc.service"
+              "seafile-notification-server.service"
+            ];
           };
         };
 
@@ -94,6 +107,15 @@
             ];
             publishPorts = [ "9980:9980" ];
             environmentFiles = [ config.sops.templates."collabora/code.env".path ];
+            environments = {
+              extra_params = lib.concatStringsSep " " [
+                "--o:logging.file[@enable]=false"
+                "--o:admin_console.enable=true"
+                "--o:ssl.enable=false"
+                "--o:ssl.termination=true"
+                "--o:net.service_root=/collabora-code"
+              ];
+            };
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
@@ -115,13 +137,11 @@
         # seadoc
         reverse_proxy /socket.io/* http://localhost:4002
         handle_path /sdoc-server/* {
-          rewrite * {uri}
           reverse_proxy http://localhost:4002
         }
 
         # notification server
         handle_path /notification* {
-          rewrite * {uri}
           reverse_proxy http://localhost:8083
         }
 
@@ -425,7 +445,6 @@
       password=${config.sops.placeholder."collabora/code/password"}
       DONT_GEN_SSL_CERT=true
       TZ=Asia/Kolkata
-      extra_params=--o:logging.file[@enable]=false --o:admin_console.enable=true --o:ssl.enable=false --o:ssl.termination=true --o:net.service_root=/collabora-code
     '';
   };
 
