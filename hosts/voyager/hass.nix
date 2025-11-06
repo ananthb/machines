@@ -14,6 +14,7 @@
     openFirewall = true;
     extraPackages =
       python3Packages: with python3Packages; [
+        ollama
         psycopg2
       ];
     extraComponents = [
@@ -86,6 +87,19 @@
         external_url = "!include ${config.sops.templates."fqdns/ha-6a.txt".path}";
         internal_url = "http://voyager.local:8123";
       };
+
+      smartir = { };
+
+      fan = [
+        {
+          platform = "smartir";
+          name = "Sylvia Plath Pedestal fan";
+          unique_id = "sylvia_plath_pedestal_fan";
+          device_code = "1170";
+          controller_data = "remote.sylvia_plath_room_remote";
+          power_sensor = "binary_sensor.fan_power";
+        }
+      ];
     };
   };
 
@@ -112,34 +126,12 @@
   };
 
   systemd.services."home-assistant-backup" = {
-    startAt = "weekly";
+    startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    preStart = "systemctl is-active home-assistant.service && systemctl stop home-assistant.service";
-    script = ''
-      backup_target="/var/lib/hass"
-      snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-      dump_file="$snapshot_target/db.dump"
-
-      cleanup() {
-        rm -f "$dump_file"
-        rm -rf "$snapshot_target"
-      }
-      trap cleanup EXIT
-
-      # Dump database
-      ${pkgs.sudo-rs}/bin/sudo -u hass \
-        ${pkgs.postgresql_16}/bin/pg_dump \
-          -Fc -U hass hass > "$dump_file"
-      printf 'Dumped database to %s' "$dump_file"
-
-      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
-
-      ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
-    '';
-    postStop = "systemctl start home-assistant.service";
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+      ExecStart = "${config.my-scripts.kopia-backup} /var/lib/hass/backups";
     };
   };
 
