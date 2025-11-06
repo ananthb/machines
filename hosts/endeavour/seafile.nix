@@ -255,9 +255,15 @@
     };
   };
 
-  #
+  # TODO: fix this
+  services.prometheus.exporters.mysqld = {
+    enable = false;
+    runAsLocalSuperUser = true;
+    listenAddress = "[::]";
+    configFile = pkgs.writeText "config.my-cnf" "";
+  };
+
   # Config files
-  #
   sops.templates."seafile/seafile.env" = {
     content = ''
       # initial variables (valid only during first-time init)
