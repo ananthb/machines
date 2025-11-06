@@ -14,8 +14,12 @@
     openFirewall = true;
     extraPackages =
       python3Packages: with python3Packages; [
+        aioimmich
+        aionut
+        jellyfin-apiclient-python
         ollama
         psycopg2
+        qbittorrent-api
       ];
     extraComponents = [
       # Components required to complete the onboarding
