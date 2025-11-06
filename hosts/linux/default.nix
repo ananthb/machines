@@ -141,6 +141,7 @@
       enabledCollectors = [
         "ethtool"
         "perf"
+        "processes"
         "systemd"
         "tcpstat"
         "wifi"
