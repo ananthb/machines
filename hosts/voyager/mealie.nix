@@ -16,6 +16,8 @@
       OIDC_SIGNUP_ENABLED = "False";
       OIDC_PROVIDER_NAME = "Google";
       OIDC_CONFIGURATION_URL = "https://accounts.google.com/.well-known/openid-configuration";
+      OPENAI_BASE_URL = "http://enterprise:11434/v1";
+      OPENAI_API_KEY = "";
     };
     credentialsFile = config.sops.templates."mealie/env".path;
   };
