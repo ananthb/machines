@@ -15,6 +15,7 @@
     extraPackages =
       python3Packages: with python3Packages; [
         aioimmich
+        aiomealie
         aionut
         jellyfin-apiclient-python
         ollama
