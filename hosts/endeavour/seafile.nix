@@ -128,6 +128,11 @@
 
   services.caddy = {
     enable = true;
+    globalConfig = ''
+      servers {
+        trusted_proxies static ::1 127.0.0.1
+      }
+    '';
     virtualHosts.":4000" = {
       listenAddresses = [ "::1" ];
       extraConfig = ''
