@@ -47,7 +47,10 @@
               "mysql.service"
               "redis-seafile.service"
               "seadoc.service"
+              "seafile-ai.service"
+              "seafile-md-server.service"
               "seafile-notification-server.service"
+              "seafile-thumbnail-server.service"
             ];
             Wants = lib.concatStringsSep " " [
               "caddy.service"
@@ -55,7 +58,10 @@
               "mysql.service"
               "redis-seafile.service"
               "seadoc.service"
+              "seafile-ai.service"
+              "seafile-md-server.service"
               "seafile-notification-server.service"
+              "seafile-thumbnail-server.service"
             ];
           };
         };
@@ -76,6 +82,70 @@
             Before = "caddy.service";
             After = "mysql.service";
             Wants = "mysql.service caddy.service";
+          };
+        };
+
+        seafile-metadata-server = {
+          containerConfig = {
+            name = "seafile-md-server";
+            image = "docker.io/seafileltd/seafile-md-server:13.0-latest";
+            autoUpdate = "registry";
+            volumes = [
+              "/srv/seafile/seafile:/shared"
+            ];
+            networks = [
+              networks.seafile.ref
+            ];
+            publishPorts = [ "8084:8084" ];
+            environmentFiles = [ config.sops.templates."seafile/md-server.env".path ];
+          };
+          serviceConfig.Restart = "on-failure";
+          unitConfig = {
+            Before = "caddy.service";
+            After = "mysql.service redis-seafile.service";
+            Wants = "caddy.service mysql.service redis-seafile.service";
+          };
+        };
+
+        seafile-thumbnail-server = {
+          containerConfig = {
+            name = "seafile-thumbnail-server";
+            image = "docker.io/seafileltd/thumbnail-server:13.0-latest";
+            autoUpdate = "registry";
+            volumes = [
+              "/srv/seafile/seafile:/shared"
+            ];
+            networks = [
+              networks.seafile.ref
+            ];
+            publishPorts = [ "4003:80" ];
+            environmentFiles = [ config.sops.templates."seafile/thumbnail-server.env".path ];
+          };
+          serviceConfig.Restart = "on-failure";
+          unitConfig = {
+            Before = "caddy.service";
+            After = "mysql.service";
+            Wants = "mysql.service caddy.service";
+          };
+        };
+
+        seafile-ai = {
+          containerConfig = {
+            name = "seafile-ai";
+            image = "docker.io/seafileltd/seafile-ai:13.0-latest";
+            autoUpdate = "registry";
+            volumes = [
+              "/srv/seafile/seafile:/shared"
+            ];
+            networks = [
+              networks.seafile.ref
+            ];
+            environmentFiles = [ config.sops.templates."seafile/ai.env".path ];
+          };
+          serviceConfig.Restart = "on-failure";
+          unitConfig = {
+            After = "redis-seafile.service";
+            Wants = "redis-seafile.service";
           };
         };
 
@@ -139,15 +209,25 @@
         # seafile
         reverse_proxy http://localhost:4001
 
+        # notification server
+        handle_path /notification* {
+          reverse_proxy http://localhost:8083
+        }
+
+        # thumbnail server
+        handle /thumbnail/* {
+          reverse_proxy http://localhost:4003
+
+        }
+        handle_path /thumbnail/ping {
+          rewrite /ping
+          reverse_proxy http://localhost:4003
+        }
+
         # seadoc
         reverse_proxy /socket.io/* http://localhost:4002
         handle_path /sdoc-server/* {
           reverse_proxy http://localhost:4002
-        }
-
-        # notification server
-        handle_path /notification* {
-          reverse_proxy http://localhost:8083
         }
 
         # collabora code
@@ -281,7 +361,6 @@
       SEAFILE_SERVER_PROTOCOL=https
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
       TIME_ZONE=Asia/Kolkata
-      SITE_ROOT=/
       NON_ROOT=false
 
       # database
@@ -311,7 +390,8 @@
       NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
 
       # ai server
-      ENABLE_SEAFILE_AI=false
+      ENABLE_SEAFILE_AI=true
+      SEAFILE_AI_SERVER_URL=http://seafile-ai:8888
     '';
   };
 
@@ -331,7 +411,7 @@
 
       # OAuth Setup
       ENABLE_OAUTH = True
-      OAUTH_CREATE_UNKNOWN_USER = True
+      OAUTH_CREATE_UNKNOWN_USER = False
       OAUTH_ACTIVATE_USER_AFTER_CREATION = False
       OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
@@ -359,6 +439,10 @@
       EMAIL_PORT = 25
       DEFAULT_FROM_EMAIL = "${config.sops.placeholder."email/from/seafile"}"
       SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+      # Enable metadata server
+      ENABLE_METADATA_MANAGEMENT = True
+      METADATA_SERVER_URL = 'http://seafile-md-server:8084'
 
       # Collabora Code
       OFFICE_SERVER_TYPE = 'CollaboraOffice'
@@ -415,6 +499,73 @@
     '';
   };
 
+  sops.templates."seafile/notification-server.env" = {
+    content = ''
+      SEAFILE_MYSQL_DB_HOST=host.containers.internal
+      SEAFILE_MYSQL_DB_USER=${config.sops.placeholder."seafile/mysql/username"}
+      SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      SEAFILE_MYSQL_DB_PORT=3306
+      SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      SEAFILE_LOG_TO_STDOUT=true
+      NOTIFICATION_SERVER_LOG_LEVEL=info
+    '';
+  };
+
+  sops.templates."seafile/md-server.env" = {
+    content = ''
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      SEAFILE_MYSQL_DB_HOST=host.containers.internal
+      SEAFILE_MYSQL_DB_USER=${config.sops.placeholder."seafile/mysql/username"}
+      SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      SEAFILE_MYSQL_DB_PORT=3306
+      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      SEAFILE_LOG_TO_STDOUT=true
+      MD_PORT=8084
+      MD_LOG_LEVEL=info
+      MD_MAX_CACHE_SIZE=1GB
+      MD_CHECK_UPDATE_INTERVAL=30m
+      MD_FILE_COUNT_LIMIT=100000
+      SEAF_SERVER_STORAGE_TYPE=disk
+      MD_STORAGE_TYPE=disk
+      CACHE_PROVIDER=redis
+      REDIS_HOST=host.containers.internal
+      REDIS_PORT=6400
+    '';
+  };
+
+  sops.templates."seafile/thumbnail-server.env" = {
+    content = ''
+      TIME_ZONE=Asia/Kolkata
+      SEAFILE_MYSQL_DB_HOST=host.containers.internal
+      SEAFILE_MYSQL_DB_USER=${config.sops.placeholder."seafile/mysql/username"}
+      SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
+      SEAFILE_MYSQL_DB_PORT=3306
+      SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      INNER_SEAHUB_SERVICE_URL=http://seafile
+      THUMBNAIL_IMAGE_ORIGINAL_SIZE_LIMIT=256
+      SEAF_SERVER_STORAGE_TYPE=disk
+    '';
+  };
+
+  sops.templates."seafile/ai.env" = {
+    content = ''
+      SEAFILE_AI_LLM_TYPE=ollama
+      SEAFILE_AI_LLM_URL=http://enterprise:11434
+      SEAFILE_AI_LLM_KEY=hunter2
+      SEAFILE_AI_LLM_MODEL=gemma3:12b
+      SEAFILE_SERVER_URL=http://seafile
+      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
+      SEAFILE_AI_LOG_LEVEL=info
+      CACHE_PROVIDER=redis
+      REDIS_HOST=host.containers.internal
+      REDIS_PORT=6400
+    '';
+  };
+
   sops.templates."seafile/seadoc.env" = {
     content = ''
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
@@ -431,20 +582,6 @@
       DB_NAME=sdoc_db
 
       NON_ROOT=false
-    '';
-  };
-
-  sops.templates."seafile/notification-server.env" = {
-    content = ''
-      SEAFILE_MYSQL_DB_HOST=host.containers.internal
-      SEAFILE_MYSQL_DB_USER=${config.sops.placeholder."seafile/mysql/username"}
-      SEAFILE_MYSQL_DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
-      SEAFILE_MYSQL_DB_PORT=3306
-      SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
-      SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
-      JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
-      SEAFILE_LOG_TO_STDOUT=true
-      NOTIFICATION_SERVER_LOG_LEVEL=info
     '';
   };
 
