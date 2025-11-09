@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   services.victoriametrics = {
@@ -122,7 +122,7 @@
             }
             {
               targets = [
-                "http://endeavour:2283" # immich-server
+                "http://endeavour:2283/auth/login" # immich-server
               ];
               labels.type = "app";
               labels.role = "server";
@@ -130,7 +130,7 @@
             }
             {
               targets = [
-                "http://endeavour:8096/web" # jellyfin
+                "http://endeavour:8096/web/" # jellyfin
                 "http://endeavour:7700" # meilisearch
               ];
               labels.app = "jellyfin";
@@ -172,8 +172,6 @@
                 "https://bhaskararaman.com"
                 "https://calculon.tech"
                 "https://coredump.blog"
-                "https://drvibhu.com"
-                "https://futuraphysio.com"
                 "https://lilaartscentre.com"
                 "https://shakthipalace.com"
               ];
@@ -247,8 +245,6 @@
                 "https://bhaskararaman.com"
                 "https://calculon.tech"
                 "https://coredump.blog"
-                "https://drvibhu.com"
-                "https://futuraphysio.com"
                 "https://lilaartscentre.com"
                 "https://shakthipalace.com"
               ];
@@ -340,7 +336,6 @@
             {
               targets = [
                 "endeavour:9187" # postgres exporter
-                "endeavour:9121" # redis exporter
                 "voyager:9187" # postgres exporter
                 "voyager:9708" # radarr exporter
                 "voyager:9709" # sonarr exporter
@@ -482,6 +477,10 @@
     };
   };
 
+  systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
+    config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
+  ];
+
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "grafana" ];
@@ -534,12 +533,12 @@
           {
               "targets": [
                 "https://6a.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://ab.${config.sops.placeholder."tailscale_api/tailnet"}"
+                "https://ab.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://ai.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://cal.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://mle.${config.sops.placeholder."tailscale_api/tailnet"}",
                 "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://vault.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://vault.${config.sops.placeholder."tailscale_api/tailnet"}"
               ],
               "labels": {
                   "type": "app",
@@ -548,7 +547,7 @@
           }
           {
               "targets": [
-                "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}/auth/login"
               ],
               "labels": {
                   "type": "app",
@@ -568,7 +567,7 @@
           }
           {
               "targets": [
-                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web"
+                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/",
                 "https://watch.${config.sops.placeholder."tailscale_api/tailnet"}"
               ],
               "labels": {
