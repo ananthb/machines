@@ -130,7 +130,7 @@
             }
             {
               targets = [
-                "http://endeavour:8096" # jellyfin
+                "http://endeavour:8096/web" # jellyfin
                 "http://endeavour:7700" # meilisearch
               ];
               labels.app = "jellyfin";
@@ -568,7 +568,7 @@
           }
           {
               "targets": [
-                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}"
+                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web"
                 "https://watch.${config.sops.placeholder."tailscale_api/tailnet"}"
               ],
               "labels": {
