@@ -7,7 +7,6 @@
 {
   services.open-webui = {
     enable = true;
-    host = "[::]";
     package = pkgs-unstable.open-webui.overrideAttrs (old: {
       propagatedBuildInputs =
         old.propagatedBuildInputs
@@ -23,10 +22,12 @@
           ++ (with pkgs-unstable; [
             bash
             gvisor
+            jellyfin-ffmpeg
             util-linux
           ])
         );
     });
+    host = "0.0.0.0";
     port = 8090;
     environmentFile = config.sops.templates."open-webui/env".path;
   };
@@ -45,12 +46,13 @@
       no_proxy=".${config.sops.placeholder."tailscale_api/tailnet"}"
       ENV="prod"
       WEBUI_URL="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
+      CORS_ALLOW_ORIGIN="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
       BYPASS_MODEL_ACCESS_CONTROL="True"
+      USER_AGENT="Ananth's Open WebUI"
 
       # ollama api
-      ENABLE_OLLAMA_API
       OLLAMA_BASE_URLS="http://enterprise.${
         config.sops.placeholder."tailscale_api/tailnet"
       }:11434;http://discovery.${config.sops.placeholder."tailscale_api/tailnet"}:11434"
