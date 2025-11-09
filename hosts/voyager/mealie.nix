@@ -16,7 +16,7 @@
       OIDC_SIGNUP_ENABLED = "False";
       OIDC_PROVIDER_NAME = "Google";
       OIDC_CONFIGURATION_URL = "https://accounts.google.com/.well-known/openid-configuration";
-      OPENAI_BASE_URL = "http://enterprise:11434/v1";
+      OPENAI_BASE_URL = "http://endeavour:8090/ollama/v1";
       OPENAI_MODEL = "gemma3:12b";
     };
     credentialsFile = config.sops.templates."mealie/env".path;
@@ -71,6 +71,7 @@
   sops.secrets = {
     "email/from/mealie" = { };
     "mealie/api_keys" = { };
+    "open-webui/api_key" = { };
   };
 
   sops.templates."mealie/env" = {
@@ -82,7 +83,7 @@
       SMTP_FROM_EMAIL=${config.sops.placeholder."email/from/mealie"}
       SMTP_USER=${config.sops.placeholder."email/smtp/username"}
       SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
-      OPENAI_API_KEY=hunter2
+      OPENAI_API_KEY=${config.sops.placeholder."open-webui/api_key"}
     '';
   };
 

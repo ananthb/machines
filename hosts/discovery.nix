@@ -9,6 +9,7 @@
   homebrew.casks = [
     "1password"
     "discord"
+    "firefox"
     "gimp"
     "ledger-live"
     "signal"

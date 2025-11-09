@@ -554,8 +554,8 @@
   sops.templates."seafile/ai.env" = {
     content = ''
       SEAFILE_AI_LLM_TYPE=ollama
-      SEAFILE_AI_LLM_URL=http://enterprise:11434
-      SEAFILE_AI_LLM_KEY=hunter2
+      SEAFILE_AI_LLM_URL=http://endeavour:8090/ollama
+      SEAFILE_AI_LLM_KEY=${config.sops.placeholder."open-webui/api_key"}
       SEAFILE_AI_LLM_MODEL=gemma3:12b
       SEAFILE_SERVER_URL=http://seafile
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
@@ -604,6 +604,7 @@
     "seafile/mysql/username" = { };
     "seafile/mysql/password" = { };
     "seafile/seahub_secret_key" = { };
+    "open-webui/api_key" = { };
   };
 
 }
