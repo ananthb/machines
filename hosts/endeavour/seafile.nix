@@ -301,10 +301,11 @@
     settings.protected-mode = "no";
   };
 
-  # Let seafile access redis and mysql
+  # Seafile access to services running on the host
   networking.firewall.interfaces.podman1.allowedTCPPorts = [
-    3306
-    6400
+    3306 # mysql
+    6400 # redis-seafile
+    8090 # open-webui
   ];
 
   systemd.services."seafile-mysql-backup" = {
@@ -392,6 +393,7 @@
       # ai server
       ENABLE_SEAFILE_AI=true
       SEAFILE_AI_SERVER_URL=http://seafile-ai:8888
+      SEAFILE_AI_SECRET_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
     '';
   };
 
@@ -553,8 +555,8 @@
 
   sops.templates."seafile/ai.env" = {
     content = ''
-      SEAFILE_AI_LLM_TYPE=ollama
-      SEAFILE_AI_LLM_URL=http://endeavour:8090/ollama
+      SEAFILE_AI_LLM_TYPE=openai
+      SEAFILE_AI_LLM_URL=http://host.containers.internal:8090/ollama/v1
       SEAFILE_AI_LLM_KEY=${config.sops.placeholder."open-webui/api_key"}
       SEAFILE_AI_LLM_MODEL=gemma3:12b
       SEAFILE_SERVER_URL=http://seafile
@@ -573,14 +575,11 @@
       SEAFILE_SERVER_PROTOCOL=https
       TIME_ZONE=Asia/Kolkata
       SEAHUB_SERVICE_URL=http://seafile
-
-      # database
       DB_HOST=host.containers.internal
       DB_USER=${config.sops.placeholder."seafile/mysql/username"}
       DB_PASSWORD=${config.sops.placeholder."seafile/mysql/password"}
       DB_PORT=3306
       DB_NAME=sdoc_db
-
       NON_ROOT=false
     '';
   };
