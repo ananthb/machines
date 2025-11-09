@@ -7,6 +7,7 @@
 {
   services.open-webui = {
     enable = true;
+    host = "[::]";
     package = pkgs-unstable.open-webui.overrideAttrs (old: {
       propagatedBuildInputs =
         old.propagatedBuildInputs
