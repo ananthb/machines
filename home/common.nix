@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  pkgs-unstable,
   username,
   ...
 }:
@@ -43,27 +44,31 @@ in
     set fish_greeting ""
   '';
 
-  home.packages = with pkgs; [
-    # Fonts
-    hack-font
+  home.packages =
+    with pkgs;
+    [
+      # Fonts
+      hack-font
 
-    # Shell
-    nushell
-    mosh
-    oils-for-unix
-    fish
+      # Shell
+      nushell
+      mosh
+      oils-for-unix
+      fish
 
-    # Tools
-    nix-output-monitor
-    git
-    lazygit
-    jujutsu
-    ripgrep
-    delta
-    fzf
-    devenv
-    gnupg
-  ];
+      # Tools
+      nix-output-monitor
+      git
+      lazygit
+      jujutsu
+      ripgrep
+      delta
+      fzf
+      gnupg
+    ]
+    ++ (with pkgs-unstable; [
+      devenv
+    ]);
 
   home.stateVersion = "24.05";
 }
