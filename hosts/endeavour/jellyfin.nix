@@ -1,15 +1,17 @@
 {
   pkgs,
+  pkgs-unstable,
   ...
 }:
 {
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs-unstable; [
     jellyfin-web
     jellyfin-ffmpeg
   ];
 
   services = {
     jellyfin.enable = true;
+    jellyfin.package = pkgs-unstable.jellyfin;
     jellyfin.group = "media";
     jellyfin.openFirewall = true;
 
