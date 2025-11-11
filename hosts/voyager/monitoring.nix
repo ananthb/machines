@@ -136,7 +136,6 @@
             {
               targets = [
                 "http://endeavour:8096/web/" # jellyfin
-                "http://endeavour:7700" # meilisearch
               ];
               labels.app = "jellyfin";
               labels.type = "app";
@@ -360,7 +359,6 @@
             {
               targets = [
                 "endeavour:8096" # jellyfin
-                "endeavour:7700" # meilisearch
               ];
               labels.type = "exporter";
               labels.role = "server";
