@@ -52,11 +52,6 @@
   services = {
     jellyseerr.enable = true;
 
-    tsnsrv.services.watch = {
-      funnel = true;
-      urlParts.port = 5055;
-    };
-
     postgresql = {
       enable = true;
       ensureDatabases = [ "jellyseerr" ];
@@ -69,16 +64,11 @@
       ];
     };
   };
-  systemd.services = {
-    tsnsrv-watch.wants = [ "jellyseerr.service" ];
-    tsnsrv-watch.after = [ "jellyseerr.service" ];
-
-    jellyseerr.environment = {
-      DB_TYPE = "postgres";
-      DB_SOCKET_PATH = "/var/run/postgresql";
-      DB_USER = "jellyseerr";
-      DB_NAME = "jellyseerr";
-    };
+  systemd.services.jellyseerr.environment = {
+    DB_TYPE = "postgres";
+    DB_SOCKET_PATH = "/var/run/postgresql";
+    DB_USER = "jellyseerr";
+    DB_NAME = "jellyseerr";
   };
 
   # secrets
