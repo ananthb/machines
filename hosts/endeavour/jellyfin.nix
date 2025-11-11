@@ -1,5 +1,4 @@
 {
-  pkgs,
   pkgs-unstable,
   ...
 }:
@@ -14,10 +13,6 @@
     jellyfin.package = pkgs-unstable.jellyfin;
     jellyfin.group = "media";
     jellyfin.openFirewall = true;
-
-    meilisearch.enable = true;
-    meilisearch.package = pkgs.meilisearch;
-    meilisearch.listenAddress = "[::]";
 
     tsnsrv.services.tv = {
       funnel = true;
