@@ -222,7 +222,7 @@
         "server": {
           "externalDomain": "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}",
           "loginPageMessage": "Welcome to Ananth's Immich server",
-          "publicUsers": false
+          "publicUsers": true
         },
         "notifications": {
           "smtp": {
