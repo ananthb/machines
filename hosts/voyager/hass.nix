@@ -21,6 +21,7 @@
         ollama
         psycopg2
         qbittorrent-api
+        speedtest-cli
       ];
     extraComponents = [
       # Components required to complete the onboarding
