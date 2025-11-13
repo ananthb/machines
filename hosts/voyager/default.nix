@@ -7,10 +7,11 @@
     ../linux
 
     ./actual.nix
-    # re-enable davis when we have postgresql.target
+    # TODO: re-enable davis when we have postgresql.target
     # ./davis.nix
     ./hardware-configuration.nix
     ./hass.nix
+    ./jam.nix
     ./mealie.nix
     ./monitoring.nix
     ./radicale.nix
@@ -46,29 +47,6 @@
       powerValue = 1;
       user = "nutmon";
     };
-  };
-
-  # Jellyseerr
-  services = {
-    jellyseerr.enable = true;
-
-    postgresql = {
-      enable = true;
-      ensureDatabases = [ "jellyseerr" ];
-      ensureUsers = [
-        {
-          name = "jellyseerr";
-          ensureDBOwnership = true;
-          ensureClauses.login = true;
-        }
-      ];
-    };
-  };
-  systemd.services.jellyseerr.environment = {
-    DB_TYPE = "postgres";
-    DB_SOCKET_PATH = "/var/run/postgresql";
-    DB_USER = "jellyseerr";
-    DB_NAME = "jellyseerr";
   };
 
   # secrets
