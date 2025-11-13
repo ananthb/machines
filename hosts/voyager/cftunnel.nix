@@ -7,11 +7,11 @@
       ingress = {
         "6a.kedi.dev" = "http://localhost:8123";
         "actual.kedi.dev" = "http://localhost:3100";
-        "immich.kedi.dev" = "http://endeavour:2283";
+        "immich.kedi.dev" = "http://endeavour.local:2283";
         "mealie.kedi.dev" = "http://localhost:9000";
-        "open-webui.kedi.dev" = "http://endeavour:8090";
+        "open-webui.kedi.dev" = "http://endeavour.local:8090";
         "radicale.kedi.dev" = "http://localhost:5232";
-        "seafile.kedi.dev" = "http://endeavour:4000";
+        "seafile.kedi.dev" = "http://endeavour.local:4000";
         "vault.kedi.dev" = "http://localhost:8222";
       };
       credentialsFile =
