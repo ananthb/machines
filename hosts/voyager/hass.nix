@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   pkgs-unstable,
   ...
 }:
@@ -109,11 +108,6 @@
     };
   };
 
-  services.tsnsrv.services."6a" = {
-    funnel = true;
-    urlParts.port = 8123;
-  };
-
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "hass" ];
@@ -124,11 +118,6 @@
         ensureClauses.login = true;
       }
     ];
-  };
-
-  systemd.services.tsnsrv-6a = {
-    wants = [ "home-assistant.service" ];
-    after = [ "home-assistant.service" ];
   };
 
   systemd.services."home-assistant-backup" = {

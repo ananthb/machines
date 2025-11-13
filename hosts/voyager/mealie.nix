@@ -8,7 +8,7 @@
   services.mealie = {
     enable = true;
     package = pkgs-unstable.mealie;
-    listenAddress = "[::]";
+    listenAddress = "[::1]";
     database.createLocally = true;
     settings = {
       ALLOW_PASSWORD_LOGIN = "False";
@@ -20,16 +20,6 @@
       OPENAI_MODEL = "gemma3:12b";
     };
     credentialsFile = config.sops.templates."mealie/env".path;
-  };
-
-  services.tsnsrv.services.mle = {
-    funnel = true;
-    urlParts.port = 9000;
-  };
-
-  systemd.services = {
-    tsnsrv-mle.wants = [ "mealie.service" ];
-    tsnsrv-mle.after = [ "mealie.service" ];
   };
 
   systemd.services."mealie-backup" = {

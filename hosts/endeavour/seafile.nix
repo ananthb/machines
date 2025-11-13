@@ -204,7 +204,6 @@
       }
     '';
     virtualHosts.":4000" = {
-      listenAddresses = [ "::1" ];
       extraConfig = ''
         # seafile
         reverse_proxy http://localhost:4001

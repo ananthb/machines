@@ -30,16 +30,6 @@
     ];
   };
 
-  services.tsnsrv.services."vault" = {
-    funnel = true;
-    urlParts.port = 8222;
-  };
-
-  systemd.services.tsnsrv-vault = {
-    wants = [ "vaultwarden.service" ];
-    after = [ "vaultwarden.service" ];
-  };
-
   systemd.services."vaultwarden-backup" = {
     startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
