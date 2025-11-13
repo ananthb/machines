@@ -240,6 +240,8 @@
     urlParts.port = 4000;
   };
 
+  networking.firewall.allowedTCPPorts = [ 4000 ];
+
   systemd.services = {
     tsnsrv-sf = {
       wants = [
