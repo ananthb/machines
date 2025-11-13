@@ -1,27 +1,15 @@
 { config, pkgs, ... }:
 {
-  services = {
-    radicale = {
-      enable = true;
-      settings = {
-        server.hosts = [ "[::]:5232" ];
-        auth = {
-          type = "htpasswd";
-          htpasswd_filename = "${config.sops.secrets."radicale/htpasswd".path}";
-          htpasswd_encryption = "autodetect";
-        };
+  services.radicale = {
+    enable = true;
+    settings = {
+      server.hosts = [ "[::1]:5232" ];
+      auth = {
+        type = "htpasswd";
+        htpasswd_filename = "${config.sops.secrets."radicale/htpasswd".path}";
+        htpasswd_encryption = "autodetect";
       };
     };
-
-    tsnsrv.services.cal = {
-      funnel = true;
-      urlParts.port = 5232;
-    };
-  };
-
-  systemd.services.tsnsrv-cal = {
-    wants = [ "radicale.service" ];
-    after = [ "radicale.service" ];
   };
 
   systemd.services."radicale-backup" = {
