@@ -76,7 +76,7 @@
 
   sops.templates."mealie/env" = {
     content = ''
-      BASE_URL=https://mle.${config.sops.placeholder."tailscale_api/tailnet"}
+      BASE_URL=https://mealie.kedi.dev
       OIDC_CLIENT_ID=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}
       OIDC_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}
       SMTP_HOST=${config.sops.placeholder."email/smtp/host"}

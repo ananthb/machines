@@ -90,7 +90,7 @@
         temperature_unit = "C";
         currency = "INR";
         country = "IN";
-        external_url = "!include ${config.sops.templates."fqdns/ha-6a.txt".path}";
+        external_url = "https://6a.kedi.dev";
         internal_url = "http://voyager.local:8123";
       };
 
@@ -144,8 +144,4 @@
   sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;
   sops.secrets."home/6a/longitude".owner = config.users.users.hass.name;
   sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
-  sops.templates."fqdns/ha-6a.txt" = {
-    owner = config.users.users.hass.name;
-    content = "https://6a.${config.sops.placeholder."tailscale_api/tailnet"}";
-  };
 }

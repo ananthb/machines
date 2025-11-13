@@ -73,7 +73,7 @@
 
   sops.templates."vaultwarden/secrets.env" = {
     content = ''
-      DOMAIN=https://vault.${config.sops.placeholder."tailscale_api/tailnet"}
+      DOMAIN=https://vault.kedi.dev
       ADMIN_TOKEN=${config.sops.placeholder."vaultwarden/admin_token"}
 
       # smtp
