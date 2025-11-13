@@ -7,6 +7,7 @@
     ../linux
 
     ./actual.nix
+    ./cftunnel.nix
     # TODO: re-enable davis when we have postgresql.target
     # ./davis.nix
     ./hardware-configuration.nix

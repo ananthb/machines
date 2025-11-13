@@ -1,0 +1,18 @@
+{ ... }:
+{
+  services.cloudflared = {
+    enable = true;
+    tunnels."kedi" = {
+      default = "http_status:404";
+      ingress = {
+        "6a.kedi.dev" = "http://localhost:8123";
+        "actual.kedi.dev" = "http://localhost:3100";
+        "mealie.kedi.dev" = "http://localhost:9000";
+        "radicale.kedi.dev" = "http://localhost:5232";
+        "vault.kedi.dev" = "http://localhost:8222";
+      };
+      credentialsFile = "/var/lib/cloudflared/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5.json";
+    };
+  };
+
+}
