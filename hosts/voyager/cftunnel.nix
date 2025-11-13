@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   services.cloudflared = {
     enable = true;
@@ -11,8 +11,12 @@
         "radicale.kedi.dev" = "http://localhost:5232";
         "vault.kedi.dev" = "http://localhost:8222";
       };
-      credentialsFile = "/var/lib/cloudflared/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5.json";
+      credentialsFile = config.sops.secrets."cloudflared/tunnels/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5/credentials".path;
     };
+  };
+
+  sops.secrets = {
+    "cloudflared/tunnels/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5/credentials" = { };
   };
 
 }
