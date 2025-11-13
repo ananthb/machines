@@ -11,7 +11,7 @@
     # ./davis.nix
     ./hardware-configuration.nix
     ./hass.nix
-    ./jam.nix
+    ./jellyseerr.nix
     ./mealie.nix
     ./monitoring.nix
     ./radicale.nix
