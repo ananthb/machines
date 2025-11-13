@@ -10,6 +10,7 @@
     ../linux
 
     ./arr.nix
+    ./cftunnel.nix
     ./hardware-configuration.nix
     ./immich.nix
     ./jellyfin.nix
