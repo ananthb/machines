@@ -16,7 +16,7 @@
       OIDC_SIGNUP_ENABLED = "False";
       OIDC_PROVIDER_NAME = "Google";
       OIDC_CONFIGURATION_URL = "https://accounts.google.com/.well-known/openid-configuration";
-      OPENAI_BASE_URL = "http://endeavour:8090/ollama/v1";
+      OPENAI_BASE_URL = "http://endeavour.local:8090/ollama/v1";
       OPENAI_MODEL = "gemma3:12b";
     };
     credentialsFile = config.sops.templates."mealie/env".path;
