@@ -29,6 +29,7 @@
     });
     host = "0.0.0.0";
     port = 8090;
+    openFirewall = true;
     environmentFile = config.sops.templates."open-webui/env".path;
   };
 

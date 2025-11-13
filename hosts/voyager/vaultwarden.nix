@@ -7,7 +7,7 @@
     config = {
       DATABASE_URL = "postgresql://vaultwarden@/vaultwarden?host=/run/postgresql";
 
-      ROCKET_ADDRESS = "::1";
+      ROCKET_ADDRESS = "::";
       ROCKET_PORT = 8222;
       ROCKET_LOG = "critical";
 

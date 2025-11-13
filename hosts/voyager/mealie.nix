@@ -8,7 +8,7 @@
   services.mealie = {
     enable = true;
     package = pkgs-unstable.mealie;
-    listenAddress = "[::1]";
+    listenAddress = "[::]";
     database.createLocally = true;
     settings = {
       ALLOW_PASSWORD_LOGIN = "False";
