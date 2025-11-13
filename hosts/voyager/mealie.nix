@@ -22,6 +22,8 @@
     credentialsFile = config.sops.templates."mealie/env".path;
   };
 
+  networking.firewall.allowedTCPPorts = [ 9000 ];
+
   systemd.services."mealie-backup" = {
     startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
