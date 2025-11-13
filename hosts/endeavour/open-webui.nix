@@ -44,19 +44,17 @@
       # general
       http_proxy="http://localhost:8888"
       https_proxy="http://localhost:8888"
-      no_proxy=".${config.sops.placeholder."tailscale_api/tailnet"}"
+      no_proxy=".kedi.dev"
       ENV="prod"
-      WEBUI_URL="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
-      CORS_ALLOW_ORIGIN="https://ai.${config.sops.placeholder."tailscale_api/tailnet"}"
+      WEBUI_URL="https://open-webui.kedi.dev"
+      CORS_ALLOW_ORIGIN="https://open-webui.kedi.dev"
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
       BYPASS_MODEL_ACCESS_CONTROL="True"
       USER_AGENT="Ananth's Open WebUI"
 
       # ollama api
-      OLLAMA_BASE_URLS="http://enterprise.${
-        config.sops.placeholder."tailscale_api/tailnet"
-      }:11434;http://discovery.${config.sops.placeholder."tailscale_api/tailnet"}:11434"
+      OLLAMA_BASE_URLS="http://enterprise.local:11434;http://discovery.local:11434"
       EMABLE_OPENAI_API="False"
 
       # auth
@@ -69,9 +67,7 @@
       # Google OpenID
       GOOGLE_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       GOOGLE_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
-      GOOGLE_REDIRECT_URI="https://ai.${
-        config.sops.placeholder."tailscale_api/tailnet"
-      }/oauth/google/callback"
+      GOOGLE_REDIRECT_URI="https://open-webui.kedi.dev/oauth/google/callback"
       OPENID_PROVIDER_URL="https://accounts.google.com/.well-known/openid-configuration"
 
       # See http://github.com/open-webui/open-webui/discussions/10571
@@ -104,12 +100,6 @@
         ensureClauses.login = true;
       }
     ];
-  };
-
-  services.tsnsrv.services.ai = {
-    funnel = true;
-    urlParts.host = "127.0.0.1";
-    urlParts.port = 8090;
   };
 
 }
