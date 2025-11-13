@@ -18,6 +18,8 @@
     environmentFile = config.sops.templates."vaultwarden/secrets.env".path;
   };
 
+  networking.firewall.allowedTCPPorts = [ 8222 ];
+
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "vaultwarden" ];
