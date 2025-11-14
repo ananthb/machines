@@ -60,9 +60,11 @@
   sops.templates."mealie/env" = {
     content = ''
       # general
-      # TODO: fix this when I figure out how to put fd00::/8 in here
-      FORWARDED_ALLOW_IPS=*
       BASE_URL=https://mealie.kedi.dev
+
+      # TODO: fix this when I figure out how to put fd00::/8 in here
+      # https://github.com/mealie-recipes/mealie/issues/6038
+      FORWARDED_ALLOW_IPS=*
 
       # auth
       ALLOW_PASSWORD_LOGIN=False
