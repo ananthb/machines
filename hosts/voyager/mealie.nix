@@ -10,15 +10,6 @@
     package = pkgs-unstable.mealie;
     listenAddress = "[::]";
     database.createLocally = true;
-    settings = {
-      ALLOW_PASSWORD_LOGIN = "False";
-      OIDC_AUTH_ENABLED = "True";
-      OIDC_SIGNUP_ENABLED = "False";
-      OIDC_PROVIDER_NAME = "Google";
-      OIDC_CONFIGURATION_URL = "https://accounts.google.com/.well-known/openid-configuration";
-      OPENAI_BASE_URL = "http://endeavour.local:8090/ollama/v1";
-      OPENAI_MODEL = "gemma3:12b";
-    };
     credentialsFile = config.sops.templates."mealie/env".path;
   };
 
@@ -68,13 +59,29 @@
 
   sops.templates."mealie/env" = {
     content = ''
+      # general
+      # TODO: fix this when I figure out how to put fd00::/8 in here
+      FORWARDED_ALLOW_IPS=*
       BASE_URL=https://mealie.kedi.dev
+
+      # auth
+      ALLOW_PASSWORD_LOGIN=False
+      OIDC_AUTH_ENABLED=True
+      OIDC_SIGNUP_ENABLED=False
       OIDC_CLIENT_ID=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}
       OIDC_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}
+      OIDC_PROVIDER_NAME=Google
+      OIDC_CONFIGURATION_URL=https://accounts.google.com/.well-known/openid-configuration
+
+      # smtp
       SMTP_HOST=${config.sops.placeholder."email/smtp/host"}
       SMTP_FROM_EMAIL=${config.sops.placeholder."email/from/mealie"}
       SMTP_USER=${config.sops.placeholder."email/smtp/username"}
       SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
+
+      # open-webui
+      OPENAI_BASE_URL=http://endeavour.local:8090/ollama/v1
+      OPENAI_MODEL=gemma3:12b
       OPENAI_API_KEY=${config.sops.placeholder."open-webui/api_key"}
     '';
   };
