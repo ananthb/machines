@@ -34,8 +34,6 @@
       };
     }
 
-    inputs.tsnsrv.nixosModules.default
-
     ../common.nix
     ./scripts.nix
   ];
@@ -127,12 +125,6 @@
     package = pkgs-unstable.tailscale;
   };
 
-  services.tsnsrv = {
-    enable = true;
-    defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
-    defaults.urlParts.host = "localhost";
-  };
-
   services.prometheus.exporters = {
     node = {
       enable = true;
@@ -170,6 +162,5 @@
     "gcloud/oauth_self-hosted_clients/secret" = { };
     "gcloud/service_accounts/kopia-hathi-backups.json" = { };
     "kopia/gcs/hathi-backups" = { };
-    "tailscale_api/auth_key" = { };
   };
 }

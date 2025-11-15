@@ -4,24 +4,17 @@
   ...
 }:
 {
-  services = {
-    immich = {
-      enable = true;
-      host = "::";
-      openFirewall = true;
-      package = pkgs-unstable.immich;
-      environment = {
-        "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
-      };
-      mediaLocation = "/srv/immich";
-      accelerationDevices = [ "/dev/dri/renderD128" ];
-      machine-learning.enable = false;
+  services.immich = {
+    enable = true;
+    host = "::";
+    openFirewall = true;
+    package = pkgs-unstable.immich;
+    environment = {
+      "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
     };
-
-    tsnsrv.services.imm = {
-      funnel = true;
-      urlParts.port = 2283;
-    };
+    mediaLocation = "/srv/immich";
+    accelerationDevices = [ "/dev/dri/renderD128" ];
+    machine-learning.enable = false;
   };
 
   users.users.immich.extraGroups = [
@@ -33,9 +26,6 @@
     environment.IMMICH_TELEMETRY_INCLUDE = "all";
     unitConfig.RequiresMountsFor = "/srv";
   };
-
-  systemd.services.tsnsrv-imm.wants = [ "immich-server.service" ];
-  systemd.services.tsnsrv-imm.after = [ "immich-server.service" ];
 
   systemd.services."immich-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
