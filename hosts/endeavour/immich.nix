@@ -219,7 +219,7 @@
         },
         "server": {
           "externalDomain": "https://immich.kedi.dev",
-          "loginPageMessage": "Welcome to Ananth's Immich server",
+          "loginPageMessage": "Welcome to KEDI Immich server",
           "publicUsers": true
         },
         "notifications": {

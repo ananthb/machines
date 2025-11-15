@@ -75,7 +75,7 @@
       SMTP_USERNAME=${config.sops.placeholder."email/smtp/username"}
       SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
       SMTP_FROM=${config.sops.placeholder."email/from/vaultwarden"}
-      SMTP_FROM_NAME=Ananth's Secret Vault
+      SMTP_FROM_NAME=KEDI Vaultwarden
 
       # push notifications
       PUSH_ENABLED=true

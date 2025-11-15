@@ -51,7 +51,7 @@
       DATABASE_URL="postgresql://open-webui@/open-webui?host=/run/postgresql"
       ENABLE_PERSISTENT_CONFIG="False"
       BYPASS_MODEL_ACCESS_CONTROL="True"
-      USER_AGENT="Ananth's Open WebUI"
+      USER_AGENT="KEDI Open WebUI"
 
       # ollama api
       OLLAMA_BASE_URLS="http://enterprise.local:11434;http://discovery.local:11434"

@@ -5,6 +5,8 @@
     openFirewall = true;
     allowedHosts = "apps.kedi.dev";
     settings = {
+      title = "KEDI Applications";
+      description = "KEDI Server running apps for the people";
       base = "https://apps.kedi.dev";
       target = "_blank";
     };
@@ -52,7 +54,7 @@
           }
           {
             "Actual" = {
-              icon = "actual";
+              icon = "actual-budget";
               description = "Personal Budget Tracker";
               href = "https://actual.kedi.dev";
             };
@@ -126,7 +128,7 @@
             "Upptime" = {
               icon = "mdi-arrow-up-circle";
               description = "Uptime Status Website";
-              href = "uptime.kedi.dev";
+              href = "https://uptime.kedi.dev";
             };
           }
         ];
