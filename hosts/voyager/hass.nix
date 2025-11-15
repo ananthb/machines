@@ -73,7 +73,7 @@
         trusted_proxies = [
           "::1"
           "127.0.0.1"
-          "fd00::/8"
+          "10.15.16.124"
         ];
         use_x_forwarded_for = true;
         ip_ban_enabled = true;
