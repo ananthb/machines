@@ -169,9 +169,7 @@
           "enabled": true,
           "issuerUrl": "https://accounts.google.com/.well-known/openid-configuration",
           "mobileOverrideEnabled": true,
-          "mobileRedirectUri": "https://imm.${
-            config.sops.placeholder."tailscale_api/tailnet"
-          }/api/oauth/mobile-redirect",
+          "mobileRedirectUri": "https://immich.kedi.dev/api/oauth/mobile-redirect",
           "scope": "openid email profile",
           "signingAlgorithm": "RS256",
           "profileSigningAlgorithm": "none",
@@ -220,7 +218,7 @@
           }
         },
         "server": {
-          "externalDomain": "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}",
+          "externalDomain": "https://immich.kedi.dev",
           "loginPageMessage": "Welcome to Ananth's Immich server",
           "publicUsers": true
         },

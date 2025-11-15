@@ -7,6 +7,7 @@
       ingress = {
         "6a.kedi.dev" = "http://voyager.local:8123";
         "actual.kedi.dev" = "http://voyager.local:3100";
+        "apps.kedi.dev" = "http://voyager.local:8082";
         "immich.kedi.dev" = "http://localhost:2283";
         "mealie.kedi.dev" = "http://voyager.local:9000";
         "open-webui.kedi.dev" = "http://localhost:8090";

@@ -518,10 +518,11 @@
   };
 
   sops.secrets = {
+    "email/from/grafana".owner = config.users.users.grafana.name;
+    "email/smtp/host".owner = config.users.users.grafana.name;
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
-    "email/smtp/host".owner = config.users.users.grafana.name;
-    "email/from/grafana".owner = config.users.users.grafana.name;
+    "tailscale_api/tailnet" = { };
   };
 
   sops.templates."fqdns/grafana.txt" = {
@@ -530,18 +531,18 @@
   };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
-    mode = "0444";
+    owner = config.users.users.grafana.name;
     content = ''
       [
           {
               "targets": [
-                "https://6a.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://ab.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://ai.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://cal.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://mle.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://6a.kedi.dev",
+                "https://actual.kedi.dev",
+                "https://mealie.kedi.dev",
                 "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://vault.${config.sops.placeholder."tailscale_api/tailnet"}"
+                "https://open-webui.kedi.dev.",
+                "https://radicale.kedi.dev",
+                "https://vault.kedi.dev"
               ],
               "labels": {
                   "type": "app",
@@ -550,7 +551,7 @@
           }
           {
               "targets": [
-                "https://imm.${config.sops.placeholder."tailscale_api/tailnet"}/auth/login"
+                "https://immich.kedi.dev/auth/login"
               ],
               "labels": {
                   "type": "app",
@@ -560,7 +561,7 @@
           }
           {
               "targets": [
-                "https://sf.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://seafile.kedi.dev/accounts/login/",
               ],
               "labels": {
                   "type": "app",
@@ -570,8 +571,7 @@
           }
           {
               "targets": [
-                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/",
-                "https://watch.${config.sops.placeholder."tailscale_api/tailnet"}"
+                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
               ],
               "labels": {
                   "type": "app",
