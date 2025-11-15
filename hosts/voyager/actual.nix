@@ -12,6 +12,8 @@
   systemd.services.actual.serviceConfig.EnvironmentFile =
     config.sops.templates."actual/config.env".path;
 
+  networking.firewall.allowedTCPPorts = [ 3100 ];
+
   sops.templates."actual/config.env" = {
     content = ''
       ACTUAL_OPENID_DISCOVERY_URL=https://accounts.google.com/.well-known/openid-configuration
