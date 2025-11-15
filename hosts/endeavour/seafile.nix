@@ -85,7 +85,7 @@
           };
         };
 
-        seafile-metadata-server = {
+        seafile-md-server = {
           containerConfig = {
             name = "seafile-md-server";
             image = "docker.io/seafileltd/seafile-md-server:13.0-latest";
@@ -235,29 +235,7 @@
     };
   };
 
-  services.tsnsrv.services.sf = {
-    funnel = true;
-    urlParts.port = 4000;
-  };
-
   networking.firewall.allowedTCPPorts = [ 4000 ];
-
-  systemd.services = {
-    tsnsrv-sf = {
-      wants = [
-        "caddy.service"
-        "collabora-code.service"
-        "seadoc.service"
-        "seafile.service"
-      ];
-      after = [
-        "caddy.service"
-        "collabora-code.service"
-        "seadoc.service"
-        "seafile.service"
-      ];
-    };
-  };
 
   services.mysql = {
     enable = true;

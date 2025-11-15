@@ -1,24 +1,36 @@
 {
+  config,
+  inputs,
   pkgs-unstable,
   ...
 }:
 {
+  imports = [
+    inputs.tsnsrv.nixosModules.default
+  ];
+
   environment.systemPackages = with pkgs-unstable; [
     jellyfin-web
     jellyfin-ffmpeg
   ];
 
-  services = {
-    jellyfin.enable = true;
-    jellyfin.package = pkgs-unstable.jellyfin;
-    jellyfin.group = "media";
-    jellyfin.openFirewall = true;
+  services.jellyfin = {
+    enable = true;
+    package = pkgs-unstable.jellyfin;
+    group = "media";
+    openFirewall = true;
+  };
 
-    tsnsrv.services.tv = {
+  services.tsnsrv = {
+    enable = true;
+
+    defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
+    defaults.urlParts.host = "localhost";
+
+    services.tv = {
       funnel = true;
       urlParts.port = 8096;
     };
-
   };
 
   systemd.services.tsnsrv-tv.wants = [ "jellyfin.service" ];
@@ -45,5 +57,7 @@
       );
     })
   ];
+
+  sops.secrets."tailscale_api/auth_key" = { };
 
 }
