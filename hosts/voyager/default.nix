@@ -12,6 +12,7 @@
     # ./davis.nix
     ./hardware-configuration.nix
     ./hass.nix
+    ./homepage.nix
     ./jellyseerr.nix
     ./mealie.nix
     ./monitoring.nix

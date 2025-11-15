@@ -171,6 +171,5 @@
     "gcloud/service_accounts/kopia-hathi-backups.json" = { };
     "kopia/gcs/hathi-backups" = { };
     "tailscale_api/auth_key" = { };
-    "tailscale_api/tailnet" = { };
   };
 }

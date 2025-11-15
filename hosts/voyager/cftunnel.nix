@@ -7,6 +7,7 @@
       ingress = {
         "6a.kedi.dev" = "http://localhost:8123";
         "actual.kedi.dev" = "http://localhost:3100";
+        "apps.kedi.dev" = "http://localhost:8082";
         "immich.kedi.dev" = "http://endeavour.local:2283";
         "mealie.kedi.dev" = "http://localhost:9000";
         "open-webui.kedi.dev" = "http://endeavour.local:8090";

@@ -359,7 +359,7 @@
 
       # startup parameters
       SEAFILE_LOG_TO_STDOUT=true
-      SEAFILE_SERVER_HOSTNAME=sf.${config.sops.placeholder."tailscale_api/tailnet"}
+      SEAFILE_SERVER_HOSTNAME=seafile.kedi.dev
       SEAFILE_SERVER_PROTOCOL=https
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
       TIME_ZONE=Asia/Kolkata
@@ -381,7 +381,7 @@
 
       # seadoc
       ENABLE_SEADOC=true
-      SEADOC_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/sdoc-server
+      SEADOC_SERVER_URL=https://seafile.kedi.dev/sdoc-server
 
       # metadata server
       MD_FILE_COUNT_LIMIT=100000
@@ -389,7 +389,7 @@
       # notification server
       ENABLE_NOTIFICATION_SERVER=true
       INNER_NOTIFICATION_SERVER_URL=http://seafile-notification-server:8083
-      NOTIFICATION_SERVER_URL=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/notification
+      NOTIFICATION_SERVER_URL=https://seafile.kedi.dev/notification
 
       # ai server
       ENABLE_SEAFILE_AI=true
@@ -405,7 +405,7 @@
 
       TIME_ZONE = "Asia/Kolkata"
 
-      CSRF_TRUSTED_ORIGINS = ["https://*.${config.sops.placeholder."tailscale_api/tailnet"}"]
+      CSRF_TRUSTED_ORIGINS = ["https://seafile.kedi.dev"]
       USE_X_FORWARDED_HOST = True
       SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
       SECURE_SSL_REDIRECT = True
@@ -418,7 +418,7 @@
       OAUTH_ACTIVATE_USER_AFTER_CREATION = False
       OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
-      OAUTH_REDIRECT_URL = "https://sf.${config.sops.placeholder."tailscale_api/tailnet"}/oauth/callback/"
+      OAUTH_REDIRECT_URL = "https://seafile.kedi.dev/oauth/callback/"
       OAUTH_PROVIDER_DOMAIN = "google.com"
       OAUTH_AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth"
       OAUTH_TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token"
@@ -572,7 +572,7 @@
   sops.templates."seafile/seadoc.env" = {
     content = ''
       JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
-      SEAFILE_SERVER_HOSTNAME=tv.${config.sops.placeholder."tailscale_api/tailnet"}
+      SEAFILE_SERVER_HOSTNAME=seafile.kedi.dev
       SEAFILE_SERVER_PROTOCOL=https
       TIME_ZONE=Asia/Kolkata
       SEAHUB_SERVICE_URL=http://seafile
@@ -587,8 +587,8 @@
 
   sops.templates."collabora/code.env" = {
     content = ''
-      server_name=sf.${config.sops.placeholder."tailscale_api/tailnet"}
-      aliasgroup1=https://sf.${config.sops.placeholder."tailscale_api/tailnet"}:443
+      server_name=seafile.kedi.dev
+      aliasgroup1=https://seafile.kedi.dev:443
       username=${config.sops.placeholder."collabora/code/username"}
       password=${config.sops.placeholder."collabora/code/password"}
       DONT_GEN_SSL_CERT=true
