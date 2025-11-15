@@ -1,11 +1,16 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
 }:
 
 {
+  imports = [
+    inputs.tsnsrv.nixosModules.default
+  ];
+
   services.victoriametrics = {
     enable = true;
     retentionPeriod = "1y";
@@ -496,8 +501,16 @@
     ];
   };
 
-  services.tsnsrv.services.mon = {
-    urlParts.port = 3000;
+  services.tsnsrv = {
+    enable = true;
+
+    defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
+    defaults.urlParts.host = "localhost";
+
+    services.mon = {
+      funnel = true;
+      urlParts.port = 3000;
+    };
   };
 
   sops.secrets."arr_apis/radarr".mode = "0444";
@@ -522,6 +535,7 @@
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
+    "tailscale_api/auth_key" = { };
     "tailscale_api/tailnet" = { };
   };
 
