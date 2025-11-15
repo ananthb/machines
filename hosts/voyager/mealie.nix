@@ -62,9 +62,7 @@
       # general
       BASE_URL=https://mealie.kedi.dev
 
-      # TODO: fix this when I figure out how to put fd00::/8 in here
-      # https://github.com/mealie-recipes/mealie/issues/6038
-      FORWARDED_ALLOW_IPS=*
+      FORWARDED_ALLOW_IPS=::1,127.0.0.1,10.15.16.124
 
       # auth
       ALLOW_PASSWORD_LOGIN=False
