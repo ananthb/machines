@@ -71,9 +71,9 @@
 
       http = {
         trusted_proxies = [
-          "::1"
-          "127.0.0.1"
           "10.15.16.124"
+          "127.0.0.1"
+          "::1"
         ];
         use_x_forwarded_for = true;
         ip_ban_enabled = true;
