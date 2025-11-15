@@ -455,7 +455,7 @@
       };
 
       server = {
-        http_addr = "::1";
+        http_addr = "::";
         domain = "$__file{${config.sops.templates."fqdns/grafana.txt".path}}";
       };
 
