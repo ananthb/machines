@@ -200,7 +200,7 @@
     enable = true;
     globalConfig = ''
       servers {
-        trusted_proxies static ::1 127.0.0.1 fdc0:6625:5195::45 10.15.16.45
+        trusted_proxies static ::1 127.0.0.1/8 fdc0:6625:5195::0/64 10.15.16.0/24
       }
     '';
     virtualHosts.":4000" = {
