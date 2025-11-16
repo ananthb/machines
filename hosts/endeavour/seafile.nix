@@ -392,7 +392,7 @@
 
       # OAuth Setup
       ENABLE_OAUTH = True
-      OAUTH_CREATE_UNKNOWN_USER = False
+      OAUTH_CREATE_UNKNOWN_USER = True
       OAUTH_ACTIVATE_USER_AFTER_CREATION = False
       OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
       OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
