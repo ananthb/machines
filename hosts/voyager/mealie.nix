@@ -62,7 +62,7 @@
       # general
       BASE_URL=https://mealie.kedi.dev
 
-      FORWARDED_ALLOW_IPS=::1,127.0.0.1,10.15.16.124
+      FORWARDED_ALLOW_IPS=::1,127.0.0.1,fdc0:6625:5195::50,10.15.16.50
 
       # auth
       ALLOW_PASSWORD_LOGIN=False
