@@ -120,7 +120,7 @@
         },
         "machineLearning": {
           "enabled": true,
-          "urls": ["http://enterprise:3003"],
+          "urls": ["http://enterprise.local:3003"],
           "clip": {
             "enabled": true,
             "modelName": "ViT-B-32__openai"
@@ -152,7 +152,7 @@
         },
         "oauth": {
           "autoLaunch": false,
-          "autoRegister": false,
+          "autoRegister": true,
           "buttonText": "Sign in with Google",
           "clientId": "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}",
           "clientSecret": "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}",
