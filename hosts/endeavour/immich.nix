@@ -11,7 +11,7 @@
     package = pkgs-unstable.immich;
     environment = {
       "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
-      "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.1,10.15.16.202";
+      "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.1,fdc0:6625:5195::45,10.15.16.45";
     };
     mediaLocation = "/srv/immich";
     accelerationDevices = [ "/dev/dri/renderD128" ];
