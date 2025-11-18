@@ -114,6 +114,7 @@
             modules = [
               nixos-hardware.nixosModules.raspberry-pi-4
               sops-nix.nixosModules.sops
+              quadlet-nix.nixosModules.quadlet
               ./hosts/voyager
             ];
           };

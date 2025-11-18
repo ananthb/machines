@@ -9,7 +9,6 @@
         name = "globalping-probe";
         image = "docker.io/globalping/globalping-probe:latest";
         networks = [ "host" ];
-        restartPolicy = "always";
         addCapabilities = [ "NET_RAW" ];
         environmentFiles = [
           config.sops.templates."globalping/probe.env".path
