@@ -85,9 +85,9 @@
         name = "6A";
         unit_system = "metric";
         time_zone = "Asia/Kolkata";
-        latitude = "!include ${config.sops.secrets."home/6a/latitude".path}";
-        longitude = "!include ${config.sops.secrets."home/6a/longitude".path}";
-        elevation = "!include ${config.sops.secrets."home/6a/elevation".path}";
+        latitude = "!include ${config.sops.secrets."homes/6a/latitude".path}";
+        longitude = "!include ${config.sops.secrets."homes/6a/longitude".path}";
+        elevation = "!include ${config.sops.secrets."homes/6a/elevation".path}";
         temperature_unit = "C";
         currency = "INR";
         country = "IN";
@@ -105,6 +105,28 @@
           device_code = "1170";
           controller_data = "remote.sylvia_plath_room_remote";
           power_sensor = "binary_sensor.fan_power";
+        }
+      ];
+
+      # Example configuration.yaml entry
+      device_tracker = [
+        {
+          platform = "ubus";
+          host = "atlantis.local";
+          username = "!include ${config.sops.secrets."homes/6a/openwrt/username".path}";
+          password = "!include ${config.sops.secrets."homes/6a/openwrt/password".path}";
+        }
+        {
+          platform = "ubus";
+          host = "intrepid.local";
+          username = "!include ${config.sops.secrets."homes/6a/openwrt/username".path}";
+          password = "!include ${config.sops.secrets."homes/6a/openwrt/password".path}";
+        }
+        {
+          platform = "ubus";
+          host = "ds9.local";
+          username = "!include ${config.sops.secrets."homes/6a/openwrt/username".path}";
+          password = "!include ${config.sops.secrets."homes/6a/openwrt/password".path}";
         }
       ];
     };
@@ -132,7 +154,11 @@
     };
   };
 
-  sops.secrets."home/6a/latitude".owner = config.users.users.hass.name;
-  sops.secrets."home/6a/longitude".owner = config.users.users.hass.name;
-  sops.secrets."home/6a/elevation".owner = config.users.users.hass.name;
+  sops.secrets = {
+    "homes/6a/latitude".owner = config.users.users.hass.name;
+    "homes/6a/longitude".owner = config.users.users.hass.name;
+    "homes/6a/elevation".owner = config.users.users.hass.name;
+    "homes/6a/openwrt/username".owner = config.users.users.hass.name;
+    "homes/6a/openwrt/password".owner = config.users.users.hass.name;
+  };
 }
