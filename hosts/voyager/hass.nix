@@ -18,21 +18,20 @@
         aionut
         jellyfin-apiclient-python
         ollama
+        onvif-zeep
         psycopg2
         qbittorrent-api
         speedtest-cli
       ];
     extraComponents = [
-      # Components required to complete the onboarding
+      # baseline components
       "analytics"
+      "default_config"
+      "dhcp"
       "google_translate"
       "met"
       "radio_browser"
       "shopping_list"
-
-      "default_config"
-      "dhcp"
-
       # "radio_browser"
       # "shopping_list"
       # Recommended for fast zlib compression
@@ -52,6 +51,7 @@
       "ecovacs"
       #"esphome"
       "luci"
+      "onvif"
     ];
     customComponents = with pkgs-unstable.home-assistant-custom-components; [
       ecoflow_cloud
@@ -59,6 +59,7 @@
       miraie
       prometheus_sensor
       smartir
+      spook
     ];
     config = {
       # Includes dependencies for a basic setup
@@ -112,19 +113,7 @@
       device_tracker = [
         {
           platform = "ubus";
-          host = "atlantis.local";
-          username = "!include ${config.sops.secrets."homes/6a/openwrt/username".path}";
-          password = "!include ${config.sops.secrets."homes/6a/openwrt/password".path}";
-        }
-        {
-          platform = "ubus";
-          host = "intrepid.local";
-          username = "!include ${config.sops.secrets."homes/6a/openwrt/username".path}";
-          password = "!include ${config.sops.secrets."homes/6a/openwrt/password".path}";
-        }
-        {
-          platform = "ubus";
-          host = "ds9.local";
+          host = "10.15.16.1";
           username = "!include ${config.sops.secrets."homes/6a/openwrt/username".path}";
           password = "!include ${config.sops.secrets."homes/6a/openwrt/password".path}";
         }
