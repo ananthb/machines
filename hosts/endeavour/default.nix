@@ -9,14 +9,13 @@
   imports = [
     ../linux
 
-    ./arr.nix
     ./cftunnel.nix
     ./hardware-configuration.nix
     ./immich.nix
-    ./jellyfin.nix
     ./open-webui.nix
     ./power.nix
     ./seafile.nix
+    ./tv.nix
   ];
 
   users.groups.media.members = [

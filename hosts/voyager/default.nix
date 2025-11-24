@@ -6,19 +6,12 @@
   imports = [
     ../linux
 
-    ./actual.nix
+    ./apps.nix
     ./cftunnel.nix
-    ./glance.nix
-    ./globalping.nix
     ./hardware-configuration.nix
     ./hass.nix
     ./homepage.nix
-    ./jellyseerr.nix
-    ./mealie.nix
-    ./miniflux.nix
     ./monitoring.nix
-    ./radicale.nix
-    ./vaultwarden.nix
   ];
 
   # System packages
