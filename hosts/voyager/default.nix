@@ -8,14 +8,14 @@
 
     ./actual.nix
     ./cftunnel.nix
-    # TODO: re-enable davis when we have postgresql.target
-    # ./davis.nix
+    ./glance.nix
     ./globalping.nix
     ./hardware-configuration.nix
     ./hass.nix
     ./homepage.nix
     ./jellyseerr.nix
     ./mealie.nix
+    ./miniflux.nix
     ./monitoring.nix
     ./radicale.nix
     ./vaultwarden.nix
