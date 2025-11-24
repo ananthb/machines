@@ -28,10 +28,10 @@
             };
           }
           {
-            "Mealie" = {
-              icon = "mealie";
-              description = "Recipes & Meal Planner";
-              href = "https://mealie.kedi.dev";
+            "Miniflux" = {
+              icon = "miniflux";
+              description = "RSS Feed Reader";
+              href = "https://miniflux.kedi.dev";
             };
           }
           {
@@ -46,10 +46,10 @@
       {
         "Organisation" = [
           {
-            "Radicale" = {
-              icon = "radicale";
-              description = "Contacts, Calendars, & Tasks";
-              href = "https://radicale.kedi.dev";
+            "Mealie" = {
+              icon = "mealie";
+              description = "Recipes & Meal Planner";
+              href = "https://mealie.kedi.dev";
             };
           }
           {
@@ -57,6 +57,13 @@
               icon = "actual-budget";
               description = "Personal Budget Tracker";
               href = "https://actual.kedi.dev";
+            };
+          }
+          {
+            "Radicale" = {
+              icon = "radicale";
+              description = "Contacts, Calendars, & Tasks";
+              href = "https://radicale.kedi.dev";
             };
           }
           {
