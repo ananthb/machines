@@ -489,6 +489,23 @@
     config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
   ];
 
+  # globalping
+  virtualisation.quadlet = {
+    autoEscape = true;
+    autoUpdate.enable = true;
+    containers.globalping-probe = {
+      containerConfig = {
+        name = "globalping-probe";
+        image = "docker.io/globalping/globalping-probe:latest";
+        networks = [ "host" ];
+        addCapabilities = [ "NET_RAW" ];
+        environmentFiles = [
+          config.sops.templates."globalping/probe.env".path
+        ];
+      };
+    };
+  };
+
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "grafana" ];
@@ -535,65 +552,74 @@
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
+    "globalping/probeToken" = { };
     "tailscale_api/auth_key" = { };
     "tailscale_api/tailnet" = { };
   };
 
-  sops.templates."fqdns/grafana.txt" = {
-    owner = config.users.users.grafana.name;
-    content = "mon.${config.sops.placeholder."tailscale_api/tailnet"}";
-  };
+  sops.templates = {
+    "globalping/probe.env" = {
+      content = ''
+        GP_ADOPTION_TOKEN=${config.sops.placeholder."globalping/probeToken"}
+      '';
+    };
 
-  sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
-    owner = config.users.users.grafana.name;
-    content = ''
-      [
-          {
-              "targets": [
-                "https://6a.kedi.dev",
-                "https://actual.kedi.dev",
-                "https://mealie.kedi.dev",
-                "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
-                "https://open-webui.kedi.dev.",
-                "https://radicale.kedi.dev",
-                "https://vault.kedi.dev"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server"
-              }
-          }
-          {
-              "targets": [
-                "https://immich.kedi.dev/auth/login"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "immich"
-              }
-          }
-          {
-              "targets": [
-                "https://seafile.kedi.dev/accounts/login/",
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "seafile"
-              }
-          }
-          {
-              "targets": [
-                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "jellyfin"
-              }
-          }
-      ]
-    '';
+    "fqdns/grafana.txt" = {
+      owner = config.users.users.grafana.name;
+      content = "mon.${config.sops.placeholder."tailscale_api/tailnet"}";
+    };
+
+    "victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
+      owner = config.users.users.grafana.name;
+      content = ''
+        [
+            {
+                "targets": [
+                  "https://6a.kedi.dev",
+                  "https://actual.kedi.dev",
+                  "https://mealie.kedi.dev",
+                  "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
+                  "https://open-webui.kedi.dev.",
+                  "https://radicale.kedi.dev",
+                  "https://vault.kedi.dev"
+                ],
+                "labels": {
+                    "type": "app",
+                    "role": "server"
+                }
+            }
+            {
+                "targets": [
+                  "https://immich.kedi.dev/auth/login"
+                ],
+                "labels": {
+                    "type": "app",
+                    "role": "server",
+                    "app": "immich"
+                }
+            }
+            {
+                "targets": [
+                  "https://seafile.kedi.dev/accounts/login/",
+                ],
+                "labels": {
+                    "type": "app",
+                    "role": "server",
+                    "app": "seafile"
+                }
+            }
+            {
+                "targets": [
+                  "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
+                ],
+                "labels": {
+                    "type": "app",
+                    "role": "server",
+                    "app": "jellyfin"
+                }
+            }
+        ]
+      '';
+    };
   };
 }
