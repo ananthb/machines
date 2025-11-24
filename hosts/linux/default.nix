@@ -12,7 +12,8 @@
 {
 
   imports = [
-
+    inputs.sops-nix.nixosModules.sops
+    inputs.quadlet-nix.nixosModules.quadlet
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.sharedModules = [
