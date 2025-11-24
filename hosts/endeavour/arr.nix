@@ -8,6 +8,7 @@
   services.qbittorrent = {
     enable = true;
     group = "media";
+    openFirewall = true;
     serverConfig = {
       LegalNotice.Accepted = true;
       BitTorrent = {
@@ -57,27 +58,56 @@
     enable = true;
     package = pkgs-unstable.radarr;
     group = "media";
+    openFirewall = true;
   };
-  systemd.services.radarr.serviceConfig.UMask = "0002";
-  systemd.services.radarr.wants = [
-    "transmission.service"
-    "prowlarr.service"
-  ];
+  systemd.services.radarr = {
+    serviceConfig.UMask = "0002";
+    after = [
+      "postgresql.service"
+      "transmission.service"
+    ];
+    wants = [
+      "postgresql.service"
+      "transmission.service"
+    ];
+  };
 
   services.sonarr = {
     enable = true;
     package = pkgs-unstable.sonarr;
     group = "media";
+    openFirewall = true;
   };
-  systemd.services.sonarr.serviceConfig.UMask = "0002";
-  systemd.services.sonarr.wants = [
-    "transmission.service"
-    "prowlarr.service"
-  ];
+  systemd.services.sonarr = {
+    serviceConfig.UMask = "0002";
+    after = [
+      "postgresql.service"
+      "transmission.service"
+    ];
+    wants = [
+      "postgresql.service"
+      "transmission.service"
+    ];
+  };
 
   services.prowlarr = {
     enable = true;
     package = pkgs-unstable.prowlarr;
+    openFirewall = true;
+  };
+  systemd.services.prowlarr = {
+    after = [
+      "postgresql.service"
+      "radarr.service"
+      "sonarr.service"
+      "transmission.service"
+    ];
+    wants = [
+      "postgresql.service"
+      "radarr.service"
+      "sonarr.service"
+      "transmission.service"
+    ];
   };
 
   services.postgresql = {

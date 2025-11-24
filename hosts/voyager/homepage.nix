@@ -3,7 +3,7 @@
   services.homepage-dashboard = {
     enable = true;
     openFirewall = true;
-    allowedHosts = "apps.kedi.dev";
+    allowedHosts = "apps.kedi.dev,[fdc0:6625:5195::45]:8082,10.15.16.45:8082";
     settings = {
       title = "KEDI Applications";
       description = "KEDI Server running apps for the people";
