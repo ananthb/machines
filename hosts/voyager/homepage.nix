@@ -40,6 +40,13 @@
             };
           }
           {
+            "Wallabag" = {
+              icon = "wallabag";
+              description = "Read-it-later";
+              href = "https://wallabag.kedi.dev";
+            };
+          }
+          {
             "Miniflux" = {
               icon = "miniflux";
               description = "RSS Feed Reader";

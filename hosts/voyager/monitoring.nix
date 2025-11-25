@@ -579,7 +579,18 @@
                     "type": "app",
                     "role": "server"
                 }
-            }
+            },
+            {
+                "targets": [
+                  "https://wallabag.kedi.dev",
+                  "https://miniflux.kedi.dev"
+                ],
+                "labels": {
+                    "type": "app",
+                    "role": "server",
+                    "app": "news"
+                }
+            },
             {
                 "targets": [
                   "https://immich.kedi.dev/auth/login"
@@ -589,7 +600,7 @@
                     "role": "server",
                     "app": "immich"
                 }
-            }
+            },
             {
                 "targets": [
                   "https://seafile.kedi.dev/accounts/login/",
@@ -599,7 +610,7 @@
                     "role": "server",
                     "app": "seafile"
                 }
-            }
+            },
             {
                 "targets": [
                   "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
