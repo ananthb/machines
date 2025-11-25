@@ -46,9 +46,11 @@
   };
 
   # secrets
-  sops.secrets."email/smtp/username".owner = config.users.users.grafana.name;
-  sops.secrets."email/smtp/password".owner = config.users.users.grafana.name;
-  sops.secrets."email/smtp/host".owner = config.users.users.grafana.name;
+  sops.secrets = {
+    "email/smtp/username".owner = config.users.users.grafana.name;
+    "email/smtp/password".owner = config.users.users.grafana.name;
+    "email/smtp/host".owner = config.users.users.grafana.name;
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

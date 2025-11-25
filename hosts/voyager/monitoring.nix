@@ -489,23 +489,6 @@
     config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
   ];
 
-  # globalping
-  virtualisation.quadlet = {
-    autoEscape = true;
-    autoUpdate.enable = true;
-    containers.globalping-probe = {
-      containerConfig = {
-        name = "globalping-probe";
-        image = "docker.io/globalping/globalping-probe:latest";
-        networks = [ "host" ];
-        addCapabilities = [ "NET_RAW" ];
-        environmentFiles = [
-          config.sops.templates."globalping/probe.env".path
-        ];
-      };
-    };
-  };
-
   services.postgresql = {
     enable = true;
     ensureDatabases = [ "grafana" ];
@@ -530,10 +513,6 @@
     };
   };
 
-  sops.secrets."arr_apis/radarr".mode = "0444";
-  sops.secrets."arr_apis/sonarr".mode = "0444";
-  sops.secrets."arr_apis/prowlarr".mode = "0444";
-
   systemd.services.grafana.environment = {
     GF_AUTH_DISABLE_LOGIN_FORM = "true";
     GF_AUTH_BASIC_ENABLED = "false";
@@ -547,7 +526,20 @@
     GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
   };
 
+  virtualisation.quadlet.containers.globalping-probe.containerConfig = {
+    name = "globalping-probe";
+    image = "docker.io/globalping/globalping-probe:latest";
+    networks = [ "host" ];
+    addCapabilities = [ "NET_RAW" ];
+    environmentFiles = [
+      config.sops.templates."globalping/probe.env".path
+    ];
+  };
+
   sops.secrets = {
+    "arr_apis/radarr".mode = "0444";
+    "arr_apis/sonarr".mode = "0444";
+    "arr_apis/prowlarr".mode = "0444";
     "email/from/grafana".owner = config.users.users.grafana.name;
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/smtp/username".owner = config.users.users.grafana.name;
