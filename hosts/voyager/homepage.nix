@@ -1,17 +1,5 @@
 { ... }:
 {
-  # TODO: replace homepage-dashboard with glance?
-  services.glance = {
-    enable = true;
-    openFirewall = true;
-    settings = {
-      server = {
-        host = "[::]";
-        port = 8083;
-      };
-    };
-  };
-
   services.homepage-dashboard = {
     enable = true;
     openFirewall = true;
