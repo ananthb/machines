@@ -56,6 +56,11 @@
     DB_NAME = "jellyseerr";
   };
 
+  services.kavita = {
+    enable = true;
+    tokenKeyFile = config.sops.secrets."kavita/token".path;
+  };
+
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets."miniflux/admin_creds".path;
@@ -91,6 +96,7 @@
   networking.firewall = {
     allowedTCPPorts = [
       3100 # actual
+      5000 # kavita
       5232 # radicale
       8088 # miniflux
       8222 # vaultwarden
@@ -332,6 +338,7 @@
     "email/from/mealie" = { };
     "email/from/vaultwarden" = { };
     "email/from/wallabag" = { };
+    "kavita/token" = { };
     "mealie/api_keys" = { };
     "miniflux/admin_creds" = { };
     "open-webui/api_key" = { };
