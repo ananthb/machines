@@ -66,6 +66,7 @@
     adminCredentialsFile = config.sops.secrets."miniflux/admin_creds".path;
     config.LISTEN_ADDR = "[::]:8088";
     config.BASE_URL = "https://miniflux.kedi.dev";
+    config.FETCH_YOUTUBE_WATCH_TIME = "1";
   };
 
   virtualisation.quadlet =
@@ -98,6 +99,7 @@
       3100 # actual
       5000 # kavita
       5232 # radicale
+      8085 # wallabag
       8088 # miniflux
       8222 # vaultwarden
       9000 # mealie
