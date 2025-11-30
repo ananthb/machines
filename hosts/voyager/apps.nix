@@ -56,11 +56,6 @@
     DB_NAME = "jellyseerr";
   };
 
-  services.kavita = {
-    enable = true;
-    tokenKeyFile = config.sops.secrets."kavita/token".path;
-  };
-
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets."miniflux/admin_creds".path;
@@ -80,11 +75,19 @@
 
   virtualisation.quadlet =
     let
-      inherit (config.virtualisation.quadlet) volumes;
+      inherit (config.virtualisation.quadlet) networks volumes;
     in
     {
       autoEscape = true;
       autoUpdate.enable = true;
+
+      networks.podman6.networkConfig = {
+        ipv6 = true;
+        subnets = [
+          "10.98.0.0/24"
+          "fd4b:3399:cea1::/64"
+        ];
+      };
 
       volumes = {
         wallabag-data = { };
@@ -98,6 +101,7 @@
           "${volumes.wallabag-data.ref}:/var/www/wallabag/data"
           "${volumes.wallabag-images.ref}:/var/www/wallabag/web/assets/images"
         ];
+        networks = [ networks.podman6.ref ];
         publishPorts = [ "8085:80" ];
         environmentFiles = [ config.sops.templates."wallabag/env".path ];
       };
@@ -113,7 +117,7 @@
       8222 # vaultwarden
       9000 # mealie
     ];
-    interfaces.podman0.allowedTCPPorts = [
+    interfaces.podman1.allowedTCPPorts = [
       5432 # postgres
     ];
   };
@@ -122,7 +126,7 @@
     enable = true;
     enableTCPIP = true;
     authentication = ''
-      host wallabag wallabag 10.88.0.0/16 md5
+      host wallabag wallabag 10.98.0.0/16 md5
     '';
     ensureDatabases = [
       "jellyseerr"
@@ -330,7 +334,7 @@
       content = ''
         SYMFONY__ENV__DOMAIN_NAME=https://wallabag.kedi.dev
         SYMFONY__ENV__DATABASE_DRIVER=pdo_pgsql
-        SYMFONY__ENV__DATABASE_HOST=10.88.0.1
+        SYMFONY__ENV__DATABASE_HOST=10.98.0.1
         SYMFONY__ENV__DATABASE_PORT=5432
         SYMFONY__ENV__DATABASE_NAME=wallabag
         SYMFONY__ENV__DATABASE_USER=${config.sops.placeholder."wallabag/db/username"}
