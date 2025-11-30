@@ -81,8 +81,7 @@
       };
       Preferences = {
         WebUI = {
-          AuthSubnetWhitelist = "0.0.0.0/0";
-          AuthSubnetWhitelistEnabled = true;
+          Password_PBKDF2 = "@ByteArray(ARQ77eY1NUZaQsuDHbIMCA==:0WMRkYTUWVT9wVvdDtHAjU9b3b7uB8NR1Gur2hmQCvCDpm39Q+PsJRJPaCU51dEiz+dTzh8qbPsL8WkFljQYFQ==)";
           AlternativeUIEnabled = true;
           RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
         };
