@@ -526,15 +526,53 @@
     GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
   };
 
-  virtualisation.quadlet.containers.globalping-probe.containerConfig = {
-    name = "globalping-probe";
-    image = "docker.io/globalping/globalping-probe:latest";
-    networks = [ "host" ];
-    addCapabilities = [ "NET_RAW" ];
-    environmentFiles = [
-      config.sops.templates."globalping/probe.env".path
-    ];
-  };
+  virtualisation.quadlet =
+    let
+      inherit (config.virtualisation.quadlet) volumes;
+    in
+    {
+      volumes = {
+        ripe-atlas-etc = { };
+        ripe-atlas-run = { };
+        ripe-atlas-var-spool = { };
+      };
+
+      containers = {
+        globalping-probe.containerConfig = {
+          name = "globalping-probe";
+          image = "docker.io/globalping/globalping-probe:latest";
+          networks = [ "host" ];
+          addCapabilities = [ "NET_RAW" ];
+          environmentFiles = [
+            config.sops.templates."globalping/probe.env".path
+          ];
+        };
+
+        ripe-atlas-probe.containerConfig = {
+          name = "ripe-atlas-probe";
+          image = "ghcr.io/jamesits/ripe-atlas:latest-probe";
+          networks = [ "host" ];
+          dropCapabilities = [ "all" ];
+          addCapabilities = [
+            "NET_RAW"
+            "KILL"
+            "SETUID"
+            "SETGID"
+            "FOWNER"
+            "CHOWN"
+            "DAC_OVERRIDE"
+          ];
+          environments = {
+            RXTXRPT = "yes";
+          };
+          volumes = [
+            "${volumes.ripe-atlas-etc.ref}:/etc/ripe-atlas"
+            "${volumes.ripe-atlas-run.ref}:/run/ripe-atlas"
+            "${volumes.ripe-atlas-var-spool.ref}:/var/spool/ripe-atlas"
+          ];
+        };
+      };
+    };
 
   sops.secrets = {
     "arr_apis/radarr".mode = "0444";
