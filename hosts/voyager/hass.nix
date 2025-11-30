@@ -18,7 +18,6 @@
         aionut
         jellyfin-apiclient-python
         ollama
-        onvif-zeep
         psycopg2
         qbittorrent-api
         speedtest-cli
@@ -49,9 +48,8 @@
       "camera"
       "cast"
       "ecovacs"
-      #"esphome"
+      "esphome"
       "luci"
-      "onvif"
     ];
     customComponents = with pkgs-unstable.home-assistant-custom-components; [
       ecoflow_cloud
@@ -120,6 +118,48 @@
       ];
     };
   };
+
+  services.frigate = {
+    enable = true;
+    hostname = "voyager.local";
+
+    settings = {
+      mqtt.enabled = false;
+
+      record = {
+        enabled = true;
+        retain = {
+          days = 2;
+          mode = "all";
+        };
+      };
+
+      ffmpeg.hwaccel_args = "preset-vaapi";
+
+      cameras."frontdoor" = {
+        ffmpeg.inputs = [
+          {
+            path = "rtsp://192.168.1.142:8000/test1";
+            input_args = "preset-rtsp-restream";
+            roles = [ "record" ];
+          }
+        ];
+      };
+    };
+  };
+
+  services.nginx.virtualHosts."voyager.local" = {
+    listen = [
+      {
+        addr = "[::]";
+        port = 8967;
+      }
+    ];
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    8967 # frigate
+  ];
 
   services.postgresql = {
     enable = true;
