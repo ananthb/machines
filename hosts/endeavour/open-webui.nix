@@ -44,7 +44,7 @@
       # general
       http_proxy="http://localhost:8888"
       https_proxy="http://localhost:8888"
-      no_proxy=".kedi.dev"
+      no_proxy=".local,.lan"
       ENV="prod"
       WEBUI_URL="https://open-webui.kedi.dev"
       CORS_ALLOW_ORIGIN="https://open-webui.kedi.dev"

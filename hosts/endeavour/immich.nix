@@ -13,7 +13,6 @@
       "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
       "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.0/8,fdc0:6625:5195::0/64,10.15.16.0/24";
     };
-    mediaLocation = "/srv/immich";
     accelerationDevices = [ "/dev/dri/renderD128" ];
     machine-learning.enable = false;
   };

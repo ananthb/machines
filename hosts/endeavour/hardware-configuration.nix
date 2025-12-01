@@ -2,7 +2,6 @@
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 {
-  config,
   lib,
   modulesPath,
   ...
@@ -50,6 +49,17 @@
   fileSystems."/srv" = {
     device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
     fsType = "bcachefs";
+  };
+
+  fileSystems."/var/lib/immich" = {
+    device = "/srv/immich";
+    fsType = "bind";
+    options = [ "bind" ];
+  };
+  fileSystems."/var/lib/seafile" = {
+    device = "/srv/seafile";
+    fsType = "bind";
+    options = [ "bind" ];
   };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

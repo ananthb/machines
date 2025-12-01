@@ -17,12 +17,10 @@
         Takes snapshot backups of regular directories to remote storage.
       '';
     };
-    write-metric = lib.mkOption {
+    shell-helpers = lib.mkOption {
       type = lib.types.package;
       default = null;
-      description = ''
-        Sends a metric to VictoriaMetrics Remote Write API in JSON format.
-      '';
+      description = "Shell helpers for handling errors and writing metrics.";
     };
   };
 
@@ -31,12 +29,14 @@
       kopia-snapshot-backup = pkgs.writeShellScript "kopia-snapshot-backup" ''
         # Snapshot backs up a bcachefs/btrfs subvolume to the kopia hathi-backups GCS remote repository.
         # Usage: kopia-snapshot-backup <subvol-dir>
-        # <subvol-dir> is a bcachefs or btrfs subvolume (mounted under /srv or /var respectively).
+        # <subvol-dir> is a bcachefs or btrfs subvolume.
         # Creates a filesystem snapshot of <subvol-dir> and creates a kopia snapshot of that fs snapshot.
+        
+        source ${shell-helpers}
 
         usage() {
           echo 'Usage: kopia-snapshot-backup <subvol-dir>' >&2
-          echo 'Example: kopia-snapshot-backup /srv/my-data/dir' >&2
+          echo 'Example: kopia-snapshot-backup /my/data/dir' >&2
         }
 
         if [[ $# -lt 1 ]]; then
@@ -44,15 +44,13 @@
           exit 1
         fi
 
-        if [[ ! -d $1 ]] || [[ ! $1 =~ ^(/srv|/var)/ ]]; then
-          printf '%s is not a directory under /srv or /var\n' "$1" >&2
-          usage
-          exit 1
-        fi
-
-        source ${write-metric}
-
         backup_source="$1"
+        backup_fs="$(stat -f -c %T $1)"
+
+        if [[ $backup_fs != "bcachefs" && $backup_fs != "btrfs" ]]; then
+          die "unsupported fs $backup_fs"
+        fi
+        
         snapshot_target="$backup_source-$(date --utc --iso-8601=seconds)"
 
         write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 1
@@ -60,31 +58,27 @@
           write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 0
         }' EXIT
 
-        if [[ $1 == "/srv/"* ]]; then
+        if [[ $backup_fs == "bcachefs" ]]; then
           # snapshot bcachefs subvolume
           if ! ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r \
             "$backup_source" "$snapshot_target"; then
-            printf '%s might not be a bcachefs subvolume\n' "$backup_source" >&2
-            usage
-            exit 1
+            die "$backup_source might not be a bcachefs subvolume"
           fi
-        else
+        elif [[ $backup_fs == "btrfs" ]]; then
           # snapshot btrfs subvolume
           if ! ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r \
             "$backup_source" "$snapshot_target"; then
-            printf '%s might not be a btrfs subvolume\n' "$backup_source" >&2
-            usage
-            exit 1
+            die "$backup_source might not be a btrfs subvolume"
           fi
         fi
 
         write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 0
 
         trap '{
-          if [[ $backup_source == "/srv/"* ]]; then
+          if [[ $backup_fs == "bcachefs" ]]; then
             ${pkgs.bcachefs-tools}/bin/bcachefs subvolume delete \
               "$snapshot_target"
-          else
+          elif [[ $backup_fs == "btrfs" ]]; then
             ${pkgs.btrfs-progs}/bin/btrfs subvolume delete \
               "$snapshot_target"
           fi
@@ -99,6 +93,8 @@
         # <directory> is the directory to back up.
         # <source> is an optional value (default: <directory>) that overrides the kopia snapshot source directory.
 
+        source ${shell-helpers}
+
         usage() {
           echo 'Usage: kopia-backup <directory> [<source>]' >&2
           echo 'Example: kopia-backup /tmp/my-app/data-snapshot /var/lib/my-app/data' >&2
@@ -108,14 +104,6 @@
           usage
           exit 1
         fi
-
-        if [[ ! -d $1 ]]; then
-          printf '%s is not a directory under /srv or /var\n' "$1" >&2
-          usage
-          exit 1
-        fi
-
-        source ${write-metric}
 
         backup_target="$1"
         source="''${2:-$1}"
@@ -148,7 +136,15 @@
         write_metric kopia_backups_total "job=hathi-backups,instance=$source" 1
       '';
 
-      write-metric = pkgs.writeShellScript "write-metric" ''
+      shell-helpers = pkgs.writeShellScript "shell-helpers" ''
+        # Usage: die "Error message here" [optional_exit_code]
+        die() {
+          local message="$1"
+          local code="''${2:-1}"
+          echo "Error: $message" >&2
+          exit "$code"
+        }
+
         # Sends a metric to VictoriaMetrics in JSON format.
         # Usage: write_metrics <metric_name> <labels> <value>
         # <labels> should be a comma-separated string like "job=api,instance=server1"
