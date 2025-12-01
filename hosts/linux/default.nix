@@ -43,6 +43,8 @@
     "/etc/ssh/ssh_host_ed25519_key"
   ];
 
+  nix.gc.dates = "weekly";
+
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
