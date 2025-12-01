@@ -31,7 +31,7 @@
         # Usage: kopia-snapshot-backup <subvol-dir>
         # <subvol-dir> is a bcachefs or btrfs subvolume.
         # Creates a filesystem snapshot of <subvol-dir> and creates a kopia snapshot of that fs snapshot.
-        
+
         source ${shell-helpers}
 
         usage() {
@@ -50,7 +50,7 @@
         if [[ $backup_fs != "bcachefs" && $backup_fs != "btrfs" ]]; then
           die "unsupported fs $backup_fs"
         fi
-        
+
         snapshot_target="$backup_source-$(date --utc --iso-8601=seconds)"
 
         write_metric kopia_backups_count "job=hathi-backups,instance=$backup_source,stage=fs_snapshot" 1

@@ -53,7 +53,7 @@
     set fish_greeting ""
   '';
 
-  programs.git.extraConfig = {
+  programs.git.settings = {
     credential = {
       helper = "manager";
       "https://github.com".username = "ananthb";

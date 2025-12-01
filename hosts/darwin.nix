@@ -29,7 +29,7 @@
     inputs.home-manager.darwinModules.home-manager
     {
       home-manager.sharedModules = [
-        inputs.sops-nix.homeManagerModules.sops
+        inputs.sops-nix.homeModules.sops
         inputs.nix-index-database.homeModules.nix-index
       ];
       home-manager.useGlobalPkgs = true;

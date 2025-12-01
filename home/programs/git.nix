@@ -2,26 +2,27 @@
 {
   programs.git = {
     enable = true;
-    userName = "Ananth Bhaskararaman";
-    userEmail = "antsub@gmail.com";
 
-    aliases = {
-      a = "add";
-      b = "branch";
-      c = "commit";
-      p = "push";
-      r = "reset";
-      s = "status -sb";
-      sw = "switch";
-      co = "checkout";
-      cp = "cherry-pick";
-    };
+    settings = {
+      user.name = "Ananth Bhaskararaman";
+      user.email = "antsub@gmail.com";
 
-    extraConfig = {
       core.editor = "nvim";
       core.pager = "delta";
       user.useConfigOnly = "true";
       init.defaultBranch = "main";
+
+      aliases = {
+        a = "add";
+        b = "branch";
+        c = "commit";
+        p = "push";
+        r = "reset";
+        s = "status -sb";
+        sw = "switch";
+        co = "checkout";
+        cp = "cherry-pick";
+      };
 
       color = {
         ui = "true";
