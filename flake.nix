@@ -3,7 +3,7 @@
 
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
   inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   inputs.sops-nix.url = "github:Mic92/sops-nix";
@@ -15,7 +15,7 @@
   inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
   inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.05";
+  inputs.nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.11";
   inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
@@ -26,10 +26,10 @@
   inputs.homebrew-cask.url = "github:homebrew/homebrew-cask";
   inputs.homebrew-cask.flake = false;
 
-  inputs.home-manager.url = "github:nix-community/home-manager/release-25.05";
+  inputs.home-manager.url = "github:nix-community/home-manager/release-25.11";
   inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.nixvim.url = "github:nix-community/nixvim/nixos-25.05";
+  inputs.nixvim.url = "github:nix-community/nixvim/nixos-25.11";
   inputs.nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.tsnsrv.url = "github:boinkor-net/tsnsrv";
