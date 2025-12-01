@@ -1,4 +1,5 @@
 {
+  hostname,
   inputs,
   pkgs,
   username,
@@ -11,6 +12,7 @@ in
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
     ./programs
+    ../home/${hostname}.nix
   ];
 
   home.homeDirectory = homeDir;
