@@ -12,7 +12,7 @@
   inputs.nix-index-database.url = "github:nix-community/nix-index-database";
   inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.2";
+  inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.3";
   inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.11";

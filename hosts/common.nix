@@ -11,11 +11,6 @@
 
   # Optimise space
   nix.gc.automatic = true;
-  nix.gc.interval = {
-    Hour = 3;
-    Minute = 15;
-    Weekday = 7;
-  };
   nix.optimise.automatic = true;
 
   environment.systemPackages = with pkgs; [
