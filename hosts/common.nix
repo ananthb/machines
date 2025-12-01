@@ -10,9 +10,9 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # Optimise space
-  nix.settings.auto-optimise-store = true;
   nix.gc.automatic = true;
   nix.gc.dates = "weekly";
+  nix.optimise.automatic = true;
 
   environment.systemPackages = with pkgs; [
     git-credential-manager
