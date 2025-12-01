@@ -24,7 +24,7 @@
             image = "docker.io/seafileltd/seafile-mc:13.0-latest";
             autoUpdate = "registry";
             volumes = [
-              "/srv/seafile/seafile:/shared"
+              "/var/lib/seafile/seafile:/shared"
             ];
             networks = [
               networks.seafile.ref
@@ -37,7 +37,7 @@
             ExecStartPre = ''
               ${pkgs.coreutils}/bin/cp \
                 ${config.sops.templates."seafile/seahub_settings.py".path} \
-                /srv/seafile/seafile/seafile/conf/seahub_settings.py
+                /var/lib/seafile/seafile/seafile/conf/seahub_settings.py
             '';
           };
           unitConfig = {
@@ -91,7 +91,7 @@
             image = "docker.io/seafileltd/seafile-md-server:13.0-latest";
             autoUpdate = "registry";
             volumes = [
-              "/srv/seafile/seafile:/shared"
+              "/var/lib/seafile/seafile:/shared"
             ];
             networks = [
               networks.seafile.ref
@@ -113,7 +113,7 @@
             image = "docker.io/seafileltd/thumbnail-server:13.0-latest";
             autoUpdate = "registry";
             volumes = [
-              "/srv/seafile/seafile:/shared"
+              "/var/lib/seafile/seafile:/shared"
             ];
             networks = [
               networks.seafile.ref
@@ -135,7 +135,7 @@
             image = "docker.io/seafileltd/seafile-ai:13.0-latest";
             autoUpdate = "registry";
             volumes = [
-              "/srv/seafile/seafile:/shared"
+              "/var/lib/seafile/seafile:/shared"
             ];
             networks = [
               networks.seafile.ref
@@ -155,7 +155,7 @@
             image = "docker.io/seafileltd/sdoc-server:2.0-latest";
             autoUpdate = "registry";
             volumes = [
-              "/srv/seafile/seadoc:/shared"
+              "/var/lib/seafile/seadoc:/shared"
             ];
             networks = [
               networks.seafile.ref
@@ -290,7 +290,7 @@
   systemd.services."seafile-mysql-backup" = {
     startAt = "hourly";
     script = ''
-      backup_dir="/srv/seafile/backups"
+      backup_dir="/var/lib/seafile/backups"
       mkdir -p "$backup_dir"
 
       # Removes all but 2 files starting from the oldest
