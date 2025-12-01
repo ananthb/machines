@@ -43,10 +43,6 @@
     "/etc/ssh/ssh_host_ed25519_key"
   ];
 
-  nix.settings.auto-optimise-store = true;
-  nix.gc.automatic = true;
-  nix.gc.dates = "weekly";
-
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 

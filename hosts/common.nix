@@ -9,6 +9,11 @@
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
+  # Optimise space
+  nix.settings.auto-optimise-store = true;
+  nix.gc.automatic = true;
+  nix.gc.dates = "weekly";
+
   environment.systemPackages = with pkgs; [
     git-credential-manager
   ];
