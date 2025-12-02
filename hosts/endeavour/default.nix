@@ -8,13 +8,14 @@
 {
   imports = [
     ../linux
+    ../../services/arr.nix
+    ../../services/immich.nix
+    ../../services/open-webui.nix
+    ../../services/seafile.nix
 
     ./cftunnel.nix
     ./hardware-configuration.nix
-    ./immich.nix
-    ./open-webui.nix
     ./power.nix
-    ./seafile.nix
     ./tv.nix
   ];
 
@@ -71,6 +72,8 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
+  systemd.services.qbittorrent.unitConfig.RequiresMountsFor = "/srv";
+
   # WARP must be manually set up in proxy mode listening on port 8888.
   # This involves registering a new identity, accepting the tos,
   # setting the mode to proxy, and then setting proxy port to 8888.
@@ -94,11 +97,44 @@
 
     };
 
+    # TODO: fix this
+    mysqld = {
+      enable = false;
+      runAsLocalSuperUser = true;
+      listenAddress = "[::]";
+      configFile = pkgs.writeText "config.my-cnf" "";
+    };
+
     postgres.enable = true;
     postgres.runAsLocalSuperUser = true;
 
     smartctl.enable = true;
 
+  };
+
+  systemd.services."immich-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    # startAt = "weekly";
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+    };
+  };
+
+  systemd.services."seafile-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    #startAt = "weekly";
+    script = ''
+      systemctl start seafile-mysql-backup.service
+      ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
+    '';
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";

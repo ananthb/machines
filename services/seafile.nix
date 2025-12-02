@@ -306,28 +306,6 @@
     '';
   };
 
-  systemd.services."seafile-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    #startAt = "weekly";
-    script = ''
-      systemctl start seafile-mysql-backup.service
-      ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
-    '';
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
-  };
-
-  # TODO: fix this
-  services.prometheus.exporters.mysqld = {
-    enable = false;
-    runAsLocalSuperUser = true;
-    listenAddress = "[::]";
-    configFile = pkgs.writeText "config.my-cnf" "";
-  };
-
   # Config files
   sops.templates."seafile/seafile.env" = {
     content = ''
