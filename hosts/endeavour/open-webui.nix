@@ -1,25 +1,25 @@
 {
   config,
-  pkgs-unstable,
+  pkgs,
   ...
 }:
 
 {
   services.open-webui = {
     enable = true;
-    package = pkgs-unstable.open-webui.overrideAttrs (old: {
+    package = pkgs.open-webui.overrideAttrs (old: {
       propagatedBuildInputs =
         old.propagatedBuildInputs
         ++ (
-          with pkgs-unstable.python3Packages;
+          with pkgs.python3Packages;
           [
             # Run code
             pydantic
             # Youtube transcription plugin
             yt-dlp
           ]
-          ++ pkgs-unstable.open-webui.optional-dependencies.postgres
-          ++ (with pkgs-unstable; [
+          ++ pkgs.open-webui.optional-dependencies.postgres
+          ++ (with pkgs; [
             bash
             gvisor
             jellyfin-ffmpeg

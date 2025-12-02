@@ -1,13 +1,13 @@
 {
   config,
-  pkgs-unstable,
+  pkgs,
   ...
 }:
 
 {
   services.home-assistant = {
     enable = true;
-    package = pkgs-unstable.home-assistant.overrideAttrs (oldAttrs: {
+    package = pkgs.home-assistant.overrideAttrs (oldAttrs: {
       doInstallCheck = false;
     });
     openFirewall = true;
@@ -51,7 +51,7 @@
       "esphome"
       "luci"
     ];
-    customComponents = with pkgs-unstable.home-assistant-custom-components; [
+    customComponents = with pkgs.home-assistant-custom-components; [
       ecoflow_cloud
       frigate
       miraie

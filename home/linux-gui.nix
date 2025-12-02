@@ -5,6 +5,8 @@
 {
   imports = [
     ../home/linux.nix
+    ../programs/nixvim.nix
+    ../programs/nushell.nix
   ];
 
   home.packages = with pkgs; [
@@ -48,10 +50,6 @@
       };
     };
   };
-
-  programs.fish.interactiveShellInit = ''
-    set fish_greeting ""
-  '';
 
   programs.git.settings = {
     credential = {

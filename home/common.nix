@@ -11,8 +11,8 @@ in
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
-    ./programs
     ../home/${hostname}.nix
+    ../programs/shell.nix
   ];
 
   home.homeDirectory = homeDir;
@@ -41,9 +41,7 @@ in
     };
   };
 
-  programs.fish.interactiveShellInit = ''
-    set fish_greeting ""
-  '';
+  programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
     # Fonts

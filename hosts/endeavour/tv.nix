@@ -2,7 +2,6 @@
   config,
   inputs,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 
@@ -11,14 +10,13 @@
     inputs.tsnsrv.nixosModules.default
   ];
 
-  environment.systemPackages = with pkgs-unstable; [
+  environment.systemPackages = with pkgs; [
     jellyfin-web
     jellyfin-ffmpeg
   ];
 
   services.jellyfin = {
     enable = true;
-    package = pkgs-unstable.jellyfin;
     group = "media";
     openFirewall = true;
   };
@@ -108,7 +106,6 @@
 
   services.radarr = {
     enable = true;
-    package = pkgs-unstable.radarr;
     group = "media";
     openFirewall = true;
   };
@@ -126,7 +123,6 @@
 
   services.sonarr = {
     enable = true;
-    package = pkgs-unstable.sonarr;
     group = "media";
     openFirewall = true;
   };
@@ -144,7 +140,6 @@
 
   services.prowlarr = {
     enable = true;
-    package = pkgs-unstable.prowlarr;
     openFirewall = true;
   };
   systemd.services.prowlarr = {
