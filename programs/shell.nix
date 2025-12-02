@@ -1,5 +1,17 @@
-{ pkgs, ... }:
+{ ... }:
 {
+
+  programs.fish.interactiveShellInit = ''
+    set fish_greeting ""
+  '';
+  programs.nix-index-database.comma.enable = true;
+  programs.fish.enable = true;
+  programs.direnv = {
+    enable = true;
+    # Nushell needs explicit yes
+    enableNushellIntegration = true;
+    nix-direnv.enable = true;
+  };
   programs.tmux = {
     enable = true;
     historyLimit = 100000;
@@ -39,4 +51,5 @@
     ];
     extraConfig = "";
   };
+
 }

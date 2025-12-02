@@ -1,12 +1,10 @@
 {
   config,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 {
   services.actual.enable = true;
-  services.actual.package = pkgs-unstable.actual-server;
   services.actual.settings.port = 3100;
   systemd.services.actual.serviceConfig.EnvironmentFile =
     config.sops.templates."actual/config.env".path;
@@ -30,7 +28,6 @@
 
   services.mealie = {
     enable = true;
-    package = pkgs-unstable.mealie;
     listenAddress = "[::]";
     database.createLocally = true;
     credentialsFile = config.sops.templates."mealie/env".path;
