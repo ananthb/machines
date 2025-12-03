@@ -11,6 +11,8 @@
     ./cftunnel.nix
     ./exporters.nix
     ../../services/actual.nix
+    ../../services/caddy.nix
+    ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/mealie.nix
     ../../services/media/jellyseerr.nix
