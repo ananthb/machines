@@ -89,8 +89,8 @@
         #   2. Must end with :50 (static suffix)
         # ------------------------------------------------------------------
 
-	ip -6 addr show dev enp2s0 scope global | \
-          awk '/inet6 24[0-1].*::50\// { sub(/\/.*$/, "", $2); print $2 }'
+	${pkgs.iproute2}/bin/ip -6 addr show dev enp2s0 scope global | \
+          ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::50\// { sub(/\/.*$/, "", $2); print $2 }'
       '';
     in
     {
@@ -98,7 +98,8 @@
       passwordFile = config.sops.secrets."ddclient/cf_token".path;
       protocol = "cloudflare";
       interval = "5min";
-      usev6 = "cmd, cmd=${getIPv6}";
+      usev4 = "disabled";
+      usev6 = "cmdv6,cmdv6=${getIPv6}";
       zone = "kedi.dev";
       domains = [
         "tv.kedi.dev"
