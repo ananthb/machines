@@ -72,13 +72,19 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  systemd.services.qbittorrent.unitConfig.RequiresMountsFor = "/srv";
-
   # WARP must be manually set up in proxy mode listening on port 8888.
   # This involves registering a new identity, accepting the tos,
   # setting the mode to proxy, and then setting proxy port to 8888.
   services.cloudflare-warp.enable = true;
   services.cloudflare-warp.openFirewall = false;
+
+  # Jellyfin direct ingress
+  services.caddy.virtualHosts."tv.kedi.dev".extraConfig = ''
+    reverse_proxy http://localhost:8096
+  '';
+  networking.firewall.allowedTCPPorts = [ 443 ];
+
+  systemd.services.qbittorrent.unitConfig.RequiresMountsFor = "/srv";
 
   # Prometheus Exporters
   services.prometheus.exporters = {

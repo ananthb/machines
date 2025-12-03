@@ -16,7 +16,7 @@
   - Caddy (ingress) - listening on port 4000 on all interfaces
 
   Configuration files and secrets are managed using SOPS templates.
- */
+*/
 {
   config,
   lib,
