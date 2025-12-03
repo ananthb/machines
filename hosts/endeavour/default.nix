@@ -193,7 +193,7 @@
   };
 
   sops.secrets = {
-    "cloudflare/token" = { };
+    "ddclient/cf_token" = { };
     "nut/users/nutmon".mode = "0444";
   };
 
