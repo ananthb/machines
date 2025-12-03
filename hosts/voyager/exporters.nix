@@ -6,21 +6,21 @@
 
     exportarr-radarr = {
       enable = true;
-      url = "http://endeavour:7878";
+      url = "http://endeavour.local:7878";
       port = 9708;
       apiKeyFile = config.sops.secrets."arr_apis/radarr".path;
     };
 
     exportarr-sonarr = {
       enable = true;
-      url = "http://endeavour:8989";
+      url = "http://endeavour.local:8989";
       port = 9709;
       apiKeyFile = config.sops.secrets."arr_apis/sonarr".path;
     };
 
     exportarr-prowlarr = {
       enable = true;
-      url = "http://endeavour:9696";
+      url = "http://endeavour.local:9696";
       port = 9710;
       apiKeyFile = config.sops.secrets."arr_apis/prowlarr".path;
     };
