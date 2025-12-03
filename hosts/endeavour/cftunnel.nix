@@ -8,7 +8,7 @@
         "6a.kedi.dev" = "http://[fdc0:6625:5195::45]:8123";
         "actual.kedi.dev" = "http://[fdc0:6625:5195::45]:3100";
         "apps.kedi.dev" = "http://voyager:8082"; # TODO: move off of tailscale
-	"dav.kedi.dev" = "http://[fdc0:6625:5195::45]:4000";
+        "dav.kedi.dev" = "http://[fdc0:6625:5195::45]:4000";
         "immich.kedi.dev" = "http://localhost:2283";
         "miniflux.kedi.dev" = "http://[fdc0:6625:5195::45]:8088";
         "mealie.kedi.dev" = "http://[fdc0:6625:5195::45]:9000";

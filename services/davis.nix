@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  options,
   ...
 }:
 {
@@ -15,6 +16,10 @@
       inviteFromAddress = "davis@kedi.dev";
     };
     nginx = null;
+    poolConfig = options.services.davis.poolConfig.default // {
+      "listen.owner" = "caddy";
+      "listen.group" = "caddy";
+    };
   };
 
   services.caddy.virtualHosts.":4000".extraConfig = ''
