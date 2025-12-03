@@ -8,7 +8,7 @@
     ./hardware-configuration.nix
 
     ./cftunnel.nix
-    ../../services/hass.nix
+    ./6a.nix
     ../../services/homepage.nix
     ../../services/media/text.nix
     ../../services/monitoring/exporters.nix
