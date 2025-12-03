@@ -7,14 +7,14 @@
 {
   imports = [
     ../linux
-    ../../services/immich.nix
-    ../../services/open-webui.nix
-    ../../services/seafile.nix
-    ../../services/tv
+    ./hardware-configuration.nix
 
     ./cftunnel.nix
-    ./hardware-configuration.nix
     ./power.nix
+    ../../services/immich.nix
+    ../../services/media/tv.nix
+    ../../services/open-webui.nix
+    ../../services/seafile.nix
   ];
 
   # systemd-boot

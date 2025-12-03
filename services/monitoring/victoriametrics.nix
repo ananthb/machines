@@ -1,15 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  inputs,
-  lib,
-  pkgs,
-  ...
-}:
-
-{
-  imports = [
-    inputs.tsnsrv.nixosModules.default
-  ];
 
   services.victoriametrics = {
     enable = true;
@@ -396,271 +386,73 @@
     };
   };
 
-  services.prometheus.exporters = {
-    postgres.enable = true;
-    postgres.runAsLocalSuperUser = true;
-
-    exportarr-radarr = {
-      enable = true;
-      url = "http://endeavour:7878";
-      port = 9708;
-      apiKeyFile = config.sops.secrets."arr_apis/radarr".path;
-    };
-
-    exportarr-sonarr = {
-      enable = true;
-      url = "http://endeavour:8989";
-      port = 9709;
-      apiKeyFile = config.sops.secrets."arr_apis/sonarr".path;
-    };
-
-    exportarr-prowlarr = {
-      enable = true;
-      url = "http://endeavour:9696";
-      port = 9710;
-      apiKeyFile = config.sops.secrets."arr_apis/prowlarr".path;
-    };
-
-    blackbox = {
-      enable = true;
-      configFile = pkgs.writeText "blackbox_exporter.conf" ''
-        modules:
-          icmp:
-            prober: icmp
-          http_2xx:
-            prober: http
-            http:
-              method: GET
-              no_follow_redirects: true
-              fail_if_ssl: true
-          https_2xx:
-            prober: http
-            http:
-              method: GET
-              no_follow_redirects: true
-              fail_if_not_ssl: true
-      '';
-    };
-
-  };
-
-  services.grafana = {
-    enable = true;
-    settings = {
-      database = {
-        type = "postgres";
-        host = "/run/postgresql";
-        name = "grafana";
-        user = "grafana";
-      };
-
-      server = {
-        http_addr = "::";
-        domain = "$__file{${config.sops.templates."fqdns/grafana.txt".path}}";
-      };
-
-      smtp = {
-        enabled = true;
-        user = "$__file{${config.sops.secrets."email/smtp/username".path}}";
-        password = "$__file{${config.sops.secrets."email/smtp/password".path}}";
-        host = "$__file{${config.sops.secrets."email/smtp/host".path}}:587";
-        from_address = "$__file{${config.sops.secrets."email/from/grafana".path}}";
-        startTLS_policy = "MandatoryStartTLS";
-      };
-    };
-
-    provision = {
-      enable = true;
-      datasources.settings.datasources = [
-        {
-          url = "http://localhost:8428";
-          name = "VictoraMetrics";
-          type = "prometheus";
-          jsonData = {
-            httpMethod = "POST";
-            manageAlerts = true;
-          };
-        }
-      ];
-    };
-  };
-
   systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
     config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
   ];
 
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [ "grafana" ];
-    ensureUsers = [
-      {
-        name = "grafana";
-        ensureDBOwnership = true;
-        ensureClauses.login = true;
-      }
-    ];
+  sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
+    owner = config.users.users.grafana.name;
+    content = ''
+      [
+          {
+              "targets": [
+                "https://6a.kedi.dev",
+                "https://actual.kedi.dev",
+                "https://mealie.kedi.dev",
+                "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
+                "https://open-webui.kedi.dev.",
+                "https://radicale.kedi.dev",
+                "https://vault.kedi.dev"
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server"
+              }
+          },
+          {
+              "targets": [
+                "https://wallabag.kedi.dev",
+                "https://miniflux.kedi.dev"
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "news"
+              }
+          },
+          {
+              "targets": [
+                "https://immich.kedi.dev/auth/login"
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "immich"
+              }
+          },
+          {
+              "targets": [
+                "https://seafile.kedi.dev/accounts/login/",
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "seafile"
+              }
+          },
+          {
+              "targets": [
+                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
+                "https://tv.kedi.dev/web/"
+              ],
+              "labels": {
+                  "type": "app",
+                  "role": "server",
+                  "app": "jellyfin"
+              }
+          }
+      ]
+    '';
   };
 
-  services.tsnsrv = {
-    enable = true;
-
-    defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
-    defaults.urlParts.host = "localhost";
-
-    services.mon = {
-      funnel = true;
-      urlParts.port = 3000;
-    };
-  };
-
-  systemd.services.grafana.environment = {
-    GF_AUTH_DISABLE_LOGIN_FORM = "true";
-    GF_AUTH_BASIC_ENABLED = "false";
-    GF_AUTH_PROXY_ENABLED = "true";
-    GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
-    GF_AUTH_PROXY_HEADER_PROPERTY = "username";
-    GF_AUTH_PROXY_AUTO_SIGN_UP = "false";
-    GF_AUTH_PROXY_SYNC_TTL = "60";
-    GF_AUTH_PROXY_WHITELIST = "::1";
-    GF_AUTH_PROXY_HEADERS = "Name:X-Tailscale-User-DisplayName";
-    GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
-  };
-
-  virtualisation.quadlet =
-    let
-      inherit (config.virtualisation.quadlet) volumes;
-    in
-    {
-      volumes = {
-        ripe-atlas-etc = { };
-        ripe-atlas-run = { };
-        ripe-atlas-var-spool = { };
-      };
-
-      containers = {
-        globalping-probe.containerConfig = {
-          name = "globalping-probe";
-          image = "docker.io/globalping/globalping-probe:latest";
-          networks = [ "host" ];
-          addCapabilities = [ "NET_RAW" ];
-          environmentFiles = [
-            config.sops.templates."globalping/probe.env".path
-          ];
-        };
-
-        ripe-atlas-probe.containerConfig = {
-          name = "ripe-atlas-probe";
-          image = "ghcr.io/jamesits/ripe-atlas:latest-probe";
-          networks = [ "host" ];
-          dropCapabilities = [ "all" ];
-          addCapabilities = [
-            "NET_RAW"
-            "KILL"
-            "SETUID"
-            "SETGID"
-            "FOWNER"
-            "CHOWN"
-            "DAC_OVERRIDE"
-          ];
-          environments = {
-            RXTXRPT = "yes";
-          };
-          volumes = [
-            "${volumes.ripe-atlas-etc.ref}:/etc/ripe-atlas"
-            "${volumes.ripe-atlas-run.ref}:/run/ripe-atlas"
-            "${volumes.ripe-atlas-var-spool.ref}:/var/spool/ripe-atlas"
-          ];
-        };
-      };
-    };
-
-  sops.secrets = {
-    "arr_apis/radarr".mode = "0444";
-    "arr_apis/sonarr".mode = "0444";
-    "arr_apis/prowlarr".mode = "0444";
-    "email/from/grafana".owner = config.users.users.grafana.name;
-    "email/smtp/host".owner = config.users.users.grafana.name;
-    "email/smtp/username".owner = config.users.users.grafana.name;
-    "email/smtp/password".owner = config.users.users.grafana.name;
-    "globalping/probeToken" = { };
-    "tailscale_api/auth_key" = { };
-    "tailscale_api/tailnet" = { };
-  };
-
-  sops.templates = {
-    "globalping/probe.env" = {
-      content = ''
-        GP_ADOPTION_TOKEN=${config.sops.placeholder."globalping/probeToken"}
-      '';
-    };
-
-    "fqdns/grafana.txt" = {
-      owner = config.users.users.grafana.name;
-      content = "mon.${config.sops.placeholder."tailscale_api/tailnet"}";
-    };
-
-    "victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
-      owner = config.users.users.grafana.name;
-      content = ''
-        [
-            {
-                "targets": [
-                  "https://6a.kedi.dev",
-                  "https://actual.kedi.dev",
-                  "https://mealie.kedi.dev",
-                  "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
-                  "https://open-webui.kedi.dev.",
-                  "https://radicale.kedi.dev",
-                  "https://vault.kedi.dev"
-                ],
-                "labels": {
-                    "type": "app",
-                    "role": "server"
-                }
-            },
-            {
-                "targets": [
-                  "https://wallabag.kedi.dev",
-                  "https://miniflux.kedi.dev"
-                ],
-                "labels": {
-                    "type": "app",
-                    "role": "server",
-                    "app": "news"
-                }
-            },
-            {
-                "targets": [
-                  "https://immich.kedi.dev/auth/login"
-                ],
-                "labels": {
-                    "type": "app",
-                    "role": "server",
-                    "app": "immich"
-                }
-            },
-            {
-                "targets": [
-                  "https://seafile.kedi.dev/accounts/login/",
-                ],
-                "labels": {
-                    "type": "app",
-                    "role": "server",
-                    "app": "seafile"
-                }
-            },
-            {
-                "targets": [
-                  "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
-                ],
-                "labels": {
-                    "type": "app",
-                    "role": "server",
-                    "app": "jellyfin"
-                }
-            }
-        ]
-      '';
-    };
-  };
 }
