@@ -5,13 +5,16 @@
 {
   imports = [
     ../linux
-
-    ./apps.nix
-    ./cftunnel.nix
     ./hardware-configuration.nix
-    ./hass.nix
-    ./homepage.nix
-    ./monitoring.nix
+
+    ./cftunnel.nix
+    ../../services/hass.nix
+    ../../services/homepage.nix
+    ../../services/media/text.nix
+    ../../services/monitoring/exporters.nix
+    ../../services/monitoring/grafana.nix
+    ../../services/monitoring/probes.nix
+    ../../services/monitoring/victoriametrics.nix
   ];
 
   # System packages
@@ -50,6 +53,8 @@
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
     "email/smtp/host".owner = config.users.users.grafana.name;
+    "gcloud/oauth_self-hosted_clients/id".mode = "0444";
+    "gcloud/oauth_self-hosted_clients/secret".mode = "0444";
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
