@@ -81,36 +81,21 @@
   # Jellyfin direct ingress
   services.ddclient =
     let
-      getIPv6 = pkgs.writeShellScript ''
+      getIPv6 = pkgs.writeShellScript "get-ipv6" ''
         # ------------------------------------------------------------------
         # ddclient custom IPv6 getter
         # Criteria: 
-        #   1. Must be Global scope
-        #   2. Must start with 2400::/11 (Global Unicast Address Space)
-        #   3. Must end with :50 (Static Suffix)
+        #   1. Must be set on enp2s0 in the 2400::/11 Global Unicast Address Space
+        #   2. Must end with :50 (static suffix)
         # ------------------------------------------------------------------
 
-        ip -6 addr show scope global | \
-        awk '{
-            for(i=1;i<=NF;i++) {
-                if($i ~ /^inet6/) {
-                    # The next field is the address/cidr
-                    addr_field=$(i+1)
-                    if (addr_field ~ /^2400:/) {
-                        if (addr_field ~ /:50\//) {
-                            split(addr_field, a, "/")
-                            print a[1]
-                            exit 0
-                        }
-                    }
-                }
-            }
-        }'
+	ip -6 addr show dev enp2s0 scope global | \
+          awk '/inet6 24[0-1].*::50\// { sub(/\/.*$/, "", $2); print $2 }'
       '';
     in
     {
       enable = true;
-      passwordFile = config.sops.secrets."cloudflare/token".path;
+      passwordFile = config.sops.secrets."ddclient/cf_token".path;
       protocol = "cloudflare";
       interval = "5min";
       usev6 = "cmd, cmd=${getIPv6}";
