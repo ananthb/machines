@@ -1,3 +1,22 @@
+/**
+  Seafile deployment using Podman containers managed by nix-quadlet.
+
+  Components:
+  - Seafile server
+  - Notification server
+  - Metadata server
+  - Thumbnail server
+  - AI server
+  - Seadoc server
+  - Collabora CODE
+
+  Dependencies:
+  - MySQL (MariaDB)
+  - Redis
+  - Caddy (ingress) - listening on port 4000 on all interfaces
+
+  Configuration files and secrets are managed using SOPS templates.
+ */
 {
   config,
   lib,
@@ -196,44 +215,34 @@
       };
     };
 
-  services.caddy = {
-    enable = true;
-    globalConfig = ''
-      servers {
-        trusted_proxies static ::1 127.0.0.0/8 fdc0:6625:5195::0/64 10.15.16.0/24
-      }
-    '';
-    virtualHosts.":4000" = {
-      extraConfig = ''
-        # seafile
-        reverse_proxy http://localhost:4001
+  services.caddy.virtualHosts.":4000".extraConfig = ''
+    # seafile
+    reverse_proxy http://localhost:4001
 
-        # notification server
-        handle_path /notification* {
-          reverse_proxy http://localhost:8083
-        }
+    # notification server
+    handle_path /notification* {
+      reverse_proxy http://localhost:8083
+    }
 
-        # thumbnail server
-        handle /thumbnail/* {
-          reverse_proxy http://localhost:4003
+    # thumbnail server
+    handle /thumbnail/* {
+      reverse_proxy http://localhost:4003
 
-        }
-        handle_path /thumbnail/ping {
-          rewrite /ping
-          reverse_proxy http://localhost:4003
-        }
+    }
+    handle_path /thumbnail/ping {
+      rewrite /ping
+      reverse_proxy http://localhost:4003
+    }
 
-        # seadoc
-        reverse_proxy /socket.io/* http://localhost:4002
-        handle_path /sdoc-server/* {
-          reverse_proxy http://localhost:4002
-        }
+    # seadoc
+    reverse_proxy /socket.io/* http://localhost:4002
+    handle_path /sdoc-server/* {
+      reverse_proxy http://localhost:4002
+    }
 
-        # collabora code
-        reverse_proxy /collabora-code/* http://localhost:9980
-      '';
-    };
-  };
+    # collabora code
+    reverse_proxy /collabora-code/* http://localhost:9980
+  '';
 
   networking.firewall.allowedTCPPorts = [ 4000 ];
 

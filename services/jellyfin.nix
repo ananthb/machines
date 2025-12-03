@@ -21,6 +21,10 @@
     openFirewall = true;
   };
 
+  services.caddy.virtualHosts."tv.kedi.dev".extraConfig = ''
+    reverse_proxy / http://localhost:8096
+  '';
+
   services.tsnsrv = {
     enable = true;
     defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;

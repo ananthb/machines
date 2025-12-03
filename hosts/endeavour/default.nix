@@ -10,13 +10,13 @@
     ../linux
     ../../services/arr.nix
     ../../services/immich.nix
+    ../../services/jellyfin.nix
     ../../services/open-webui.nix
     ../../services/seafile.nix
 
     ./cftunnel.nix
     ./hardware-configuration.nix
     ./power.nix
-    ./tv.nix
   ];
 
   users.groups.media.members = [
@@ -109,7 +109,16 @@
     postgres.runAsLocalSuperUser = true;
 
     smartctl.enable = true;
+  };
 
+  # Caddy webserver
+  services.caddy = {
+    enable = true;
+    globalConfig = ''
+      servers {
+        trusted_proxies static ::1 127.0.0.0/8 fdc0:6625:5195::0/64 10.15.16.0/24
+      }
+    '';
   };
 
   systemd.services."immich-backup" = {
