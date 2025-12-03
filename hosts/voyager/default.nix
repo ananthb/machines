@@ -7,14 +7,18 @@
     ../linux
     ./hardware-configuration.nix
 
-    ./cftunnel.nix
     ./6a.nix
+    ./cftunnel.nix
+    ./exporters.nix
+    ../../services/actual.nix
     ../../services/homepage.nix
+    ../../services/mealie.nix
+    ../../services/media/jellyseerr.nix
     ../../services/media/text.nix
-    ../../services/monitoring/exporters.nix
     ../../services/monitoring/grafana.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
+    ../../services/vaultwarden.nix
   ];
 
   # System packages
