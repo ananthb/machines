@@ -79,6 +79,46 @@
   services.cloudflare-warp.openFirewall = false;
 
   # Jellyfin direct ingress
+  services.ddclient =
+    let
+      getIPv6 = pkgs.writeShellScript ''
+        # ------------------------------------------------------------------
+        # ddclient custom IPv6 getter
+        # Criteria: 
+        #   1. Must be Global scope
+        #   2. Must start with 2400::/11 (Global Unicast Address Space)
+        #   3. Must end with :50 (Static Suffix)
+        # ------------------------------------------------------------------
+
+        ip -6 addr show scope global | \
+        awk '{
+            for(i=1;i<=NF;i++) {
+                if($i ~ /^inet6/) {
+                    # The next field is the address/cidr
+                    addr_field=$(i+1)
+                    if (addr_field ~ /^2400:/) {
+                        if (addr_field ~ /:50\//) {
+                            split(addr_field, a, "/")
+                            print a[1]
+                            exit 0
+                        }
+                    }
+                }
+            }
+        }'
+      '';
+    in
+    {
+      enable = true;
+      passwordFile = config.sops.secrets."cloudflare/token".path;
+      protocol = "cloudflare";
+      interval = "5min";
+      usev6 = "cmd, cmd=${getIPv6}";
+      zone = "kedi.dev";
+      domains = [
+        "tv.kedi.dev"
+      ];
+    };
   services.caddy.virtualHosts."tv.kedi.dev".extraConfig = ''
     reverse_proxy http://localhost:8096
   '';
@@ -152,7 +192,10 @@
     };
   };
 
-  sops.secrets."nut/users/nutmon".mode = "0444";
+  sops.secrets = {
+    "cloudflare/token" = { };
+    "nut/users/nutmon".mode = "0444";
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
