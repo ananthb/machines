@@ -3,6 +3,7 @@
   services.prometheus.exporters = {
     blackbox = {
       enable = true;
+      openFirewall = true;
       configFile = pkgs.writeText "blackbox_exporter.conf" ''
         modules:
           https_2xx_via_warp:
@@ -19,15 +20,18 @@
     # TODO: fix this
     mysqld = {
       enable = false;
-      runAsLocalSuperUser = true;
       listenAddress = "[::]";
+      openFirewall = true;
+      runAsLocalSuperUser = true;
       configFile = pkgs.writeText "config.my-cnf" "";
     };
 
     postgres.enable = true;
     postgres.runAsLocalSuperUser = true;
+    postgres.openFirewall = true;
 
     smartctl.enable = true;
+    smartctl.openFirewall = true;
   };
 
 }
