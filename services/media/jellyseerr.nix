@@ -1,4 +1,4 @@
-{ }:
+{ ... }:
 {
   services.jellyseerr.enable = true;
   systemd.services.jellyseerr.environment = {
