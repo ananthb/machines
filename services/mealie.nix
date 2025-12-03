@@ -1,4 +1,4 @@
-{ config, pkgs }:
+{ config, pkgs, ... }:
 {
 
   services.mealie = {
@@ -48,6 +48,7 @@
 
   sops.secrets = {
     "email/from/mealie" = { };
+    "open-webui/api_key" = { };
     "mealie/api_keys" = { };
   };
 
