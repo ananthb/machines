@@ -1,6 +1,7 @@
 { ... }:
 {
   services.jellyseerr.enable = true;
+  services.jellyseer.openFirewall = true;
   systemd.services.jellyseerr.environment = {
     DB_TYPE = "postgres";
     DB_SOCKET_PATH = "/var/run/postgresql";
