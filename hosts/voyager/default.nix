@@ -20,6 +20,7 @@
     ../../services/monitoring/grafana.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
+    ../../services/radicale.nix
     ../../services/vaultwarden.nix
   ];
 
