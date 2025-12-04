@@ -8,7 +8,7 @@
         "6a.kedi.dev" = "http://localhost:8123";
         "actual.kedi.dev" = "http://localhost:3100";
         "apps.kedi.dev" = "http://localhost:8082";
-        "dav.kedi.dev" = "http://localhost:4000";
+        "davis.kedi.dev" = "http://localhost:4000";
         "immich.kedi.dev" = "http://[fdc0:6625:5195::50]:2283";
         "mealie.kedi.dev" = "http://localhost:9000";
         "miniflux.kedi.dev" = "http://localhost:8088";
