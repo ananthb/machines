@@ -58,6 +58,7 @@
       EMABLE_OPENAI_API="False"
 
       # auth
+      ENABLE_API_KEYS="True"
       ENABLE_LOGIN_FORM="False"
       ENABLE_OAUTH_PERSISTENT_CONFIG="False"
       ENABLE_SIGNUP="True"
