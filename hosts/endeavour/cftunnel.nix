@@ -15,6 +15,7 @@
         "open-webui.kedi.dev" = "http://localhost:8090";
         "radicale.kedi.dev" = "http://[fdc0:6625:5195::45]:5232";
         "seafile.kedi.dev" = "http://localhost:4000";
+	"seerr.kedi.dev" = "http://[fdc0:6625:5195::45]:5055";
         "vault.kedi.dev" = "http://[fdc0:6625:5195::45]:8222";
         "wallabag.kedi.dev" = "http://[fdc0:6625:5195::45]:8085";
       };
