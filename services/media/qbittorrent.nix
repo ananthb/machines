@@ -23,10 +23,8 @@
       };
       Preferences = {
         WebUI = {
-          AuthSubnetWhitelist = ''
-            0.0.0.0/0
-            ::/0
-          '';
+	  LocalHostAuth = false;
+          AuthSubnetWhitelist = "0.0.0.0/0,::/0";
           AuthSubnetWhitelistEnabled = true;
           AlternativeUIEnabled = true;
           RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
