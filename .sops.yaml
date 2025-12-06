@@ -1,12 +1,14 @@
 ---
 keys:
   - &admin_ananth 4F0758D4AAE24E6D5A4483C666A20525398E18D7
-  - &host_endeavour age15sfhayymtkzunzc3j3t6pd8r33qmmzmgurqsak0tvq7hdmg5fygsuwmwkl
-  - &host_endeavour_user_ananth age1vtrxhmcalay5n503w4zp892sa8d2tvhk78y2k59tl9hdwdzk2yvqulufkp
   - &host_discovery age10ptm7gkn0kx9033r4zmqsx7l65emghg3vnme3xfdxw4an0ys8ccsafaaar
   - &host_discovery_user_ananth age15mlx0pyzj3kc66dwum5jyd3kpmknltcz7g2qva9uqehz5fq9f5sq63pstl
+  - &host_endeavour age15sfhayymtkzunzc3j3t6pd8r33qmmzmgurqsak0tvq7hdmg5fygsuwmwkl
+  - &host_endeavour_user_ananth age1vtrxhmcalay5n503w4zp892sa8d2tvhk78y2k59tl9hdwdzk2yvqulufkp
   - &host_enterprise age1s5zrm3qygmhjfxw6wfauas7zm85exr2cq7ff7v79suhdkvzjnf3s97dw5s
   - &host_enterprise_user_ananth age1wl9ycv0enhqrhkxhh5q200qqul6zq27865la4m3vfwqzqphfhp3qu3zksh
+  - &host_stargazer age109kaxnxcjfqyfcr49jrvg8tqcgugk0amp4e23ru3300zexhdqfxsp6xwde
+  - &host_stargazer_user_ananth age1y8zedseruffw5hgczc5fna4y6t5ul8u93kct5ztt2rlajezd9drskam9pk
   - &host_voyager age1zwnfhqacmpssr67s9rfqsz8a80pp9tgv3n557tlxm7esfppxlvyqh55wez
   - &host_voyager_user_ananth age1d0dgdq2glj67lg59f2xurs05zjpdhjh5xzmsfu3066x2zmhjdsasc7faqv
 creation_rules:
@@ -21,5 +23,7 @@ creation_rules:
         - *host_discovery_user_ananth
         - *host_enterprise
         - *host_enterprise_user_ananth
+        - *host_stargazer
+        - *host_stargazer_user_ananth
         - *host_voyager
         - *host_voyager_user_ananth
