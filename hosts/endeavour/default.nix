@@ -46,6 +46,7 @@
   };
 
   services.fwupd.enable = true;
+  services.bcachefs.autoScrub.enable = true;
 
   # System packages
   environment.systemPackages = with pkgs; [
