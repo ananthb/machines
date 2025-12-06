@@ -137,19 +137,20 @@
       "yubico-authenticator"
 
       # tools
-      "rectangle-pro"
-      "scroll-reverser"
       "ollama-app"
+      "rectangle-pro"
+      "raspberry-pi-imager"
+      "scroll-reverser"
       "seadrive"
 
       # dailies
-      "google-chrome"
       "ghostty"
+      "google-chrome"
       "neovide-app"
 
       # media
-      "vlc"
       "jellyfin-media-player"
+      "vlc"
     ];
     masApps = {
       "Tailscale" = 1475387142;

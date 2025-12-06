@@ -82,6 +82,27 @@
             ];
           };
 
+        stargazer =
+          let
+            system = "aarch64-linux";
+            username = "ananth";
+            hostname = "stargazer";
+          in
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+
+            specialArgs = {
+              inherit system hostname username;
+
+              inputs = inputs;
+            };
+
+            modules = [
+              nixos-hardware.nixosModules.raspberry-pi-4
+              ./hosts/stargazer
+            ];
+          };
+
         voyager =
           let
             system = "aarch64-linux";
