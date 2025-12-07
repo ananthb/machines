@@ -63,7 +63,6 @@ in
     fzf
     devenv
     gnupg
-    neovim
   ];
 
   home.stateVersion = "24.05";
