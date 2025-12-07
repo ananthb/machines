@@ -30,6 +30,21 @@
       fsType = "ext4";
       options = [ "noatime" ];
     };
+    "/home" = {
+      device = "/dev/disk/by-label/storage";
+      fsType = "btrfs";
+      options = [ "subvol=@home,compress=zstd" ];
+    };
+    "/nix" = {
+      device = "/dev/disk/by-label/storage";
+      fsType = "btrfs";
+      options = [ "subvol=@nix,compress=zstd" ];
+    };
+    "/var" = {
+      device = "/dev/disk/by-label/storage";
+      fsType = "btrfs";
+      options = [ "subvol=@var,compress=zstd" ];
+    };
   };
 
   hardware = {
