@@ -23,7 +23,7 @@
       };
       Preferences = {
         WebUI = {
-	  LocalHostAuth = false;
+          LocalHostAuth = false;
           AuthSubnetWhitelist = "0.0.0.0/0,::/0";
           AuthSubnetWhitelistEnabled = true;
           AlternativeUIEnabled = true;
