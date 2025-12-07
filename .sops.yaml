@@ -9,8 +9,8 @@ keys:
   - &host_enterprise_user_ananth age1wl9ycv0enhqrhkxhh5q200qqul6zq27865la4m3vfwqzqphfhp3qu3zksh
   - &host_stargazer age109kaxnxcjfqyfcr49jrvg8tqcgugk0amp4e23ru3300zexhdqfxsp6xwde
   - &host_stargazer_user_ananth age1y8zedseruffw5hgczc5fna4y6t5ul8u93kct5ztt2rlajezd9drskam9pk
-  - &host_voyager age1zwnfhqacmpssr67s9rfqsz8a80pp9tgv3n557tlxm7esfppxlvyqh55wez
-  - &host_voyager_user_ananth age1d0dgdq2glj67lg59f2xurs05zjpdhjh5xzmsfu3066x2zmhjdsasc7faqv
+  - &host_voyager age13hhdcqa4dcn49w5uy03vfxd2lgurhep53tufawc3gyvc3q9lwf5qs4uu09
+  - &host_voyager_user_ananth age1ecj27gptwns0tlm9t9kphhcf7ngkhgzwa8pg7nc5559v96lxzf9qxr6v5q
 creation_rules:
   - path_regex: secrets.yaml$
     key_groups:
