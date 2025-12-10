@@ -5,7 +5,6 @@
     ./darwin.nix
   ];
 
-  homebrew.brews = [ ];
   homebrew.casks = [
     "1password"
     "discord"
