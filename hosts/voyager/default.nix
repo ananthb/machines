@@ -20,6 +20,7 @@
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
     ../../services/radicale.nix
+    ../../services/traefix-admin.nix
     ../../services/vaultwarden.nix
   ];
 

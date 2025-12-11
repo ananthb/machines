@@ -3,6 +3,7 @@
   services.qbittorrent = {
     enable = true;
     group = "media";
+    webuiPort = "8000";
     openFirewall = true;
     serverConfig = {
       LegalNotice.Accepted = true;
