@@ -5,6 +5,12 @@
     enable = true;
 
     staticConfigOptions = {
+      log = {
+        level = "INFO";
+      };
+
+      accessLog = { };
+
       api.dashboard = true;
 
       metrics.prometheus = {
