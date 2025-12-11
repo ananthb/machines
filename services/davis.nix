@@ -1,7 +1,5 @@
 {
   config,
-  inputs,
-  lib,
   options,
   ...
 }:
@@ -17,16 +15,38 @@
     };
     nginx = null;
     poolConfig = options.services.davis.poolConfig.default // {
-      "listen.owner" = "caddy";
-      "listen.group" = "caddy";
+      "listen.owner" = "nobody";
+      "listen.group" = "nobody";
     };
   };
 
-  services.caddy.virtualHosts.":4000".extraConfig = ''
-    reverse_proxy unix//run/phpfpm/davis.sock
-  '';
+  services.traefik = {
+    enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 4000 ];
+    staticConfigOptions = {
+      entryPoints = {
+        davis = {
+          address = ":4101";
+        };
+      };
+    };
+
+    dynamicConfigOptions = {
+      http = {
+        routers.davis-router = {
+          rule = "PathPrefix(`/`)";
+          entryPoints = [ "davis" ];
+          service = "davis-service";
+        };
+
+        services.davis-service.loadBalancer.servers = [
+          { url = "unix:///run/phpfpm/davis.sock"; }
+        ];
+      };
+    };
+  };
+
+  networking.firewall.allowedTCPPorts = [ 4101 ];
 
   sops.secrets = {
     "davis/admin_password" = { };

@@ -55,6 +55,15 @@
       quadlet-nix,
       ...
     }@inputs:
+    let
+      username = "ananth";
+      trustedIPs = [
+        "::1"
+        "127.0.0.0/8"
+        "fdc0:6625:5195::0/64"
+        "10.15.16.0/24"
+      ];
+    in
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
       formatter.aarch64-linux = nixpkgs.legacyPackages.aarch64-linux.nixfmt-rfc-style;
@@ -64,14 +73,18 @@
         endeavour =
           let
             system = "x86_64-linux";
-            username = "ananth";
             hostname = "endeavour";
           in
           nixpkgs.lib.nixosSystem {
             inherit system;
 
             specialArgs = {
-              inherit system hostname username;
+              inherit
+                system
+                hostname
+                trustedIPs
+                username
+                ;
 
               inputs = inputs;
             };
@@ -85,14 +98,18 @@
         stargazer =
           let
             system = "aarch64-linux";
-            username = "ananth";
             hostname = "stargazer";
           in
           nixpkgs.lib.nixosSystem {
             inherit system;
 
             specialArgs = {
-              inherit system hostname username;
+              inherit
+                system
+                hostname
+                trustedIPs
+                username
+                ;
 
               inputs = inputs;
             };
@@ -106,14 +123,18 @@
         voyager =
           let
             system = "aarch64-linux";
-            username = "ananth";
             hostname = "voyager";
           in
           nixpkgs.lib.nixosSystem {
             inherit system;
 
             specialArgs = {
-              inherit system hostname username;
+              inherit
+                system
+                hostname
+                trustedIPs
+                username
+                ;
 
               inputs = inputs;
             };
@@ -129,14 +150,18 @@
         discovery =
           let
             system = "aarch64-darwin";
-            username = "ananth";
             hostname = "discovery";
           in
           nix-darwin.lib.darwinSystem {
             inherit system;
 
             specialArgs = {
-              inherit system hostname username;
+              inherit
+                system
+                hostname
+                trustedIPs
+                username
+                ;
 
               inputs = inputs;
             };
@@ -150,14 +175,18 @@
         enterprise =
           let
             system = "aarch64-darwin";
-            username = "ananth";
             hostname = "enterprise";
           in
           nix-darwin.lib.darwinSystem {
             inherit system;
 
             specialArgs = {
-              inherit system hostname username;
+              inherit
+                system
+                hostname
+                trustedIPs
+                username
+                ;
 
               inputs = inputs;
             };
