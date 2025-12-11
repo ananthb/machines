@@ -117,7 +117,7 @@
             "qBittorrent" = {
               icon = "qbittorrent";
               description = "Torrent downloader";
-              href = "http://endeavour:8080";
+              href = "http://endeavour:8000";
             };
           }
         ];
