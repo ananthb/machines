@@ -53,9 +53,6 @@
   systemd = {
     services.jellyfin.after = [ "traefik.service" ];
     services.jellyfin.wants = [ "traefik.service" ];
-    tmpfiles.rules = [
-      "d /var/lib/traefik 0700 traefik traefik -"
-    ];
   };
 
   services.traefik = {
@@ -65,18 +62,10 @@
       certificatesResolvers.letsencrypt.acme = {
         email = "srv.acme@kedi.dev";
         storage = "${config.services.traefik.dataDir}/acme.json";
-        httpChallenge.entryPoint = "web";
+        tlsChallenge = { };
       };
 
       entryPoints = {
-        web = {
-          address = ":80";
-          forwardedHeaders.trustedIPs = trustedIPs;
-          http.redirections.entryPoint = {
-            to = "websecure";
-            scheme = "https";
-          };
-        };
         websecure = {
           address = ":443";
           forwardedHeaders.trustedIPs = trustedIPs;
@@ -85,14 +74,22 @@
     };
 
     dynamicConfigOptions = {
-      http.middlewares.jellyfin-headers = {
-        headers = {
-          stsSeconds = 31536000;
-          stsIncludeSubdomains = true;
-          stsPreload = true;
-          forceSTSHeader = true;
-          contentTypeNosniff = true;
-          browserXssFilter = true;
+      tls.options.default = {
+        sniStrict = true;
+      };
+
+      http = {
+        middlewares = {
+          jellyfin-headers = {
+            headers = {
+              stsSeconds = 31536000;
+              stsIncludeSubdomains = true;
+              stsPreload = true;
+              forceSTSHeader = true;
+              contentTypeNosniff = true;
+              browserXssFilter = true;
+            };
+          };
         };
 
         routers.tv = {
