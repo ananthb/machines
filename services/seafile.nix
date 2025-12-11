@@ -234,9 +234,15 @@
     dynamicConfigOptions = {
       http = {
         middlewares = {
-          strip-notification.stripPrefix.prefixes = [ "/notification" ];
-          strip-sdoc.stripPrefix.prefixes = [ "/sdoc-server" ];
-          replace-ping.replacePath.path = "/ping";
+          strip-notification = {
+            stripPrefix.prefixes = [ "/notification" ];
+          };
+          strip-sdoc = {
+            stripPrefix.prefixes = [ "/sdoc-server" ];
+          };
+          replace-ping = {
+            replacePath.path = "/ping";
+          };
         };
 
         routers = {

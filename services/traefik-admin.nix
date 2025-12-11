@@ -14,6 +14,10 @@
         addServicesLabels = true;
       };
 
+      providers.file = {
+        watch = true;
+      };
+
       entryPoints.traefik_admin = {
         address = ":8080";
         forwardedHeaders.trustedIPs = trustedIPs;

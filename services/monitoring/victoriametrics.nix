@@ -313,6 +313,7 @@
             {
               targets = [
                 "endeavour.local:9100"
+                "stargazer:9100"
                 "voyager.local:9100"
               ];
               labels.os = "linux";
@@ -334,7 +335,9 @@
           static_configs = [
             {
               targets = [
+                "endeavour.local:8080" # traefix
                 "endeavour.local:9187" # postgres exporter
+                "voyager.local:8080" # traefix
                 "voyager.local:9187" # postgres exporter
                 "voyager.local:9708" # radarr exporter
                 "voyager.local:9709" # sonarr exporter
