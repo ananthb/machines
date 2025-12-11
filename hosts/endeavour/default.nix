@@ -15,7 +15,7 @@
     ../../services/media/tv.nix
     ../../services/open-webui.nix
     ../../services/seafile.nix
-    ../../services/traefix-admin.nix
+    ../../services/traefik-admin.nix
   ];
 
   # systemd-boot

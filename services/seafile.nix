@@ -73,7 +73,7 @@
               "seafile-thumbnail-server.service"
             ];
             Wants = lib.concatStringsSep " " [
-              "traefix.service"
+              "traefik.service"
               "collabora-code.service"
               "mysql.service"
               "redis-seafile.service"
@@ -99,9 +99,9 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefix.service";
+            Before = "traefik.service";
             After = "mysql.service";
-            Wants = "mysql.service traefix.service";
+            Wants = "mysql.service traefik.service";
           };
         };
 
@@ -121,9 +121,9 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefix.service";
+            Before = "traefik.service";
             After = "mysql.service redis-seafile.service";
-            Wants = "traefix.service mysql.service redis-seafile.service";
+            Wants = "traefik.service mysql.service redis-seafile.service";
           };
         };
 
@@ -143,9 +143,9 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefix.service";
+            Before = "traefik.service";
             After = "mysql.service";
-            Wants = "mysql.service traefix.service";
+            Wants = "mysql.service traefik.service";
           };
         };
 
@@ -209,8 +209,8 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefix.service";
-            Wants = "traefix.service";
+            Before = "traefik.service";
+            Wants = "traefik.service";
           };
         };
       };
