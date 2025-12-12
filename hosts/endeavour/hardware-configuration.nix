@@ -56,11 +56,6 @@
     fsType = "bind";
     options = [ "bind" ];
   };
-  fileSystems."/var/lib/seafile" = {
-    device = "/srv/seafile";
-    fsType = "bind";
-    options = [ "bind" ];
-  };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
