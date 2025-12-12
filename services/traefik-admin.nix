@@ -4,7 +4,7 @@
   services.traefik = {
     enable = true;
 
-    static.settings = {
+    staticConfigOptions = {
       log = {
         level = "INFO";
       };
@@ -30,7 +30,7 @@
       };
     };
 
-    dynamic.settings = {
+    dynamicConfigOptions = {
       http.routers.dashboard = {
         rule = "PathPrefix(`/`)";
         entryPoints = [ "traefik_admin" ];

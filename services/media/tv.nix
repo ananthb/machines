@@ -58,9 +58,7 @@
   services.traefik = {
     enable = true;
 
-    plugins = with pkgs; [ geoblock ];
-
-    static.settings = {
+    staticConfigOptions = {
       certificatesResolvers.letsencrypt.acme = {
         email = "srv.acme@kedi.dev";
         storage = "${config.services.traefik.dataDir}/acme.json";
@@ -71,22 +69,17 @@
         websecure = {
           address = ":443";
           forwardedHeaders.trustedIPs = trustedIPs;
-          middlewares = [ "geoblock" ];
         };
       };
     };
 
-    dynamic.settings = {
+    dynamicConfigOptions = {
       tls.options.default = {
         sniStrict = true;
       };
 
       http = {
         middlewares = {
-          geoblock = {
-            plugin.geoblock.countries = [ "NL" ];
-          };
-
           jellyfin-headers = {
             headers = {
               stsSeconds = 31536000;

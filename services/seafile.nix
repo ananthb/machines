@@ -219,7 +219,7 @@
   services.traefik = {
     enable = true;
 
-    static.settings = {
+    staticConfigOptions = {
       entryPoints = {
         seafile = {
           address = ":4000";
@@ -231,7 +231,7 @@
       };
     };
 
-    dynamic.settings = {
+    dynamicConfigOptions = {
       http = {
         middlewares = {
           strip-notification = {

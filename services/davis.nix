@@ -23,7 +23,7 @@
   services.traefik = {
     enable = true;
 
-    static.settings = {
+    staticConfigOptions = {
       entryPoints = {
         davis = {
           address = ":4101";
@@ -31,7 +31,7 @@
       };
     };
 
-    dynamic.settings = {
+    dynamicConfigOptions = {
       http = {
         routers.davis-router = {
           rule = "PathPrefix(`/`)";
