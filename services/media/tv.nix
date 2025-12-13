@@ -1,6 +1,8 @@
 {
   config,
   pkgs,
+  pkgs-wip-traefik-plugins,
+  system,
   trustedIPs,
   username,
   ...
@@ -12,6 +14,14 @@
     ./qbittorrent.nix
     ./radarr.nix
     ./sonarr.nix
+
+    (pkgs-wip-traefik-plugins + "/nixos/modules/services/web-servers/traefik.nix")
+  ];
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      traefik = pkgs-wip-traefik-plugins.legacyPackages.${system}.traefik;
+    })
   ];
 
   users.groups.media.members = [
@@ -58,7 +68,7 @@
   services.traefik = {
     enable = true;
 
-    staticConfigOptions = {
+    static.config = {
       certificatesResolvers.letsencrypt.acme = {
         email = "srv.acme@kedi.dev";
         storage = "${config.services.traefik.dataDir}/acme.json";
@@ -73,7 +83,7 @@
       };
     };
 
-    dynamicConfigOptions = {
+    dynamic.config = {
       tls.options.default = {
         sniStrict = true;
       };
