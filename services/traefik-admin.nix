@@ -1,10 +1,16 @@
-{ trustedIPs, ... }:
+{ pkgs-wip-traefik-plugins, trustedIPs, ... }:
 
 {
+
+  imports = [
+    (pkgs-wip-traefik-plugins + "/nixos/modules/services/web-servers/traefik.nix")
+  ];
+
   services.traefik = {
     enable = true;
+    package = pkgs-wip-traefik-plugins.traefik;
 
-    staticConfigOptions = {
+    static.config = {
       log = {
         level = "INFO";
       };
@@ -30,7 +36,7 @@
       };
     };
 
-    dynamicConfigOptions = {
+    dynamic.config = {
       http.routers.dashboard = {
         rule = "PathPrefix(`/`)";
         entryPoints = [ "traefik_admin" ];
