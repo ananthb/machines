@@ -4,7 +4,6 @@
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.nixpkgs-wip-traefik-plugins.url = "github:NixOS/nixpkgs/wip-traefik-plugins";
 
   inputs.sops-nix.url = "github:Mic92/sops-nix";
   inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -42,7 +41,6 @@
       self,
       nixos-hardware,
       nixpkgs,
-      nixpkgs-wip-traefik-plugins,
       sops-nix,
       nix-index-database,
       lanzaboote,
@@ -89,11 +87,6 @@
                 ;
 
               inputs = inputs;
-
-              pkgs-wip-traefik-plugins = import nixpkgs-wip-traefik-plugins {
-                inherit system;
-                config.allowUnfree = true;
-              };
             };
 
             modules = [
