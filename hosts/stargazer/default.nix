@@ -8,7 +8,9 @@
     ./hardware-configuration.nix
 
     ./t1.nix
+    ./cftunnel.nix
     ./exporters.nix
+    ../../services/monitoring/probes.nix
   ];
 
   # System packages
