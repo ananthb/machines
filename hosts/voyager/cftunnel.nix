@@ -6,13 +6,11 @@
       default = "http_status:404";
       ingress = {
         "6a.kedi.dev" = "http://localhost:8123";
-        "actual.kedi.dev" = "http://localhost:3100";
         "apps.kedi.dev" = "http://localhost:8082";
         "davis.kedi.dev" = "http://localhost:4101";
         "immich.kedi.dev" = "http://[fdc0:6625:5195::50]:2283";
         "miniflux.kedi.dev" = "http://localhost:8088";
         "open-webui.kedi.dev" = "http://[fdc0:6625:5195::50]:8090";
-        "radicale.kedi.dev" = "http://localhost:5232";
         "seafile.kedi.dev" = "http://[fdc0:6625:5195::50]:4000";
         "seerr.kedi.dev" = "http://localhost:5055";
         "vault.kedi.dev" = "http://localhost:8222";

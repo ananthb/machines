@@ -1,11 +1,8 @@
 { config, pkgs, ... }:
 {
   services.actual.enable = true;
-  services.actual.settings.port = 3100;
   systemd.services.actual.serviceConfig.EnvironmentFile =
     config.sops.templates."actual/config.env".path;
-
-  networking.firewall.allowedTCPPorts = [ 3100 ];
 
   systemd.services = {
     "actual-backup" = {

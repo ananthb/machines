@@ -34,7 +34,5 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 5232 ];
-
   sops.secrets."radicale/htpasswd".owner = "radicale";
 }
