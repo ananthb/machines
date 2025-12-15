@@ -11,10 +11,12 @@
     startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     script = ''
+      set -uo pipefail
+
       backup_api_url="http://localhost:9000/api/admin/backups"
 
       http() {
-        ${pkgs.httpie}/bin/http -A bearer -a "$backups_key" \
+        ${pkgs.httpie}/bin/http -A bearer -a "$backup_api_key" \
           --check-status \
           --ignore-stdin \
           --timeout=10 \
@@ -25,7 +27,7 @@
        http GET "$backup_api_url" \
         | ${pkgs.jq}/bin/jq -r '.imports[].name' \
         | ${pkgs.findutils}/bin/xargs -I{} \
-          ${pkgs.httpie}/bin/http -A bearer -a "$backups_key" \
+          ${pkgs.httpie}/bin/http -A bearer -a "$backup_api_key" \
             --check-status \
             --ignore-stdin \
             --timeout=10 \
