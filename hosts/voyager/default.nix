@@ -13,7 +13,6 @@
     ../../services/actual.nix
     ../../services/davis.nix
     ../../services/homepage.nix
-    ../../services/mealie.nix
     ../../services/media/jellyseerr.nix
     ../../services/media/text.nix
     ../../services/monitoring/grafana.nix

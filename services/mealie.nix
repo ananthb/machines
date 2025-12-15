@@ -57,7 +57,7 @@
       BASE_URL=https://mealie.kedi.dev
 
       # TODO: this blasted setting doesn't work
-      #FORWARDED_ALLOW_IPS=[::1],127.0.0.1,[fdc0:6625:5195::50],10.15.16.50
+      #FORWARDED_ALLOW_IPS=[::1],127.0.0.1
       FORWARDED_ALLOW_IPS=*
 
       # auth

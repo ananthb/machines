@@ -10,6 +10,7 @@
     ./t1.nix
     ./cftunnel.nix
     ./exporters.nix
+    ../../services/mealie.nix
     ../../services/monitoring/probes.nix
   ];
 
