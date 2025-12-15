@@ -40,6 +40,7 @@
       ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
     '';
     serviceConfig = {
+      User = "root";
       Type = "oneshot";
       EnvironmentFile = "${config.sops.secrets."mealie/api_keys".path}";
     };
