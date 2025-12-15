@@ -4,7 +4,6 @@
   services.mealie = {
     enable = true;
     listenAddress = "[::]";
-    database.createLocally = true;
     credentialsFile = config.sops.templates."mealie/env".path;
   };
 
@@ -77,7 +76,7 @@
       SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
 
       # open-webui
-      OPENAI_BASE_URL=http://endeavour.local:8090/ollama/v1
+      OPENAI_BASE_URL=http://endeavour:8090/ollama/v1
       OPENAI_MODEL=gemma3:12b
       OPENAI_API_KEY=${config.sops.placeholder."open-webui/api_key"}
     '';
