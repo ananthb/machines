@@ -11,7 +11,6 @@
         "davis.kedi.dev" = "http://[fdc0:6625:5195::45]:4101";
         "immich.kedi.dev" = "http://localhost:2283";
         "miniflux.kedi.dev" = "http://[fdc0:6625:5195::45]:8088";
-        "mealie.kedi.dev" = "http://[fdc0:6625:5195::45]:9000";
         "open-webui.kedi.dev" = "http://localhost:8090";
         "radicale.kedi.dev" = "http://[fdc0:6625:5195::45]:5232";
         "seafile.kedi.dev" = "http://localhost:4000";
