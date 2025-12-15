@@ -17,7 +17,7 @@
         ${pkgs.httpie}/bin/http -A bearer -a "$backups_key" \
           --check-status \
           --ignore-stdin \
-          --timeout=2.5 \
+          --timeout=10 \
           "$@"
       }
 
@@ -28,7 +28,7 @@
           ${pkgs.httpie}/bin/http -A bearer -a "$backups_key" \
             --check-status \
             --ignore-stdin \
-            --timeout=2.5 \
+            --timeout=10 \
             DELETE "$backup_api_url/"{}
 
       # Create new backup
