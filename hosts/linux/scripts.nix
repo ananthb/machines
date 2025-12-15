@@ -195,7 +195,7 @@
             --timeout=1 \
             --ignore-stdin \
             POST "$vm_url/api/v1/import/prometheus"
-        }
+        } || true # ignore errors
       '';
     };
   };
