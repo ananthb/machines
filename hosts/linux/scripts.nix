@@ -32,6 +32,8 @@
         # <subvol-dir> is a bcachefs or btrfs subvolume.
         # Creates a filesystem snapshot of <subvol-dir> and creates a kopia snapshot of that fs snapshot.
 
+        set -uo pipefail
+
         source ${shell-helpers}
 
         usage() {
@@ -92,6 +94,8 @@
         # Usage: kopia-backup <directory> [<source>]
         # <directory> is the directory to back up.
         # <source> is an optional value (default: <directory>) that overrides the kopia snapshot source directory.
+
+        set -uo pipefail
 
         source ${shell-helpers}
 
@@ -191,11 +195,11 @@
 
           # Send the data using httpie, ignoring errors
           echo "$line" | ${pkgs.httpie}/bin/http \
-            --check-status \
+            --quiet \
             --timeout=1 \
             --ignore-stdin \
-            POST "$vm_url/api/v1/import/prometheus"
-        } || true # ignore errors
+            post "$vm_url/api/v1/import/prometheus" || true
+        }
       '';
     };
   };
