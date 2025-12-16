@@ -4,6 +4,7 @@
   services.mealie = {
     enable = true;
     listenAddress = "[::]";
+    database.createLocally = true;
     credentialsFile = config.sops.templates."mealie/env".path;
   };
 
