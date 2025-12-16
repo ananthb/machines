@@ -15,7 +15,7 @@
   systemd.services."radicale-backup" = {
     startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    preStart = "systemctl is-active radicale.service && systemctl stop radicale.service";
+    preStart = "systemctl -q is-active radicale.service && systemctl stop radicale.service";
     script = ''
       backup_target="/var/lib/radicale"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
