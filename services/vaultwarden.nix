@@ -11,7 +11,7 @@
     config = {
       DATABASE_URL = "postgresql://vaultwarden@/vaultwarden?host=/run/postgresql";
 
-      ROCKET_ADDRESS = "::";
+      ROCKET_ADDRESS = "::1";
       ROCKET_PORT = 8222;
       ROCKET_LOG = "critical";
 
@@ -66,8 +66,6 @@
       }
     ];
   };
-
-  networking.firewall.allowedTCPPorts = [ 8222 ];
 
   sops.secrets = {
     "email/from/vaultwarden" = { };

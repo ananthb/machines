@@ -14,6 +14,7 @@
     ../../services/mealie.nix
     ../../services/monitoring/probes.nix
     ../../services/radicale.nix
+    ../../services/vaultwarden.nix
   ];
 
   # System packages
