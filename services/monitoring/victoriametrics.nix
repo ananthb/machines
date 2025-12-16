@@ -435,7 +435,7 @@
           },
           {
               "targets": [
-                "https://seafile.kedi.dev/accounts/login/",
+                "https://seafile.kedi.dev/accounts/login/"
               ],
               "labels": {
                   "type": "app",
@@ -445,7 +445,7 @@
           },
           {
               "targets": [
-                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/"
+                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/",
                 "https://tv.kedi.dev/web/"
               ],
               "labels": {
