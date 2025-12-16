@@ -12,7 +12,7 @@
       user.useConfigOnly = "true";
       init.defaultBranch = "main";
 
-      aliases = {
+      alias = {
         a = "add";
         b = "branch";
         c = "commit";
