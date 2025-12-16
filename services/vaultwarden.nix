@@ -11,7 +11,7 @@
     config = {
       DATABASE_URL = "postgresql://vaultwarden@/vaultwarden?host=/run/postgresql";
 
-      ROCKET_ADDRESS = "::1";
+      ROCKET_ADDRESS = "::";
       ROCKET_PORT = 8222;
       ROCKET_LOG = "critical";
 
@@ -21,6 +21,8 @@
     };
     environmentFile = config.sops.templates."vaultwarden/secrets.env".path;
   };
+
+  networking.firewall.allowedTCPPorts = [ 8222 ];
 
   systemd.services."vaultwarden-backup" = {
     startAt = "daily";
