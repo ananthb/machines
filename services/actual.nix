@@ -8,7 +8,7 @@
     "actual-backup" = {
       startAt = "daily";
       environment.KOPIA_CHECK_FOR_UPDATES = "false";
-      preStart = "systemctl stop actual.service";
+      preStart = "systemctl -q is-active actual.service && systemctl stop actual.service";
       script = ''
         backup_target="/var/lib/actual"
         snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
