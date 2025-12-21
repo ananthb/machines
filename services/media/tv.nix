@@ -58,6 +58,15 @@
 
   services.caddy = {
     enable = true;
+    package = pkgs.caddy.withPlugins {
+      plugins = [
+        "github.com/zhangjiayin/caddy-geoip2@v0.0.0-20251110021726-8aee010bbbb8"
+        "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
+        "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
+        "github.com/caddy-dns/cloudflare@v0.2.2"
+      ];
+      hash = "sha256-iOuW5lP6lDONhz7ZMON6p/yYi3ln5B71Ds8Wuiu0bls=";
+    };
 
     virtualHosts."tv.kedi.dev" = {
       extraConfig = ''
@@ -98,6 +107,12 @@
         ensureClauses.login = true;
       }
     ];
+  };
+
+  sops.secrets = {
+    "cloudflare/api_tokens/ddns" = { };
+    "maxmind/account_id" = { };
+    "maxmind/license_key" = { };
   };
 
 }
