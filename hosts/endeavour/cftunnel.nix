@@ -18,12 +18,12 @@
         "wallabag.kedi.dev" = "http://[fdc0:6625:5195::45]:8085";
       };
       credentialsFile =
-        config.sops.secrets."cloudflared/tunnels/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5/credentials".path;
+        config.sops.secrets."cloudflare/tunnels/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5/credentials".path;
     };
   };
 
   sops.secrets = {
-    "cloudflared/tunnels/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5/credentials" = { };
+    "cloudflare/tunnels/5fd5fbd5-fc21-4766-b92e-a8b577b4bda5/credentials" = { };
   };
 
 }
