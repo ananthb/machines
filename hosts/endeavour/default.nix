@@ -11,11 +11,11 @@
 
     ./cftunnel.nix
     ./power.nix
+    ../../services/caddy.nix
     ../../services/immich.nix
     ../../services/media/tv.nix
     ../../services/open-webui.nix
     ../../services/seafile.nix
-    ../../services/traefik-admin.nix
   ];
 
   # systemd-boot

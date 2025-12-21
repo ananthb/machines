@@ -14,7 +14,7 @@
         "seafile.kedi.dev" = "http://localhost:4000";
         "seerr.kedi.dev" = "http://[fdc0:6625:5195::45]:5055";
         # TODO: enable when we've moved it back to voyager
-	# "vault.kedi.dev" = "http://[fdc0:6625:5195::45]:8222";
+        # "vault.kedi.dev" = "http://[fdc0:6625:5195::45]:8222";
         "wallabag.kedi.dev" = "http://[fdc0:6625:5195::45]:8085";
       };
       credentialsFile =

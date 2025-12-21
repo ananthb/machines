@@ -20,31 +20,9 @@
     };
   };
 
-  services.traefik = {
-    enable = true;
-
-    staticConfigOptions = {
-      entryPoints = {
-        davis = {
-          address = ":4101";
-        };
-      };
-    };
-
-    dynamicConfigOptions = {
-      http = {
-        routers.davis-router = {
-          rule = "PathPrefix(`/`)";
-          entryPoints = [ "davis" ];
-          service = "davis-service";
-        };
-
-        services.davis-service.loadBalancer.servers = [
-          { url = "unix:///run/phpfpm/davis.sock"; }
-        ];
-      };
-    };
-  };
+  services.caddy.virtualHosts.":4000".extraConfig = ''
+    reverse_proxy unix//run/phpfpm/davis.sock
+  '';
 
   networking.firewall.allowedTCPPorts = [ 4101 ];
 
