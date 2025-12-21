@@ -12,10 +12,10 @@
         "vault.kedi.dev" = "http://localhost:8222";
       };
       credentialsFile =
-        config.sops.secrets."cloudflared/tunnels/b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7/credentials".path;
+        config.sops.secrets."cloudflare/tunnels/b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7/credentials".path;
     };
   };
 
-  sops.secrets."cloudflared/tunnels/b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7/credentials" = { };
+  sops.secrets."cloudflare/tunnels/b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7/credentials" = { };
 
 }
