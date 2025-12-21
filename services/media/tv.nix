@@ -52,64 +52,27 @@
     };
 
   systemd = {
-    services.jellyfin.after = [ "traefik.service" ];
-    services.jellyfin.wants = [ "traefik.service" ];
+    services.jellyfin.after = [ "caddy.service" ];
+    services.jellyfin.wants = [ "caddy.service" ];
   };
 
-  services.traefik = {
+  services.caddy = {
     enable = true;
 
-    staticConfigOptions = {
-      certificatesResolvers.letsencrypt.acme = {
-        email = "srv.acme@kedi.dev";
-        storage = "${config.services.traefik.dataDir}/acme.json";
-        tlsChallenge = { };
-      };
+    virtualHosts."tv.kedi.dev" = {
+      extraConfig = ''
+        header {
+          Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+          X-Content-Type-Options "nosniff"
+          X-XSS-Protection "1; mode=block"
+        }
 
-      entryPoints = {
-        websecure = {
-          address = ":443";
-          forwardedHeaders.trustedIPs = trustedIPs;
-        };
-      };
-    };
-
-    dynamicConfigOptions = {
-      tls.options.default = {
-        sniStrict = true;
-      };
-
-      http = {
-        middlewares = {
-          jellyfin-headers = {
-            headers = {
-              stsSeconds = 31536000;
-              stsIncludeSubdomains = true;
-              stsPreload = true;
-              forceSTSHeader = true;
-              contentTypeNosniff = true;
-              browserXssFilter = true;
-            };
-          };
-        };
-
-        routers.tv = {
-          rule = "Host(`tv.kedi.dev`)";
-          entryPoints = [ "websecure" ];
-          service = "tv-svc";
-          middlewares = [ "jellyfin-headers" ];
-          tls.certResolver = "letsencrypt";
-        };
-
-        services.tv-svc.loadBalancer.servers = [ { url = "http://localhost:8096"; } ];
-      };
+        reverse_proxy localhost:8096
+      '';
     };
   };
 
-  networking.firewall.allowedTCPPorts = [
-    80
-    443
-  ];
+  networking.firewall.allowedTCPPorts = [ 443 ];
 
   services.postgresql = {
     enable = true;

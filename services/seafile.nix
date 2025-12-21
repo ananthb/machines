@@ -61,7 +61,7 @@
             '';
           };
           unitConfig = {
-            Before = "traefik.service";
+            Before = "caddy.service";
             After = lib.concatStringsSep " " [
               "collabora-code.service"
               "mysql.service"
@@ -73,7 +73,7 @@
               "seafile-thumbnail-server.service"
             ];
             Wants = lib.concatStringsSep " " [
-              "traefik.service"
+              "caddy.service"
               "collabora-code.service"
               "mysql.service"
               "redis-seafile.service"
@@ -99,9 +99,9 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefik.service";
+            Before = "caddy.service";
             After = "mysql.service";
-            Wants = "mysql.service traefik.service";
+            Wants = "mysql.service caddy.service";
           };
         };
 
@@ -121,9 +121,9 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefik.service";
+            Before = "caddy.service";
             After = "mysql.service redis-seafile.service";
-            Wants = "traefik.service mysql.service redis-seafile.service";
+            Wants = "caddy.service mysql.service redis-seafile.service";
           };
         };
 
@@ -143,9 +143,9 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefik.service";
+            Before = "caddy.service";
             After = "mysql.service";
-            Wants = "mysql.service traefik.service";
+            Wants = "mysql.service caddy.service";
           };
         };
 
@@ -209,93 +209,43 @@
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
-            Before = "traefik.service";
-            Wants = "traefik.service";
+            Before = "caddy.service";
+            Wants = "caddy.service";
           };
         };
       };
     };
 
-  services.traefik = {
+  services.caddy = {
     enable = true;
+    virtualHosts.":4000".extraConfig = ''
+      # seafile
+      reverse_proxy http://localhost:4001
 
-    staticConfigOptions = {
-      entryPoints = {
-        seafile = {
-          address = ":4000";
+      # notification server
+      handle_path /notification* {
+        reverse_proxy http://localhost:8083
+      }
 
-          forwardedHeaders = {
-            trustedIPs = trustedIPs;
-          };
-        };
-      };
-    };
+      # thumbnail server
+      handle /thumbnail/* {
+        reverse_proxy http://localhost:4003
 
-    dynamicConfigOptions = {
-      http = {
-        middlewares = {
-          strip-notification = {
-            stripPrefix.prefixes = [ "/notification" ];
-          };
-          strip-sdoc = {
-            stripPrefix.prefixes = [ "/sdoc-server" ];
-          };
-          replace-ping = {
-            replacePath.path = "/ping";
-          };
-        };
+      }
+      handle_path /thumbnail/ping {
+        rewrite /ping
+        reverse_proxy http://localhost:4003
+      }
 
-        routers = {
-          notification = {
-            rule = "PathPrefix(`/notification`)";
-            entryPoints = [ "seafile" ];
-            service = "notification-svc";
-            middlewares = [ "strip-notification" ];
-          };
-          thumbnail-ping = {
-            rule = "Path(`/thumbnail/ping`)";
-            entryPoints = [ "seafile" ];
-            service = "thumbnail-svc";
-            middlewares = [ "replace-ping" ];
-          };
-          thumbnail = {
-            rule = "PathPrefix(`/thumbnail/`)";
-            entryPoints = [ "seafile" ];
-            service = "thumbnail-svc";
-          };
-          seadoc-socket = {
-            rule = "PathPrefix(`/socket.io/`)";
-            entryPoints = [ "seafile" ];
-            service = "seadoc-svc";
-          };
-          seadoc-server = {
-            rule = "PathPrefix(`/sdoc-server/`)";
-            entryPoints = [ "seafile" ];
-            service = "seadoc-svc";
-            middlewares = [ "strip-sdoc" ];
-          };
-          collabora = {
-            rule = "PathPrefix(`/collabora-code/`)";
-            entryPoints = [ "seafile" ];
-            service = "collabora-svc";
-          };
-          seafile = {
-            rule = "PathPrefix(`/`)";
-            entryPoints = [ "seafile" ];
-            service = "seafile-svc";
-            priority = 1;
-          };
-        };
+      # seadoc
+      reverse_proxy /socket.io/* http://localhost:4002
+      handle_path /sdoc-server/* {
+        reverse_proxy http://localhost:4002
+      }
 
-        services = {
-          seafile-svc.loadBalancer.servers = [ { url = "http://localhost:4001"; } ];
-          notification-svc.loadBalancer.servers = [ { url = "http://localhost:8083"; } ];
-          thumbnail-svc.loadBalancer.servers = [ { url = "http://localhost:4003"; } ];
-          seadoc-svc.loadBalancer.servers = [ { url = "http://localhost:4002"; } ];
-          collabora-svc.loadBalancer.servers = [ { url = "http://localhost:9980"; } ];
-        };
-      };
-    };
+      # collabora code
+      reverse_proxy /collabora-code/* http://localhost:9980
+    '';
   };
 
   networking.firewall.allowedTCPPorts = [ 4000 ];

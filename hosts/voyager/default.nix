@@ -10,6 +10,7 @@
     ./6a.nix
     ./cftunnel.nix
     ./exporters.nix
+    ../../services/caddy.nix
     ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/media/jellyseerr.nix
@@ -17,7 +18,6 @@
     ../../services/monitoring/grafana.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
-    ../../services/traefik-admin.nix
   ];
 
   # System packages
