@@ -40,7 +40,7 @@
     in
     {
       enable = true;
-      passwordFile = config.sops.secrets."ddclient/cf_token".path;
+      passwordFile = config.sops.secrets."cloudflare/api_tokens/ddns".path;
       protocol = "cloudflare";
       interval = "5min";
       usev4 = "disabled";
@@ -61,15 +61,33 @@
     package = pkgs.caddy.withPlugins {
       plugins = [
         "github.com/zhangjiayin/caddy-geoip2@v0.0.0-20251110021726-8aee010bbbb8"
-        "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
+	"github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
         "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
         "github.com/caddy-dns/cloudflare@v0.2.2"
       ];
       hash = "sha256-iOuW5lP6lDONhz7ZMON6p/yYi3ln5B71Ds8Wuiu0bls=";
     };
 
+    globalConfig = ''
+      email srv.acme@kedi.dev
+      acme_ca https://acme-v02.api.letsencrypt.org/directory
+
+      geoip2 {
+        accountId         {$MM_ACCOUNT_ID}
+        databaseDirectory "/var/lib/caddy"
+        licenseKey        "{$MM_LICENSE_KEY}"
+        lockFile          "/run/caddy/geoip2.lock"
+        editionID         "GeoLite2-City,GeoLite2-ASN"
+        updateUrl         "https://updates.maxmind.com"
+        updateFrequency   86400   # in seconds
+      }
+    '';
+
     virtualHosts."tv.kedi.dev" = {
       extraConfig = ''
+        # TODO: doesn't work for some reason
+        @geofilter expression {geoip2.country_code} == "IN"
+
         header {
           Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
           X-Content-Type-Options "nosniff"
@@ -79,6 +97,11 @@
         reverse_proxy localhost:8096
       '';
     };
+  };
+
+  systemd.services.caddy.serviceConfig = {
+    EnvironmentFile = config.sops.templates."caddy/maxmind.env".path;
+    RuntimeDirectory = "caddy";
   };
 
   networking.firewall.allowedTCPPorts = [ 443 ];
@@ -114,5 +137,10 @@
     "maxmind/account_id" = { };
     "maxmind/license_key" = { };
   };
+
+  sops.templates."caddy/maxmind.env".content = ''
+    MM_ACCOUNT_ID=${config.sops.placeholder."maxmind/account_id"}
+    MM_LICENSE_KEY=${config.sops.placeholder."maxmind/license_key"}
+  '';
 
 }
