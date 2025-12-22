@@ -23,34 +23,6 @@
     "qbittorrent"
   ];
 
-  # Jellyfin direct ingress
-  services.ddclient =
-    let
-      getIPv6 = pkgs.writeShellScript "get-ipv6" ''
-                # ------------------------------------------------------------------
-                # ddclient custom IPv6 getter
-                # Criteria: 
-                #   1. Must be set on enp2s0 in the 2400::/11 Global Unicast Address Space
-                #   2. Must end with :50 (static suffix)
-                # ------------------------------------------------------------------
-
-        	${pkgs.iproute2}/bin/ip -6 addr show dev enp2s0 scope global | \
-                  ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::50\// { sub(/\/.*$/, "", $2); print $2 }'
-      '';
-    in
-    {
-      enable = true;
-      passwordFile = config.sops.secrets."cloudflare/api_tokens/ddns".path;
-      protocol = "cloudflare";
-      interval = "5min";
-      usev4 = "disabled";
-      usev6 = "cmdv6,cmdv6=${getIPv6}";
-      zone = "kedi.dev";
-      domains = [
-        "tv.kedi.dev"
-      ];
-    };
-
   systemd = {
     services.jellyfin.after = [ "caddy.service" ];
     services.jellyfin.wants = [ "caddy.service" ];
@@ -60,38 +32,51 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [
-        "github.com/zhangjiayin/caddy-geoip2@v0.0.0-20251110021726-8aee010bbbb8"
-	"github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
+        "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
         "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
         "github.com/caddy-dns/cloudflare@v0.2.2"
       ];
-      hash = "sha256-iOuW5lP6lDONhz7ZMON6p/yYi3ln5B71Ds8Wuiu0bls=";
+      hash = "sha256-/33C9wrXK8yuxAVQJGDMDJvRtgO2YecQbbUNyY+1Wy0=";
     };
 
-    globalConfig = ''
-      email srv.acme@kedi.dev
-      acme_ca https://acme-v02.api.letsencrypt.org/directory
+    globalConfig =
 
-      geoip2 {
-        accountId         {$MM_ACCOUNT_ID}
-        databaseDirectory "/var/lib/caddy"
-        licenseKey        "{$MM_LICENSE_KEY}"
-        lockFile          "/run/caddy/geoip2.lock"
-        editionID         "GeoLite2-City,GeoLite2-ASN"
-        updateUrl         "https://updates.maxmind.com"
-        updateFrequency   86400   # in seconds
-      }
-    '';
+      let
+        getIPv6 = pkgs.writeShellScript "get-ipv6" ''
+                  # ------------------------------------------------------------------------
+                  # ddns custom IPv6 getter
+                  # Criteria: 
+                  #   1. Must be set on enp2s0 in the 2400::/11 Global Unicast Address Space
+                  #   2. Must end with ::50 (static suffix)
+                  # ------------------------------------------------------------------------
+
+          	${pkgs.iproute2}/bin/ip -6 addr show dev enp2s0 scope global | \
+                    ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::50\// { sub(/\/.*$/, "", $2); print $2 }'
+        '';
+      in
+
+      ''
+              email srv.acme@kedi.dev
+              acme_ca https://acme-v02.api.letsencrypt.org/directory
+
+              dynamic_dns {
+                provider cloudflare {$CLOUDFLARE_API_TOKEN}
+        	domains {
+        	  kedi.dev tv
+        	}
+                ip_source command ${getIPv6}
+        	versions ipv6
+                check_interval 5m
+                ttl 1h
+              }
+      '';
 
     virtualHosts."tv.kedi.dev" = {
       extraConfig = ''
-        # TODO: doesn't work for some reason
-        @geofilter expression {geoip2.country_code} == "IN"
-
         header {
           Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-          X-Content-Type-Options "nosniff"
-          X-XSS-Protection "1; mode=block"
+          X-Content-Type-Options    "nosniff"
+          X-XSS-Protection          "1; mode=block"
         }
 
         reverse_proxy localhost:8096
@@ -100,8 +85,7 @@
   };
 
   systemd.services.caddy.serviceConfig = {
-    EnvironmentFile = config.sops.templates."caddy/maxmind.env".path;
-    RuntimeDirectory = "caddy";
+    EnvironmentFile = config.sops.templates."caddy/secrets.env".path;
   };
 
   networking.firewall.allowedTCPPorts = [ 443 ];
@@ -134,13 +118,10 @@
 
   sops.secrets = {
     "cloudflare/api_tokens/ddns" = { };
-    "maxmind/account_id" = { };
-    "maxmind/license_key" = { };
   };
 
-  sops.templates."caddy/maxmind.env".content = ''
-    MM_ACCOUNT_ID=${config.sops.placeholder."maxmind/account_id"}
-    MM_LICENSE_KEY=${config.sops.placeholder."maxmind/license_key"}
+  sops.templates."caddy/secrets.env".content = ''
+    CLOUDFLARE_API_TOKEN=${config.sops.placeholder."cloudflare/api_tokens/ddns"}
   '';
 
 }
