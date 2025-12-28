@@ -7,7 +7,8 @@
       ingress = {
         "6a.kedi.dev" = "http://[fdc0:6625:5195::45]:8123";
         "apps.kedi.dev" = "http://voyager:8082"; # TODO: move off of tailscale
-        "davis.kedi.dev" = "http://[fdc0:6625:5195::45]:4101";
+        # TODO: davis isn't ready yet
+        # "davis.kedi.dev" = "http://[fdc0:6625:5195::45]:4101";
         "immich.kedi.dev" = "http://localhost:2283";
         "miniflux.kedi.dev" = "http://[fdc0:6625:5195::45]:8088";
         "open-webui.kedi.dev" = "http://localhost:8090";
