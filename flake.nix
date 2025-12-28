@@ -172,31 +172,6 @@
             ];
           };
 
-        enterprise =
-          let
-            system = "aarch64-darwin";
-            hostname = "enterprise";
-          in
-          nix-darwin.lib.darwinSystem {
-            inherit system;
-
-            specialArgs = {
-              inherit
-                system
-                hostname
-                trustedIPs
-                username
-                ;
-
-              inputs = inputs;
-            };
-
-            modules = [
-              sops-nix.darwinModules.sops
-              ./hosts/enterprise.nix
-            ];
-          };
-
       };
     };
 }
