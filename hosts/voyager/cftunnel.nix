@@ -7,7 +7,8 @@
       ingress = {
         "6a.kedi.dev" = "http://localhost:8123";
         "apps.kedi.dev" = "http://localhost:8082";
-        "davis.kedi.dev" = "http://localhost:4101";
+        # TODO: davis isn't ready yet
+        # "davis.kedi.dev" = "http://localhost:4101";
         "immich.kedi.dev" = "http://[fdc0:6625:5195::50]:2283";
         "miniflux.kedi.dev" = "http://localhost:8088";
         "open-webui.kedi.dev" = "http://[fdc0:6625:5195::50]:8090";
