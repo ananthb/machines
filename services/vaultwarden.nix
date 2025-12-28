@@ -29,7 +29,7 @@
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
     preStart = "systemctl -q is-active vaultwarden.service && systemctl stop vaultwarden.service";
     script = ''
-      backup_target="/var/lib/vaultwarden"
+      backup_target="/var/lib/${config.systemd.services.vaultwarden.serviceConfig.StateDirectory}"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
         
