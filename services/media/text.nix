@@ -57,7 +57,6 @@
 
   networking.firewall = {
     allowedTCPPorts = [
-      5000 # kavita
       8085 # wallabag
       8088 # miniflux
     ];
@@ -101,7 +100,6 @@
 
   sops.secrets = {
     "email/from/wallabag" = { };
-    "kavita/token" = { };
     "miniflux/admin_creds" = { };
     "wallabag/db/username" = { };
     "wallabag/db/password" = { };
