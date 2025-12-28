@@ -10,11 +10,8 @@
     ./t1.nix
     ./cftunnel.nix
     ./exporters.nix
-    ../../services/actual.nix
     ../../services/mealie.nix
     ../../services/monitoring/probes.nix
-    ../../services/radicale.nix
-    ../../services/vaultwarden.nix
   ];
 
   # System packages
