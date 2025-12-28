@@ -1,13 +1,12 @@
 {
   config,
   pkgs,
-  system,
-  trustedIPs,
   username,
   ...
 }:
 {
   imports = [
+    ../caddy.nix
     ./jellyfin.nix
     ./prowlarr.nix
     ./qbittorrent.nix

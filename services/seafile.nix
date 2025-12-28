@@ -21,10 +21,14 @@
   config,
   lib,
   pkgs,
-  trustedIPs,
   ...
 }:
 {
+
+  imports = [
+    ./caddy.nix
+  ];
+
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) networks;
