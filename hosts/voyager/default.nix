@@ -10,7 +10,6 @@
     ./6a.nix
     ./cftunnel.nix
     ./exporters.nix
-    ../../services/caddy.nix
     ../../services/homepage.nix
     ../../services/media/jellyseerr.nix
     ../../services/media/text.nix

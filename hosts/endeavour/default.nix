@@ -12,9 +12,9 @@
     ./cftunnel.nix
     ./power.nix
     ../../services/actual.nix
-    ../../services/caddy.nix
     ../../services/immich.nix
     ../../services/media/tv.nix
+    ../../services/monitoring/probes.nix
     ../../services/open-webui.nix
     ../../services/seafile.nix
     ../../services/radicale.nix
