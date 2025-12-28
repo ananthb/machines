@@ -11,11 +11,14 @@
 
     ./cftunnel.nix
     ./power.nix
+    ../../services/actual.nix
     ../../services/caddy.nix
     ../../services/immich.nix
     ../../services/media/tv.nix
     ../../services/open-webui.nix
     ../../services/seafile.nix
+    ../../services/radicale.nix
+    ../../services/vaultwarden.nix
   ];
 
   # systemd-boot
