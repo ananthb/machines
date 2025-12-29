@@ -22,13 +22,11 @@
     "sd_mod"
     "sr_mod"
   ];
-  boot.initrd.kernelModules = [ "bcachefs" ];
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
     "net.ipv6.conf.all.forwarding" = 1;
   };
   boot.kernelModules = [ "kvm-intel" ];
-  boot.supportedFilesystems = [ "bcachefs" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/63de0249-73cc-4608-b228-a9d26f8b110c";
@@ -44,17 +42,6 @@
       "fmask=0077"
       "dmask=0077"
     ];
-  };
-
-  fileSystems."/srv" = {
-    device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
-    fsType = "bcachefs";
-  };
-
-  fileSystems."/var/lib/immich" = {
-    device = "/srv/immich";
-    fsType = "bind";
-    options = [ "bind" ];
   };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
