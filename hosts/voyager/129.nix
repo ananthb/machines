@@ -13,13 +13,8 @@
     openFirewall = true;
     extraPackages =
       python3Packages: with python3Packages; [
-        aioimmich
-        aiomealie
         aionut
-        jellyfin-apiclient-python
-        ollama
         psycopg2
-        qbittorrent-api
         speedtest-cli
       ];
     extraComponents = [
@@ -44,17 +39,13 @@
       "bluetooth"
       "bluetooth_adapters"
       "bluetooth_le_tracker"
-      "broadlink"
       "camera"
       "cast"
-      "ecovacs"
       "esphome"
       "luci"
     ];
     customComponents = with pkgs.home-assistant-custom-components; [
-      ecoflow_cloud
       frigate
-      miraie
       prometheus_sensor
       smartir
       spook
@@ -72,8 +63,6 @@
         trusted_proxies = [
           "::1"
           "127.0.0.0/8"
-          "fdc0:6625:5195::0/64"
-          "10.15.16.0/24"
         ];
         use_x_forwarded_for = true;
         ip_ban_enabled = true;
@@ -81,16 +70,16 @@
       };
 
       homeassistant = {
-        name = "6A";
+        name = "#129";
         unit_system = "metric";
         time_zone = "Asia/Kolkata";
-        latitude = "!include ${config.sops.secrets."homes/6a/latitude".path}";
-        longitude = "!include ${config.sops.secrets."homes/6a/longitude".path}";
-        elevation = "!include ${config.sops.secrets."homes/6a/elevation".path}";
+        latitude = "!include ${config.sops.secrets."homes/129/latitude".path}";
+        longitude = "!include ${config.sops.secrets."homes/129/longitude".path}";
+        elevation = "!include ${config.sops.secrets."homes/129/elevation".path}";
         temperature_unit = "C";
         currency = "INR";
         country = "IN";
-        external_url = "https://6a.kedi.dev";
+        external_url = "https://129.kedi.dev";
         internal_url = "http://voyager.local:8123";
       };
 

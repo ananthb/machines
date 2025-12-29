@@ -7,15 +7,9 @@
     ../linux
     ./hardware-configuration.nix
 
-    ./6a.nix
-    ./cftunnel.nix
-    ./exporters.nix
-    ../../services/homepage.nix
-    ../../services/media/jellyseerr.nix
-    ../../services/media/text.nix
-    ../../services/monitoring/grafana.nix
+    ../../services/monitoring/blackbox.nix
+    ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
-    ../../services/monitoring/victoriametrics.nix
   ];
 
   # System packages
@@ -38,30 +32,9 @@
   services.cloudflare-warp.enable = true;
   services.cloudflare-warp.openFirewall = false;
 
-  power.ups = {
-    enable = true;
-    mode = "netclient";
-
-    users = {
-      "nutmon" = {
-        passwordFile = config.sops.secrets."nut/users/nutmon".path;
-        upsmon = "primary";
-      };
-    };
-
-    upsmon.monitor."apc1@endeavour" = {
-      powerValue = 1;
-      user = "nutmon";
-    };
-  };
-
-  # secrets
-  sops.secrets = {
-    "email/smtp/username".owner = config.users.users.grafana.name;
-    "email/smtp/password".owner = config.users.users.grafana.name;
-    "email/smtp/host".owner = config.users.users.grafana.name;
-    "gcloud/oauth_self-hosted_clients/id".mode = "0444";
-    "gcloud/oauth_self-hosted_clients/secret".mode = "0444";
+  services.prometheus.exporters = {
+    smartctl.enable = true;
+    smartctl.openFirewall = true;
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,

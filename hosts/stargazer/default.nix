@@ -1,5 +1,4 @@
 {
-  config,
   ...
 }:
 {
@@ -11,6 +10,7 @@
     ./cftunnel.nix
     ./exporters.nix
     ../../services/mealie.nix
+    ../../services/monitoring/blackbox.nix
     ../../services/monitoring/probes.nix
   ];
 

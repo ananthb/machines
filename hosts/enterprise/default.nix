@@ -9,21 +9,13 @@
     ../linux
     ./hardware-configuration.nix
 
-    ./6a.nix
     ./cftunnel.nix
-    ./power.nix
-    ../../services/actual.nix
-    ../../services/homepage.nix
-    ../../services/media/jellyseerr.nix
-    ../../services/media/text.nix
+    ../../services/immich.nix
     ../../services/media/tv.nix
     ../../services/monitoring/blackbox.nix
-    ../../services/monitoring/grafana.nix
     ../../services/monitoring/postgres.nix
-    ../../services/monitoring/probes.nix
-    ../../services/monitoring/victoriametrics.nix
-    ../../services/radicale.nix
-    ../../services/vaultwarden.nix
+    ../../services/open-webui.nix
+    ../../services/seafile.nix
   ];
 
   # systemd-boot
@@ -105,6 +97,23 @@
     serviceConfig = {
       Type = "oneshot";
       User = "root";
+    };
+  };
+
+  power.ups = {
+    enable = true;
+    mode = "netclient";
+
+    users = {
+      "nutmon" = {
+        passwordFile = config.sops.secrets."nut/users/nutmon".path;
+        upsmon = "primary";
+      };
+    };
+
+    upsmon.monitor."apc1@endeavour" = {
+      powerValue = 1;
+      user = "nutmon";
     };
   };
 

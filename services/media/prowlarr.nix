@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   services.prowlarr = {
     enable = true;
@@ -18,4 +18,14 @@
       "qbittorrent.service"
     ];
   };
+
+  services.prometheus.exporters.exportarr-prowlarr = {
+    enable = true;
+    url = "http://endeavour.local:9696";
+    port = 9710;
+    apiKeyFile = config.sops.secrets."arr_apis/prowlarr".path;
+
+  };
+
+  sops.secrets."arr_apis/prowlarr".mode = "0444";
 }
