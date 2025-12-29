@@ -31,18 +31,18 @@
   boot.supportedFilesystems = [ "bcachefs" ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/63de0249-73cc-4608-b228-a9d26f8b110c";
+    device = "/dev/mapper/root";
     fsType = "btrfs";
   };
 
-  boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
+  boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/342c86a9-4b5a-4c14-b7fa-4bfb6e031ee1";
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/E445-A150";
+    device = "/dev/disk/by-uuid/B681-F883";
     fsType = "vfat";
     options = [
-      "fmask=0077"
-      "dmask=0077"
+      "fmask=0022"
+      "dmask=0022"
     ];
   };
 
@@ -62,9 +62,6 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp2s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp4s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp3s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.enableRedistributableFirmware = true;
