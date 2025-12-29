@@ -16,7 +16,6 @@
     ../../services/homepage.nix
     ../../services/media/jellyseerr.nix
     ../../services/media/text.nix
-    ../../services/media/tv.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/grafana.nix
     ../../services/monitoring/postgres.nix
