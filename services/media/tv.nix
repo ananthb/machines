@@ -45,11 +45,11 @@
                   # ------------------------------------------------------------------------
                   # ddns custom IPv6 getter
                   # Criteria: 
-                  #   1. Must be set on enp2s0 in the 2400::/11 Global Unicast Address Space
+                  #   1. Must be set on enp87s0 in the 2400::/11 Global Unicast Address Space
                   #   2. Must end with ::55 (static suffix)
                   # ------------------------------------------------------------------------
 
-          	${pkgs.iproute2}/bin/ip -6 addr show dev enp2s0 scope global | \
+          	${pkgs.iproute2}/bin/ip -6 addr show dev enp87s0 scope global | \
                     ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::55\// { sub(/\/.*$/, "", $2); print $2 }'
         '';
       in
