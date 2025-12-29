@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 {
   services.actual.enable = true;
+  services.actual.settings.port = 3001;
+
   systemd.services.actual.serviceConfig.EnvironmentFile =
     config.sops.templates."actual/config.env".path;
 
@@ -34,5 +36,10 @@
     ACTUAL_OPENID_CLIENT_ID=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}
     ACTUAL_OPENID_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}
   '';
+
+  sops.secrets = {
+    "gcloud/oauth_self-hosted_clients/id" = { };
+    "gcloud/oauth_self-hosted_clients/secret" = { };
+  };
 
 }

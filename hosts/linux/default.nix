@@ -152,8 +152,6 @@
     "email/smtp/host" = { };
     "email/smtp/password" = { };
     "email/smtp/username" = { };
-    "gcloud/oauth_self-hosted_clients/id" = { };
-    "gcloud/oauth_self-hosted_clients/secret" = { };
     "gcloud/service_accounts/kopia-hathi-backups.json" = { };
     "kopia/gcs/hathi-backups" = { };
   };

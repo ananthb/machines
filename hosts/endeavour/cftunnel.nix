@@ -6,7 +6,7 @@
       default = "http_status:404";
       ingress = {
         "6a.kedi.dev" = "http://localhost:8123";
-        "actual.kedi.dev" = "http://localhost:3000";
+        "actual.kedi.dev" = "http://localhost:3001";
         "apps.kedi.dev" = "http://localhost:8082";
         # TODO: davis isn't ready yet
         # "davis.kedi.dev" = "http://localhost:4101";
