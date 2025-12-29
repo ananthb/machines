@@ -61,6 +61,9 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
   # WARP must be manually set up in proxy mode listening on port 8888.
   # This involves registering a new identity, accepting the tos,
   # setting the mode to proxy, and then setting proxy port to 8888.
@@ -136,5 +139,5 @@
   # and migrated your data accordingly.
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "25.11"; # Did you read the comment?
 }

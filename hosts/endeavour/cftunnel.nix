@@ -10,11 +10,11 @@
         "apps.kedi.dev" = "http://localhost:8082";
         # TODO: davis isn't ready yet
         # "davis.kedi.dev" = "http://localhost:4101";
-        "immich.kedi.dev" = "http://[fdc0:6625:5195::40]:2283";
+        "immich.kedi.dev" = "http://[fdc0:6625:5195::55]:2283";
         "miniflux.kedi.dev" = "http://localhost:8088";
-        "open-webui.kedi.dev" = "http://[fdc0:6625:5195::40]:8090";
+        "open-webui.kedi.dev" = "http://[fdc0:6625:5195::55]:8090";
         "radicale.kedi.dev" = "http://localhost:5232";
-        "seafile.kedi.dev" = "http://[fdc0:6625:5195::40]:4000";
+        "seafile.kedi.dev" = "http://[fdc0:6625:5195::55]:4000";
         "seerr.kedi.dev" = "http://localhost:5055";
         "vault.kedi.dev" = "http://localhost:8222";
         "wallabag.kedi.dev" = "http://localhost:8085";
