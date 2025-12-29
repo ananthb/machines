@@ -95,6 +95,31 @@
             ];
           };
 
+        enterprise =
+          let
+            system = "x86_64-linux";
+            hostname = "enterprise";
+          in
+          nixpkgs.lib.nixosSystem {
+            inherit system;
+
+            specialArgs = {
+              inherit
+                system
+                hostname
+                trustedIPs
+                username
+                ;
+
+              inputs = inputs;
+            };
+
+            modules = [
+              lanzaboote.nixosModules.lanzaboote
+              ./hosts/enterprise
+            ];
+          };
+
         stargazer =
           let
             system = "aarch64-linux";
