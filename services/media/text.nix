@@ -100,6 +100,8 @@
 
   sops.secrets = {
     "email/from/wallabag" = { };
+    "gcloud/oauth_self-hosted_clients/id".mode = "0444";
+    "gcloud/oauth_self-hosted_clients/secret".mode = "0444";
     "miniflux/admin_creds" = { };
     "wallabag/db/username" = { };
     "wallabag/db/password" = { };

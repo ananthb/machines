@@ -573,6 +573,8 @@
     "collabora/code/username" = { };
     "collabora/code/password" = { };
     "email/from/seafile" = { };
+    "gcloud/oauth_self-hosted_clients/id" = { };
+    "gcloud/oauth_self-hosted_clients/secret" = { };
     "seafile/jwt_private_key" = { };
     "seafile/mysql/username" = { };
     "seafile/mysql/password" = { };

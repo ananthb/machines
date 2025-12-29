@@ -50,6 +50,8 @@
 
   sops.secrets = {
     "email/from/mealie" = { };
+    "gcloud/oauth_self-hosted_clients/id" = { };
+    "gcloud/oauth_self-hosted_clients/secret" = { };
     "open-webui/api_key" = { };
     "mealie/api_keys" = { };
   };
