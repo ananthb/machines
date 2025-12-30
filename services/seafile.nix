@@ -297,6 +297,20 @@
     settings.protected-mode = "no";
   };
 
+  systemd.services."seafile-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    #startAt = "weekly";
+    script = ''
+      systemctl start seafile-mysql-backup.service
+      ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
+    '';
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
   # Seafile access to services running on the host
   networking.firewall.interfaces.podman1.allowedTCPPorts = [
     3306 # mysql

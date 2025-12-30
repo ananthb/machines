@@ -22,6 +22,17 @@
 
   systemd.services.immich-server.environment.IMMICH_TELEMETRY_INCLUDE = "all";
 
+  systemd.services."immich-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    # startAt = "weekly";
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+    };
+  };
+
   sops.secrets = {
     "email/from/immich" = { };
     "gcloud/oauth_self-hosted_clients/id".owner = config.users.users.immich.name;

@@ -9,26 +9,27 @@
   ];
 
   home.packages = with pkgs; [
-    wl-clipboard
-    git-credential-manager
-    gcr
-
-    # Apps
+    discord
     firefox
+    gcr
     google-chrome
     ghostty
-    jellyfin-media-player
-    wireshark
-    zed-editor
-    rpi-imager
-    vlc
-    vscode
-    neovide
     gimp
-
+    git-credential-manager
     gnomeExtensions.appindicator
     gnomeExtensions.night-theme-switcher
     gnomeExtensions.gsconnect
+    jellyfin-media-player
+    rpi-imager
+    slack
+    signal-desktop
+    telegram-desktop
+    vlc
+    vscode
+    wireshark
+    wl-clipboard
+    zed-editor
+    neovide
   ];
 
   services.gnome-keyring.enable = true;
