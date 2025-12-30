@@ -297,6 +297,13 @@
     settings.protected-mode = "no";
   };
 
+  # Seafile access to services running on the host
+  networking.firewall.interfaces.podman1.allowedTCPPorts = [
+    3306 # mysql
+    6400 # redis-seafile
+    8090 # open-webui
+  ];
+
   systemd.services."seafile-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
     #startAt = "weekly";
@@ -310,13 +317,6 @@
       User = "root";
     };
   };
-
-  # Seafile access to services running on the host
-  networking.firewall.interfaces.podman1.allowedTCPPorts = [
-    3306 # mysql
-    6400 # redis-seafile
-    8090 # open-webui
-  ];
 
   systemd.services."seafile-mysql-backup" = {
     startAt = "hourly";
