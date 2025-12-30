@@ -5,6 +5,15 @@
 }:
 
 {
+  services.ollama = {
+    enable = true;
+    # See https://ollama.com/library
+    loadModels = [
+      "llama3.2:3b"
+      "deepseek-r1:1.5b"
+    ];
+  };
+
   services.open-webui = {
     enable = true;
     package = pkgs.open-webui.overrideAttrs (old: {

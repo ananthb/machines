@@ -11,10 +11,10 @@
 
     ./cftunnel.nix
     ../../services/immich.nix
+    ../../services/llm.nix
     ../../services/media/tv.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/postgres.nix
-    ../../services/open-webui.nix
     ../../services/seafile.nix
   ];
 
