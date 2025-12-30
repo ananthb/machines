@@ -95,7 +95,7 @@
             "Radarr" = {
               icon = "radarr";
               description = "Movies";
-              href = "http://enterprise:7878";
+              href = "http://endeavour:7878";
             };
 
           }
@@ -103,21 +103,21 @@
             "Sonarr" = {
               icon = "sonarr";
               description = "TV Shows";
-              href = "http://enterprise:8989";
+              href = "http://endeavour:8989";
             };
           }
           {
             "Prowlarr" = {
               icon = "prowlarr";
               description = "Indexer";
-              href = "http://enterprise:9696";
+              href = "http://endeavour:9696";
             };
           }
           {
             "qBittorrent" = {
               icon = "qbittorrent";
               description = "Torrent downloader";
-              href = "http://enterprise:8000";
+              href = "http://endeavour:8080";
             };
           }
         ];

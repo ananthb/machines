@@ -117,9 +117,9 @@
           static_configs = [
             {
               targets = [
-                "http://enterprise:9696" # prowlarr
-                "http://enterprise:7878" # radarr
-                "http://enterprise:8989" # sonarr
+                "http://endeavour:7878" # radarr
+                "http://endeavour:8989" # sonarr
+                "http://endeavour:9696" # prowlarr
               ];
               labels.type = "app";
               labels.role = "server";
