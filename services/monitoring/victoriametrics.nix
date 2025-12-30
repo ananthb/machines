@@ -24,7 +24,9 @@
             {
               targets = [
                 "endeavour.local:9115"
-                "voyager.local:9115"
+                "enterprise.local:9115"
+                "stargazer:9115"
+                "voyager:9115"
               ];
               labels.type = "exporter";
             }
@@ -44,7 +46,7 @@
             }
             {
               target_label = "__address__";
-              replacement = "voyager.local:9115";
+              replacement = "endeavour.local:9115";
             }
           ];
           params.module = [ "icmp" ];
@@ -52,8 +54,10 @@
             {
               targets = [
                 "endeavour.local"
-                "voyager.local"
-                "kvm1"
+                "enterprise.local"
+                "stargazer"
+                "voyager"
+                "pikvm"
               ];
               labels.type = "node";
               labels.os = "linux";
@@ -61,7 +65,6 @@
             }
             {
               targets = [
-                "enterprise.local"
                 "discovery.local"
               ];
               labels.type = "node";
@@ -70,6 +73,7 @@
             {
               targets = [
                 "atlantis.local"
+                "ds9"
                 "intrepid.local"
               ];
               labels.type = "node";
@@ -113,16 +117,16 @@
           static_configs = [
             {
               targets = [
-                "http://endeavour:9696" # prowlarr
-                "http://endeavour:7878" # radarr
-                "http://endeavour:8989" # sonarr
+                "http://enterprise:9696" # prowlarr
+                "http://enterprise:7878" # radarr
+                "http://enterprise:8989" # sonarr
               ];
               labels.type = "app";
               labels.role = "server";
             }
             {
               targets = [
-                "http://endeavour.local:2283/auth/login" # immich-server
+                "http://enterprise.local:2283/auth/login" # immich-server
               ];
               labels.type = "app";
               labels.role = "server";
@@ -130,7 +134,7 @@
             }
             {
               targets = [
-                "http://endeavour.local:8096/web/" # jellyfin
+                "http://enterprise.local:8096/web/" # jellyfin
               ];
               labels.app = "jellyfin";
               labels.type = "app";
@@ -139,6 +143,7 @@
             {
               targets = [
                 "http://atlantis.local"
+                "http://ds9"
                 "http://intrepid.local"
               ];
               labels.os = "openwrt";
@@ -299,6 +304,7 @@
             {
               targets = [
                 "atlantis.local:9100"
+                "ds9:9100"
                 "intrepid.local:9100"
               ];
               labels.os = "openwrt";
@@ -313,8 +319,9 @@
             {
               targets = [
                 "endeavour.local:9100"
+                "enterprise.local:9100"
                 "stargazer:9100"
-                "voyager.local:9100"
+                "voyager:9100"
               ];
               labels.os = "linux";
               labels.type = "exporter";
@@ -323,7 +330,6 @@
             {
               targets = [
                 "discovery.local:9100"
-                "enterprise.local:9100"
               ];
               labels.type = "node";
               labels.os = "darwin";
@@ -335,20 +341,19 @@
           static_configs = [
             {
               targets = [
-                "endeavour.local:8080" # traefix
+                "endeavour.local:9708" # radarr exporter
+                "endeavour.local:9709" # sonarr exporter
+                "endeavour.local:9710" # prowlarr exporter
                 "endeavour.local:9187" # postgres exporter
-                "voyager.local:8080" # traefix
+                "enterprise.local:9187" # postgres exporter
                 "voyager.local:9187" # postgres exporter
-                "voyager.local:9708" # radarr exporter
-                "voyager.local:9709" # sonarr exporter
-                "voyager.local:9710" # prowlarr exporter
               ];
               labels.type = "exporter";
               labels.role = "server";
             }
             {
               targets = [
-                "endeavour.local:8081" # immich exporter
+                "enterprise.local:8081" # immich exporter
               ];
               labels.type = "exporter";
               labels.role = "server";
@@ -356,7 +361,7 @@
             }
             {
               targets = [
-                "endeavour.local:8096" # jellyfin
+                "enterprise.local:8096" # jellyfin
               ];
               labels.type = "exporter";
               labels.role = "server";
@@ -368,7 +373,13 @@
               labels.role = "ups";
             }
             {
-              targets = [ "endeavour.local:9633" ]; # smartctl exporter
+              # smartctl exporters
+              targets = [
+                "endeavour.local:9633"
+                "enterprise.local:9633"
+                "stargazer:9633"
+                "voyager:9633"
+              ];
               labels.type = "exporter";
               labels.role = "disks";
             }

@@ -152,14 +152,14 @@
         # Sends a metric to VictoriaMetrics in JSON format.
         # Usage: write_metrics <metric_name> <labels> <value>
         # <labels> should be a comma-separated string like "job=api,instance=server1"
-        # VM_URL environment variable (default: http://voyager:8428) selects
+        # VM_URL environment variable (default: http://endeavour:8428) selects
         # the VictoriaMetrics endpoint to send metrics to.
         write_metric() {
           local metric_name="$1"
           local labels_str="$2"
           local value="$3"
           # Use environment variable for URL or default
-          local vm_url="''${VM_URL:-http://voyager:8428}"
+          local vm_url="''${VM_URL:-http://endeavour:8428}"
 
           if [[ $# -lt 3 ]]; then
             echo 'Usage: write_metrics <metric_name> <labels> <value>' >&2
