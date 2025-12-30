@@ -45,6 +45,7 @@
   sops.secrets = {
     "gcloud/pse_api/id" = { };
     "gcloud/pse_api/key" = { };
+    "tailscale_api/tailnet" = { };
   };
 
   sops.templates."open-webui/env" = {
