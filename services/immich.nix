@@ -12,7 +12,6 @@
       "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.0/8,fdc0:6625:5195::0/64,10.15.16.0/24";
     };
     accelerationDevices = [ "/dev/dri/renderD128" ];
-    machine-learning.enable = false;
   };
 
   users.users.immich.extraGroups = [
@@ -75,37 +74,37 @@
         },
         "job": {
           "backgroundTask": {
-            "concurrency": 1
-          },
-          "smartSearch": {
             "concurrency": 4
           },
+          "smartSearch": {
+            "concurrency": 8
+          },
           "metadataExtraction": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "faceDetection": {
             "concurrency": 4
           },
           "search": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "sidecar": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "library": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "migration": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "thumbnailGeneration": {
-            "concurrency": 1
+            "concurrency": 8
           },
           "videoConversion": {
-            "concurrency": 1
+            "concurrency": 4
           },
           "notifications": {
-            "concurrency": 1
+            "concurrency": 4
           }
         },
         "logging": {
@@ -114,7 +113,7 @@
         },
         "machineLearning": {
           "enabled": true,
-          "urls": ["http://enterprise.local:3003"],
+          "urls": ["http://localhost:3003"],
           "clip": {
             "enabled": true,
             "modelName": "ViT-B-32__openai"
