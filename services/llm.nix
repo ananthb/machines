@@ -63,7 +63,7 @@
       USER_AGENT="KEDI Open WebUI"
 
       # ollama api
-      OLLAMA_BASE_URLS="http://enterprise.local:11434;http://discovery.local:11434"
+      OLLAMA_BASE_URLS="http://localhost:11434;http://discovery.local:11434"
       EMABLE_OPENAI_API="False"
 
       # auth
