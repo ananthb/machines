@@ -53,7 +53,7 @@
       # general
       http_proxy="http://localhost:8888"
       https_proxy="http://localhost:8888"
-      no_proxy=".local,.lan"
+      no_proxy="localhost,.local,.lan,.${config.sops.placeholder."tailscale_api/tailnet"}"
       ENV="prod"
       WEBUI_URL="https://open-webui.kedi.dev"
       CORS_ALLOW_ORIGIN="https://open-webui.kedi.dev"
@@ -63,7 +63,9 @@
       USER_AGENT="KEDI Open WebUI"
 
       # ollama api
-      OLLAMA_BASE_URLS="http://localhost:11434;http://discovery:11434"
+      OLLAMA_BASE_URLS="http://localhost:11434;http://discovery.${
+        config.sops.placeholder."tailscale_api/tailnet"
+      }:11434"
       EMABLE_OPENAI_API="False"
 
       # auth
