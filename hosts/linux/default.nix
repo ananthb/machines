@@ -66,6 +66,8 @@
   networking.firewall.enable = true;
   networking.firewall.allowPing = true;
 
+  users.groups.media.gid = 985;
+
   users.users.${username} = {
     name = username;
     home = "/home/" + username;

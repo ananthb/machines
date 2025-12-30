@@ -8,18 +8,11 @@
   imports = [
     ../caddy.nix
     ./jellyfin.nix
-    ./prowlarr.nix
-    ./qbittorrent.nix
-    ./radarr.nix
-    ./sonarr.nix
   ];
 
   users.groups.media.members = [
     username
     "jellyfin"
-    "radarr"
-    "sonarr"
-    "qbittorrent"
   ];
 
   systemd = {
@@ -88,32 +81,6 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 443 ];
-
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [
-      "radarr-main"
-      "radarr-log"
-      "sonarr-main"
-      "sonarr-log"
-      "prowlarr-main"
-      "prowlarr-log"
-    ];
-    ensureUsers = [
-      {
-        name = "radarr";
-        ensureClauses.login = true;
-      }
-      {
-        name = "sonarr";
-        ensureClauses.login = true;
-      }
-      {
-        name = "prowlarr";
-        ensureClauses.login = true;
-      }
-    ];
-  };
 
   sops.secrets = {
     "cloudflare/api_tokens/ddns" = { };

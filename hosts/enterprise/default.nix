@@ -68,6 +68,20 @@
   services.fwupd.enable = true;
   services.bcachefs.autoScrub.enable = true;
 
+  # NFS server - export /srv/media
+  services.nfs.server = {
+    enable = true;
+    exports = ''
+      /srv/media endeavour.local(rw,sync,no_subtree_check,all_squash,anonuid=65534,anongid=985)
+    '';
+  };
+  networking.firewall.allowedTCPPorts = [ 2049 ];
+
+  # Set default ACL for group-writable files (umask 002)
+  systemd.tmpfiles.rules = [
+    "A+ /srv/media - - - - default:group::rwx"
+  ];
+
   power.ups = {
     enable = true;
     mode = "netclient";

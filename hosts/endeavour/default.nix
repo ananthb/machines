@@ -14,7 +14,7 @@
     ./power.nix
     ../../services/actual.nix
     ../../services/homepage.nix
-    ../../services/media/jellyseerr.nix
+    ../../services/media/arr.nix
     ../../services/media/text.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/grafana.nix
@@ -70,6 +70,13 @@
 
   services.fwupd.enable = true;
   services.bcachefs.autoScrub.enable = true;
+
+  # NFS mount from enterprise
+  fileSystems."/srv/media" = {
+    device = "enterprise.local:/srv/media";
+    fsType = "nfs";
+    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+  };
 
   systemd.services."immich-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
