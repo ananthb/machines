@@ -321,6 +321,11 @@
   systemd.services."seafile-mysql-backup" = {
     startAt = "hourly";
     script = ''
+      if ! ${pkgs.systemd}/bin/systemctl is-active seafile.service; then
+        # Exit successfully if seafile is not running
+        exit 0
+      fi
+
       backup_dir="/srv/seafile/backups"
       mkdir -p "$backup_dir"
 
