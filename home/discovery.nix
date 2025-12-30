@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   programs.git.settings = {
     # signing
@@ -10,4 +10,6 @@
       "https://github.com".username = "ananthb";
     };
   };
+
+  home.packages = [ pkgs.claude-code ];
 }
