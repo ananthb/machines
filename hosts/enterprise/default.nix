@@ -64,7 +64,6 @@
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
-
   services.fwupd.enable = true;
   services.bcachefs.autoScrub.enable = true;
 
