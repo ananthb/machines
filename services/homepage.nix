@@ -3,7 +3,7 @@
   services.homepage-dashboard = {
     enable = true;
     openFirewall = true;
-    allowedHosts = "apps.kedi.dev,[fdc0:6625:5195::45]:8082,10.15.16.45:8082";
+    allowedHosts = "apps.kedi.dev,[fdc0:6625:5195::50]:8082,10.15.16.50:8082";
     settings = {
       title = "KEDI Applications";
       description = "KEDI Server running apps for the people";
@@ -88,14 +88,14 @@
             "Jellyseerr" = {
               icon = "jellyseerr";
               description = "Watch requests";
-              href = "http://voyager:5055";
+              href = "http://endeavour:5055";
             };
           }
           {
             "Radarr" = {
               icon = "radarr";
               description = "Movies";
-              href = "http://endeavour:7878";
+              href = "http://enterprise:7878";
             };
 
           }
@@ -103,21 +103,21 @@
             "Sonarr" = {
               icon = "sonarr";
               description = "TV Shows";
-              href = "http://endeavour:8989";
+              href = "http://enterprise:8989";
             };
           }
           {
             "Prowlarr" = {
               icon = "prowlarr";
               description = "Indexer";
-              href = "http://endeavour:9696";
+              href = "http://enterprise:9696";
             };
           }
           {
             "qBittorrent" = {
               icon = "qbittorrent";
               description = "Torrent downloader";
-              href = "http://endeavour:8000";
+              href = "http://enterprise:8000";
             };
           }
         ];
@@ -135,7 +135,7 @@
             "VictoriaMetrics" = {
               icon = "victoriametrics";
               description = "Metrics";
-              href = "http://voyager:8428";
+              href = "http://endeavour:8428";
             };
           }
           {

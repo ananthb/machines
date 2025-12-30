@@ -68,19 +68,8 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  # WARP must be manually set up in proxy mode listening on port 8888.
-  # This involves registering a new identity, accepting the tos,
-  # setting the mode to proxy, and then setting proxy port to 8888.
-  services.cloudflare-warp.enable = true;
-  services.cloudflare-warp.openFirewall = false;
-
   services.fwupd.enable = true;
   services.bcachefs.autoScrub.enable = true;
-
-  services.prometheus.exporters = {
-    smartctl.enable = true;
-    smartctl.openFirewall = true;
-  };
 
   systemd.services."immich-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
