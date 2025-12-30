@@ -39,7 +39,7 @@
           Port = 8888;
           Type = "SOCKS5";
           Profiles = {
-            BitTorrent = true;
+            BitTorrent = false;
             Misc = true;
             RSS = true;
           };
