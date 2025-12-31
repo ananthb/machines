@@ -46,6 +46,7 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
+    gnome-tweaks
     tpm2-tss
   ];
 

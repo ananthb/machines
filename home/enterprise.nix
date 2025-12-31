@@ -10,6 +10,7 @@
 
   home.packages = with pkgs; [
     discord
+    element-desktop
     firefox
     gcr
     google-chrome
@@ -20,6 +21,7 @@
     gnomeExtensions.night-theme-switcher
     gnomeExtensions.gsconnect
     jellyfin-media-player
+    junction
     rpi-imager
     slack
     signal-desktop
