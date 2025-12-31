@@ -12,6 +12,8 @@
     };
   };
 
+  networking.firewall.allowedTCPPorts = [ 5232 ];
+
   systemd.services."radicale-backup" = {
     startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";
