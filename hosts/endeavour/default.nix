@@ -21,6 +21,7 @@
     ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
+    ../../services/open-webui.nix
     ../../services/radicale.nix
     ../../services/vaultwarden.nix
   ];
