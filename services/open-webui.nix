@@ -5,14 +5,9 @@
 }:
 
 {
-  services.ollama = {
-    enable = true;
-    # See https://ollama.com/library
-    loadModels = [
-      "llama3.2:3b"
-      "deepseek-r1:1.5b"
-    ];
-  };
+  imports = [
+    ./warp.nix
+  ];
 
   services.open-webui = {
     enable = true;
@@ -64,7 +59,7 @@
       USER_AGENT="KEDI Open WebUI"
 
       # ollama api
-      OLLAMA_BASE_URLS="http://localhost:11434;http://discovery.${
+      OLLAMA_BASE_URLS="http://enterprise.local:11434;http://discovery.${
         config.sops.placeholder."tailscale_api/tailnet"
       }:11434"
       EMABLE_OPENAI_API="False"

@@ -82,6 +82,15 @@
     "A+ /srv/media - - - - default:group::rwx"
   ];
 
+  services.ollama = {
+    enable = true;
+    # See https://ollama.com/library
+    loadModels = [
+      "llama3.2:3b"
+      "deepseek-r1:1.5b"
+    ];
+  };
+
   power.ups = {
     enable = true;
     mode = "netclient";
