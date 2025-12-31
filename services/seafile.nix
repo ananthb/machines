@@ -27,6 +27,7 @@
 
   imports = [
     ./caddy.nix
+    ./warp.nix
   ];
 
   virtualisation.quadlet =

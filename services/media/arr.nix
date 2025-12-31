@@ -1,5 +1,9 @@
 { config, pkgs, username, ... }:
 {
+  imports = [
+    ../warp.nix
+  ];
+
   # qBittorrent
   services.qbittorrent = {
     enable = true;
