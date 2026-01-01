@@ -31,7 +31,6 @@
     wireshark
     wl-clipboard
     zed-editor
-    neovide
   ];
 
   services.gnome-keyring.enable = true;
