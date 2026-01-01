@@ -24,7 +24,7 @@
     };
   };
 
-  services.caddy.virtualHosts.":4000".extraConfig = ''
+  services.caddy.virtualHosts.":4101".extraConfig = ''
     reverse_proxy unix//run/phpfpm/davis.sock
   '';
 
