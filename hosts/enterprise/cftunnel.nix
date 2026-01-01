@@ -8,8 +8,7 @@
         "6a.kedi.dev" = "http://[fdc0:6625:5195::50]:8123";
         "actual.kedi.dev" = "http://[fdc0:6625:5195::50]:3001";
         "apps.kedi.dev" = "http://endeavour:8082"; # TODO: migrate from tailscale
-        # TODO: davis isn't ready yet
-        # "davis.kedi.dev" = "http://[fdc0:6625:5195::50]:4101";
+        "davis.kedi.dev" = "http://[fdc0:6625:5195::50]:4101";
         "immich.kedi.dev" = "http://localhost:2283";
         "miniflux.kedi.dev" = "http://[fdc0:6625:5195::50]:8088";
         "open-webui.kedi.dev" = "http://[fdc0:6625:5195::50]:8090";
