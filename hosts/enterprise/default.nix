@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  username,
   ...
 }:
 {
@@ -91,6 +92,11 @@
       "deepseek-r1:1.5b"
     ];
   };
+
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
+
+  users.users.${username}.extraGroups = [ "libvirtd" ];
 
   power.ups = {
     enable = true;
