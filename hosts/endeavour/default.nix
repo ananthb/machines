@@ -76,7 +76,11 @@
   fileSystems."/srv/media" = {
     device = "enterprise.local:/srv/media";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+    options = [
+      "x-systemd.automount"
+      "noauto"
+      "x-systemd.idle-timeout=600"
+    ];
   };
 
   systemd.services."immich-backup" = {
