@@ -1,14 +1,9 @@
 {
   config,
-  pkgs,
   username,
   ...
 }:
 {
-  imports = [
-    ../warp.nix
-  ];
-
   # Radarr
   services.radarr = {
     enable = true;
