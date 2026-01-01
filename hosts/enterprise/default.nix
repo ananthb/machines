@@ -11,6 +11,7 @@
 
     ./cftunnel.nix
     ../../services/immich.nix
+    ../../services/media/dl.nix
     ../../services/media/tv.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/postgres.nix
