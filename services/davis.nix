@@ -4,6 +4,10 @@
   ...
 }:
 {
+  imports = [
+    ./caddy.nix
+  ];
+
   services.davis = {
     enable = true;
     adminPasswordFile = config.sops.secrets."davis/admin_password".path;
