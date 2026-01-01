@@ -94,9 +94,19 @@
   };
 
   virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd.qemu.swtpm.enable = true;
+
   programs.virt-manager.enable = true;
+  services.spice-vdagentd.enable = true;
+  services.qemuGuest.enable = true;
+  services.spice-webdavd.enable = true;
 
   users.users.${username}.extraGroups = [ "libvirtd" ];
+
+  # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
+  systemd.services.gnome-remote-desktop = {
+    wantedBy = [ "graphical.target" ];
+  };
 
   power.ups = {
     enable = true;
