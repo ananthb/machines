@@ -54,9 +54,9 @@
     };
   };
 
-  xdg.desktopEntries.org-protocol = {
+  xdg.desktopEntries.chrome-triton = {
     name = "Chrome (triton.one)";
-    exec = "/etc/profiles/per-user/ananth/bin/google-chrome-stable --profile-directory='Profile 2' --class=WorkProfile -- %u";
+    exec = "/etc/profiles/per-user/ananth/bin/google-chrome-stable --profile-directory=\"Profile 2\" --class=WorkProfile -- %u";
     terminal = false;
     icon = "google-chrome";
     type = "Application";
@@ -64,7 +64,7 @@
       "Network"
       "WebBrowser"
     ];
-    mimeTypes = [ "x-scheme-handler/org-protocol" ];
+    mimeType = [ "x-scheme-handler/org-protocol" ];
   };
 
   programs.git.settings = {
