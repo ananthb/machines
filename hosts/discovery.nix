@@ -10,7 +10,7 @@
     "discord"
     "firefox"
     "gimp"
-    "ledger-live"
+    "ledger-wallet"
     "signal"
     "slack"
     "slack-cli"

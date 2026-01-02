@@ -1,12 +1,10 @@
 { pkgs, ... }:
 {
 
-  programs.zsh.enable = true;
-
-  #programs.fish.enable = true;
-  #programs.fish.interactiveShellInit = ''
-  #  set fish_greeting ""
-  #'';
+  programs.fish.enable = true;
+  programs.fish.interactiveShellInit = ''
+    set fish_greeting ""
+  '';
 
   programs.nix-index-database.comma.enable = true;
 
