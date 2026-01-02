@@ -13,10 +13,11 @@
 }:
 {
   config,
+  lib,
   pkgs,
   ...
 }:
-{
+lib.recursiveUpdate {
   services.home-assistant = {
     enable = true;
     package = pkgs.home-assistant.overrideAttrs (oldAttrs: {
@@ -113,4 +114,4 @@
     "${secretsPrefix}/longitude".owner = config.users.users.hass.name;
     "${secretsPrefix}/elevation".owner = config.users.users.hass.name;
   } // builtins.mapAttrs (_: _: { owner = config.users.users.hass.name; }) extraSecrets;
-} // extraModules
+}) extraModules
