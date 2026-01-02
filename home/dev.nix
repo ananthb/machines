@@ -2,7 +2,6 @@
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
-    ./nixvim.nix
   ];
 
   programs.gpg = {
