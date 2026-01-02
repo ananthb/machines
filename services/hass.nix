@@ -109,8 +109,8 @@
   };
 
   sops.secrets = {
-    "${secretsPrefix}/latitude".owner = "hass";
-    "${secretsPrefix}/longitude".owner = "hass";
-    "${secretsPrefix}/elevation".owner = "hass";
-  } // builtins.mapAttrs (_: _: { owner = "hass"; }) extraSecrets;
+    "${secretsPrefix}/latitude".owner = config.users.users.hass.name;
+    "${secretsPrefix}/longitude".owner = config.users.users.hass.name;
+    "${secretsPrefix}/elevation".owner = config.users.users.hass.name;
+  } // builtins.mapAttrs (_: _: { owner = config.users.users.hass.name; }) extraSecrets;
 } // extraModules
