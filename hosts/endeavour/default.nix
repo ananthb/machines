@@ -78,10 +78,9 @@
     device = "enterprise.local:/srv/media";
     fsType = "nfs";
     options = [
-      "x-systemd.automount"
-      "noauto"
+      "_netdev"
+      "auto"
       "nfsvers=4"
-      "x-systemd.idle-timeout=600"
     ];
   };
 
