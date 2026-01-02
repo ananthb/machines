@@ -18,6 +18,7 @@ in
     pkg:
     builtins.elem (lib.getName pkg) [
       "claude-code"
+      "copilot.vim"
       "discord"
       "git-credential-manager"
       "google-chrome"

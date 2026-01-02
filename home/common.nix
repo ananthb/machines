@@ -12,7 +12,7 @@ in
   imports = [
     inputs.nixvim.homeModules.nixvim
     ../home/${hostname}.nix
-    ../programs/shell.nix
+    ./programs/shell.nix
   ];
 
   home.homeDirectory = homeDir;
