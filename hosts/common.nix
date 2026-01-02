@@ -18,10 +18,13 @@ in
     pkg:
     builtins.elem (lib.getName pkg) [
       "claude-code"
+      "cloudflare-warp"
       "copilot.vim"
       "discord"
       "git-credential-manager"
       "google-chrome"
+      "intel-ocl"
+      "open-webui"
       "slack"
       "vscode"
     ];

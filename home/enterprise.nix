@@ -4,8 +4,7 @@
 }:
 {
   imports = [
-    ./programs/nixvim.nix
-    ./programs/nushell.nix
+    ./dev.nix
   ];
 
   home.packages = with pkgs; [
