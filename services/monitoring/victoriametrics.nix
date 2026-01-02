@@ -117,9 +117,9 @@
           static_configs = [
             {
               targets = [
-                "http://endeavour:7878" # radarr
-                "http://endeavour:8989" # sonarr
-                "http://endeavour:9696" # prowlarr
+                "http://endeavour.local:7878" # radarr
+                "http://endeavour.local:8989" # sonarr
+                "http://endeavour.local:9696" # prowlarr
               ];
               labels.type = "app";
               labels.role = "server";
@@ -167,7 +167,7 @@
             }
             {
               target_label = "__address__";
-              replacement = "voyager:9115";
+              replacement = "endeavour.local:9115";
             }
           ];
           static_configs = [
@@ -207,7 +207,7 @@
             }
             {
               target_label = "__address__";
-              replacement = "voyager:9115";
+              replacement = "endeavour.local:9115";
             }
           ];
           file_sd_configs = [
