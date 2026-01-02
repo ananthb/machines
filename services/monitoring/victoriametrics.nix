@@ -439,8 +439,8 @@
   ];
 
   sops.secrets = {
-    "homes/6a/hass/prometheus_token".owner = config.users.users.victoriametrics.name;
-    "homes/t1/hass/prometheus_token".owner = config.users.users.victoriametrics.name;
+    "homes/6a/hass/prometheus_token" = { };
+    "homes/t1/hass/prometheus_token" = { };
   };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
