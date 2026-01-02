@@ -98,10 +98,6 @@
     shell = pkgs.fish;
   };
 
-  environment.shells = [ pkgs.fish ];
-
-  programs.fish.enable = true;
-
   programs.ssh.extraConfig = ''
     Host *
       AddKeysToAgent yes
