@@ -8,7 +8,6 @@
     ./hardware-configuration.nix
 
     ./t1.nix
-    ((import ../../lib/cftunnel.nix).mkCftunnel { inherit hostname; })
     ../../services/mealie.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/probes.nix

@@ -1,9 +1,20 @@
 {
+  config,
+  hostname,
+  lib,
   pkgs,
   username,
   ...
 }:
+let
+  cftunnelLib = import ../lib/cftunnel.nix;
+  hasTunnel = cftunnelLib.tunnels ? ${hostname};
+in
 {
+  imports = lib.optionals hasTunnel [
+    (cftunnelLib.mkCftunnel { inherit hostname; })
+  ];
+
   nixpkgs.config.allowUnfree = true;
 
   # Necessary for using flakes on this system.
