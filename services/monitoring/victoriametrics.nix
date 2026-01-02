@@ -439,12 +439,12 @@
   ];
 
   sops.secrets = {
-    "homes/6a/hass/prometheus_token" = { };
-    "homes/t1/hass/prometheus_token" = { };
+    "homes/6a/hass/prometheus_token".mode = "0444";
+    "homes/t1/hass/prometheus_token".mode = "0444";
   };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
-    owner = config.users.users.grafana.name;
+    mode = "0444";
     content = ''
       [
           {
