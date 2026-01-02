@@ -31,6 +31,7 @@ in
       "steam"
       "steam-unwrapped"
       "vscode"
+      "xow_dongle-firmware"
     ];
 
   # Necessary for using flakes on this system.
