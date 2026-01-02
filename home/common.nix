@@ -44,25 +44,16 @@ in
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    # Fonts
-    hack-font
-
-    # Shell
-    nushell
-    mosh
-    oils-for-unix
-    fish
-
-    # Tools
-    nix-output-monitor
-    git
-    lazygit
-    jujutsu
-    ripgrep
     delta
-    fzf
     devenv
+    fzf
+    git
     gnupg
+    hack-font
+    lazygit
+    mosh
+    nix-output-monitor
+    ripgrep
   ];
 
   home.stateVersion = "24.05";

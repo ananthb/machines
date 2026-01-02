@@ -95,6 +95,7 @@
 
   virtualisation.libvirtd.enable = true;
   virtualisation.libvirtd.qemu.swtpm.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true;
 
   programs.virt-manager.enable = true;
   services.spice-vdagentd.enable = true;
