@@ -10,16 +10,21 @@
     environment = {
       "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
       "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.0/8,fdc0:6625:5195::0/64,10.15.16.0/24";
+      "IMMICH_TELEMETRY_INCLUDE" = "all";
     };
     accelerationDevices = [ "/dev/dri/renderD128" ];
   };
+
+  # immich-server metrics ports
+  networking.firewall.allowedTCPPorts = [
+    8081 # api
+    8082 # microservices
+  ];
 
   users.users.immich.extraGroups = [
     "video"
     "render"
   ];
-
-  systemd.services.immich-server.environment.IMMICH_TELEMETRY_INCLUDE = "all";
 
   systemd.services."immich-backup" = {
     # TODO: re-enable after we've trimmed down unnecessary files
@@ -30,12 +35,6 @@
       User = "root";
       ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
     };
-  };
-
-  sops.secrets = {
-    "email/from/immich" = { };
-    "gcloud/oauth_self-hosted_clients/id".owner = config.users.users.immich.name;
-    "gcloud/oauth_self-hosted_clients/secret".owner = config.users.users.immich.name;
   };
 
   sops.templates."immich/config.json" = {
@@ -227,8 +226,9 @@
   };
 
   sops.secrets = {
-    "gcloud/oauth_self-hosted_clients/id" = { };
-    "gcloud/oauth_self-hosted_clients/secret" = { };
+    "email/from/immich" = { };
+    "gcloud/oauth_self-hosted_clients/id".owner = config.users.users.immich.name;
+    "gcloud/oauth_self-hosted_clients/secret".owner = config.users.users.immich.name;
   };
 
 }

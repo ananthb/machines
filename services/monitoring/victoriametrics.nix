@@ -352,7 +352,8 @@
             }
             {
               targets = [
-                "enterprise.local:8081" # immich exporter
+                "enterprise.local:8081" # immich-server api metrics
+                "enterprise.local:8081" # immich-server microservices metrics
               ];
               labels.type = "exporter";
               labels.role = "server";
