@@ -74,7 +74,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /srv/media endeavour.local(rw,sync,no_subtree_check,all_squash,anonuid=65534,anongid=985)
+      /srv/media fdc0:6625:5195::50(rw,sync,no_subtree_check,all_squash,anonuid=65534,anongid=985)
     '';
   };
   networking.firewall.allowedTCPPorts = [ 2049 ];
