@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./dev.nix
+  ];
+
   programs.git.settings = {
     gpg.format = "ssh";
     user.signingkey = "~/.ssh/yubikey_5c_nano";
