@@ -24,7 +24,6 @@
             {
               targets = [
                 "endeavour.local:9115"
-                "enterprise.local:9115"
                 "stargazer:9115"
                 "voyager:9115"
               ];
@@ -111,7 +110,7 @@
             }
             {
               target_label = "__address__";
-              replacement = "voyager.local:9115";
+              replacement = "endeavour.local:9115";
             }
           ];
           static_configs = [
