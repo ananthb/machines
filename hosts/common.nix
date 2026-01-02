@@ -1,5 +1,4 @@
 {
-  config,
   hostname,
   lib,
   pkgs,
@@ -15,7 +14,16 @@ in
     (cftunnelLib.mkCftunnel { inherit hostname; })
   ];
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+      "discord"
+      "git-credential-manager"
+      "google-chrome"
+      "slack"
+      "vscode"
+    ];
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
@@ -33,6 +41,8 @@ in
     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano
 "
   ];
+
+  programs.fish.enable = true;
 
   sops.defaultSopsFile = ../secrets.yaml;
   sops.secrets = {
