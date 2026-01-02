@@ -77,10 +77,7 @@
   fileSystems."/srv/media" = {
     device = "enterprise.local:/srv/media";
     fsType = "nfs";
-    options = [
-      "_netdev"
-      "nfsvers=4"
-    ];
+    options = [ "_netdev" ];
   };
 
   systemd.services."immich-backup" = {
