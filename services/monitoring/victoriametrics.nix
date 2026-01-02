@@ -396,13 +396,52 @@
             }
           ];
         }
+        {
+          job_name = "home_assistant_6a";
+          metrics_path = "/api/prometheus";
+          scheme = "https";
+          authorization = {
+            type = "Bearer";
+            credentials_file = config.sops.secrets."homes/6a/hass/prometheus_token".path;
+          };
+          static_configs = [
+            {
+              targets = [ "6a.kedi.dev" ];
+              labels.type = "app";
+              labels.app = "home-assistant";
+            }
+          ];
+        }
+        {
+          job_name = "home_assistant_t1";
+          metrics_path = "/api/prometheus";
+          scheme = "https";
+          authorization = {
+            type = "Bearer";
+            credentials_file = config.sops.secrets."homes/t1/hass/prometheus_token".path;
+          };
+          static_configs = [
+            {
+              targets = [ "t1.kedi.dev" ];
+              labels.type = "app";
+              labels.app = "home-assistant";
+            }
+          ];
+        }
       ];
     };
   };
 
   systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
     config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
+    config.sops.secrets."homes/6a/hass/prometheus_token".path
+    config.sops.secrets."homes/t1/hass/prometheus_token".path
   ];
+
+  sops.secrets = {
+    "homes/6a/hass/prometheus_token".owner = config.users.users.victoriametrics.name;
+    "homes/t1/hass/prometheus_token".owner = config.users.users.victoriametrics.name;
+  };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
     owner = config.users.users.grafana.name;
