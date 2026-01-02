@@ -17,6 +17,7 @@ in
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
+      "broadcom-bt-firmware"
       "claude-code"
       "cloudflare-warp"
       "copilot.vim"
@@ -26,6 +27,8 @@ in
       "intel-ocl"
       "open-webui"
       "slack"
+      "steam"
+      "steam-unwrapped"
       "vscode"
     ];
 
