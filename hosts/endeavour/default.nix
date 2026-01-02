@@ -1,16 +1,17 @@
 {
   config,
+  hostname,
   lib,
   pkgs,
   ...
 }:
 {
   imports = [
-    ../linux
+    ../linux.nix
     ./hardware-configuration.nix
 
     ./6a.nix
-    ./cftunnel.nix
+    ((import ../../lib/cftunnel.nix).mkCftunnel { inherit hostname; })
     ./power.nix
     ../../services/actual.nix
     ../../services/davis.nix

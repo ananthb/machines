@@ -34,7 +34,7 @@
     }
 
     ../common.nix
-    ./scripts.nix
+    ../lib/scripts.nix
   ];
 
   sops.age.sshKeyPaths = [

@@ -3,7 +3,7 @@
 }:
 {
   imports = [
-    ../linux
+    ../linux.nix
     ./hardware-configuration.nix
 
     ../../services/monitoring/blackbox.nix
