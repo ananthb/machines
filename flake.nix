@@ -1,15 +1,17 @@
 {
-  description = "A SecureBoot-enabled NixOS configurations";
+  description = "NixOS and Nix-Darwin configurations for Ananth's machines";
 
-  inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+  inputs.home-manager.url = "github:nix-community/home-manager";
+  inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.homebrew-cask.url = "github:homebrew/homebrew-cask";
+  inputs.homebrew-cask.flake = false;
 
-  inputs.sops-nix.url = "github:Mic92/sops-nix";
-  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.homebrew-core.url = "github:homebrew/homebrew-core";
+  inputs.homebrew-core.flake = false;
 
-  inputs.nix-index-database.url = "github:nix-community/nix-index-database";
-  inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.homebrew-bundle.url = "github:homebrew/homebrew-bundle";
+  inputs.homebrew-bundle.flake = false;
 
   inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.3";
   inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
@@ -18,41 +20,42 @@
   inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
   inputs.nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
-  inputs.homebrew-bundle.url = "github:homebrew/homebrew-bundle";
-  inputs.homebrew-bundle.flake = false;
-  inputs.homebrew-core.url = "github:homebrew/homebrew-core";
-  inputs.homebrew-core.flake = false;
-  inputs.homebrew-cask.url = "github:homebrew/homebrew-cask";
-  inputs.homebrew-cask.flake = false;
 
-  inputs.home-manager.url = "github:nix-community/home-manager";
-  inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.nix-index-database.url = "github:nix-community/nix-index-database";
+  inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+  inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   inputs.nixvim.url = "github:nix-community/nixvim";
   inputs.nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+
+  inputs.sops-nix.url = "github:Mic92/sops-nix";
+  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
   inputs.tsnsrv.url = "github:boinkor-net/tsnsrv";
   inputs.tsnsrv.inputs.nixpkgs.follows = "nixpkgs";
-
-  inputs.quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
 
   outputs =
     {
       self,
-      nixos-hardware,
-      nixpkgs,
-      sops-nix,
-      nix-index-database,
-      lanzaboote,
       home-manager,
-      nixvim,
+      homebrew-cask,
+      homebrew-core,
+      homebrew-bundle,
+      lanzaboote,
       nix-darwin,
       nix-homebrew,
-      homebrew-bundle,
-      homebrew-core,
-      homebrew-cask,
-      tsnsrv,
+      nix-index-database,
+      nixos-hardware,
+      nixpkgs,
+      nixvim,
       quadlet-nix,
+      sops-nix,
+      tsnsrv,
       ...
     }@inputs:
     let
