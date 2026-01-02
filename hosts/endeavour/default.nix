@@ -79,7 +79,6 @@
     fsType = "nfs";
     options = [
       "_netdev"
-      "auto"
       "nfsvers=4"
     ];
   };
