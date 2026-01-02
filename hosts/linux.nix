@@ -22,8 +22,8 @@
       home-manager.useUserPackages = true;
       home-manager.users.${username} = {
         imports = [
-          ../../home/common.nix
-          ../../home/linux.nix
+          ../home/common.nix
+          ../home/linux.nix
         ];
       };
       home-manager.extraSpecialArgs = {
@@ -33,7 +33,7 @@
       };
     }
 
-    ../common.nix
+    ./common.nix
     ../lib/scripts.nix
   ];
 

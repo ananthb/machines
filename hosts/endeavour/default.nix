@@ -11,7 +11,6 @@
     ./hardware-configuration.nix
 
     ./6a.nix
-    ((import ../../lib/cftunnel.nix).mkCftunnel { inherit hostname; })
     ./power.nix
     ../../services/actual.nix
     ../../services/davis.nix
