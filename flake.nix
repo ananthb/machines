@@ -57,12 +57,7 @@
     }@inputs:
     let
       username = "ananth";
-      trustedIPs = [
-        "::1"
-        "127.0.0.0/8"
-        "fdc0:6625:5195::0/64"
-        "10.15.16.0/24"
-      ];
+      trustedIPs = "::1 127.0.0.0/8 fdc0:6625:5195::0/64 10.15.16.0/24";
 
       mkNixosHost =
         {
