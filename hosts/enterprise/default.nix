@@ -1,5 +1,6 @@
 {
   config,
+  hostname,
   lib,
   pkgs,
   username,
@@ -7,10 +8,10 @@
 }:
 {
   imports = [
-    ../linux
+    ../linux.nix
     ./hardware-configuration.nix
 
-    ./cftunnel.nix
+    ((import ../../lib/cftunnel.nix).mkCftunnel { inherit hostname; })
     ../../services/immich.nix
     ../../services/media/dl.nix
     ../../services/media/tv.nix

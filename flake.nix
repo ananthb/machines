@@ -63,6 +63,46 @@
         "fdc0:6625:5195::0/64"
         "10.15.16.0/24"
       ];
+
+      mkNixosHost =
+        {
+          hostname,
+          system,
+          extraModules ? [ ],
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit
+              system
+              hostname
+              trustedIPs
+              username
+              inputs
+              ;
+          };
+          modules = extraModules ++ [ ./hosts/${hostname} ];
+        };
+
+      mkDarwinHost =
+        {
+          hostname,
+          system,
+          extraModules ? [ ],
+        }:
+        nix-darwin.lib.darwinSystem {
+          inherit system;
+          specialArgs = {
+            inherit
+              system
+              hostname
+              trustedIPs
+              username
+              inputs
+              ;
+          };
+          modules = extraModules ++ [ ./hosts/${hostname}.nix ];
+        };
     in
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
@@ -70,133 +110,37 @@
       formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-rfc-style;
 
       nixosConfigurations = {
-        endeavour =
-          let
-            system = "x86_64-linux";
-            hostname = "endeavour";
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
+        endeavour = mkNixosHost {
+          hostname = "endeavour";
+          system = "x86_64-linux";
+          extraModules = [ lanzaboote.nixosModules.lanzaboote ];
+        };
 
-            specialArgs = {
-              inherit
-                system
-                hostname
-                trustedIPs
-                username
-                ;
+        enterprise = mkNixosHost {
+          hostname = "enterprise";
+          system = "x86_64-linux";
+          extraModules = [ lanzaboote.nixosModules.lanzaboote ];
+        };
 
-              inputs = inputs;
-            };
+        stargazer = mkNixosHost {
+          hostname = "stargazer";
+          system = "aarch64-linux";
+          extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
+        };
 
-            modules = [
-              lanzaboote.nixosModules.lanzaboote
-              ./hosts/endeavour
-            ];
-          };
-
-        enterprise =
-          let
-            system = "x86_64-linux";
-            hostname = "enterprise";
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-
-            specialArgs = {
-              inherit
-                system
-                hostname
-                trustedIPs
-                username
-                ;
-
-              inputs = inputs;
-            };
-
-            modules = [
-              lanzaboote.nixosModules.lanzaboote
-              ./hosts/enterprise
-            ];
-          };
-
-        stargazer =
-          let
-            system = "aarch64-linux";
-            hostname = "stargazer";
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-
-            specialArgs = {
-              inherit
-                system
-                hostname
-                trustedIPs
-                username
-                ;
-
-              inputs = inputs;
-            };
-
-            modules = [
-              nixos-hardware.nixosModules.raspberry-pi-4
-              ./hosts/stargazer
-            ];
-          };
-
-        voyager =
-          let
-            system = "aarch64-linux";
-            hostname = "voyager";
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit system;
-
-            specialArgs = {
-              inherit
-                system
-                hostname
-                trustedIPs
-                username
-                ;
-
-              inputs = inputs;
-            };
-
-            modules = [
-              nixos-hardware.nixosModules.raspberry-pi-4
-              ./hosts/voyager
-            ];
-          };
+        voyager = mkNixosHost {
+          hostname = "voyager";
+          system = "aarch64-linux";
+          extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
+        };
       };
 
       darwinConfigurations = {
-        discovery =
-          let
-            system = "aarch64-darwin";
-            hostname = "discovery";
-          in
-          nix-darwin.lib.darwinSystem {
-            inherit system;
-
-            specialArgs = {
-              inherit
-                system
-                hostname
-                trustedIPs
-                username
-                ;
-
-              inputs = inputs;
-            };
-
-            modules = [
-              sops-nix.darwinModules.sops
-              ./hosts/discovery.nix
-            ];
-          };
-
+        discovery = mkDarwinHost {
+          hostname = "discovery";
+          system = "aarch64-darwin";
+          extraModules = [ sops-nix.darwinModules.sops ];
+        };
       };
     };
 }
