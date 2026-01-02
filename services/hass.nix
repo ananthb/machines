@@ -25,10 +25,13 @@ lib.recursiveUpdate {
     });
     openFirewall = true;
     extraPackages =
-      python3Packages: with python3Packages; [
+      python3Packages:
+      with python3Packages;
+      [
         ollama
         speedtest-cli
-      ] ++ (extraPackages python3Packages);
+      ]
+      ++ (extraPackages python3Packages);
     extraComponents = [
       # baseline components
       "analytics"
@@ -55,15 +58,19 @@ lib.recursiveUpdate {
       "cast"
       "ecovacs"
       "esphome"
-    ] ++ extraComponents;
-    customComponents = with pkgs.home-assistant-custom-components; [
-      ecoflow_cloud
-      frigate
-      miraie
-      prometheus_sensor
-      smartir
-      spook
-    ] // extraCustomComponents;
+    ]
+    ++ extraComponents;
+    customComponents =
+      with pkgs.home-assistant-custom-components;
+      [
+        ecoflow_cloud
+        frigate
+        miraie
+        prometheus_sensor
+        smartir
+        spook
+      ]
+      // extraCustomComponents;
     config = {
       # Includes dependencies for a basic setup
       # https://www.home-assistant.io/integrations/default_config/
@@ -75,7 +82,8 @@ lib.recursiveUpdate {
         trusted_proxies = [
           "::1"
           "127.0.0.0/8"
-        ] ++ extraTrustedProxies;
+        ]
+        ++ extraTrustedProxies;
         use_x_forwarded_for = true;
         ip_ban_enabled = true;
         login_attempts_threshold = 5;
@@ -96,7 +104,8 @@ lib.recursiveUpdate {
       };
 
       smartir = { };
-    } // extraConfig;
+    }
+    // extraConfig;
   };
 
   systemd.services."home-assistant-backup" = {
@@ -113,5 +122,6 @@ lib.recursiveUpdate {
     "${secretsPrefix}/latitude".owner = config.users.users.hass.name;
     "${secretsPrefix}/longitude".owner = config.users.users.hass.name;
     "${secretsPrefix}/elevation".owner = config.users.users.hass.name;
-  } // builtins.mapAttrs (_: _: { owner = config.users.users.hass.name; }) extraSecrets;
-}) extraModules
+  }
+  // builtins.mapAttrs (_: _: { owner = config.users.users.hass.name; }) extraSecrets;
+} extraModules
