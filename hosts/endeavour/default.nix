@@ -75,7 +75,7 @@
 
   # NFS mount from enterprise
   fileSystems."/srv/media" = {
-    device = "enterprise.local:/srv/media";
+    device = "[fdc0:6625:5195::55]:/srv/media";
     fsType = "nfs";
     options = [ "_netdev" ];
   };
