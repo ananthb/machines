@@ -1,5 +1,4 @@
 {
-  hostname,
   pkgs,
   username,
   ...
@@ -9,7 +8,6 @@ let
 in
 {
   imports = [
-    ../home/${hostname}.nix
     ./shell.nix
   ];
 

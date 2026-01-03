@@ -1,5 +1,6 @@
 {
   pkgs,
+  username,
   ...
 }:
 {
@@ -34,21 +35,22 @@
 
   services.gnome-keyring.enable = true;
 
+  programs.gnome-shell = {
+    enable = true;
+    extensions = with pkgs.gnomeExtensions; [
+      { package = appindicator; }
+      { package = gsconnect; }
+      { package = night-theme-switcher; }
+      { package = system-monitor; }
+    ];
+  };
+
   dconf = {
     enable = true;
     settings = {
       "org/gnome/settings-daemon/plugins/power" = {
         sleep-inactive-ac-type = "nothing";
         sleep-inactive-ac-timeout = 0;
-      };
-      "org/gnome/shell" = {
-        disable-user-extensions = false;
-        enabled-extensions = with pkgs.gnomeExtensions; [
-          appindicator.extensionUuid
-          night-theme-switcher.extensionUuid
-          gsconnect.extensionUuid
-          system-monitor.extensionUuid
-        ];
       };
     };
   };

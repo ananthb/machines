@@ -38,6 +38,7 @@
         imports = [
           ../home/common.nix
           ../home/darwin.nix
+          ../home/${hostname}.nix
         ];
       };
       home-manager.extraSpecialArgs = {
