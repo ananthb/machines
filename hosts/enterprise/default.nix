@@ -77,7 +77,20 @@
       /srv/media fdc0:6625:5195::50(rw,sync,no_subtree_check,all_squash,anonuid=65534,anongid=985)
     '';
   };
-  networking.firewall.allowedTCPPorts = [ 2049 ];
+
+  networking.firewall = rec {
+    # nfs server
+    allowedTCPPorts = [ 2049 ];
+    # gsconnect/kdeconnect
+    allowedTCPPortRanges = [
+      {
+        from = 1714;
+        to = 1764;
+      }
+    ];
+    allowedUDPPortRanges = allowedTCPPortRanges;
+  };
+
 
   # Set default ACL for group-writable files (umask 002)
   systemd.tmpfiles.rules = [

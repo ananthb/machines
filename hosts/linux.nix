@@ -24,6 +24,7 @@
         imports = [
           ../home/common.nix
           ../home/linux.nix
+          ../home/${hostname}.nix
         ];
       };
       home-manager.extraSpecialArgs = {
