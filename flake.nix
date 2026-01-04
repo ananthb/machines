@@ -26,7 +26,7 @@
 
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/53c1a7905192f2760adb4aa2288a02489a5fc82f";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   inputs.nixvim.url = "github:nix-community/nixvim";
   inputs.nixvim.inputs.nixpkgs.follows = "nixpkgs";
