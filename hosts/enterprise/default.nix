@@ -91,7 +91,6 @@
     allowedUDPPortRanges = allowedTCPPortRanges;
   };
 
-
   # Set default ACL for group-writable files (umask 002)
   systemd.tmpfiles.rules = [
     "A+ /srv/media - - - - default:group::rwx"
