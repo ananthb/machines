@@ -1,6 +1,5 @@
 {
   config,
-  hostname,
   lib,
   pkgs,
   ...
@@ -78,31 +77,6 @@
     device = "[fdc0:6625:5195::55]:/srv/media";
     fsType = "nfs";
     options = [ "_netdev" ];
-  };
-
-  systemd.services."immich-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    # startAt = "weekly";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
-    };
-  };
-
-  systemd.services."seafile-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    #startAt = "weekly";
-    script = ''
-      systemctl start seafile-mysql-backup.service
-      ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
-    '';
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";
