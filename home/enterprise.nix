@@ -1,6 +1,5 @@
 {
   pkgs,
-  username,
   ...
 }:
 {
@@ -17,9 +16,6 @@
     ghostty
     gimp
     git-credential-manager
-    gnomeExtensions.appindicator
-    gnomeExtensions.night-theme-switcher
-    gnomeExtensions.gsconnect
     jellyfin-media-player
     junction
     rpi-imager
@@ -42,6 +38,7 @@
       { package = gsconnect; }
       { package = night-theme-switcher; }
       { package = system-monitor; }
+      { package = tiling-shell; }
     ];
   };
 
