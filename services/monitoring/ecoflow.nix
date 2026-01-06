@@ -9,8 +9,8 @@
   };
 
   sops.secrets = {
-    "ecoflow/email" = { };
-    "ecoflow/password" = { };
-    "ecoflow/devices_pretty_names" = { };
+    "ecoflow/email".mode = "0444";
+    "ecoflow/password".mode = "0444";
+    "ecoflow/devices_pretty_names".mode = "0444";
   };
 }
