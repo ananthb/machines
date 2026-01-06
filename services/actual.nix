@@ -6,6 +6,8 @@
   systemd.services.actual.serviceConfig.EnvironmentFile =
     config.sops.templates."actual/config.env".path;
 
+  networking.firewall.allowedTCPPorts = [ 3001 ];
+
   systemd.services = {
     "actual-backup" = {
       startAt = "daily";
