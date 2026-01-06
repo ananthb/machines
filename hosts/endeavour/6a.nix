@@ -5,6 +5,7 @@
   internalUrl = "http://endeavour.local:8123";
   extraPackages =
     python3Packages: with python3Packages; [
+      adguardhome
       aioimmich
       aiomealie
       aionut
