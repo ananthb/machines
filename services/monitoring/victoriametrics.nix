@@ -397,6 +397,16 @@
           ];
         }
         {
+          job_name = "ecoflow";
+          static_configs = [
+            {
+              targets = ["endeavour.local:2112"]; # ecoflow exporter
+              labels.type = "exporter";
+              labels.role = "ups";
+            }
+          ];
+        }
+        {
           job_name = "home_assistant_6a";
           metrics_path = "/api/prometheus";
           scheme = "https";
