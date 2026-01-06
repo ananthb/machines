@@ -400,7 +400,7 @@
           job_name = "ecoflow";
           static_configs = [
             {
-              targets = ["endeavour.local:2112"]; # ecoflow exporter
+              targets = [ "endeavour.local:2112" ]; # ecoflow exporter
               labels.type = "exporter";
               labels.role = "ups";
             }
