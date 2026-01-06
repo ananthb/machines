@@ -18,6 +18,7 @@
     ../../services/media/arr.nix
     ../../services/media/text.nix
     ../../services/monitoring/blackbox.nix
+    ../../services/monitoring/ecoflow.nix
     ../../services/monitoring/grafana.nix
     ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
