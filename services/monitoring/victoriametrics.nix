@@ -414,19 +414,6 @@
             type = "Bearer";
             credentials_file = config.sops.secrets."homes/6a/hass/prometheus_token".path;
           };
-          relabel_configs = [
-            {
-              source_labels = [ "address" ];
-              regex = "([^.]+)\.kedi\.dev:443";
-              target_label = "__param_target";
-              replacement = "$1";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-              action = "uppercase";
-            }
-          ];
           static_configs = [
             {
               targets = [ "6a.kedi.dev" ];
@@ -443,19 +430,6 @@
             type = "Bearer";
             credentials_file = config.sops.secrets."homes/t1/hass/prometheus_token".path;
           };
-          relabel_configs = [
-            {
-              source_labels = [ "address" ];
-              regex = "([^.]+)\.kedi\.dev:443";
-              target_label = "__param_target";
-              replacement = "$1";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-              action = "uppercase";
-            }
-          ];
           static_configs = [
             {
               targets = [ "t1.kedi.dev" ];
