@@ -12,7 +12,8 @@
     ./6a.nix
     ./power.nix
     ../../services/actual.nix
-    ../../services/davis.nix
+    # TODO: fix
+    # ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/media/arr.nix
     ../../services/media/text.nix
