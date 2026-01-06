@@ -420,6 +420,7 @@
               regex = "([^.]+)\.kedi\.dev:443";
               target_label = "instance";
               replacement = "$1";
+              action = "replace";
             }
             {
               source_labels = [ "instance" ];
@@ -449,6 +450,7 @@
               regex = "([^.]+)\.kedi\.dev:443";
               target_label = "instance";
               replacement = "$1";
+              action = "replace";
             }
             {
               source_labels = [ "instance" ];
