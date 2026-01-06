@@ -416,7 +416,7 @@
           };
           relabel_configs = [
             {
-              source_labels = [ "instance" ];
+              source_labels = [ "address" ];
               regex = "([^.]+)\.kedi\.dev:443";
               target_label = "instance";
               replacement = "$1";
@@ -446,7 +446,7 @@
           };
           relabel_configs = [
             {
-              source_labels = [ "instance" ];
+              source_labels = [ "address" ];
               regex = "([^.]+)\.kedi\.dev:443";
               target_label = "instance";
               replacement = "$1";
