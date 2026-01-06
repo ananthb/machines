@@ -418,12 +418,11 @@
             {
               source_labels = [ "address" ];
               regex = "([^.]+)\.kedi\.dev:443";
-              target_label = "instance";
+              target_label = "__param_target";
               replacement = "$1";
-              action = "replace";
             }
             {
-              source_labels = [ "instance" ];
+              source_labels = [ "__param_target" ];
               target_label = "instance";
               action = "uppercase";
             }
@@ -448,12 +447,11 @@
             {
               source_labels = [ "address" ];
               regex = "([^.]+)\.kedi\.dev:443";
-              target_label = "instance";
+              target_label = "__param_target";
               replacement = "$1";
-              action = "replace";
             }
             {
-              source_labels = [ "instance" ];
+              source_labels = [ "__param_target" ];
               target_label = "instance";
               action = "uppercase";
             }
