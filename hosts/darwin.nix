@@ -94,9 +94,7 @@
   ids.gids.nixbld = 350;
 
   users.users.${username} = {
-    name = username;
     home = "/Users/" + username;
-    shell = pkgs.fish;
   };
 
   programs.ssh.extraConfig = ''
@@ -128,26 +126,19 @@
       }
     ];
     casks = [
-      # hardware support
       "ddpm"
-      "logi-options+"
-      "yubico-authenticator"
-
-      # tools
-      "ollama-app"
-      "rectangle-pro"
-      "raspberry-pi-imager"
-      "scroll-reverser"
-      "seadrive"
-
-      # dailies
       "ghostty"
       "google-chrome"
-      "neovide-app"
-
-      # media
       "jellyfin-media-player"
+      "linearmouse"
+      "neovide-app"
+      "ollama-app"
+      "raspberry-pi-imager"
+      "rectangle-pro"
+      "scroll-reverser"
+      "seadrive"
       "vlc"
+      "yubico-authenticator"
     ];
     masApps = {
       "Tailscale" = 1475387142;

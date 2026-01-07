@@ -1,6 +1,5 @@
 {
   config,
-  hostname,
   lib,
   pkgs,
   username,
@@ -49,6 +48,8 @@
   # System packages
   environment.systemPackages = with pkgs; [
     gnome-tweaks
+    logitech-udev-rules
+    solaar
     tpm2-tss
   ];
 
