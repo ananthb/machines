@@ -37,6 +37,7 @@
       { package = appindicator; }
       { package = gsconnect; }
       { package = night-theme-switcher; }
+      { package = solaar-extension; }
       { package = system-monitor; }
       { package = tiling-shell; }
     ];

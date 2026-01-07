@@ -70,10 +70,8 @@
   users.groups.media.gid = 985;
 
   users.users.${username} = {
-    name = username;
     home = "/home/" + username;
     isNormalUser = true;
-    shell = pkgs.fish;
     extraGroups = [
       "wheel"
       "libvirtd"
@@ -161,5 +159,6 @@
     "email/smtp/username" = { };
     "gcloud/service_accounts/kopia-hathi-backups.json" = { };
     "kopia/gcs/hathi-backups" = { };
+    "nut/users/nutmon" = { };
   };
 }
