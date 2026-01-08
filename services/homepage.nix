@@ -86,6 +86,11 @@
               icon = "mealie";
               description = "Recipes & Meal Planner";
               href = "https://mealie.kedi.dev";
+              widget = {
+                type = "mealie";
+                url = "https://mealie.kedi.dev";
+                key = "{{HOMEPAGE_VAR_MEALIE_API_KEY}}";
+              };
             };
           }
           {
@@ -198,6 +203,7 @@
       HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
       HOMEPAGE_VAR_IMMICH_API_KEY=${config.sops.placeholder."immich/admin_api_key"}
       HOMEPAGE_VAR_JELLYFIN_API_KEY=${config.sops.placeholder."jellyfin/api_key"}
+      HOMEPAGE_VAR_MEALIE_API_KEY=${config.sops.placeholder."mealie/api_key"}
     '';
   };
 
@@ -206,5 +212,6 @@
     "adguard-home/password" = { };
     "immich/admin_api_key" = { };
     "jellyfin/api_key" = { };
+    "mealie/api_key" = { };
   };
 }
