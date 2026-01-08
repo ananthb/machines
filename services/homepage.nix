@@ -90,6 +90,7 @@
                 type = "mealie";
                 url = "https://mealie.kedi.dev";
                 key = "{{HOMEPAGE_VAR_MEALIE_API_KEY}}";
+                version = 2;
               };
             };
           }
