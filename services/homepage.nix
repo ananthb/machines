@@ -178,7 +178,7 @@
     ];
   };
 
-  config.sops.templates."homepage-dashboard.env" = {
+  sops.templates."homepage-dashboard.env" = {
     content = ''
       HOMEPAGE_VAR_ADGUARD_USERNAME=${config.sops.placeholder."adguard-home/username"}
       HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
