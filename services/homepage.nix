@@ -48,6 +48,11 @@
               icon = "miniflux";
               description = "RSS Feed Reader";
               href = "https://miniflux.kedi.dev";
+              widget = {
+                type = "miniflux";
+                url = "http://endeavour:8088";
+                key = "{{HOMEPAGE_VAR_MINIFLUX_API_KEY}}";
+              };
             };
           }
         ];
@@ -153,6 +158,10 @@
               icon = "qbittorrent";
               description = "Torrent downloader";
               href = "http://enterprise:8080";
+              widget = {
+                type = "qbittorrent";
+                url = "http://enterprise.local:8080";
+              };
             };
           }
         ];
@@ -205,6 +214,7 @@
       HOMEPAGE_VAR_IMMICH_API_KEY=${config.sops.placeholder."immich/admin_api_key"}
       HOMEPAGE_VAR_JELLYFIN_API_KEY=${config.sops.placeholder."jellyfin/api_key"}
       HOMEPAGE_VAR_MEALIE_API_KEY=${config.sops.placeholder."mealie/api_key"}
+      HOMEPAGE_VAR_MINIFLUX_API_KEY=${config.sops.placeholder."miniflux/api_key"}
     '';
   };
 
@@ -214,5 +224,6 @@
     "immich/admin_api_key" = { };
     "jellyfin/api_key" = { };
     "mealie/api_key" = { };
+    "miniflux/api_key" = { };
   };
 }
