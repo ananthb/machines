@@ -184,4 +184,9 @@
       HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
     '';
   };
+
+  sops.secrets = {
+    "adguard-home/username" = { };
+    "adguard-home/password" = { };
+  };
 }
