@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   services.homepage-dashboard = {
     enable = true;
@@ -10,9 +10,10 @@
       base = "https://apps.kedi.dev";
       target = "_blank";
     };
+    environmentFile = config.sops.templates."homepage-dashboard.env".path;
     services = [
       {
-        "Productivity" = [
+        "Media" = [
           {
             "Jellyfin (IPv6 only)" = {
               icon = "jellyfin";
@@ -25,20 +26,6 @@
               icon = "jellyfin";
               description = "Media Server";
               href = "https://tv.tail42937.ts.net";
-            };
-          }
-          {
-            "Seafile" = {
-              icon = "seafile";
-              description = "Files & Collaboration";
-              href = "https://seafile.kedi.dev";
-            };
-          }
-          {
-            "Immich" = {
-              icon = "immich";
-              description = "Photo & Video Library";
-              href = "https://immich.kedi.dev";
             };
           }
           {
@@ -55,17 +42,31 @@
               href = "https://miniflux.kedi.dev";
             };
           }
-          {
-            "Open WebUI" = {
-              icon = "open-webui";
-              description = "Large Language Model (LLM) inference";
-              href = "https://open-webui.kedi.dev";
-            };
-          }
         ];
       }
       {
-        "Organisation" = [
+        "Tools" = [
+          {
+            "Seafile" = {
+              icon = "seafile";
+              description = "Files & Collaboration";
+              href = "https://seafile.kedi.dev";
+            };
+          }
+          {
+            "Immich" = {
+              icon = "immich";
+              description = "Photo & Video Library";
+              href = "https://immich.kedi.dev";
+            };
+          }
+          {
+            "Actual" = {
+              icon = "actual-budget";
+              description = "Personal Budget Tracker";
+              href = "https://actual.kedi.dev";
+            };
+          }
           {
             "Mealie" = {
               icon = "mealie";
@@ -74,10 +75,10 @@
             };
           }
           {
-            "Actual" = {
-              icon = "actual-budget";
-              description = "Personal Budget Tracker";
-              href = "https://actual.kedi.dev";
+            "Open WebUI" = {
+              icon = "open-webui";
+              description = "Large Language Model (LLM) inference";
+              href = "https://open-webui.kedi.dev";
             };
           }
           {
@@ -159,8 +160,28 @@
               href = "https://uptime.kedi.dev";
             };
           }
+          {
+            "Adguard Home" = {
+              icon = "adguard";
+              description = "Network-wide Ad Blocker";
+              href = "https://atlantis.tail42937.ts.net/adguard-home";
+              widget = {
+                type = "adguard";
+                url = "http://atlantis.local:8080";
+                username = "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}";
+                password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}";
+              };
+            };
+          }
         ];
       }
     ];
+  };
+
+  config.sops.templates."homepage-dashboard.env" = {
+    content = ''
+      HOMEPAGE_VAR_ADGUARD_USERNAME=${config.sops.placeholder."adguard-home/username"}
+      HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
+    '';
   };
 }
