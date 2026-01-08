@@ -26,6 +26,7 @@
                 enableBlocks = true;
                 enableNowPlaying = true;
                 enableMediaControl = false;
+              };
             };
           }
           {
