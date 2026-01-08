@@ -169,7 +169,7 @@
                 type = "adguard";
                 url = "http://atlantis.local:8080";
                 username = "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}";
-                password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}";
+                password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}";
               };
             };
           }
