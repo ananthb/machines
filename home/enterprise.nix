@@ -8,6 +8,7 @@
   ];
 
   home.packages = with pkgs; [
+    claude-code
     discord
     element-desktop
     firefox
