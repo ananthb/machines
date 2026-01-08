@@ -162,7 +162,7 @@
           }
           {
             "Adguard Home (6A)" = {
-              icon = "adguard";
+              icon = "adguard-home";
               description = "Network-wide Ad Blocker";
               href = "https://atlantis.tail42937.ts.net/adguard-home";
               widget = {
