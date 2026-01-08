@@ -19,6 +19,13 @@
               icon = "jellyfin";
               description = "Media Server";
               href = "https://tv.kedi.dev";
+              widget = {
+                type = "jellyfin";
+                url = "http://enterprise.local:8096";
+                key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
+                enableBlocks = true;
+                enableNowPlaying = true;
+                enableMediaControl = false;
             };
           }
           {
@@ -58,6 +65,11 @@
               icon = "immich";
               description = "Photo & Video Library";
               href = "https://immich.kedi.dev";
+              widget = {
+                type = "immich";
+                url = "http://enterprise.local:2283";
+                key = "{{HOMEPAGE_VAR_IMMICH_API_KEY}}";
+              };
             };
           }
           {
@@ -182,11 +194,15 @@
     content = ''
       HOMEPAGE_VAR_ADGUARD_USERNAME=${config.sops.placeholder."adguard-home/username"}
       HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
+      HOMEPAGE_VAR_IMMICH_API_KEY=${config.sops.placeholder."immich/admin_api_key"}
+      HOMEPAGE_VAR_JELLYFIN_API_KEY=${config.sops.placeholder."jellyfin/api_key"}
     '';
   };
 
   sops.secrets = {
     "adguard-home/username" = { };
     "adguard-home/password" = { };
+    "immich/admin_api_key" = { };
+    "jellyfin/api_key" = { };
   };
 }
