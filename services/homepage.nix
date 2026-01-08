@@ -14,6 +14,20 @@
       {
         "Productivity" = [
           {
+            "Jellyfin (IPv6 only)" = {
+              icon = "jellyfin";
+              description = "Media Server";
+              href = "https://tv.kedi.dev";
+            };
+          }
+          {
+            "Jellyfin" = {
+              icon = "jellyfin";
+              description = "Media Server";
+              href = "https://tv.tail42937.ts.net";
+            };
+          }
+          {
             "Seafile" = {
               icon = "seafile";
               description = "Files & Collaboration";
