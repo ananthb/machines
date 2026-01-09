@@ -31,6 +31,9 @@
   inputs.nixvim.url = "github:nix-community/nixvim";
   inputs.nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
+  inputs.NixVirt.inputs.nixpkgs.follows = "nixpkgs";
+
   inputs.quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
 
   inputs.sops-nix.url = "github:Mic92/sops-nix";
@@ -53,6 +56,7 @@
       nixos-hardware,
       nixpkgs,
       nixvim,
+      NixVirt,
       quadlet-nix,
       sops-nix,
       tsnsrv,
