@@ -1,6 +1,6 @@
 (import ../../services/hass.nix {
   name = "6A";
-  secretsPrefix = "homes/6a";
+  secretsPrefix = "home-assistant/6a";
   externalUrl = "https://6a.kedi.dev";
   internalUrl = "http://endeavour.local:8123";
   extraPackages =
@@ -42,14 +42,14 @@
       {
         platform = "ubus";
         host = "10.15.16.1";
-        username = "!include /run/secrets/homes/6a/openwrt/username";
-        password = "!include /run/secrets/homes/6a/openwrt/password";
+        username = "!include /run/secrets/openwrt/atlantis/username";
+        password = "!include /run/secrets/openwrt/atlantis/password";
       }
     ];
   };
   extraSecrets = {
-    "homes/6a/openwrt/username" = null;
-    "homes/6a/openwrt/password" = null;
+    "openwrt/atlantis/username" = null;
+    "openwrt/atlantis/password" = null;
   };
   extraModules = {
     services.frigate = {
