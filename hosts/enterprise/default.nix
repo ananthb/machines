@@ -14,6 +14,7 @@
     ../../services/media/dl.nix
     ../../services/media/tv.nix
     ../../services/monitoring/blackbox.nix
+    ../../services/monitoring/libvirt.nix
     ../../services/monitoring/postgres.nix
     ../../services/seafile.nix
   ];
