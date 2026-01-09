@@ -407,6 +407,16 @@
           ];
         }
         {
+          job_name = "libvirt";
+          static_configs = [
+            {
+              targets = [ "enterprise.local:9177" ]; # libvirt exporter
+              labels.type = "exporter";
+              labels.role = "hypervisor";
+            }
+          ];
+        }
+        {
           job_name = "home_assistant_6a";
           metrics_path = "/api/prometheus";
           scheme = "https";
