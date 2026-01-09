@@ -268,8 +268,8 @@
     content = ''
       HOMEPAGE_VAR_ADGUARD_USERNAME=${config.sops.placeholder."adguard-home/username"}
       HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
-      HOMEPAGE_VAR_HA_6A_TOKEN=${config.sops.placeholder."homes/6a/access_token"}
-      HOMEPAGE_VAR_HA_T1_TOKEN=${config.sops.placeholder."homes/t1/access_token"}
+      HOMEPAGE_VAR_HA_6A_TOKEN=${config.sops.placeholder."home-assistant/6a/access_token"}
+      HOMEPAGE_VAR_HA_T1_TOKEN=${config.sops.placeholder."home-assistant/t1/access_token"}
       HOMEPAGE_VAR_IMMICH_API_KEY=${config.sops.placeholder."immich/admin_api_key"}
       HOMEPAGE_VAR_JELLYSEERR_API_KEY=${config.sops.placeholder."jellyseerr/api_key"}
       HOMEPAGE_VAR_JELLYFIN_API_KEY=${config.sops.placeholder."jellyfin/api_key"}
@@ -281,8 +281,8 @@
   sops.secrets = {
     "adguard-home/username" = { };
     "adguard-home/password" = { };
-    "homes/6a/access_token" = { };
-    "homes/t1/access_token" = { };
+    "home-assistant/6a/access_token" = { };
+    "home-assistant/t1/access_token" = { };
     "immich/admin_api_key" = { };
     "jellyseerr/api_key" = { };
     "jellyfin/api_key" = { };
