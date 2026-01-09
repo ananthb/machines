@@ -19,6 +19,7 @@
               icon = "jellyfin";
               description = "Media Server";
               href = "https://tv.kedi.dev";
+              siteMonitor = "https://tv.kedi.dev";
               widget = {
                 type = "jellyfin";
                 url = "http://enterprise.local:8096";
@@ -34,6 +35,20 @@
               icon = "jellyfin";
               description = "Media Server";
               href = "https://tv.tail42937.ts.net";
+              siteMonitor = "https://tv.tail42937.ts.net";
+            };
+          }
+          {
+            "Jellyseerr" = {
+              icon = "jellyseerr";
+              description = "Watch requests";
+              href = "https://seerr.kedi.dev";
+              siteMonitor = "https://seerr.kedi.dev";
+              widget = {
+                type = "jellyseerr";
+                url = "http://endeavour.local:5055";
+                key = "{{HOMEPAGE_VAR_JELLYSEERR_API_KEY}}";
+              };
             };
           }
           {
@@ -41,6 +56,7 @@
               icon = "wallabag";
               description = "Read-it-later";
               href = "https://wallabag.kedi.dev";
+              siteMonitor = "https://wallabag.kedi.dev";
             };
           }
           {
@@ -48,6 +64,7 @@
               icon = "miniflux";
               description = "RSS Feed Reader";
               href = "https://miniflux.kedi.dev";
+              siteMonitor = "https://miniflux.kedi.dev";
               widget = {
                 type = "miniflux";
                 url = "http://endeavour:8088";
@@ -64,6 +81,7 @@
               icon = "seafile";
               description = "Files & Collaboration";
               href = "https://seafile.kedi.dev";
+              siteMonitor = "https://seafile.kedi.dev";
             };
           }
           {
@@ -71,6 +89,7 @@
               icon = "immich";
               description = "Photo & Video Library";
               href = "https://immich.kedi.dev";
+              siteMonitor = "https://immich.kedi.dev";
               widget = {
                 type = "immich";
                 url = "http://enterprise.local:2283";
@@ -84,6 +103,7 @@
               icon = "actual-budget";
               description = "Personal Budget Tracker";
               href = "https://actual.kedi.dev";
+              siteMonitor = "https://actual.kedi.dev";
             };
           }
           {
@@ -91,6 +111,7 @@
               icon = "mealie";
               description = "Recipes & Meal Planner";
               href = "https://mealie.kedi.dev";
+              siteMonitor = "https://mealie.kedi.dev";
               widget = {
                 type = "mealie";
                 url = "https://mealie.kedi.dev";
@@ -104,6 +125,7 @@
               icon = "open-webui";
               description = "Large Language Model (LLM) inference";
               href = "https://open-webui.kedi.dev";
+              siteMonitor = "https://open-webui.kedi.dev";
             };
           }
           {
@@ -111,6 +133,7 @@
               icon = "radicale";
               description = "Contacts, Calendars, & Tasks";
               href = "https://radicale.kedi.dev";
+              siteMonitor = "https://radicale.kedi.dev";
             };
           }
           {
@@ -118,89 +141,123 @@
               icon = "vaultwarden";
               description = "Password Manager";
               href = "https://vault.kedi.dev";
+              siteMonitor = "https://vault.kedi.dev";
             };
           }
         ];
       }
       {
-        "Arr" = [
+        "Homes" = [
           {
-            "Jellyseerr" = {
-              icon = "jellyseerr";
-              description = "Watch requests";
-              href = "http://endeavour:5055";
-            };
+            "6A" = [
+              {
+                "Home Assistant" = {
+                  icon = "home-assistant";
+                  description = "Home Automation";
+                  href = "https://6a.kedi.dev";
+                  widget = {
+                    type = "home-assistant";
+                    url = "http://endeavour.local:8123";
+                    key = "{{HOMEPAGE_VAR_HA_6A_TOKEN}}";
+                  };
+                };
+              }
+              {
+                "Adguard Home" = {
+                  icon = "adguard-home";
+                  description = "Network-wide Ad Blocker";
+                  href = "https://atlantis.tail42937.ts.net/adguard-home";
+                  widget = {
+                    type = "adguard";
+                    url = "http://atlantis.local:8080";
+                    username = "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}";
+                    password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}";
+                  };
+                };
+              }
+            ];
           }
           {
-            "Radarr" = {
-              icon = "radarr";
-              description = "Movies";
-              href = "http://endeavour:7878";
-            };
-
-          }
-          {
-            "Sonarr" = {
-              icon = "sonarr";
-              description = "TV Shows";
-              href = "http://endeavour:8989";
-            };
-          }
-          {
-            "Prowlarr" = {
-              icon = "prowlarr";
-              description = "Indexer";
-              href = "http://endeavour:9696";
-            };
-          }
-          {
-            "qBittorrent" = {
-              icon = "qbittorrent";
-              description = "Torrent downloader";
-              href = "http://enterprise:8080";
-              widget = {
-                type = "qbittorrent";
-                url = "http://enterprise.local:8080";
-              };
-            };
+            "T1" = [
+              {
+                "Home Assistant" = {
+                  icon = "home-assistant";
+                  description = "Home Automation";
+                  href = "https://t1.kedi.dev";
+                  widget = {
+                    type = "home-assistant";
+                    url = "http://stargazer:8123";
+                    key = "{{HOMEPAGE_VAR_HA_T1_TOKEN}}";
+                  };
+                };
+              }
+            ];
           }
         ];
       }
       {
         "Internal" = [
           {
-            "Grafana" = {
-              icon = "grafana";
-              description = "Monitoring";
-              href = "https://mon.tail42937.ts.net";
-            };
+            "Monitoring" = [
+              {
+                "Grafana" = {
+                  icon = "grafana";
+                  description = "Monitoring";
+                  href = "https://mon.tail42937.ts.net";
+                };
+              }
+              {
+                "VictoriaMetrics" = {
+                  icon = "victoriametrics";
+                  description = "Metrics";
+                  href = "http://endeavour:8428";
+                };
+              }
+              {
+                "Upptime" = {
+                  icon = "mdi-arrow-up-circle";
+                  description = "Uptime Status Website";
+                  href = "https://uptime.kedi.dev";
+                };
+              }
+            ];
           }
           {
-            "VictoriaMetrics" = {
-              icon = "victoriametrics";
-              description = "Metrics";
-              href = "http://endeavour:8428";
-            };
-          }
-          {
-            "Upptime" = {
-              icon = "mdi-arrow-up-circle";
-              description = "Uptime Status Website";
-              href = "https://uptime.kedi.dev";
-            };
-          }
-          {
-            "Adguard Home (6A)" = {
-              icon = "adguard-home";
-              description = "Network-wide Ad Blocker";
-              href = "https://atlantis.tail42937.ts.net/adguard-home";
-              widget = {
-                type = "adguard";
-                url = "http://atlantis.local:8080";
-                username = "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}";
-                password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}";
-              };
-            };
+            "Arr" = [
+              {
+                "Radarr" = {
+                  icon = "radarr";
+                  description = "Movies";
+                  href = "http://endeavour:7878";
+                };
+
+              }
+              {
+                "Sonarr" = {
+                  icon = "sonarr";
+                  description = "TV Shows";
+                  href = "http://endeavour:8989";
+                };
+              }
+              {
+                "Prowlarr" = {
+                  icon = "prowlarr";
+                  description = "Indexer";
+                  href = "http://endeavour:9696";
+                };
+              }
+              {
+                "qBittorrent" = {
+                  icon = "qbittorrent";
+                  description = "Torrent downloader";
+                  href = "http://enterprise:8080";
+                  widget = {
+                    type = "qbittorrent";
+                    url = "http://enterprise.local:8080";
+                  };
+                };
+              }
+            ];
           }
         ];
       }
@@ -211,7 +268,10 @@
     content = ''
       HOMEPAGE_VAR_ADGUARD_USERNAME=${config.sops.placeholder."adguard-home/username"}
       HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
+      HOMEPAGE_VAR_HA_6A_TOKEN=${config.sops.placeholder."homes/6a/access_token"}
+      HOMEPAGE_VAR_HA_T1_TOKEN=${config.sops.placeholder."homes/t1/access_token"}
       HOMEPAGE_VAR_IMMICH_API_KEY=${config.sops.placeholder."immich/admin_api_key"}
+      HOMEPAGE_VAR_JELLYSEERR_API_KEY=${config.sops.placeholder."jellyseerr/api_key"}
       HOMEPAGE_VAR_JELLYFIN_API_KEY=${config.sops.placeholder."jellyfin/api_key"}
       HOMEPAGE_VAR_MEALIE_API_KEY=${config.sops.placeholder."mealie/api_key"}
       HOMEPAGE_VAR_MINIFLUX_API_KEY=${config.sops.placeholder."miniflux/api_key"}
@@ -221,7 +281,10 @@
   sops.secrets = {
     "adguard-home/username" = { };
     "adguard-home/password" = { };
+    "homes/6a/access_token" = { };
+    "homes/t1/access_token" = { };
     "immich/admin_api_key" = { };
+    "jellyseerr/api_key" = { };
     "jellyfin/api_key" = { };
     "mealie/api_key" = { };
     "miniflux/api_key" = { };

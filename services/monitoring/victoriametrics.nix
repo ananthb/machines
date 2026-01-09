@@ -412,7 +412,7 @@
           scheme = "https";
           authorization = {
             type = "Bearer";
-            credentials_file = config.sops.secrets."homes/6a/hass/prometheus_token".path;
+            credentials_file = config.sops.secrets."homes/6a/hass/access_token".path;
           };
           static_configs = [
             {
@@ -428,7 +428,7 @@
           scheme = "https";
           authorization = {
             type = "Bearer";
-            credentials_file = config.sops.secrets."homes/t1/hass/prometheus_token".path;
+            credentials_file = config.sops.secrets."homes/t1/hass/access_token".path;
           };
           static_configs = [
             {
@@ -444,13 +444,13 @@
 
   systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
     config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
-    config.sops.secrets."homes/6a/hass/prometheus_token".path
-    config.sops.secrets."homes/t1/hass/prometheus_token".path
+    config.sops.secrets."homes/6a/hass/access_token".path
+    config.sops.secrets."homes/t1/hass/access_token".path
   ];
 
   sops.secrets = {
-    "homes/6a/hass/prometheus_token".mode = "0444";
-    "homes/t1/hass/prometheus_token".mode = "0444";
+    "homes/6a/hass/access_token".mode = "0444";
+    "homes/t1/hass/access_token".mode = "0444";
   };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
