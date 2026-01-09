@@ -156,7 +156,7 @@
                   description = "Home Automation";
                   href = "https://6a.kedi.dev";
                   widget = {
-                    type = "home-assistant";
+                    type = "homeassistant";
                     url = "http://endeavour.local:8123";
                     key = "{{HOMEPAGE_VAR_HA_6A_TOKEN}}";
                   };
@@ -185,7 +185,7 @@
                   description = "Home Automation";
                   href = "https://t1.kedi.dev";
                   widget = {
-                    type = "home-assistant";
+                    type = "homeassistant";
                     url = "http://stargazer:8123";
                     key = "{{HOMEPAGE_VAR_HA_T1_TOKEN}}";
                   };
