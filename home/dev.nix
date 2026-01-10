@@ -84,6 +84,7 @@
     colorschemes.oxocarbon.enable = true;
 
     plugins = {
+      aw-watcher.enable = true;
       barbecue.enable = true;
       bufferline.enable = true;
       copilot-vim.enable = true;
