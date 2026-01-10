@@ -59,11 +59,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
 
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.autoSuspend = false;

@@ -84,6 +84,8 @@
   security.pam.services = {
     login.u2fAuth = true;
     sudo.u2fAuth = true;
+    sudo.rssh = true;
+    sshd.rssh = true;
   };
 
   security.pam.rssh = {
@@ -92,10 +94,6 @@
       auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
       loglevel = "debug";
     };
-  };
-  security.pam.services = {
-    sudo.rssh = true;
-    sshd.rssh = true;
   };
 
   environment.shells = [ pkgs.fish ];
@@ -142,8 +140,6 @@
 
   };
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     e2fsprogs
     ghostty.terminfo

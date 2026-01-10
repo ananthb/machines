@@ -12,8 +12,6 @@
     ./6a.nix
     ./power.nix
     ../../services/actual.nix
-    # TODO: fix
-    # ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/media/arr.nix
     ../../services/media/text.nix
@@ -65,11 +63,6 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
 
   services.fwupd.enable = true;
   services.bcachefs.autoScrub.enable = true;
