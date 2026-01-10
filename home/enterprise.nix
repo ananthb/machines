@@ -7,6 +7,8 @@
     ./dev.nix
   ];
 
+  services.activitywatch.enable = true;
+
   home.packages = with pkgs; [
     claude-code
     discord

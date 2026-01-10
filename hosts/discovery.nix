@@ -7,6 +7,7 @@
 
   homebrew.casks = [
     "1password"
+    "activitywatch"
     "discord"
     "firefox"
     "gimp"
