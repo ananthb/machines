@@ -62,7 +62,7 @@
       OLLAMA_BASE_URLS="http://enterprise.local:11434;http://discovery.${
         config.sops.placeholder."tailscale_api/tailnet"
       }:11434"
-      EMABLE_OPENAI_API="False"
+      ENABLE_OPENAI_API="False"
 
       # auth
       ENABLE_API_KEYS="True"
