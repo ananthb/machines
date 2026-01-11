@@ -36,6 +36,11 @@ in
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
+  nix.settings.trusted-users = [
+    "root"
+    username
+  ];
+
   # Optimise space
   nix.gc.automatic = true;
   nix.optimise.automatic = true;
