@@ -3,12 +3,15 @@
   lib,
   pkgs,
   username,
+  inputs,
   ...
 }:
 {
   imports = [
+    inputs.NixVirt.nixosModules.default
     ../linux.nix
     ./hardware-configuration.nix
+    ./vms.nix
 
     ../../services/immich.nix
     ../../services/media/dl.nix
