@@ -142,7 +142,7 @@
   environment.systemPackages = with pkgs; [
     e2fsprogs
     ghostty.terminfo
-    nixfmt-rfc-style
+    nixfmt
     pam_rssh
   ];
 
