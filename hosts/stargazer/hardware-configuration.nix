@@ -21,6 +21,7 @@
     };
 
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
+    kernelParams = [ "psi=1" ];
     kernelModules = [ "gpio_fan" ];
   };
 
