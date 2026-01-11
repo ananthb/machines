@@ -147,6 +147,14 @@
 
   sops.secrets."nut/users/nutmon".mode = "0444";
 
+  # 32GB swapfile
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 32 * 1024;
+    }
+  ];
+
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
