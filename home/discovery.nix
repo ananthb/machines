@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
     ./dev.nix
@@ -14,5 +14,8 @@
     };
   };
 
-  home.packages = [ pkgs.claude-code ];
+  home.packages = [
+    pkgs.claude-code
+    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 }

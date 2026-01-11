@@ -23,7 +23,6 @@
       home-manager.users.${username} = {
         imports = [
           ../home/common.nix
-          ../home/linux.nix
           ../home/${hostname}.nix
         ];
       };

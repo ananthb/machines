@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -11,6 +12,8 @@
 
   home.packages = with pkgs; [
     claude-code
+    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     discord
     element-desktop
     firefox

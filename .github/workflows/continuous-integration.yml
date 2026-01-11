@@ -23,19 +23,10 @@ jobs:
       - name: Check Nix flake inputs
         uses: DeterminateSystems/flake-checker-action@main
 
-  check-flake:
-    name: Check Flake (${{ matrix.os }})
-    needs: [check-lock]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - macos-latest
-          - ubuntu-24.04-arm
-          - ubuntu-latest
-
+  check-format:
+    name: Check Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,5 +39,93 @@ jobs:
         with:
           logger: pretty
 
-      - name: Check Flake
-        run: nix flake check --accept-flake-config
+      - name: Check formatting
+        run: nix fmt -- --check .
+
+      - name: Run statix
+        run: nix run nixpkgs#statix -- check .
+
+      - name: Run deadnix
+        run: nix run nixpkgs#deadnix -- --fail .
+
+  enumerate-systems:
+    name: Enumerate Systems
+    runs-on: ubuntu-latest
+    needs: [check-lock, check-format]
+    outputs:
+      nixos: ${{ steps.enumerate.outputs.nixos }}
+      darwin: ${{ steps.enumerate.outputs.darwin }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          logger: pretty
+
+      - name: Enumerate configurations
+        id: enumerate
+        run: |
+          nixos=$(nix eval .#nixosConfigurations --apply 'x: builtins.attrNames x' --json)
+          darwin=$(nix eval .#darwinConfigurations --apply 'x: builtins.attrNames x' --json)
+          echo "nixos=$nixos" >> "$GITHUB_OUTPUT"
+          echo "darwin=$darwin" >> "$GITHUB_OUTPUT"
+
+  build-nixos:
+    name: Build NixOS (${{ matrix.host }})
+    needs: [enumerate-systems]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJson(needs.enumerate-systems.outputs.nixos) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          logger: pretty
+          extra-conf: |
+            extra-platforms = aarch64-linux
+
+      - name: Setup QEMU for aarch64
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
+      - name: Build ${{ matrix.host }}
+        run: nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel --accept-flake-config --dry-run
+
+  build-darwin:
+    name: Build Darwin (${{ matrix.host }})
+    needs: [enumerate-systems]
+    runs-on: macos-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJson(needs.enumerate-systems.outputs.darwin) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          logger: pretty
+
+      - name: Build ${{ matrix.host }}
+        run: nix build .#darwinConfigurations.${{ matrix.host }}.system --accept-flake-config --dry-run
