@@ -31,6 +31,9 @@
   inputs.nixvim.url = "github:nix-community/nixvim";
   inputs.nixvim.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.opencode.url = "github:sst/opencode";
+  inputs.opencode.inputs.nixpkgs.follows = "nixpkgs";
+
   inputs.NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
   inputs.NixVirt.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -56,6 +59,7 @@
       nixos-hardware,
       nixpkgs,
       nixvim,
+      opencode,
       NixVirt,
       quadlet-nix,
       sops-nix,
