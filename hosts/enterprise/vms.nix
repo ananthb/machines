@@ -1,9 +1,42 @@
 { inputs, lib, ... }:
 let
-  inherit (inputs.NixVirt.lib) domain;
+  inherit (inputs.NixVirt.lib) domain network;
 in
 {
   virtualisation.libvirt.connections."qemu:///system" = {
+    networks = [
+      {
+        definition = network.writeXML {
+          name = "default";
+          uuid = "be431e55-852c-4f3d-b475-e24afd1dcbe7";
+          forward.mode = "nat";
+          bridge = {
+            name = "virbr0";
+            stp = "on";
+            delay = 0;
+          };
+          mac.address = "52:54:00:3a:b0:32";
+          ip = {
+            address = "192.168.122.1";
+            netmask = "255.255.255.0";
+            dhcp = {
+              range = {
+                start = "192.168.122.2";
+                end = "192.168.122.254";
+              };
+              host = [
+                {
+                  mac = "52:54:00:3e:51:ae";
+                  ip = "192.168.122.11";
+                  name = "win11";
+                }
+              ];
+            };
+          };
+        };
+        active = true;
+      }
+    ];
     domains = [
       {
         definition = domain.writeXML (
