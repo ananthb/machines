@@ -113,6 +113,7 @@
     taps = builtins.attrNames config.nix-homebrew.taps;
 
     brews = [
+      "gh"
       "mas"
       {
         name = "neovim";
