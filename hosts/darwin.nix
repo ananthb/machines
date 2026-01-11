@@ -129,7 +129,7 @@
       "ghostty"
       "google-chrome"
       "jellyfin-media-player"
-      "logi-options-plus"
+      "logi-options+"
       "neovide-app"
       "ollama-app"
       "raspberry-pi-imager"
