@@ -35,10 +35,13 @@ in
           };
         };
         active = true;
+        autostart = true;
       }
     ];
     domains = [
       {
+        active = true;
+        autostart = true;
         definition = domain.writeXML (
           lib.recursiveUpdate
             (domain.templates.windows {
