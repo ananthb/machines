@@ -62,6 +62,14 @@
     AllowHibernation=no
   '';
 
+  # Enable systemd-oomd for memory pressure management
+  systemd.oomd = {
+    enable = true;
+    enableRootSlice = true;
+    enableUserSlices = true;
+    enableSystemSlice = true;
+  };
+
   networking.hostName = hostname;
   networking.firewall.enable = true;
   networking.firewall.allowPing = true;

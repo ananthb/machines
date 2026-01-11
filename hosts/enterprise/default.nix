@@ -121,6 +121,11 @@
     wantedBy = [ "graphical.target" ];
   };
 
+  # More aggressive than default to prevent GUI lag from memory-heavy workloads
+  systemd.oomd.settings.OOM = {
+    DefaultMemoryPressureDurationSec = "5s";
+  };
+
   power.ups = {
     enable = true;
     mode = "netclient";
