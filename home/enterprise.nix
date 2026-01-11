@@ -20,6 +20,7 @@
     google-chrome
     ghostty
     gimp
+    gh
     git-credential-manager
     jellyfin-media-player
     junction
