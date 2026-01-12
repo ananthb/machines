@@ -11,6 +11,7 @@
 
     ./6a.nix
     ./power.nix
+    ./rclone.nix
     ../../services/actual.nix
     ../../services/homepage.nix
     ../../services/media/arr.nix

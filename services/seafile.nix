@@ -21,6 +21,7 @@
   config,
   lib,
   pkgs,
+  hostname,
   ...
 }:
 {
@@ -398,7 +399,7 @@
 
       TIME_ZONE = "Asia/Kolkata"
 
-      CSRF_TRUSTED_ORIGINS = ["https://seafile.kedi.dev"]
+      CSRF_TRUSTED_ORIGINS = ["https://seafile.kedi.dev", "http://${hostname}.local:4000"]
       USE_X_FORWARDED_HOST = True
       SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
       SECURE_SSL_REDIRECT = True
