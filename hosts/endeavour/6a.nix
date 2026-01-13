@@ -52,6 +52,7 @@
     "openwrt/atlantis/password" = null;
   };
   extraModules = {
+    imports = [ ../../services/monitoring/postgres.nix ];
     services.frigate = {
       enable = true;
       hostname = "endeavour.local";

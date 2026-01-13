@@ -4,6 +4,9 @@
   ...
 }:
 {
+  imports = [
+    ./monitoring/postgres.nix
+  ];
 
   services.vaultwarden = {
     enable = true;

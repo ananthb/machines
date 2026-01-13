@@ -3,8 +3,13 @@
   ...
 }:
 {
+  imports = [
+    ./monitoring/postgres.nix
+  ];
+
   services.immich = {
     enable = true;
+    machine-learning.enable = false;
     host = "::";
     openFirewall = true;
     environment = {
@@ -25,17 +30,6 @@
     "video"
     "render"
   ];
-
-  systemd.services."immich-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    # startAt = "weekly";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
-    };
-  };
 
   sops.templates."immich/config.json" = {
     owner = config.users.users.immich.name;
@@ -112,7 +106,7 @@
         },
         "machineLearning": {
           "enabled": true,
-          "urls": ["http://localhost:3003"],
+          "urls": ["http://enterprise.local:3003"],
           "clip": {
             "enabled": true,
             "modelName": "ViT-B-32__openai"

@@ -3,6 +3,7 @@
 
   imports = [
     inputs.tsnsrv.nixosModules.default
+    ./postgres.nix
   ];
 
   services.grafana = {

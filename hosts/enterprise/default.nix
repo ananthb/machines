@@ -13,13 +13,11 @@
     ./hardware-configuration.nix
     ./vms.nix
 
-    ../../services/immich.nix
+    ../../services/immich-ml.nix
     ../../services/media/dl.nix
     ../../services/media/tv.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
-    ../../services/monitoring/postgres.nix
-    ../../services/seafile.nix
   ];
 
   # systemd-boot
@@ -70,11 +68,11 @@
   services.fwupd.enable = true;
   services.bcachefs.autoScrub.enable = true;
 
-  # NFS server - export /srv/media
+  # NFS server - export /srv
   services.nfs.server = {
     enable = true;
     exports = ''
-      /srv/media fdc0:6625:5195::50(rw,sync,no_subtree_check,all_squash,anonuid=65534,anongid=985)
+      /srv fdc0:6625:5195::50(rw,sync,no_subtree_check,crossmnt,no_root_squash)
     '';
   };
 
@@ -95,6 +93,28 @@
   systemd.tmpfiles.rules = [
     "A+ /srv/media - - - - default:group::rwx"
   ];
+
+  # Seafile & Immich backups
+  systemd.services."seafile-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    #startAt = "weekly";
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/seafile";
+    };
+  };
+  systemd.services."immich-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    # startAt = "weekly";
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+    };
+  };
 
   services.ollama = {
     enable = true;

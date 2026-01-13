@@ -1,18 +1,31 @@
 { config, ... }:
 {
+  # Expected secrets.yaml structure for rclone/conf:
+  #
+  # [webdav]
+  # type = webdav
+  # user = <user>
+  # pass = <rclone obscure password>
+  #
+  # [gdrive]
+  # type = drive
+  # scope = drive
+  # token = <json from `rclone authorize "drive"`>
+
   sops.secrets."rclone/conf" = { };
 
-  my-services.rclone-syncs."seafile-to-gdrive" = {
-    # 'seafile' and 'gdrive' must be defined in the rclone.conf secret
-    source = "seafile:/";
-    destination = "gdrive:/Backups/Seafile";
+  my-services.rclone-syncs."taxes-sync" = {
+    type = "bisync";
+    source = "webdav:";
+    sourceSubPath = "/Finance/Taxes";
+    destination = "gdrive:";
+    destSubPath = "/Taxes";
     rcloneConfig = config.sops.secrets."rclone/conf".path;
     interval = "daily";
     environment = {
-      # Override the Seafile URL to use the local network
-      RCLONE_CONFIG_SEAFILE_URL = "http://enterprise.local:4000/seafdav";
-      RCLONE_CONFIG_SEAFILE_TYPE = "webdav";
-      RCLONE_CONFIG_SEAFILE_VENDOR = "other";
+      RCLONE_CONFIG_WEBDAV_URL = "http://localhost:4000/seafdav";
+      RCLONE_CONFIG_WEBDAV_TYPE = "webdav";
+      RCLONE_CONFIG_WEBDAV_VENDOR = "other";
     };
   };
 }

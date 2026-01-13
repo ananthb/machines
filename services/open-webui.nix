@@ -7,6 +7,7 @@
 {
   imports = [
     ./warp.nix
+    ./monitoring/postgres.nix
   ];
 
   services.open-webui = {
