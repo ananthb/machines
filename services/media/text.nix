@@ -3,6 +3,9 @@
   ...
 }:
 {
+  imports = [
+    ../monitoring/postgres.nix
+  ];
 
   services.miniflux = {
     enable = true;

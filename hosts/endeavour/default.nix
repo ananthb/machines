@@ -12,8 +12,10 @@
     ./6a.nix
     ./power.nix
     ./rclone.nix
+    ../../lib/rclone-sync.nix
     ../../services/actual.nix
     ../../services/homepage.nix
+    ../../services/immich.nix
     ../../services/media/arr.nix
     ../../services/media/text.nix
     ../../services/monitoring/blackbox.nix
@@ -24,6 +26,7 @@
     ../../services/monitoring/victoriametrics.nix
     ../../services/open-webui.nix
     ../../services/radicale.nix
+    ../../services/seafile.nix
     ../../services/vaultwarden.nix
   ];
 
@@ -69,8 +72,8 @@
   services.bcachefs.autoScrub.enable = true;
 
   # NFS mount from enterprise
-  fileSystems."/srv/media" = {
-    device = "[fdc0:6625:5195::55]:/srv/media";
+  fileSystems."/srv" = {
+    device = "[fdc0:6625:5195::55]:/srv";
     fsType = "nfs";
     options = [ "_netdev" ];
   };

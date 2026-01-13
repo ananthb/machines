@@ -4,7 +4,10 @@
   ...
 }:
 {
-  imports = [ ../warp.nix ];
+  imports = [
+    ../warp.nix
+    ../monitoring/postgres.nix
+  ];
 
   # Radarr
   services.radarr = {

@@ -12,7 +12,7 @@
 
   home.packages = with pkgs; [
     inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
+    #inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     discord
     element-desktop
     firefox
@@ -32,7 +32,7 @@
     vscode
     wireshark
     wl-clipboard
-    zed-editor
+    #zed-editor
   ];
 
   services.gnome-keyring.enable = true;

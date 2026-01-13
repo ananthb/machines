@@ -35,7 +35,6 @@
 
     ./common.nix
     ../lib/scripts.nix
-    ../lib/rclone-sync.nix
   ];
 
   sops.age.sshKeyPaths = [

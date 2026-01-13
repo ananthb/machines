@@ -14,11 +14,11 @@
           "actual.kedi.dev" = "http://localhost:3001";
           "apps.kedi.dev" = "http://localhost:8082";
           "davis.kedi.dev" = "http://localhost:4101";
-          "immich.kedi.dev" = "http://[fdc0:6625:5195::55]:2283";
+          "immich.kedi.dev" = "http://localhost:2283";
           "miniflux.kedi.dev" = "http://localhost:8088";
           "open-webui.kedi.dev" = "http://localhost:8090";
           "radicale.kedi.dev" = "http://localhost:5232";
-          "seafile.kedi.dev" = "http://[fdc0:6625:5195::55]:4000";
+          "seafile.kedi.dev" = "http://localhost:4000";
           "seerr.kedi.dev" = "http://localhost:5055";
           "vault.kedi.dev" = "http://localhost:8222";
           "wallabag.kedi.dev" = "http://localhost:8085";
@@ -35,11 +35,11 @@
           "actual.kedi.dev" = "http://[fdc0:6625:5195::50]:3001";
           "apps.kedi.dev" = "http://endeavour:8082";
           "davis.kedi.dev" = "http://[fdc0:6625:5195::50]:4101";
-          "immich.kedi.dev" = "http://localhost:2283";
+          "immich.kedi.dev" = "http://[fdc0:6625:5195::50]:2283";
           "miniflux.kedi.dev" = "http://[fdc0:6625:5195::50]:8088";
           "open-webui.kedi.dev" = "http://[fdc0:6625:5195::50]:8090";
           "radicale.kedi.dev" = "http://[fdc0:6625:5195::50]:5232";
-          "seafile.kedi.dev" = "http://localhost:4000";
+          "seafile.kedi.dev" = "http://[fdc0:6625:5195::50]:4000";
           "seerr.kedi.dev" = "http://[fdc0:6625:5195::50]:5055";
           "vault.kedi.dev" = "http://[fdc0:6625:5195::50]:8222";
           "wallabag.kedi.dev" = "http://[fdc0:6625:5195::50]:8085";
