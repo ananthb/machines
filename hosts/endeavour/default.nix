@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   pkgs,
   ulaPrefix,
@@ -6,6 +7,8 @@
 }:
 {
   imports = [
+    inputs.tsnsrv.nixosModules.default
+
     ../linux.nix
     ./hardware-configuration.nix
 

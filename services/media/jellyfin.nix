@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   pkgs,
   staticIPSuffix,
   username,
@@ -9,8 +8,6 @@
 
 {
   imports = [
-    inputs.tsnsrv.nixosModules.default
-
     ../caddy.nix
   ];
 
