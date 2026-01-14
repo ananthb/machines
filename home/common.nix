@@ -56,6 +56,7 @@ in
   home.packages = with pkgs; [
     git
     hack-font
+    htop
     mosh
     nix-output-monitor
   ];
