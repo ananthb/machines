@@ -22,6 +22,7 @@ in
       "broadcom-bt-firmware"
       "cloudflare-warp"
       "copilot.vim"
+      "crush"
       "discord"
       "git-credential-manager"
       "google-chrome"
