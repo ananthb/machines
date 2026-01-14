@@ -55,7 +55,6 @@ in
 
   home.packages = with pkgs; [
     git
-    gnupg
     hack-font
     mosh
     nix-output-monitor

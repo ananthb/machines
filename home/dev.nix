@@ -24,6 +24,11 @@
   ];
 
   programs = {
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+
     gpg = {
       enable = true;
       publicKeys = [ ];
@@ -91,6 +96,8 @@
         receive.fsckObjects = "true";
       };
     };
+
+    nix-index-database.comma.enable = true;
 
     nixvim = {
       enable = true;

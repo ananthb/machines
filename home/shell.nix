@@ -8,13 +8,6 @@
       '';
     };
 
-    nix-index-database.comma.enable = true;
-
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
-
     tmux = {
       enable = true;
       historyLimit = 100000;
