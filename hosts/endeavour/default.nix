@@ -1,7 +1,7 @@
 {
-  config,
   lib,
   pkgs,
+  ulaPrefix,
   ...
 }:
 {
@@ -17,7 +17,7 @@
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
-    ../../services/media/text.nix
+    ../../services/media/news.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/ecoflow.nix
     ../../services/monitoring/grafana.nix
@@ -73,7 +73,7 @@
 
   # NFS mount from enterprise
   fileSystems."/srv" = {
-    device = "[fdc0:6625:5195::55]:/srv";
+    device = "[${ulaPrefix}::55]:/srv";
     fsType = "nfs";
     options = [ "_netdev" ];
   };

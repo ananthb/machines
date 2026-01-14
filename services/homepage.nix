@@ -1,9 +1,15 @@
-{ config, ... }:
+{
+  config,
+  localPrefix,
+  staticIPSuffix,
+  ulaPrefix,
+  ...
+}:
 {
   services.homepage-dashboard = {
     enable = true;
     openFirewall = true;
-    allowedHosts = "apps.kedi.dev,[fdc0:6625:5195::50]:8082,10.15.16.50:8082";
+    allowedHosts = "apps.kedi.dev,[${ulaPrefix}::${staticIPSuffix}]:8082,${localPrefix}.${staticIPSuffix}:8082";
     settings = {
       title = "KEDI Applications";
       description = "KEDI Server running apps for the people";

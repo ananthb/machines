@@ -1,3 +1,8 @@
+{
+  localPrefix,
+  ulaPrefix,
+  ...
+}@args:
 (import ../../services/hass.nix {
   name = "6A";
   secretsPrefix = "home-assistant/6a";
@@ -18,8 +23,8 @@
     "luci"
   ];
   extraTrustedProxies = [
-    "fdc0:6625:5195::0/64"
-    "10.15.16.0/24"
+    "${ulaPrefix}::0/64"
+    "${localPrefix}.0/24"
   ];
   extraConfig = {
     recorder = {
@@ -41,7 +46,7 @@
     device_tracker = [
       {
         platform = "ubus";
-        host = "10.15.16.1";
+        host = "${localPrefix}.1";
         username = "!include /run/secrets/openwrt/atlantis/username";
         password = "!include /run/secrets/openwrt/atlantis/password";
       }
@@ -108,3 +113,4 @@
     };
   };
 })
+  args

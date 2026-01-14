@@ -3,15 +3,16 @@
   lib,
   pkgs,
   username,
+  ulaPrefix,
   ...
 }:
 let
   cftunnelLib = import ../lib/cftunnel.nix;
-  hasTunnel = cftunnelLib.tunnels ? ${hostname};
+  hasTunnel = (cftunnelLib.mkTunnels ulaPrefix) ? ${hostname};
 in
 {
   imports = lib.optionals hasTunnel [
-    (cftunnelLib.mkCftunnel { inherit hostname; })
+    (cftunnelLib.mkCftunnel { inherit hostname ulaPrefix; })
   ];
 
   nixpkgs.config.allowUnfreePredicate =
