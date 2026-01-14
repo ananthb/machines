@@ -1,6 +1,7 @@
 {
   localPrefix,
   ulaPrefix,
+  pkgs,
   ...
 }@args:
 (import ../../services/hass.nix {
@@ -113,4 +114,4 @@
     };
   };
 })
-  args
+  (args // { inherit pkgs; })
