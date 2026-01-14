@@ -17,7 +17,6 @@
 
     ../../services/collabora-code.nix
     ../../services/immich-ml.nix
-    ../../services/media/jellyfin.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
   ];
