@@ -135,7 +135,6 @@
       "jellyfin-media-player"
       "logi-options+"
       "neovide-app"
-      "ollama-app"
       "raspberry-pi-imager"
       "rectangle-pro"
       "scroll-reverser"

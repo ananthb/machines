@@ -127,14 +127,6 @@
             };
           }
           {
-            "Open WebUI" = {
-              icon = "open-webui";
-              description = "Large Language Model (LLM) inference";
-              href = "https://open-webui.kedi.dev";
-              siteMonitor = "https://open-webui.kedi.dev";
-            };
-          }
-          {
             "Radicale" = {
               icon = "radicale";
               description = "Contacts, Calendars, & Tasks";

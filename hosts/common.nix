@@ -27,7 +27,6 @@ in
       "git-credential-manager"
       "google-chrome"
       "intel-ocl"
-      "open-webui"
       "slack"
       "steam"
       "steam-unwrapped"
