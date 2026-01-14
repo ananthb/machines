@@ -50,10 +50,6 @@
     "/srv" = {
       device = "[${ulaPrefix}::50]:/srv";
       fsType = "nfs";
-      options = [
-        "_netdev"
-        "clientaddr=${ulaPrefix}::55"
-      ];
     };
   };
 
