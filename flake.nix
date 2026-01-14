@@ -127,14 +127,14 @@
           hostname = "endeavour";
           system = "x86_64-linux";
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
-          staticIPSuffix = 50;
+          staticIPSuffix = "50";
         };
 
         enterprise = mkNixosHost {
           hostname = "enterprise";
           system = "x86_64-linux";
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
-          staticIPSuffix = 55;
+          staticIPSuffix = "55";
         };
 
         stargazer = mkNixosHost {
