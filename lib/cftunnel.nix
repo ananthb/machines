@@ -28,9 +28,10 @@
     enterprise = [
       {
         tunnelId = "547c677a-cb80-471c-b5b2-c4ab61ff2750";
-        tunnelName = "kedi-vms-1";
+        tunnelName = "kedi-compute-1";
         ingress = {
           "win11.kedi.dev" = "rdp://192.168.122.11:3389";
+          "coder.kedi.dev" = "http://localhost:3002";
         };
       }
     ];
