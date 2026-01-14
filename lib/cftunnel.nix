@@ -17,7 +17,7 @@
           "miniflux.kedi.dev" = "http://localhost:8088";
           "open-webui.kedi.dev" = "http://localhost:8090";
           "radicale.kedi.dev" = "http://localhost:5232";
-          "seafile.kedi.dev" = "http://localhost:4000";
+          "seafile.kedi.dev" = "http://localhost:4444";
           "seerr.kedi.dev" = "http://localhost:5055";
           "vault.kedi.dev" = "http://localhost:8222";
           "wallabag.kedi.dev" = "http://localhost:8085";
