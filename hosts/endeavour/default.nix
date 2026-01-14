@@ -83,11 +83,30 @@
     # NFS server - export /srv
     nfs.server = {
       enable = true;
-      openFirewall = true;
+      lockdPort = 4001;
+      mountdPort = 4002;
+      statdPort = 4000;
       exports = ''
         /srv ${ulaPrefix}::55(rw,sync,no_subtree_check,crossmnt,no_root_squash)
       '';
     };
+  };
+
+  networking.firewall = {
+    allowedTCPPorts = [
+      111
+      2049
+      4000
+      4001
+      4002
+    ];
+    allowedUDPPorts = [
+      111
+      2049
+      4000
+      4001
+      4002
+    ];
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";
