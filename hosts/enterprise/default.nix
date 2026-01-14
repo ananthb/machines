@@ -15,7 +15,6 @@
     ./hardware-configuration.nix
     ./vms.nix
 
-    ../../services/collabora-code.nix
     ../../services/immich-ml.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
