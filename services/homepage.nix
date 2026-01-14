@@ -8,7 +8,8 @@
 {
   services.homepage-dashboard = {
     enable = true;
-    allowedHosts = "apps.kedi.dev,[${ulaPrefix}::${meta.staticIPSuffix}]:8082,${localPrefix}.${meta.staticIPSuffix}:8082";
+    listenPort = 8802;
+    allowedHosts = "apps.kedi.dev,[${ulaPrefix}::${meta.staticIPSuffix}]:8802,${localPrefix}.${meta.staticIPSuffix}:8802";
     settings = {
       title = "KEDI Applications";
       description = "KEDI Server running apps for the people";
