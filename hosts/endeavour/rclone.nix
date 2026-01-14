@@ -5,7 +5,7 @@
     source = "seafile:";
     sourceSubPath = "/Finance/Taxes";
     destination = "gdrive:";
-    destSubPath = "/Taxes";
+    destSubPath = "/Finance/Taxes";
     checkAccess = false;
     rcloneConfig = config.sops.secrets."rclone/conf".path;
     interval = "daily";
