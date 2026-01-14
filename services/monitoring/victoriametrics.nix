@@ -1,4 +1,127 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  outputs,
+  ...
+}:
+let
+  inherit (lib)
+    mapAttrsToList
+    flatten
+    concatMap
+    optionals
+    hasAttr
+    ;
+
+  # Helper functions to check for enabled services/exporters
+  hasService = c: name: hasAttr name c.services && c.services.${name}.enable or false;
+  hasExporter =
+    c: name:
+    hasAttr "exporters" c.services.prometheus
+    && c.services.prometheus.exporters.${name}.enable or false;
+
+  # Check if a brew package is installed (for macOS)
+  # Brews can be strings or attribute sets with a 'name' field
+  hasBrew =
+    c: pkgName:
+    lib.any (x: (if builtins.isString x then x else x.name) == pkgName) c.homebrew.brews or [ ];
+
+  # Host lists with their configs
+  nixosHosts = mapAttrsToList (name: value: {
+    inherit name;
+    inherit (value) config;
+  }) outputs.nixosConfigurations;
+
+  darwinHosts = mapAttrsToList (name: value: {
+    inherit name;
+    inherit (value) config;
+  }) outputs.darwinConfigurations;
+
+  # --- Target Generation Logic ---
+
+  # 1. Node Exporter (Machine metrics)
+  # Target: hostname:9100
+  nodeTargets =
+    let
+      linux = concatMap (
+        host: if hasExporter host.config "node" then [ "${host.name}:9100" ] else [ ]
+      ) nixosHosts;
+      mac = concatMap (
+        host: if hasBrew host.config "node_exporter" then [ "${host.name}:9100" ] else [ ]
+      ) darwinHosts;
+    in
+    linux ++ mac;
+
+  # 2. Blackbox Exporter (The prober itself)
+  # Target: hostname:9115
+  blackboxExporterTargets = concatMap (
+    host: if hasExporter host.config "blackbox" then [ "${host.name}:9115" ] else [ ]
+  ) nixosHosts;
+
+  # 3. Libvirt Exporter
+  # Target: hostname:9177
+  libvirtTargets = concatMap (
+    host: if hasExporter host.config "libvirt" then [ "${host.name}:9177" ] else [ ]
+  ) nixosHosts;
+
+  # 4. SmartCTL Exporter
+  # Target: hostname:9633
+  smartctlTargets = concatMap (
+    host: if hasExporter host.config "smartctl" then [ "${host.name}:9633" ] else [ ]
+  ) nixosHosts;
+
+  # 5. UPS (NUT) Exporter
+  # Target: hostname:9199
+  # Using services.power.ups.enable check
+  nutTargets = concatMap (
+    host:
+    if hasAttr "ups" host.config.power && host.config.power.ups.enable then
+      [ "${host.name}:9199" ]
+    else
+      [ ]
+  ) nixosHosts;
+
+  # 6. EcoFlow Exporter
+  # Target: hostname:2112
+  ecoflowTargets = concatMap (
+    host: if hasExporter host.config "ecoflow" then [ "${host.name}:2112" ] else [ ]
+  ) nixosHosts;
+
+  # 7. App Exporters (Radarr, Sonarr, Prowlarr, Postgres, Immich, Jellyfin)
+  appTargets =
+    let
+      getAppTargets =
+        host:
+        let
+          c = host.config;
+        in
+        flatten [
+          (optionals (hasExporter c "exportarr-radarr") [ "${host.name}:9708" ]) # Radarr
+          (optionals (hasExporter c "exportarr-sonarr") [ "${host.name}:9709" ]) # Sonarr
+          (optionals (hasExporter c "exportarr-prowlarr") [ "${host.name}:9710" ]) # Prowlarr
+          (optionals (hasExporter c "postgres") [ "${host.name}:9187" ]) # Postgres
+          (optionals (hasService c "immich") [
+            "${host.name}:8081" # API
+            "${host.name}:8082" # Microservices
+          ])
+          (optionals (hasService c "jellyfin") [ "${host.name}:8096" ]) # Jellyfin
+        ];
+    in
+    concatMap getAppTargets nixosHosts;
+
+  # 8. Blackbox Ping Targets (Hosts to ping)
+  # All NixOS + Darwin hosts
+  pingTargets =
+    let
+      linux = map (h: h.name) nixosHosts;
+      mac = map (h: h.name) darwinHosts;
+      static = [
+        "pikvm"
+      ];
+    in
+    linux ++ mac ++ static;
+
+in
 {
 
   services.victoriametrics = {
@@ -22,11 +145,7 @@
           job_name = "blackbox_exporter";
           static_configs = [
             {
-              targets = [
-                "endeavour.local:9115"
-                "stargazer:9115"
-                "voyager:9115"
-              ];
+              targets = blackboxExporterTargets;
               labels.type = "exporter";
             }
           ];
@@ -51,31 +170,18 @@
           params.module = [ "icmp" ];
           static_configs = [
             {
-              targets = [
-                "endeavour.local"
-                "enterprise.local"
-                "stargazer"
-                "voyager"
-                "pikvm"
-              ];
+              targets = pingTargets;
               labels = {
                 type = "node";
-                os = "linux";
+                os = "linux"; # Generic, though some are mac
                 role = "server";
               };
             }
             {
               targets = [
-                "discovery.local"
-              ];
-              labels.type = "node";
-              labels.os = "darwin";
-            }
-            {
-              targets = [
-                "atlantis.local"
+                "atlantis"
                 "ds9"
-                "intrepid.local"
+                "intrepid"
               ];
               labels = {
                 type = "node";
@@ -120,18 +226,22 @@
             }
           ];
           static_configs = [
+            # Note: HTTP checks usually require specific paths/protocols, so dynamic generation
+            # for generic "enabled services" is harder without knowing the full URL.
+            # We will keep these static or minimally dynamic if we assume standard ports.
+            # For now, keeping the structure but updating hostnames to tailscale names.
             {
               targets = [
-                "http://endeavour.local:7878" # radarr
-                "http://endeavour.local:8989" # sonarr
-                "http://endeavour.local:9696" # prowlarr
+                "http://endeavour:7878" # radarr
+                "http://endeavour:8989" # sonarr
+                "http://endeavour:9696" # prowlarr
               ];
               labels.type = "app";
               labels.role = "server";
             }
             {
               targets = [
-                "http://endeavour.local:2283/auth/login" # immich-server
+                "http://endeavour:2283/auth/login" # immich-server
               ];
               labels = {
                 type = "app";
@@ -141,7 +251,7 @@
             }
             {
               targets = [
-                "http://endeavour.local:8096/web/" # jellyfin
+                "http://endeavour:8096/web/" # jellyfin
               ];
               labels = {
                 app = "jellyfin";
@@ -151,9 +261,9 @@
             }
             {
               targets = [
-                "http://atlantis.local"
+                "http://atlantis"
                 "http://ds9"
-                "http://intrepid.local"
+                "http://intrepid"
               ];
               labels = {
                 os = "openwrt";
@@ -314,9 +424,9 @@
           static_configs = [
             {
               targets = [
-                "atlantis.local:9100"
+                "atlantis:9100"
                 "ds9:9100"
-                "intrepid.local:9100"
+                "intrepid:9100"
               ];
               labels = {
                 os = "openwrt";
@@ -330,24 +440,11 @@
           job_name = "machines";
           static_configs = [
             {
-              targets = [
-                "endeavour.local:9100"
-                "enterprise.local:9100"
-                "stargazer:9100"
-                "voyager:9100"
-              ];
+              targets = nodeTargets;
               labels = {
-                os = "linux";
                 type = "exporter";
                 role = "server";
               };
-            }
-            {
-              targets = [
-                "discovery.local:9100"
-              ];
-              labels.type = "node";
-              labels.os = "darwin";
             }
           ];
         }
@@ -355,53 +452,19 @@
           job_name = "apps";
           static_configs = [
             {
-              targets = [
-                "endeavour.local:9708" # radarr exporter
-                "endeavour.local:9709" # sonarr exporter
-                "endeavour.local:9710" # prowlarr exporter
-                "endeavour.local:9187" # postgres exporter
-                "enterprise.local:9187" # postgres exporter
-                "voyager.local:9187" # postgres exporter
-              ];
+              targets = appTargets;
               labels.type = "exporter";
               labels.role = "server";
             }
             {
-              targets = [
-                "endeavour.local:8081" # immich-server api metrics
-                "endeavour.local:8081" # immich-server microservices metrics
-              ];
-              labels = {
-                type = "exporter";
-                role = "server";
-                app = "immich";
-              };
-            }
-            {
-              targets = [
-                "endeavour.local:8096" # jellyfin
-              ];
-              labels = {
-                type = "exporter";
-                role = "server";
-                app = "jellyfin";
-              };
-            }
-            {
-              targets = [ "endeavour.local:9199" ]; # nut exporter meta metrics
-              labels.type = "exporter";
-              labels.role = "ups";
-            }
-            {
-              # smartctl exporters
-              targets = [
-                "endeavour.local:9633"
-                "enterprise.local:9633"
-                "stargazer:9633"
-                "voyager:9633"
-              ];
+              targets = smartctlTargets;
               labels.type = "exporter";
               labels.role = "disks";
+            }
+            {
+              targets = nutTargets;
+              labels.type = "exporter";
+              labels.role = "ups";
             }
           ];
         }
@@ -410,7 +473,7 @@
           metrics_path = "/ups_metrics";
           static_configs = [
             {
-              targets = [ "endeavour.local:9199" ]; # nut exporter
+              targets = nutTargets;
               labels.type = "exporter";
               labels.role = "ups";
             }
@@ -420,7 +483,7 @@
           job_name = "ecoflow";
           static_configs = [
             {
-              targets = [ "endeavour.local:2112" ]; # ecoflow exporter
+              targets = ecoflowTargets;
               labels.type = "exporter";
               labels.role = "ups";
             }
@@ -430,7 +493,7 @@
           job_name = "libvirt";
           static_configs = [
             {
-              targets = [ "enterprise.local:9177" ]; # libvirt exporter
+              targets = libvirtTargets;
               labels.type = "exporter";
               labels.role = "hypervisor";
             }

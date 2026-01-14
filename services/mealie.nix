@@ -46,8 +46,6 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 9000 ];
-
   sops.secrets = {
     "email/from/mealie" = { };
     "gcloud/oauth_self-hosted_clients/id" = { };

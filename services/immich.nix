@@ -22,12 +22,6 @@
     accelerationDevices = [ "/dev/dri/renderD128" ];
   };
 
-  # immich-server metrics ports
-  networking.firewall.allowedTCPPorts = [
-    8081 # api
-    8082 # microservices
-  ];
-
   users.users.immich.extraGroups = [
     "video"
     "render"

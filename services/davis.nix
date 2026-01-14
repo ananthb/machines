@@ -28,8 +28,6 @@
     reverse_proxy unix//run/phpfpm/davis.sock
   '';
 
-  networking.firewall.allowedTCPPorts = [ 4101 ];
-
   sops.secrets = {
     "davis/admin_password" = { };
     "davis/app_secret" = { };

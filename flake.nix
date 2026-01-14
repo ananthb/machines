@@ -73,6 +73,7 @@
 
   outputs =
     {
+      self,
       lanzaboote,
       nix-darwin,
       nixos-hardware,
@@ -106,6 +107,7 @@
               ulaPrefix
               username
               ;
+            outputs = self;
           };
           modules = extraModules ++ [ ./hosts/${hostname} ];
         };
