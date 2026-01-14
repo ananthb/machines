@@ -443,7 +443,7 @@
           # Collabora Code
           OFFICE_SERVER_TYPE = 'CollaboraOffice'
           ENABLE_OFFICE_WEB_APP = True
-          OFFICE_WEB_APP_BASE_URL = 'http://localhost:9980/collabora-code/hosting/discovery'
+          OFFICE_WEB_APP_BASE_URL = 'http://collabora-code:9980/collabora-code/hosting/discovery'
 
           # Expiration of WOPI access token
           # WOPI access token is a string used by Seafile to determine the file's
