@@ -189,6 +189,30 @@
           };
           serviceConfig.Restart = "on-failure";
         };
+
+        collabora-code = {
+          containerConfig = {
+            name = "collabora-code";
+            image = "docker.io/collabora/code:latest";
+            podmanArgs = [ "--privileged" ];
+            autoUpdate = "registry";
+            networks = [
+              networks.seafile.ref
+            ];
+            publishPorts = [ "9980:9980" ];
+            environmentFiles = [ config.sops.templates."collabora/code.env".path ];
+            environments = {
+              extra_params = lib.concatStringsSep " " [
+                "--o:logging.file[@enable]=false"
+                "--o:admin_console.enable=true"
+                "--o:ssl.enable=false"
+                "--o:ssl.termination=true"
+                "--o:net.service_root=/collabora-code"
+              ];
+            };
+          };
+          serviceConfig.Restart = "on-failure";
+        };
       };
     };
 
@@ -221,7 +245,7 @@
         }
 
         # collabora code
-        reverse_proxy /collabora-code/* http://enterprise.local:9980
+        reverse_proxy /collabora-code/* http://localhost:9980
       '';
     };
 
@@ -419,7 +443,7 @@
           # Collabora Code
           OFFICE_SERVER_TYPE = 'CollaboraOffice'
           ENABLE_OFFICE_WEB_APP = True
-          OFFICE_WEB_APP_BASE_URL = 'http://enterprise.local:9980/collabora-code/hosting/discovery'
+          OFFICE_WEB_APP_BASE_URL = 'http://localhost:9980/collabora-code/hosting/discovery'
 
           # Expiration of WOPI access token
           # WOPI access token is a string used by Seafile to determine the file's
@@ -553,9 +577,21 @@
           NON_ROOT=false
         '';
       };
+      "collabora/code.env" = {
+        content = ''
+          server_name=seafile.kedi.dev
+          aliasgroup1=https://seafile.kedi.dev:443
+          username=${config.sops.placeholder."collabora/code/username"}
+          password=${config.sops.placeholder."collabora/code/password"}
+          DONT_GEN_SSL_CERT=true
+          TZ=Asia/Kolkata
+        '';
+      };
     };
 
     secrets = {
+      "collabora/code/username" = { };
+      "collabora/code/password" = { };
       "email/from/seafile" = { };
       "gcloud/oauth/self-hosted_clients/id" = { };
       "gcloud/oauth/self-hosted_clients/secret" = { };
