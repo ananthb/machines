@@ -9,6 +9,7 @@
         CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS = "true";
         CODER_OAUTH2_GITHUB_ALLOWED_ORGS = "kedi-code";
         DOCKER_HOST = "unix:///run/podman/podman.sock";
+        CODER_PROMETHEUS_ADDRESS = "[::]:2112";
       };
       file = config.sops.templates."coder/env".path;
     };
