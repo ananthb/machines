@@ -299,7 +299,6 @@
   networking.firewall.interfaces.podman1.allowedTCPPorts = [
     3306 # mysql
     6400 # redis-seafile
-    8090 # open-webui
   ];
 
   systemd.services = {
@@ -554,8 +553,8 @@
       "seafile/ai.env" = {
         content = ''
           SEAFILE_AI_LLM_TYPE=openai
-          SEAFILE_AI_LLM_URL=http://host.containers.internal:8090/ollama/v1
-          SEAFILE_AI_LLM_KEY=${config.sops.placeholder."open-webui/api_key"}
+          SEAFILE_AI_LLM_URL=http://enterprise:11434/v1
+          SEAFILE_AI_LLM_KEY=dummy
           SEAFILE_AI_LLM_MODEL=gemma3:12b
           SEAFILE_SERVER_URL=http://seafile
           JWT_PRIVATE_KEY=${config.sops.placeholder."seafile/jwt_private_key"}
@@ -603,7 +602,6 @@
       "seafile/mysql/username" = { };
       "seafile/mysql/password" = { };
       "seafile/seahub_secret_key" = { };
-      "open-webui/api_key" = { };
     };
   };
 

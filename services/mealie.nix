@@ -50,7 +50,6 @@
     "email/from/mealie" = { };
     "gcloud/oauth/self-hosted_clients/id" = { };
     "gcloud/oauth/self-hosted_clients/secret" = { };
-    "open-webui/api_key" = { };
     "mealie/api_key" = { };
   };
 
@@ -84,10 +83,10 @@
         SMTP_USER=${config.sops.placeholder."email/smtp/username"}
         SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
 
-        # open-webui
-        OPENAI_BASE_URL=http://endeavour:8090/ollama/v1
+        # ollama
+        OPENAI_BASE_URL=http://enterprise:11434/v1
         OPENAI_MODEL=gemma3:12b
-        OPENAI_API_KEY=${config.sops.placeholder."open-webui/api_key"}
+        OPENAI_API_KEY=dummy
       '';
     };
   };
