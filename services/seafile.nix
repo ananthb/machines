@@ -13,7 +13,7 @@
   Dependencies:
   - MySQL (MariaDB)
   - Redis
-  - Caddy (ingress) - listening on port 4000 on all interfaces
+  - Caddy (ingress) - listening on port 4444 on all interfaces
 
   Configuration files and secrets are managed using SOPS templates.
 */
@@ -55,7 +55,7 @@
             networks = [
               networks.seafile.ref
             ];
-            publishPorts = [ "4001:80" ];
+            publishPorts = [ "4450:80" ];
             environmentFiles = [ config.sops.templates."seafile/seafile.env".path ];
           };
           serviceConfig = {
@@ -142,7 +142,7 @@
             networks = [
               networks.seafile.ref
             ];
-            publishPorts = [ "4003:80" ];
+            publishPorts = [ "4453:80" ];
             environmentFiles = [ config.sops.templates."seafile/thumbnail-server.env".path ];
           };
           serviceConfig.Restart = "on-failure";
@@ -184,7 +184,7 @@
             networks = [
               networks.seafile.ref
             ];
-            publishPorts = [ "4002:80" ];
+            publishPorts = [ "4451:80" ];
             environmentFiles = [ config.sops.templates."seafile/seadoc.env".path ];
           };
           serviceConfig.Restart = "on-failure";
@@ -195,9 +195,9 @@
   services = {
     caddy = {
       enable = true;
-      virtualHosts.":4000".extraConfig = ''
+      virtualHosts.":4444".extraConfig = ''
         # seafile
-        reverse_proxy http://localhost:4001
+        reverse_proxy http://localhost:4450
 
         # notification server
         handle_path /notification* {
@@ -206,18 +206,18 @@
 
         # thumbnail server
         handle /thumbnail/* {
-          reverse_proxy http://localhost:4003
+          reverse_proxy http://localhost:4453
 
         }
         handle_path /thumbnail/ping {
           rewrite /ping
-          reverse_proxy http://localhost:4003
+          reverse_proxy http://localhost:4453
         }
 
         # seadoc
-        reverse_proxy /socket.io/* http://localhost:4002
+        reverse_proxy /socket.io/* http://localhost:4451
         handle_path /sdoc-server/* {
-          reverse_proxy http://localhost:4002
+          reverse_proxy http://localhost:4451
         }
 
         # collabora code
