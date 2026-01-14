@@ -3,6 +3,7 @@
 # to /etc/nixos/configuration.nix instead.
 {
   lib,
+  meta,
   modulesPath,
   ulaPrefix,
   ...
@@ -56,8 +57,15 @@
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
+  networking = {
+    useDHCP = lib.mkDefault true;
+    interfaces.${meta.primaryInterface}.useDHCP = lib.mkDefault true;
+    # Ensure primary interface is preferred for the default route
+    dhcpcd.extraConfig = ''
+      interface ${meta.primaryInterface}
+      metric 10
+    '';
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware = {
