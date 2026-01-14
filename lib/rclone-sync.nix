@@ -135,17 +135,39 @@ in
               BISYNC_ARGS+=("--resync")
             fi
 
+            TEMP_LOG=$(mktemp)
+            trap 'rm -f "$TEMP_LOG"' EXIT
+
             if ${pkgs.rclone}/bin/rclone bisync \
               "''${BISYNC_ARGS[@]}" \
-              "$FULL_SOURCE" "$FULL_DEST"; then
+              "$FULL_SOURCE" "$FULL_DEST" 2>&1 | tee "$TEMP_LOG"; then
               
               echo "Bisync successful"
               write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
               write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
             else
-              echo "Bisync failed"
-              write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
-              die "Rclone bisync failed"
+              EXIT_CODE=$?
+              echo "Bisync failed with code $EXIT_CODE"
+
+              if grep -q "Must run --resync to recover" "$TEMP_LOG"; then
+                 echo "Critical state error detected. Attempting auto-recovery with --resync..."
+                 BISYNC_ARGS+=("--resync")
+                 if ${pkgs.rclone}/bin/rclone bisync \
+                    "''${BISYNC_ARGS[@]}" \
+                    "$FULL_SOURCE" "$FULL_DEST"; then
+                     echo "Recovery bisync successful"
+                     write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
+                     write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
+                 else
+                     echo "Recovery bisync failed"
+                     write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
+                     die "Rclone bisync failed even after resync attempt"
+                 fi
+              else
+                 echo "Bisync failed"
+                 write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
+                 die "Rclone bisync failed"
+              fi
             fi
 
           else
