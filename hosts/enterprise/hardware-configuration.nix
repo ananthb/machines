@@ -4,6 +4,7 @@
 {
   lib,
   modulesPath,
+  ulaPrefix,
   ...
 }:
 
@@ -24,15 +25,10 @@
         "sd_mod"
         "sr_mod"
       ];
-      kernelModules = [ "bcachefs" ];
+      kernelModules = [ "kvm-intel" ];
       luks.devices."root".device = "/dev/disk/by-uuid/342c86a9-4b5a-4c14-b7fa-4bfb6e031ee1";
     };
-    kernel.sysctl = {
-      "net.ipv4.ip_forward" = 1;
-      "net.ipv6.conf.all.forwarding" = 1;
-    };
     kernelModules = [ "kvm-intel" ];
-    supportedFilesystems = [ "bcachefs" ];
   };
 
   fileSystems = {
@@ -50,15 +46,11 @@
       ];
     };
 
+    # NFS mount from endeavour
     "/srv" = {
-      device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
-      fsType = "bcachefs";
-    };
-
-    "/var/lib/immich" = {
-      device = "/srv/immich";
-      fsType = "bind";
-      options = [ "bind" ];
+      device = "[${ulaPrefix}::50]:/srv";
+      fsType = "nfs";
+      options = [ "_netdev" ];
     };
   };
 

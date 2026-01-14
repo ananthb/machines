@@ -33,6 +33,17 @@
     "render"
   ];
 
+  systemd.services."immich-backup" = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    # startAt = "weekly";
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+    };
+  };
+
   sops.templates."immich/config.json" = {
     owner = config.users.users.immich.name;
     content = ''

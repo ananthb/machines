@@ -278,28 +278,43 @@
     8090 # open-webui
   ];
 
-  systemd.services."seafile-mysql-backup" = {
-    startAt = "hourly";
-    script = ''
-      if ! ${pkgs.systemd}/bin/systemctl is-active seafile.service; then
-        # Exit successfully if seafile is not running
-        exit 0
-      fi
+  systemd.services = {
+    "seafile-mysql-backup" = {
+      startAt = "hourly";
+      script = ''
+        if ! ${pkgs.systemd}/bin/systemctl is-active seafile.service; then
+          # Exit successfully if seafile is not running
+          exit 0
+        fi
 
-      backup_dir="/srv/seafile/backups"
-      mkdir -p "$backup_dir"
+        backup_dir="/srv/seafile/backups"
+        mkdir -p "$backup_dir"
 
-      # Removes all but 2 files starting from the oldest
-      pushd "$backup_dir"
-      ls -t | tail -n +3 | tr '\n' '\0' | xargs -0 rm --
-      popd
+        # Removes all but 2 files starting from the oldest
+        pushd "$backup_dir"
+        ls -t | tail -n +3 | tr '\n' '\0' | xargs -0 rm --
+        popd
 
-      dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
-      # Dump databases
-      ${pkgs.sudo}/bin/sudo ${pkgs.mariadb}/bin/mysqldump \
-        --databases ccnet_db sdoc_db seafile_db seahub_db | \
-          ${pkgs.zstd}/bin/zstd > "$dump_file.zst"
-    '';
+        dump_file="$backup_dir/seafile_dbs_dump-$(date --utc --iso-8601=seconds).sql"
+        # Dump databases
+        ${pkgs.sudo}/bin/sudo ${pkgs.mariadb}/bin/mysqldump \
+          --databases ccnet_db sdoc_db seafile_db seahub_db | \
+            ${pkgs.zstd}/bin/zstd > "$dump_file.zst"
+      '';
+    };
+    "seafile-backup" = {
+      # TODO: re-enable after we've trimmed down unnecessary files
+      #startAt = "weekly";
+      environment.KOPIA_CHECK_FOR_UPDATES = "false";
+      script = ''
+        ${pkgs.systemd}/bin/systemctl start seafile-mysql-backup.service
+        ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
+      '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+      };
+    };
   };
 
   # Config files
