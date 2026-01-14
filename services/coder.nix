@@ -50,7 +50,7 @@
   ];
 
   sops.templates."coder/env" = {
-    text = ''
+    content = ''
       CODER_OAUTH2_GITHUB_CLIENT_ID=${config.sops.placeholder."github/oauth/kedi-coder/id"}
       CODER_OAUTH2_GITHUB_CLIENT_SECRET=${config.sops.placeholder."github/oauth/kedi-coder/secret"}
     '';
