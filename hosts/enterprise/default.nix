@@ -23,12 +23,16 @@
   ];
 
   # systemd-boot
-  boot.loader.systemd-boot.enable = lib.mkForce false;
-  boot.initrd.systemd.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.lanzaboote = {
-    enable = true;
-    pkiBundle = "/var/lib/sbctl";
+  boot = {
+    loader = {
+      systemd-boot.enable = lib.mkForce false;
+      efi.canTouchEfiVariables = true;
+    };
+    initrd.systemd.enable = true;
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
   };
 
   # hardware accelerated graphics
@@ -63,19 +67,36 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
 
-  services.displayManager.gdm.enable = true;
-  services.displayManager.gdm.autoSuspend = false;
-  services.desktopManager.gnome.enable = true;
+  services = {
+    displayManager.gdm = {
+      enable = true;
+      autoSuspend = false;
+    };
+    desktopManager.gnome.enable = true;
 
-  services.fwupd.enable = true;
-  services.bcachefs.autoScrub.enable = true;
+    fwupd.enable = true;
+    bcachefs.autoScrub.enable = true;
 
-  # NFS server - export /srv
-  services.nfs.server = {
-    enable = true;
-    exports = ''
-      /srv ${ulaPrefix}::50(rw,sync,no_subtree_check,crossmnt,no_root_squash)
-    '';
+    # NFS server - export /srv
+    nfs.server = {
+      enable = true;
+      exports = ''
+        /srv ${ulaPrefix}::50(rw,sync,no_subtree_check,crossmnt,no_root_squash)
+      '';
+    };
+
+    ollama = {
+      enable = true;
+      # See https://ollama.com/library
+      loadModels = [
+        "llama3.2:3b"
+        "deepseek-r1:1.5b"
+      ];
+    };
+
+    spice-vdagentd.enable = true;
+    qemuGuest.enable = true;
+    spice-webdavd.enable = true;
   };
 
   networking.firewall = rec {
@@ -92,61 +113,57 @@
   };
 
   # Set default ACL for group-writable files (umask 002)
-  systemd.tmpfiles.rules = [
-    "A+ /srv/media - - - - default:group::rwx"
-  ];
-
-  # Seafile & Immich backups
-  systemd.services."seafile-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    #startAt = "weekly";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/seafile";
-    };
-  };
-  systemd.services."immich-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    # startAt = "weekly";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
-    };
-  };
-
-  services.ollama = {
-    enable = true;
-    # See https://ollama.com/library
-    loadModels = [
-      "llama3.2:3b"
-      "deepseek-r1:1.5b"
+  systemd = {
+    tmpfiles.rules = [
+      "A+ /srv/media - - - - default:group::rwx"
     ];
+
+    # Seafile & Immich backups
+    services = {
+      "seafile-backup" = {
+        # TODO: re-enable after we've trimmed down unnecessary files
+        #startAt = "weekly";
+        environment.KOPIA_CHECK_FOR_UPDATES = "false";
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/seafile";
+        };
+      };
+      "immich-backup" = {
+        # TODO: re-enable after we've trimmed down unnecessary files
+        # startAt = "weekly";
+        environment.KOPIA_CHECK_FOR_UPDATES = "false";
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+        };
+      };
+
+      # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
+      gnome-remote-desktop = {
+        wantedBy = [ "graphical.target" ];
+      };
+    };
+
+    # More aggressive than default to prevent GUI lag from memory-heavy workloads
+    oomd.settings.OOM = {
+      DefaultMemoryPressureDurationSec = "5s";
+    };
   };
 
-  virtualisation.libvirtd.enable = true;
-  virtualisation.libvirtd.qemu.swtpm.enable = true;
-  virtualisation.spiceUSBRedirection.enable = true;
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      qemu.swtpm.enable = true;
+    };
+    spiceUSBRedirection.enable = true;
+  };
 
   programs.virt-manager.enable = true;
-  services.spice-vdagentd.enable = true;
-  services.qemuGuest.enable = true;
-  services.spice-webdavd.enable = true;
 
   users.users.${username}.extraGroups = [ "libvirtd" ];
-
-  # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
-  systemd.services.gnome-remote-desktop = {
-    wantedBy = [ "graphical.target" ];
-  };
-
-  # More aggressive than default to prevent GUI lag from memory-heavy workloads
-  systemd.oomd.settings.OOM = {
-    DefaultMemoryPressureDurationSec = "5s";
-  };
 
   power.ups = {
     enable = true;

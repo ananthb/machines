@@ -28,27 +28,29 @@
 
     inputs.home-manager.darwinModules.home-manager
     {
-      home-manager.sharedModules = [
-        inputs.sops-nix.homeModules.sops
-        inputs.nix-index-database.homeModules.nix-index
-      ];
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.users.${username} = {
-        imports = [
-          ../home/common.nix
-          ../home/${hostname}.nix
+      home-manager = {
+        sharedModules = [
+          inputs.sops-nix.homeModules.sops
+          inputs.nix-index-database.homeModules.nix-index
         ];
-      };
-      home-manager.extraSpecialArgs = {
-        inherit
-          hostname
-          pkgs
-          system
-          username
-          ;
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.${username} = {
+          imports = [
+            ../home/common.nix
+            ../home/${hostname}.nix
+          ];
+        };
+        extraSpecialArgs = {
+          inherit
+            hostname
+            pkgs
+            system
+            username
+            ;
 
-        inputs = inputs;
+          inherit inputs;
+        };
       };
     }
 
@@ -106,9 +108,11 @@
 
   homebrew = {
     enable = true;
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
-    onActivation.cleanup = "zap";
+    onActivation = {
+      autoUpdate = true;
+      upgrade = true;
+      cleanup = "zap";
+    };
     taps = builtins.attrNames config.nix-homebrew.taps;
 
     brews = [

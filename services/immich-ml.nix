@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   virtualisation.quadlet = {
     autoUpdate.enable = true;
     containers.immich-machine-learning = {

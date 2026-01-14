@@ -12,28 +12,25 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = [
-    "xhci_pci"
-    "ahci"
-    "nvme"
-    "usbhid"
-    "usb_storage"
-    "uas"
-    "sd_mod"
-    "sr_mod"
-  ];
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = 1;
-    "net.ipv6.conf.all.forwarding" = 1;
-  };
-  boot.kernelModules = [ "kvm-intel" ];
+  boot = {
+    initrd.availableKernelModules = [
+      "xhci_pci"
+      "ahci"
+      "nvme"
+      "usbhid"
+      "usb_storage"
+      "uas"
+      "sd_mod"
+      "sr_mod"
+    ];
+    kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+    };
+    kernelModules = [ "kvm-intel" ];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/63de0249-73cc-4608-b228-a9d26f8b110c";
-    fsType = "btrfs";
+    initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
   };
-
-  boot.initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/E445-A150";
@@ -54,8 +51,12 @@
   # networking.interfaces.wlp3s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.enableRedistributableFirmware = true;
-  hardware.cpu.intel.updateMicrocode = true;
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
+  hardware = {
+    enableRedistributableFirmware = true;
+    cpu.intel.updateMicrocode = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+  };
 }

@@ -73,7 +73,7 @@ in
         description = "Rclone sync job: ${name}";
         after = [ "network-online.target" ];
         wants = [ "network-online.target" ];
-        environment = job.environment;
+        inherit (job) environment;
 
         serviceConfig = {
           Type = "oneshot";

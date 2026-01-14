@@ -11,9 +11,11 @@ in
     ./shell.nix
   ];
 
-  home.homeDirectory = homeDir;
-  home.username = username;
-  home.sessionVariables.EDITOR = "nvim";
+  home = {
+    homeDirectory = homeDir;
+    inherit username;
+    sessionVariables.EDITOR = "nvim";
+  };
 
   sops = {
     age.sshKeyPaths =
@@ -23,17 +25,19 @@ in
       [ sshKeyPath ];
     defaultSopsFile = ../secrets.yaml;
 
-    secrets."ssh/yubikey_5c" = {
-      path = homeDir + "/.ssh/yubikey_5c";
-    };
-    secrets."ssh/yubikey_5c.pub" = {
-      path = homeDir + "/.ssh/yubikey_5c.pub";
-    };
-    secrets."ssh/yubikey_5c_nano" = {
-      path = homeDir + "/.ssh/yubikey_5c_nano";
-    };
-    secrets."ssh/yubikey_5c_nano.pub" = {
-      path = homeDir + "/.ssh/yubikey_5c_nano.pub";
+    secrets = {
+      "ssh/yubikey_5c" = {
+        path = homeDir + "/.ssh/yubikey_5c";
+      };
+      "ssh/yubikey_5c.pub" = {
+        path = homeDir + "/.ssh/yubikey_5c.pub";
+      };
+      "ssh/yubikey_5c_nano" = {
+        path = homeDir + "/.ssh/yubikey_5c_nano";
+      };
+      "ssh/yubikey_5c_nano.pub" = {
+        path = homeDir + "/.ssh/yubikey_5c_nano.pub";
+      };
     };
   };
 

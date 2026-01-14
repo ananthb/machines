@@ -6,68 +6,70 @@
     ./postgres.nix
   ];
 
-  services.grafana = {
-    enable = true;
-    settings = {
-      database = {
-        type = "postgres";
-        host = "/run/postgresql";
-        name = "grafana";
-        user = "grafana";
+  services = {
+    grafana = {
+      enable = true;
+      settings = {
+        database = {
+          type = "postgres";
+          host = "/run/postgresql";
+          name = "grafana";
+          user = "grafana";
+        };
+
+        server = {
+          http_addr = "::";
+          domain = "$__file{${config.sops.templates."fqdns/grafana.txt".path}}";
+        };
+
+        smtp = {
+          enabled = true;
+          user = "$__file{${config.sops.secrets."email/smtp/username".path}}";
+          password = "$__file{${config.sops.secrets."email/smtp/password".path}}";
+          host = "$__file{${config.sops.secrets."email/smtp/host".path}}:587";
+          from_address = "$__file{${config.sops.secrets."email/from/grafana".path}}";
+          startTLS_policy = "MandatoryStartTLS";
+        };
       };
 
-      server = {
-        http_addr = "::";
-        domain = "$__file{${config.sops.templates."fqdns/grafana.txt".path}}";
-      };
-
-      smtp = {
-        enabled = true;
-        user = "$__file{${config.sops.secrets."email/smtp/username".path}}";
-        password = "$__file{${config.sops.secrets."email/smtp/password".path}}";
-        host = "$__file{${config.sops.secrets."email/smtp/host".path}}:587";
-        from_address = "$__file{${config.sops.secrets."email/from/grafana".path}}";
-        startTLS_policy = "MandatoryStartTLS";
+      provision = {
+        enable = true;
+        datasources.settings.datasources = [
+          {
+            url = "http://localhost:8428";
+            name = "VictoraMetrics";
+            type = "prometheus";
+            jsonData = {
+              httpMethod = "POST";
+              manageAlerts = true;
+            };
+          }
+        ];
       };
     };
 
-    provision = {
+    postgresql = {
       enable = true;
-      datasources.settings.datasources = [
+      ensureDatabases = [ "grafana" ];
+      ensureUsers = [
         {
-          url = "http://localhost:8428";
-          name = "VictoraMetrics";
-          type = "prometheus";
-          jsonData = {
-            httpMethod = "POST";
-            manageAlerts = true;
-          };
+          name = "grafana";
+          ensureDBOwnership = true;
+          ensureClauses.login = true;
         }
       ];
     };
-  };
 
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [ "grafana" ];
-    ensureUsers = [
-      {
-        name = "grafana";
-        ensureDBOwnership = true;
-        ensureClauses.login = true;
-      }
-    ];
-  };
+    tsnsrv = {
+      enable = true;
 
-  services.tsnsrv = {
-    enable = true;
+      defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
+      defaults.urlParts.host = "localhost";
 
-    defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
-    defaults.urlParts.host = "localhost";
-
-    services.mon = {
-      funnel = true;
-      urlParts.port = 3000;
+      services.mon = {
+        funnel = true;
+        urlParts.port = 3000;
+      };
     };
   };
 

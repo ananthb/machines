@@ -59,58 +59,56 @@
   };
   extraModules = {
     imports = [ ../../services/monitoring/postgres.nix ];
-    services.frigate = {
-      enable = true;
-      hostname = "endeavour.local";
+    services = {
+      frigate = {
+        enable = true;
+        hostname = "endeavour.local";
 
-      settings = {
-        mqtt.enabled = false;
+        settings = {
+          mqtt.enabled = false;
 
-        record = {
-          enabled = true;
-          retain = {
-            days = 2;
-            mode = "all";
+          record = {
+            enabled = true;
+            retain = {
+              days = 2;
+              mode = "all";
+            };
+          };
+
+          ffmpeg.hwaccel_args = "preset-vaapi";
+
+          cameras."frontdoor" = {
+            ffmpeg.inputs = [
+              {
+                path = "rtsp://192.168.1.142:8000/test1";
+                input_args = "preset-rtsp-restream";
+                roles = [ "record" ];
+              }
+            ];
           };
         };
-
-        ffmpeg.hwaccel_args = "preset-vaapi";
-
-        cameras."frontdoor" = {
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://192.168.1.142:8000/test1";
-              input_args = "preset-rtsp-restream";
-              roles = [ "record" ];
-            }
-          ];
-        };
       };
-    };
 
-    services.nginx.virtualHosts."endeavour.local" = {
-      listen = [
-        {
-          addr = "[::]";
-          port = 8967;
-        }
-      ];
-    };
+      nginx.virtualHosts."endeavour.local" = {
+        listen = [
+          {
+            addr = "[::]";
+            port = 8967;
+          }
+        ];
+      };
 
-    networking.firewall.allowedTCPPorts = [
-      8967 # frigate
-    ];
-
-    services.postgresql = {
-      enable = true;
-      ensureDatabases = [ "hass" ];
-      ensureUsers = [
-        {
-          name = "hass";
-          ensureDBOwnership = true;
-          ensureClauses.login = true;
-        }
-      ];
+      postgresql = {
+        enable = true;
+        ensureDatabases = [ "hass" ];
+        ensureUsers = [
+          {
+            name = "hass";
+            ensureDBOwnership = true;
+            ensureClauses.login = true;
+          }
+        ];
+      };
     };
   };
 })

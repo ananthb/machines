@@ -1,69 +1,83 @@
 {
   description = "NixOS and Nix-Darwin configurations for Ananth's machines";
 
-  inputs.home-manager.url = "github:nix-community/home-manager";
-  inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  inputs = {
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.homebrew-cask.url = "github:homebrew/homebrew-cask";
-  inputs.homebrew-cask.flake = false;
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
 
-  inputs.homebrew-core.url = "github:homebrew/homebrew-core";
-  inputs.homebrew-core.flake = false;
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
 
-  inputs.homebrew-bundle.url = "github:homebrew/homebrew-bundle";
-  inputs.homebrew-bundle.flake = false;
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
 
-  inputs.lanzaboote.url = "github:nix-community/lanzaboote/v0.4.3";
-  inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.3";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.nix-darwin.url = "github:nix-darwin/nix-darwin/master";
-  inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
 
-  inputs.nix-index-database.url = "github:nix-community/nix-index-database";
-  inputs.nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  inputs.nixvim.url = "github:nix-community/nixvim";
-  inputs.nixvim.inputs.nixpkgs.follows = "nixpkgs";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.opencode.url = "github:sst/opencode";
-  inputs.opencode.inputs.nixpkgs.follows = "nixpkgs";
+    opencode = {
+      url = "github:sst/opencode";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.NixVirt.url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
-  inputs.NixVirt.inputs.nixpkgs.follows = "nixpkgs";
+    NixVirt = {
+      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+    quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
 
-  inputs.sops-nix.url = "github:Mic92/sops-nix";
-  inputs.sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.tsnsrv.url = "github:boinkor-net/tsnsrv";
-  inputs.tsnsrv.inputs.nixpkgs.follows = "nixpkgs";
+    tsnsrv = {
+      url = "github:boinkor-net/tsnsrv";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
   outputs =
     {
-      self,
-      home-manager,
-      homebrew-cask,
-      homebrew-core,
-      homebrew-bundle,
       lanzaboote,
       nix-darwin,
-      nix-homebrew,
-      nix-index-database,
       nixos-hardware,
       nixpkgs,
-      nixvim,
-      opencode,
-      NixVirt,
-      quadlet-nix,
       sops-nix,
-      tsnsrv,
       ...
     }@inputs:
     let
@@ -118,9 +132,11 @@
         };
     in
     {
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
-      formatter.aarch64-linux = nixpkgs.legacyPackages.aarch64-linux.nixfmt;
-      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
+      formatter = {
+        x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
+        aarch64-linux = nixpkgs.legacyPackages.aarch64-linux.nixfmt;
+        aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
+      };
 
       nixosConfigurations = {
         endeavour = mkNixosHost {
