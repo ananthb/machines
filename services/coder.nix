@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   services.coder = {
     enable = true;
@@ -14,7 +14,12 @@
     };
   };
 
-  users.users.coder.extraGroups = [ "podman" ];
+  users.users.coder.extraGroups = [
+    "podman"
+    "kvm"
+  ];
+
+  systemd.services.coder.path = [ pkgs.firecracker ];
 
   sops.templates."coder/env" = {
     text = ''

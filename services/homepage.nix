@@ -27,7 +27,7 @@
               siteMonitor = "https://tv.kedi.dev";
               widget = {
                 type = "jellyfin";
-                url = "http://enterprise.local:8096";
+                url = "http://localhost:8096";
                 key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
                 enableBlocks = true;
                 enableNowPlaying = true;
@@ -51,7 +51,7 @@
               siteMonitor = "https://seerr.kedi.dev";
               widget = {
                 type = "jellyseerr";
-                url = "http://endeavour.local:5055";
+                url = "http://localhost:5055";
                 key = "{{HOMEPAGE_VAR_JELLYSEERR_API_KEY}}";
               };
             };
@@ -72,7 +72,7 @@
               siteMonitor = "https://miniflux.kedi.dev";
               widget = {
                 type = "miniflux";
-                url = "http://endeavour:8088";
+                url = "http://localhost:8088";
                 key = "{{HOMEPAGE_VAR_MINIFLUX_API_KEY}}";
               };
             };
@@ -97,7 +97,7 @@
               siteMonitor = "https://immich.kedi.dev";
               widget = {
                 type = "immich";
-                url = "http://enterprise.local:2283";
+                url = "http://localhost:2283";
                 key = "{{HOMEPAGE_VAR_IMMICH_API_KEY}}";
                 version = 2;
               };
@@ -162,7 +162,7 @@
                   href = "https://6a.kedi.dev";
                   widget = {
                     type = "homeassistant";
-                    url = "http://endeavour.local:8123";
+                    url = "http://localhost:8123";
                     key = "{{HOMEPAGE_VAR_HA_6A_TOKEN}}";
                   };
                 };
@@ -255,10 +255,10 @@
                 "qBittorrent" = {
                   icon = "qbittorrent";
                   description = "Torrent downloader";
-                  href = "http://enterprise:8080";
+                  href = "http://endeavour:8080";
                   widget = {
                     type = "qbittorrent";
-                    url = "http://enterprise.local:8080";
+                    url = "http://localhost:8080";
                   };
                 };
               }
