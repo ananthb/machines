@@ -25,8 +25,6 @@
     environmentFile = config.sops.templates."vaultwarden/secrets.env".path;
   };
 
-  networking.firewall.allowedTCPPorts = [ 8222 ];
-
   systemd.services."vaultwarden-backup" = {
     startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";

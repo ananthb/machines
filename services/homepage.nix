@@ -8,7 +8,6 @@
 {
   services.homepage-dashboard = {
     enable = true;
-    openFirewall = true;
     allowedHosts = "apps.kedi.dev,[${ulaPrefix}::${staticIPSuffix}]:8082,${localPrefix}.${staticIPSuffix}:8082";
     settings = {
       title = "KEDI Applications";
