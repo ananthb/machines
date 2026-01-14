@@ -8,10 +8,13 @@
       extra = {
         CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS = "true";
         CODER_OAUTH2_GITHUB_ALLOWED_ORGS = "ananthb";
+        DOCKER_HOST = "unix:///run/podman/podman.sock";
       };
       file = config.sops.templates."coder/env".path;
     };
   };
+
+  users.users.coder.extraGroups = [ "podman" ];
 
   sops.templates."coder/env" = {
     text = ''
