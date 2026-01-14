@@ -11,8 +11,6 @@
   services.activitywatch.enable = true;
 
   home.packages = with pkgs; [
-    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-    #inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     discord
     element-desktop
     firefox
@@ -22,6 +20,8 @@
     gimp
     gh
     git-credential-manager
+    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
+    #inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     jellyfin-media-player
     junction
     rpi-imager

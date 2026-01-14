@@ -54,6 +54,7 @@ in
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    crush
     delta
     devenv
     fzf

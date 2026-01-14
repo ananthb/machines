@@ -92,7 +92,7 @@
           hostname,
           system,
           extraModules ? [ ],
-          staticIPSuffix ? null,
+          meta ? { },
         }:
         nixpkgs.lib.nixosSystem {
           inherit system;
@@ -101,7 +101,7 @@
               hostname
               inputs
               localPrefix
-              staticIPSuffix
+              meta
               system
               trustedIPs
               ulaPrefix
@@ -117,6 +117,7 @@
           hostname,
           system,
           extraModules ? [ ],
+          meta ? { },
         }:
         nix-darwin.lib.darwinSystem {
           inherit system;
@@ -128,6 +129,7 @@
               ulaPrefix
               username
               inputs
+              meta
               ;
           };
           modules = extraModules ++ [ ./hosts/${hostname}.nix ];
@@ -145,14 +147,19 @@
           hostname = "endeavour";
           system = "x86_64-linux";
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
-          staticIPSuffix = "50";
+          meta = {
+            staticIPSuffix = "50";
+          };
         };
 
         enterprise = mkNixosHost {
           hostname = "enterprise";
           system = "x86_64-linux";
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
-          staticIPSuffix = "55";
+          meta = {
+            staticIPSuffix = "55";
+            primaryInterface = "enp2s0";
+          };
         };
 
         stargazer = mkNixosHost {
