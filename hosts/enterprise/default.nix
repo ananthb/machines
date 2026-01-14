@@ -15,6 +15,7 @@
     ./hardware-configuration.nix
     ./vms.nix
 
+    ../../services/coder.nix
     ../../services/immich-ml.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
