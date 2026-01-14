@@ -1,7 +1,26 @@
-{ config, inputs, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 {
   imports = [
     inputs.nixvim.homeModules.nixvim
+  ];
+
+  home.packages = with pkgs; [
+    crush
+    delta
+    devenv
+    fzf
+    git
+    gnupg
+    hack-font
+    lazygit
+    mosh
+    nix-output-monitor
+    ripgrep
   ];
 
   programs = {

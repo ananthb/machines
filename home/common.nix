@@ -54,17 +54,10 @@ in
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    crush
-    delta
-    devenv
-    fzf
-    git
     gnupg
     hack-font
-    lazygit
     mosh
     nix-output-monitor
-    ripgrep
   ];
 
   home.stateVersion = "24.05";
