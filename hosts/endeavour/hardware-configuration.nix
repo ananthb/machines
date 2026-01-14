@@ -32,13 +32,19 @@
     initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/E445-A150";
-    fsType = "vfat";
-    options = [
-      "fmask=0077"
-      "dmask=0077"
-    ];
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/63de0249-73cc-4608-b228-a9d26f8b110c";
+      fsType = "btrfs";
+    };
+    "/boot" = {
+      device = "/dev/disk/by-uuid/E445-A150";
+      fsType = "vfat";
+      options = [
+        "fmask=0077"
+        "dmask=0077"
+      ];
+    };
   };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
