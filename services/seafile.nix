@@ -8,7 +8,7 @@
   - Thumbnail server
   - AI server
   - Seadoc server
-  - Collabora CODE
+  - Collabora CODE (can be hosted separately)
 
   Dependencies:
   - MySQL (MariaDB)
@@ -270,49 +270,6 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 4000 ];
-
-  services.mysql = {
-    enable = true;
-    package = pkgs.mariadb;
-    settings = {
-      client = {
-        default-character-set = "utf8mb4";
-      };
-      mysqld = {
-        skip-name-resolve = 1;
-        # localhost and podman bridge network
-        bind-address = "::1,10.89.0.1";
-        # See https://github.com/MariaDB/mariadb-docker/issues/560#issuecomment-1956517890
-        character-set-server = "utf8mb4";
-        collation-server = "utf8mb4_bin";
-      };
-    };
-    ensureUsers = [
-      {
-        name = "seafile";
-        ensurePermissions = {
-          "ccnet_db.*" = "ALL PRIVILEGES";
-          "sdoc_db.*" = "ALL PRIVILEGES";
-          "seafile_db.*" = "ALL PRIVILEGES";
-          "seahub_db.*" = "ALL PRIVILEGES";
-        };
-      }
-    ];
-    ensureDatabases = [
-      "ccnet_db"
-      "sdoc_db"
-      "seafile_db"
-      "seahub_db"
-    ];
-  };
-
-  services.redis.servers.seafile = {
-    enable = true;
-    bind = "10.89.0.1";
-    port = 6400;
-    unixSocket = null;
-    settings.protected-mode = "no";
-  };
 
   # Seafile access to services running on the host
   networking.firewall.interfaces.podman1.allowedTCPPorts = [
