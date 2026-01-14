@@ -149,7 +149,7 @@
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
           meta = {
             staticIPSuffix = "50";
-            primaryInterface = "enp2s0";
+            primaryInterface = "bond0";
           };
         };
 

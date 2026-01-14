@@ -303,6 +303,10 @@
   ];
 
   systemd.services = {
+    "redis-seafile" = {
+      after = [ "seafile-network.service" ];
+      wants = [ "seafile-network.service" ];
+    };
     "seafile-mysql-backup" = {
       startAt = "hourly";
       script = ''
