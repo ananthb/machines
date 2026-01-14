@@ -58,13 +58,23 @@
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
   networking = {
-    useDHCP = lib.mkDefault true;
-    interfaces.${meta.primaryInterface}.useDHCP = lib.mkDefault true;
-    # Ensure primary interface is preferred for the default route
-    dhcpcd.extraConfig = ''
-      interface ${meta.primaryInterface}
-      metric 10
-    '';
+    useDHCP = lib.mkDefault false;
+    interfaces.${meta.primaryInterface}.useDHCP = lib.mkDefault false;
+    networkmanager.ensureProfiles.profiles.primary = {
+      connection = {
+        id = "primary";
+        type = "ethernet";
+        interface-name = meta.primaryInterface;
+      };
+      ipv4 = {
+        method = "auto";
+        route-metric = 10;
+      };
+      ipv6 = {
+        method = "auto";
+        route-metric = 10;
+      };
+    };
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
