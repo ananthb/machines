@@ -102,14 +102,14 @@ in
           FULL_SOURCE="${job.source}"
           if [ -n "${job.sourceSubPath}" ]; then
              clean_source="''${FULL_SOURCE%/}"
-             clean_sub="''${job.sourceSubPath#/}"
+             clean_sub="${lib.strings.removePrefix "/" job.sourceSubPath}"
              FULL_SOURCE="''${clean_source}/''${clean_sub}"
           fi
 
           FULL_DEST="${job.destination}"
           if [ -n "${job.destSubPath}" ]; then
              clean_dest="''${FULL_DEST%/}"
-             clean_sub_dest="''${job.destSubPath#/}"
+             clean_sub_dest="${lib.strings.removePrefix "/" job.destSubPath}"
              FULL_DEST="''${clean_dest}/''${clean_sub_dest}"
           fi
 
