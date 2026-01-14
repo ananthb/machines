@@ -8,7 +8,7 @@
     destSubPath = "/Finance/Taxes";
     checkAccess = false;
     rcloneConfig = config.sops.secrets."rclone/conf".path;
-    interval = "daily";
+    interval = "*:0/5";
     environment = {
       RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
       RCLONE_CONFIG_SEAFILE_TYPE = "webdav";
