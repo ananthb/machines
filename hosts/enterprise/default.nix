@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  ulaPrefix,
   username,
   inputs,
   ...
@@ -16,8 +15,6 @@
 
     ../../services/collabora-code.nix
     ../../services/immich-ml.nix
-    ../../services/media/dl.nix
-    ../../services/media/jellyfin.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
   ];
@@ -75,15 +72,6 @@
     desktopManager.gnome.enable = true;
 
     fwupd.enable = true;
-    bcachefs.autoScrub.enable = true;
-
-    # NFS server - export /srv
-    nfs.server = {
-      enable = true;
-      exports = ''
-        /srv ${ulaPrefix}::50(rw,sync,no_subtree_check,crossmnt,no_root_squash)
-      '';
-    };
 
     ollama = {
       enable = true;
@@ -118,33 +106,9 @@
       "A+ /srv/media - - - - default:group::rwx"
     ];
 
-    # Seafile & Immich backups
-    services = {
-      "seafile-backup" = {
-        # TODO: re-enable after we've trimmed down unnecessary files
-        #startAt = "weekly";
-        environment.KOPIA_CHECK_FOR_UPDATES = "false";
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/seafile";
-        };
-      };
-      "immich-backup" = {
-        # TODO: re-enable after we've trimmed down unnecessary files
-        # startAt = "weekly";
-        environment.KOPIA_CHECK_FOR_UPDATES = "false";
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
-        };
-      };
-
-      # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
-      gnome-remote-desktop = {
-        wantedBy = [ "graphical.target" ];
-      };
+    # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
+    services.gnome-remote-desktop = {
+      wantedBy = [ "graphical.target" ];
     };
 
     # More aggressive than default to prevent GUI lag from memory-heavy workloads

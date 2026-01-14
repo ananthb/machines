@@ -13,21 +13,24 @@
   ];
 
   boot = {
-    initrd.availableKernelModules = [
-      "xhci_pci"
-      "ahci"
-      "nvme"
-      "usbhid"
-      "usb_storage"
-      "uas"
-      "sd_mod"
-      "sr_mod"
-    ];
+    initrd = {
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usbhid"
+        "usb_storage"
+        "uas"
+        "sd_mod"
+        "sr_mod"
+      ];
+      kernelModules = [ "bcachefs" ];
+    };
     kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
     };
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = [ "bcachefs" ];
 
     initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
   };
@@ -44,6 +47,15 @@
         "fmask=0077"
         "dmask=0077"
       ];
+    };
+    "/srv" = {
+      device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
+      fsType = "bcachefs";
+    };
+    "/var/lib/immich" = {
+      device = "/srv/immich";
+      fsType = "bind";
+      options = [ "bind" ];
     };
   };
 

@@ -17,6 +17,8 @@
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
+    ../../services/media/dl.nix
+    ../../services/media/jellyfin.nix
     ../../services/media/news.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/ecoflow.nix
@@ -72,14 +74,17 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
 
-  services.fwupd.enable = true;
-  services.bcachefs.autoScrub.enable = true;
+  services = {
+    fwupd.enable = true;
+    bcachefs.autoScrub.enable = true;
 
-  # NFS mount from enterprise
-  fileSystems."/srv" = {
-    device = "[${ulaPrefix}::55]:/srv";
-    fsType = "nfs";
-    options = [ "_netdev" ];
+    # NFS server - export /srv
+    nfs.server = {
+      enable = true;
+      exports = ''
+        /srv ${ulaPrefix}::55(rw,sync,no_subtree_check,crossmnt,no_root_squash)
+      '';
+    };
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";
