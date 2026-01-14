@@ -83,6 +83,7 @@
     # NFS server - export /srv
     nfs.server = {
       enable = true;
+      openFirewall = true;
       exports = ''
         /srv ${ulaPrefix}::55(rw,sync,no_subtree_check,crossmnt,no_root_squash)
       '';
