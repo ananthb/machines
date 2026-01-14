@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  ulaPrefix,
   username,
   inputs,
   ...
@@ -13,9 +14,10 @@
     ./hardware-configuration.nix
     ./vms.nix
 
+    ../../services/collabora-code.nix
     ../../services/immich-ml.nix
     ../../services/media/dl.nix
-    ../../services/media/tv.nix
+    ../../services/media/jellyfin.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
   ];
@@ -72,7 +74,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /srv fdc0:6625:5195::50(rw,sync,no_subtree_check,crossmnt,no_root_squash)
+      /srv ${ulaPrefix}::50(rw,sync,no_subtree_check,crossmnt,no_root_squash)
     '';
   };
 

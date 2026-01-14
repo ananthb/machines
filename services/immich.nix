@@ -1,5 +1,7 @@
 {
   config,
+  localPrefix,
+  ulaPrefix,
   ...
 }:
 {
@@ -14,7 +16,7 @@
     openFirewall = true;
     environment = {
       "IMMICH_CONFIG_FILE" = config.sops.templates."immich/config.json".path;
-      "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.0/8,fdc0:6625:5195::0/64,10.15.16.0/24";
+      "IMMICH_TRUSTED_PROXIES" = "::1,127.0.0.0/8,${ulaPrefix}::0/64,${localPrefix}.0/24";
       "IMMICH_TELEMETRY_INCLUDE" = "all";
     };
     accelerationDevices = [ "/dev/dri/renderD128" ];
