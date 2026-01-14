@@ -1,8 +1,7 @@
-{ config, inputs, ... }:
+{ config, ... }:
 {
 
   imports = [
-    inputs.tsnsrv.nixosModules.default
     ./postgres.nix
   ];
 
