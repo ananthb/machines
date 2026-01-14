@@ -5,20 +5,24 @@
     enable = true;
     accessUrl = "https://coder.kedi.dev";
     listenAddress = "[::1]:3002";
-    environment.file = config.sops.templates."coder/env".path;
+    environment = {
+      extra = {
+        CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS = true;
+        CODER_OAUTH2_GITHUB_ALLOWED_ORGS = "ananthb";
+      };
+      file = config.sops.templates."coder/env".path;
+    };
   };
 
   sops.templates."coder/env" = {
     content = ''
-      CODER_OIDC_ISSUER_URL=https://accounts.google.com
-      CODER_OIDC_EMAIL_DOMAIN=
-      CODER_OIDC_CLIENT_ID=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}
-      CODER_OIDC_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}
+      CODER_OAUTH2_GITHUB_CLIENT_ID=${config.sops.placeholder."github/oauth/kedi-coder/id"}
+      CODER_OAUTH2_GITHUB_CLIENT_SECRET=${config.sops.placeholder."github/oauth/kedi-coder/secret"}
     '';
   };
 
   sops.secrets = {
-    "gcloud/oauth_self-hosted_clients/id" = { };
-    "gcloud/oauth_self-hosted_clients/secret" = { };
+    "github/oauth/kedi-coder/id" = { };
+    "github/oauth/kedi-coder/secret" = { };
   };
 }

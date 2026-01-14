@@ -73,8 +73,8 @@
       OAUTH_UPDATE_PICTURE_ON_LOGIN="True"
 
       # Google OpenID
-      GOOGLE_CLIENT_ID="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
-      GOOGLE_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
+      GOOGLE_CLIENT_ID="${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}"
+      GOOGLE_CLIENT_SECRET="${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}"
       GOOGLE_REDIRECT_URI="https://open-webui.kedi.dev/oauth/google/callback"
       OPENID_PROVIDER_URL="https://accounts.google.com/.well-known/openid-configuration"
 

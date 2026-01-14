@@ -48,8 +48,8 @@
 
   sops.secrets = {
     "email/from/mealie" = { };
-    "gcloud/oauth_self-hosted_clients/id" = { };
-    "gcloud/oauth_self-hosted_clients/secret" = { };
+    "gcloud/oauth/self-hosted_clients/id" = { };
+    "gcloud/oauth/self-hosted_clients/secret" = { };
     "open-webui/api_key" = { };
     "mealie/api_key" = { };
   };
@@ -73,8 +73,8 @@
         ALLOW_PASSWORD_LOGIN=False
         OIDC_AUTH_ENABLED=True
         OIDC_SIGNUP_ENABLED=False
-        OIDC_CLIENT_ID=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}
-        OIDC_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}
+        OIDC_CLIENT_ID=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}
+        OIDC_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}
         OIDC_PROVIDER_NAME=Google
         OIDC_CONFIGURATION_URL=https://accounts.google.com/.well-known/openid-configuration
 

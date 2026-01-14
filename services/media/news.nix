@@ -17,8 +17,8 @@
       METRICS_COLLECTOR = "1";
       DISABLE_LOCAL_AUTH = "1";
       OAUTH2_USER_CREATION = "1";
-      OAUTH2_CLIENT_ID_FILE = config.sops.secrets."gcloud/oauth_self-hosted_clients/id".path;
-      OAUTH2_CLIENT_SECRET_FILE = config.sops.secrets."gcloud/oauth_self-hosted_clients/secret".path;
+      OAUTH2_CLIENT_ID_FILE = config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path;
+      OAUTH2_CLIENT_SECRET_FILE = config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path;
       OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://accounts.google.com";
       OAUTH2_PROVIDER = "google";
       OAUTH2_REDIRECT_URL = "https://miniflux.kedi.dev/oauth2/oidc/callback";
@@ -104,8 +104,8 @@
 
   sops.secrets = {
     "email/from/wallabag" = { };
-    "gcloud/oauth_self-hosted_clients/id".mode = "0444";
-    "gcloud/oauth_self-hosted_clients/secret".mode = "0444";
+    "gcloud/oauth/self-hosted_clients/id".mode = "0444";
+    "gcloud/oauth/self-hosted_clients/secret".mode = "0444";
     "miniflux/admin_creds" = { };
     "wallabag/db/username" = { };
     "wallabag/db/password" = { };
