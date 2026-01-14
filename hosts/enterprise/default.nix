@@ -14,6 +14,7 @@
     ./vms.nix
 
     ../../services/collabora-code.nix
+    ../../services/coder.nix
     ../../services/immich-ml.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
