@@ -6,6 +6,7 @@
     sourceSubPath = "/Finance/Taxes";
     destination = "gdrive:";
     destSubPath = "/Taxes";
+    checkAccess = false;
     rcloneConfig = config.sops.secrets."rclone/conf".path;
     interval = "daily";
     environment = {

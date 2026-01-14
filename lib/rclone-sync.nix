@@ -40,6 +40,11 @@ in
             default = "";
             description = "Sub-path to append to destination";
           };
+          checkAccess = mkOption {
+            type = types.bool;
+            default = true;
+            description = "Whether to perform access checks (create/delete test file)";
+          };
           rcloneConfig = mkOption {
             type = types.path;
             description = "Path to rclone.conf file (usually a sops secret)";
@@ -121,7 +126,7 @@ in
             BISYNC_ARGS=(
               "--config" "${job.rcloneConfig}"
               "--verbose"
-              "--check-access"
+              ${lib.optionalString job.checkAccess "\"--check-access\""}
               "--remove-empty-dirs"
             )
 
