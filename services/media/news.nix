@@ -10,18 +10,19 @@
   services.miniflux = {
     enable = true;
     adminCredentialsFile = config.sops.secrets."miniflux/admin_creds".path;
-    config.LISTEN_ADDR = "[::]:8088";
-    config.BASE_URL = "https://miniflux.kedi.dev";
-    config.FETCH_YOUTUBE_WATCH_TIME = "1";
-    config.METRICS_COLLECTOR = "1";
-    config.DISABLE_LOCAL_AUTH = "1";
-    config.OAUTH2_USER_CREATION = "1";
-    config.OAUTH2_CLIENT_ID_FILE = config.sops.secrets."gcloud/oauth_self-hosted_clients/id".path;
-    config.OAUTH2_CLIENT_SECRET_FILE =
-      config.sops.secrets."gcloud/oauth_self-hosted_clients/secret".path;
-    config.OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://accounts.google.com";
-    config.OAUTH2_PROVIDER = "google";
-    config.OAUTH2_REDIRECT_URL = "https://miniflux.kedi.dev/oauth2/oidc/callback";
+    config = {
+      LISTEN_ADDR = "[::]:8088";
+      BASE_URL = "https://miniflux.kedi.dev";
+      FETCH_YOUTUBE_WATCH_TIME = "1";
+      METRICS_COLLECTOR = "1";
+      DISABLE_LOCAL_AUTH = "1";
+      OAUTH2_USER_CREATION = "1";
+      OAUTH2_CLIENT_ID_FILE = config.sops.secrets."gcloud/oauth_self-hosted_clients/id".path;
+      OAUTH2_CLIENT_SECRET_FILE = config.sops.secrets."gcloud/oauth_self-hosted_clients/secret".path;
+      OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://accounts.google.com";
+      OAUTH2_PROVIDER = "google";
+      OAUTH2_REDIRECT_URL = "https://miniflux.kedi.dev/oauth2/oidc/callback";
+    };
   };
 
   virtualisation.quadlet =

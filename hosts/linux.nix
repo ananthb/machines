@@ -14,22 +14,24 @@
     inputs.quadlet-nix.nixosModules.quadlet
     inputs.home-manager.nixosModules.home-manager
     {
-      home-manager.sharedModules = [
-        inputs.sops-nix.homeManagerModules.sops
-        inputs.nix-index-database.homeModules.nix-index
-      ];
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.users.${username} = {
-        imports = [
-          ../home/common.nix
-          ../home/${hostname}.nix
+      home-manager = {
+        sharedModules = [
+          inputs.sops-nix.homeManagerModules.sops
+          inputs.nix-index-database.homeModules.nix-index
         ];
-      };
-      home-manager.extraSpecialArgs = {
-        inherit hostname system username;
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.${username} = {
+          imports = [
+            ../home/common.nix
+            ../home/${hostname}.nix
+          ];
+        };
+        extraSpecialArgs = {
+          inherit hostname system username;
 
-        inputs = inputs;
+          inherit inputs;
+        };
       };
     }
 
@@ -56,23 +58,29 @@
     randomizedDelaySec = "45min";
   };
 
-  systemd.enableEmergencyMode = false;
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-  '';
+  systemd = {
+    enableEmergencyMode = false;
+    sleep.extraConfig = ''
+      AllowSuspend=no
+      AllowHibernation=no
+    '';
 
-  # Enable systemd-oomd for memory pressure management
-  systemd.oomd = {
-    enable = true;
-    enableRootSlice = true;
-    enableUserSlices = true;
-    enableSystemSlice = true;
+    # Enable systemd-oomd for memory pressure management
+    oomd = {
+      enable = true;
+      enableRootSlice = true;
+      enableUserSlices = true;
+      enableSystemSlice = true;
+    };
   };
 
-  networking.hostName = hostname;
-  networking.firewall.enable = true;
-  networking.firewall.allowPing = true;
+  networking = {
+    hostName = hostname;
+    firewall = {
+      enable = true;
+      allowPing = true;
+    };
+  };
 
   users.groups.media.gid = 985;
 
@@ -86,20 +94,24 @@
     ];
   };
 
-  security.sudo.wheelNeedsPassword = false;
+  security = {
+    sudo.wheelNeedsPassword = false;
 
-  security.pam.services = {
-    login.u2fAuth = true;
-    sudo.u2fAuth = true;
-    sudo.rssh = true;
-    sshd.rssh = true;
-  };
+    pam = {
+      services = {
+        login.u2fAuth = true;
+        sudo.u2fAuth = true;
+        sudo.rssh = true;
+        sshd.rssh = true;
+      };
 
-  security.pam.rssh = {
-    enable = true;
-    settings = {
-      auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
-      loglevel = "debug";
+      rssh = {
+        enable = true;
+        settings = {
+          auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
+          loglevel = "debug";
+        };
+      };
     };
   };
 
@@ -108,43 +120,45 @@
   programs.fish.enable = true;
   programs.mosh.enable = true;
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = false;
-  };
-
-  # Yubikey stuff
-  services.udev.packages = with pkgs; [ yubikey-personalization ];
-  services.pcscd.enable = true;
-
-  # Enable resolved and avahi
-  services.resolved.enable = true;
-  services.avahi.enable = true;
-
-  # Enable tailscale
-  services.tailscale.enable = true;
-
-  services.prometheus.exporters = {
-    node = {
+  services = {
+    openssh = {
       enable = true;
-      openFirewall = true;
-      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
-      enabledCollectors = [
-        "ethtool"
-        "interrupts"
-        "perf"
-        "processes"
-        "systemd"
-        "tcpstat"
-        "wifi"
-      ];
-      disabledCollectors = [ "textfile" ];
+      settings.PermitRootLogin = "no";
+      settings.PasswordAuthentication = false;
     };
 
-    smartctl.enable = true;
-    smartctl.openFirewall = true;
+    # Yubikey stuff
+    udev.packages = with pkgs; [ yubikey-personalization ];
+    pcscd.enable = true;
 
+    # Enable resolved and avahi
+    resolved.enable = true;
+    avahi.enable = true;
+
+    # Enable tailscale
+    tailscale.enable = true;
+
+    prometheus.exporters = {
+      node = {
+        enable = true;
+        openFirewall = true;
+        # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/monitoring/prometheus/exporters.nix
+        enabledCollectors = [
+          "ethtool"
+          "interrupts"
+          "perf"
+          "processes"
+          "systemd"
+          "tcpstat"
+          "wifi"
+        ];
+        disabledCollectors = [ "textfile" ];
+      };
+
+      smartctl.enable = true;
+      smartctl.openFirewall = true;
+
+    };
   };
 
   environment.systemPackages = with pkgs; [

@@ -35,16 +35,20 @@ in
     ];
 
   # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
+  nix = {
+    settings = {
+      experimental-features = "nix-command flakes";
 
-  nix.settings.trusted-users = [
-    "root"
-    username
-  ];
+      trusted-users = [
+        "root"
+        username
+      ];
+    };
 
-  # Optimise space
-  nix.gc.automatic = true;
-  nix.optimise.automatic = true;
+    # Optimise space
+    gc.automatic = true;
+    optimise.automatic = true;
+  };
 
   environment.systemPackages = with pkgs; [
     git-credential-manager

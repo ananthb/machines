@@ -20,7 +20,7 @@
 lib.recursiveUpdate {
   services.home-assistant = {
     enable = true;
-    package = pkgs.home-assistant.overrideAttrs (oldAttrs: {
+    package = pkgs.home-assistant.overrideAttrs (_oldAttrs: {
       doInstallCheck = false;
     });
     openFirewall = true;

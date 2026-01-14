@@ -4,7 +4,7 @@
 # 3. Add the tunnel ID and name below
 # 4. Add the credentials to sops: sops secrets/cloudflare/tunnels/<tunnel-id>/credentials
 {
-  mkTunnels = ulaPrefix: {
+  mkTunnels = _ulaPrefix: {
     endeavour = [
       {
         tunnelId = "5fd5fbd5-fc21-4766-b92e-a8b577b4bda5";
@@ -62,7 +62,7 @@
             name = cfg.tunnelName;
             value = {
               default = "http_status:404";
-              ingress = cfg.ingress;
+              inherit (cfg) ingress;
               credentialsFile = config.sops.secrets."cloudflare/tunnels/${cfg.tunnelId}/credentials".path;
             };
           }) cfgs

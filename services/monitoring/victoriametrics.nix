@@ -58,9 +58,11 @@
                 "voyager"
                 "pikvm"
               ];
-              labels.type = "node";
-              labels.os = "linux";
-              labels.role = "server";
+              labels = {
+                type = "node";
+                os = "linux";
+                role = "server";
+              };
             }
             {
               targets = [
@@ -75,9 +77,11 @@
                 "ds9"
                 "intrepid.local"
               ];
-              labels.type = "node";
-              labels.os = "openwrt";
-              labels.role = "router";
+              labels = {
+                type = "node";
+                os = "openwrt";
+                role = "router";
+              };
             }
             {
               targets = [
@@ -90,8 +94,10 @@
                 "1.1.1.1"
                 "1.0.0.1"
               ];
-              labels.role = "canary";
-              labels.type = "internet-dns";
+              labels = {
+                role = "canary";
+                type = "internet-dns";
+              };
             }
           ];
         }
@@ -127,17 +133,21 @@
               targets = [
                 "http://enterprise.local:2283/auth/login" # immich-server
               ];
-              labels.type = "app";
-              labels.role = "server";
-              labels.app = "immich";
+              labels = {
+                type = "app";
+                role = "server";
+                app = "immich";
+              };
             }
             {
               targets = [
                 "http://enterprise.local:8096/web/" # jellyfin
               ];
-              labels.app = "jellyfin";
-              labels.type = "app";
-              labels.role = "server";
+              labels = {
+                app = "jellyfin";
+                type = "app";
+                role = "server";
+              };
             }
             {
               targets = [
@@ -145,9 +155,11 @@
                 "http://ds9"
                 "http://intrepid.local"
               ];
-              labels.os = "openwrt";
-              labels.type = "node";
-              labels.role = "router";
+              labels = {
+                os = "openwrt";
+                type = "node";
+                role = "router";
+              };
             }
           ];
         }
@@ -306,9 +318,11 @@
                 "ds9:9100"
                 "intrepid.local:9100"
               ];
-              labels.os = "openwrt";
-              labels.type = "exporter";
-              labels.role = "router";
+              labels = {
+                os = "openwrt";
+                type = "exporter";
+                role = "router";
+              };
             }
           ];
         }
@@ -322,9 +336,11 @@
                 "stargazer:9100"
                 "voyager:9100"
               ];
-              labels.os = "linux";
-              labels.type = "exporter";
-              labels.role = "server";
+              labels = {
+                os = "linux";
+                type = "exporter";
+                role = "server";
+              };
             }
             {
               targets = [
@@ -355,17 +371,21 @@
                 "enterprise.local:8081" # immich-server api metrics
                 "enterprise.local:8081" # immich-server microservices metrics
               ];
-              labels.type = "exporter";
-              labels.role = "server";
-              labels.app = "immich";
+              labels = {
+                type = "exporter";
+                role = "server";
+                app = "immich";
+              };
             }
             {
               targets = [
                 "enterprise.local:8096" # jellyfin
               ];
-              labels.type = "exporter";
-              labels.role = "server";
-              labels.app = "jellyfin";
+              labels = {
+                type = "exporter";
+                role = "server";
+                app = "jellyfin";
+              };
             }
             {
               targets = [ "endeavour.local:9199" ]; # nut exporter meta metrics

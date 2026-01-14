@@ -13,6 +13,8 @@
   git-hooks.hooks = {
     nixfmt.enable = true;
     shellcheck.enable = true;
+    statix.enable = true;
+    deadnix.enable = true;
   };
 
   # https://devenv.sh/scripts/
