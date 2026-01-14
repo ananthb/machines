@@ -27,19 +27,11 @@
 
   virtualisation.quadlet =
     let
-      inherit (config.virtualisation.quadlet) networks volumes;
+      inherit (config.virtualisation.quadlet) volumes;
     in
     {
       autoEscape = true;
       autoUpdate.enable = true;
-
-      networks.podman6.networkConfig = {
-        ipv6 = true;
-        subnets = [
-          "10.98.0.0/24"
-          "fd4b:3399:cea1::/64"
-        ];
-      };
 
       volumes = {
         wallabag-data = { };
@@ -53,7 +45,6 @@
           "${volumes.wallabag-data.ref}:/var/www/wallabag/data"
           "${volumes.wallabag-images.ref}:/var/www/wallabag/web/assets/images"
         ];
-        networks = [ networks.podman6.ref ];
         publishPorts = [ "8085:80" ];
         environmentFiles = [ config.sops.templates."wallabag/env".path ];
       };
