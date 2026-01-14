@@ -131,7 +131,7 @@
             }
             {
               targets = [
-                "http://enterprise.local:2283/auth/login" # immich-server
+                "http://endeavour.local:2283/auth/login" # immich-server
               ];
               labels = {
                 type = "app";
@@ -141,7 +141,7 @@
             }
             {
               targets = [
-                "http://enterprise.local:8096/web/" # jellyfin
+                "http://endeavour.local:8096/web/" # jellyfin
               ];
               labels = {
                 app = "jellyfin";
@@ -368,8 +368,8 @@
             }
             {
               targets = [
-                "enterprise.local:8081" # immich-server api metrics
-                "enterprise.local:8081" # immich-server microservices metrics
+                "endeavour.local:8081" # immich-server api metrics
+                "endeavour.local:8081" # immich-server microservices metrics
               ];
               labels = {
                 type = "exporter";
@@ -379,7 +379,7 @@
             }
             {
               targets = [
-                "enterprise.local:8096" # jellyfin
+                "endeavour.local:8096" # jellyfin
               ];
               labels = {
                 type = "exporter";
