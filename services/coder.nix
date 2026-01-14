@@ -19,7 +19,35 @@
     "kvm"
   ];
 
-  systemd.services.coder.path = [ pkgs.firecracker ];
+  systemd.services.coder.path = with pkgs; [
+    firecracker
+    iproute2
+    iptables
+  ];
+
+  security.sudo.extraRules = [
+    {
+      users = [ "coder" ];
+      commands = [
+        {
+          command = "${pkgs.firecracker}/bin/jailer";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "${pkgs.firecracker}/bin/firecracker";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "${pkgs.iproute2}/bin/ip";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "${pkgs.iptables}/bin/iptables";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 
   sops.templates."coder/env" = {
     text = ''
