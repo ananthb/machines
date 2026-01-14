@@ -1,14 +1,14 @@
 {
   config,
   localPrefix,
-  staticIPSuffix,
+  meta,
   ulaPrefix,
   ...
 }:
 {
   services.homepage-dashboard = {
     enable = true;
-    allowedHosts = "apps.kedi.dev,[${ulaPrefix}::${staticIPSuffix}]:8082,${localPrefix}.${staticIPSuffix}:8082";
+    allowedHosts = "apps.kedi.dev,[${ulaPrefix}::${meta.staticIPSuffix}]:8082,${localPrefix}.${meta.staticIPSuffix}:8082";
     settings = {
       title = "KEDI Applications";
       description = "KEDI Server running apps for the people";
