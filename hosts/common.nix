@@ -31,6 +31,7 @@ in
       "slack"
       "steam"
       "steam-unwrapped"
+      "‘terraform"
       "vscode"
       "xow_dongle-firmware"
     ];
