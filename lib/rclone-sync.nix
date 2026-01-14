@@ -89,14 +89,12 @@ in
           set -uo pipefail
           source ${config.my-scripts.shell-helpers}
 
-          # Ensure rclone config exists
           if [ ! -f "${job.rcloneConfig}" ]; then
             die "Rclone config not found at ${job.rcloneConfig}"
           fi
 
           # Set cache directory for bisync listings
           export XDG_CACHE_HOME="/var/cache/rclone-sync-${name}"
-          # Alternatively use --base-dir
 
           # Construct full paths (using rclone syntax)
           FULL_SOURCE="${job.source}"
@@ -120,21 +118,13 @@ in
           write_metric rclone_sync_status "job=${name},stage=start,type=${job.type}" 1
 
           if [ "${job.type}" = "bisync" ]; then
-            # Bisync specific logic
-            # Check if this is the first run (no listings)
-            # We use --resync only if explicitly needed? No, better safe to let user handle --resync?
-            # Actually, without --resync on first run, bisync fails.
-            # We can check if the cache directory is empty.
-
             BISYNC_ARGS=(
               "--config" "${job.rcloneConfig}"
               "--verbose"
-              "--check-access"     # Check for access to files
+              "--check-access"
               "--remove-empty-dirs"
-              "--filters-file" "${pkgs.writeText "filter" "- **/.DS_Store"}" # Basic filter example, or just rely on defaults
             )
 
-            # Simple check for first run: if XDG_CACHE_HOME/rclone/bisync is empty
             if [ ! -d "$XDG_CACHE_HOME/rclone/bisync" ] || [ -z "$(ls -A "$XDG_CACHE_HOME/rclone/bisync")" ]; then
               echo "First run detected or cache empty. Using --resync."
               BISYNC_ARGS+=("--resync")
