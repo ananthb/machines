@@ -21,6 +21,7 @@
     ../../services/immich.nix
     ../../services/media/arr.nix
     ../../services/media/dl.nix
+    ../../services/media/jellyfin.nix
     ../../services/media/news.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/ecoflow.nix
