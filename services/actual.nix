@@ -33,13 +33,13 @@
   sops.templates."actual/config.env".content = ''
     ACTUAL_OPENID_DISCOVERY_URL=https://accounts.google.com/.well-known/openid-configuration
     ACTUAL_OPENID_SERVER_HOSTNAME=https://actual.kedi.dev
-    ACTUAL_OPENID_CLIENT_ID=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}
-    ACTUAL_OPENID_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}
+    ACTUAL_OPENID_CLIENT_ID=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}
+    ACTUAL_OPENID_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}
   '';
 
   sops.secrets = {
-    "gcloud/oauth_self-hosted_clients/id" = { };
-    "gcloud/oauth_self-hosted_clients/secret" = { };
+    "gcloud/oauth/self-hosted_clients/id" = { };
+    "gcloud/oauth/self-hosted_clients/secret" = { };
   };
 
 }

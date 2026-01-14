@@ -385,8 +385,8 @@
           ENABLE_OAUTH = True
           OAUTH_CREATE_UNKNOWN_USER = True
           OAUTH_ACTIVATE_USER_AFTER_CREATION = False
-          OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}"
-          OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}"
+          OAUTH_CLIENT_ID = "${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}"
+          OAUTH_CLIENT_SECRET = "${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}"
           OAUTH_REDIRECT_URL = "https://seafile.kedi.dev/oauth/callback/"
           OAUTH_PROVIDER_DOMAIN = "google.com"
           OAUTH_AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -557,8 +557,8 @@
 
     secrets = {
       "email/from/seafile" = { };
-      "gcloud/oauth_self-hosted_clients/id" = { };
-      "gcloud/oauth_self-hosted_clients/secret" = { };
+      "gcloud/oauth/self-hosted_clients/id" = { };
+      "gcloud/oauth/self-hosted_clients/secret" = { };
       "seafile/jwt_private_key" = { };
       "seafile/mysql/username" = { };
       "seafile/mysql/password" = { };

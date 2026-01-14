@@ -147,8 +147,8 @@
           "autoLaunch": false,
           "autoRegister": true,
           "buttonText": "Sign in with Google",
-          "clientId": "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/id"}",
-          "clientSecret": "${config.sops.placeholder."gcloud/oauth_self-hosted_clients/secret"}",
+          "clientId": "${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}",
+          "clientSecret": "${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}",
           "defaultStorageQuota": null,
           "enabled": true,
           "issuerUrl": "https://accounts.google.com/.well-known/openid-configuration",
@@ -228,8 +228,8 @@
 
   sops.secrets = {
     "email/from/immich" = { };
-    "gcloud/oauth_self-hosted_clients/id".owner = config.users.users.immich.name;
-    "gcloud/oauth_self-hosted_clients/secret".owner = config.users.users.immich.name;
+    "gcloud/oauth/self-hosted_clients/id".owner = config.users.users.immich.name;
+    "gcloud/oauth/self-hosted_clients/secret".owner = config.users.users.immich.name;
   };
 
 }
