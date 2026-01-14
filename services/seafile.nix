@@ -272,7 +272,7 @@
   networking.firewall.allowedTCPPorts = [ 4000 ];
 
   # Seafile access to services running on the host
-  networking.firewall.interfaces.podman2.allowedTCPPorts = [
+  networking.firewall.interfaces.podman1.allowedTCPPorts = [
     3306 # mysql
     6400 # redis-seafile
     8090 # open-webui
