@@ -41,6 +41,7 @@
     enable = true;
     extensions = with pkgs.gnomeExtensions; [
       { package = appindicator; }
+      { package = easyeffects-preset-selector; }
       { package = gsconnect; }
       { package = night-theme-switcher; }
       { package = solaar-extension; }
