@@ -128,12 +128,15 @@
   };
 
   systemd.services.bond0-token = {
-    description = "Set IPv6 token for bond0";
+    description = "Set IPv6 configuration for bond0";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.iproute2}/bin/ip token set ${ipv6Token} dev bond0";
+      ExecStart = [
+        "${pkgs.iproute2}/bin/ip token set ${ipv6Token} dev bond0"
+        "${pkgs.procps}/bin/sysctl -w net.ipv6.conf.bond0.accept_ra=2"
+      ];
       RemainAfterExit = true;
     };
   };
