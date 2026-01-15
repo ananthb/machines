@@ -164,7 +164,7 @@ in
             }
             {
               target_label = "__address__";
-              replacement = "endeavour.local:9115";
+              replacement = "endeavour:9115";
             }
           ];
           params.module = [ "icmp" ];
@@ -222,7 +222,7 @@ in
             }
             {
               target_label = "__address__";
-              replacement = "endeavour.local:9115";
+              replacement = "endeavour:9115";
             }
           ];
           static_configs = [
@@ -288,7 +288,7 @@ in
             }
             {
               target_label = "__address__";
-              replacement = "endeavour.local:9115";
+              replacement = "endeavour:9115";
             }
           ];
           static_configs = [
@@ -328,7 +328,7 @@ in
             }
             {
               target_label = "__address__";
-              replacement = "endeavour.local:9115";
+              replacement = "endeavour:9115";
             }
           ];
           file_sd_configs = [
@@ -354,7 +354,7 @@ in
             }
             {
               target_label = "__address__";
-              replacement = "endeavour.local:9115";
+              replacement = "endeavour:9115";
             }
             {
               source_labels = [ "__address__" ];
@@ -401,7 +401,7 @@ in
             }
             {
               target_label = "__address__";
-              replacement = "endeavour.local:9115";
+              replacement = "endeavour:9115";
             }
             {
               source_labels = [ "__address__" ];
