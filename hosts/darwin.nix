@@ -126,10 +126,8 @@
     casks = [
       "ddpm"
       "logi-options+"
-      "neovide-app"
       "rectangle-pro"
       "scroll-reverser"
-      "seadrive"
       "yubico-authenticator"
     ];
     masApps = {

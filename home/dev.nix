@@ -16,7 +16,6 @@
     devenv
     fzf
     gh
-    ghostty
     git
     gnupg
     hack-font
@@ -24,7 +23,6 @@
     mosh
     nix-output-monitor
     ripgrep
-    vscode
   ];
 
   programs = {
