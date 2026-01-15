@@ -1,6 +1,4 @@
 {
-  localPrefix,
-  ulaPrefix,
   pkgs,
   ...
 }@args:
@@ -23,10 +21,6 @@
     "broadlink"
     "luci"
   ];
-  extraTrustedProxies = [
-    "${ulaPrefix}::0/64"
-    "${localPrefix}.0/24"
-  ];
   extraConfig = {
     recorder = {
       db_url = "postgresql://@/hass";
@@ -47,7 +41,7 @@
     device_tracker = [
       {
         platform = "ubus";
-        host = "${localPrefix}.1";
+        host = "atlantis";
         username = "!include /run/secrets/openwrt/atlantis/username";
         password = "!include /run/secrets/openwrt/atlantis/password";
       }
