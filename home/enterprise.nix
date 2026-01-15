@@ -15,21 +15,18 @@
     element-desktop
     firefox
     gcr
-    google-chrome
-    ghostty
-    gimp
-    gh
     git-credential-manager
+    gimp
+    google-chrome
     inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
     #inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     jellyfin-media-player
     junction
     rpi-imager
-    slack
     signal-desktop
+    slack
     telegram-desktop
     vlc
-    vscode
     wireshark
     wl-clipboard
     #zed-editor

@@ -7,17 +7,10 @@
 
   homebrew.casks = [
     "1password"
-    "activitywatch"
-    "discord"
-    "firefox"
-    "gimp"
     "ledger-wallet"
-    "signal"
-    "slack"
     "slack-cli"
     "steam"
     "timemator"
-    "visual-studio-code"
   ];
   homebrew.masApps = {
     "1Password for Safari" = 1569813296;

@@ -10,10 +10,13 @@
   ];
 
   home.packages = with pkgs; [
+    claude-code
     crush
     delta
     devenv
     fzf
+    gh
+    ghostty
     git
     gnupg
     hack-font
@@ -21,6 +24,7 @@
     mosh
     nix-output-monitor
     ripgrep
+    vscode
   ];
 
   programs = {

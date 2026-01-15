@@ -116,12 +116,7 @@
     taps = builtins.attrNames config.nix-homebrew.taps;
 
     brews = [
-      "gh"
       "mas"
-      {
-        name = "neovim";
-        link = false;
-      }
       "openssh" # needed for yubikey ssh keys
       {
         name = "node_exporter";
@@ -130,16 +125,11 @@
     ];
     casks = [
       "ddpm"
-      "ghostty"
-      "google-chrome"
-      "jellyfin-media-player"
       "logi-options+"
       "neovide-app"
-      "raspberry-pi-imager"
       "rectangle-pro"
       "scroll-reverser"
       "seadrive"
-      "vlc"
       "yubico-authenticator"
     ];
     masApps = {
