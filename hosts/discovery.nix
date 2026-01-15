@@ -7,10 +7,26 @@
 
   homebrew.casks = [
     "1password"
+    "activitywatch"
+    "discord"
+    "firefox"
+    "gimp"
+    "ghostty"
+    "google-chrome"
+    "jellyfin-media-player"
     "ledger-wallet"
+    "logi-options+"
+    "raspberry-pi-imager"
+    "rectangle-pro"
+    "scroll-reverser"
+    "seadrive"
+    "signal"
+    "slack"
     "slack-cli"
-    "steam"
     "timemator"
+    "visual-studio-code"
+    "vlc"
+    "yubico-authenticator"
   ];
   homebrew.masApps = {
     "1Password for Safari" = 1569813296;

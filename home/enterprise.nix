@@ -15,6 +15,7 @@
     element-desktop
     firefox
     gcr
+    ghostty
     git-credential-manager
     gimp
     google-chrome
@@ -27,6 +28,7 @@
     slack
     telegram-desktop
     vlc
+    vscode
     wireshark
     wl-clipboard
     #zed-editor
