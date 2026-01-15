@@ -57,6 +57,7 @@
   };
 
   networking = {
+    useDHCP = false;
     bonds.bond0 = {
       interfaces = [
         "enp2s0"
@@ -67,11 +68,7 @@
         miimon = "100";
       };
     };
-    interfaces = {
-      bond0.useDHCP = true;
-      enp2s0.useDHCP = false;
-      enp4s0.useDHCP = false;
-    };
+    interfaces.bond0.useDHCP = true;
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
