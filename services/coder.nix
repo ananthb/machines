@@ -6,6 +6,7 @@
     listenAddress = "[::1]:3030";
     environment = {
       extra = {
+        CODER_WILDCARD_ACCESS_URL = "*.coder.kedi.dev";
         CODER_OAUTH2_GITHUB_ALLOW_SIGNUPS = "true";
         CODER_OAUTH2_GITHUB_ALLOWED_ORGS = "kedi-code";
         DOCKER_HOST = "unix:///run/podman/podman.sock";
