@@ -109,7 +109,6 @@
           hostname,
           system,
           extraModules ? [ ],
-          meta ? { },
         }:
         nix-darwin.lib.darwinSystem {
           inherit system;
@@ -119,7 +118,6 @@
               hostname
               username
               inputs
-              meta
               ;
           };
           modules = extraModules ++ [ ./hosts/${hostname}.nix ];

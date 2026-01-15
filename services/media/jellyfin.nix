@@ -1,6 +1,5 @@
 {
   config,
-  meta,
   pkgs,
   username,
   ...
@@ -82,8 +81,8 @@
                     #   2. Must end with static ip suffix
                     # ------------------------------------------------------------------------
 
-            	${pkgs.iproute2}/bin/ip -6 addr show dev ${meta.primaryInterface} scope global | \
-                      ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::${meta.staticIPSuffix}\// { sub(/\/.*$/, "", $2); print $2 }'
+            	${pkgs.iproute2}/bin/ip -6 addr show scope global | \
+                      ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::0f\// { sub(/\/.*$/, "", $2); print $2 }'
           '';
         in
 
