@@ -126,6 +126,17 @@
     };
   };
 
+  systemd.services.bond0-token = {
+    description = "Set IPv6 token for bond0";
+    after = [ "network-interfaces.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.iproute2}/bin/ip token set ::e4de:a704 dev bond0";
+      RemainAfterExit = true;
+    };
+  };
+
   sops.secrets."nut/users/nutmon".mode = "0444";
 
   # 16GB swapfile

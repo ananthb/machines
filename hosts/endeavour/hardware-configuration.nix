@@ -26,6 +26,7 @@
     kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
+      "net.ipv6.conf.bond0.accept_ra" = 2;
     };
     kernelModules = [ "bcachefs" ];
 
