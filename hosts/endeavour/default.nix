@@ -2,6 +2,7 @@
   inputs,
   lib,
   pkgs,
+  ipv6Token,
   ...
 }:
 {
@@ -128,11 +129,11 @@
 
   systemd.services.bond0-token = {
     description = "Set IPv6 token for bond0";
-    after = [ "network-interfaces.target" ];
+    after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.iproute2}/bin/ip token set ::e4de:a704 dev bond0";
+      ExecStart = "${pkgs.iproute2}/bin/ip token set ${ipv6Token} dev bond0";
       RemainAfterExit = true;
     };
   };
