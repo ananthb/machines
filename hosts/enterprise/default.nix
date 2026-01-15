@@ -13,6 +13,7 @@
 
     ../linux.nix
     ./hardware-configuration.nix
+    ./programs.nix
     ./vms.nix
 
     ../../services/coder.nix
@@ -52,14 +53,6 @@
     ];
   };
 
-  # System packages
-  environment.systemPackages = with pkgs; [
-    gnome-tweaks
-    logitech-udev-rules
-    solaar
-    tpm2-tss
-  ];
-
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
@@ -84,10 +77,32 @@
       ];
     };
 
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      wireplumber.extraConfig.bluetoothEnhancements = {
+        "monitor.bluez.properties" = {
+          "bluez5.enable-sbc-xq" = true;
+          "bluez5.enable-msbc" = true;
+          "bluez5.enable-hw-volume" = true;
+          "bluez5.roles" = [
+            "hsp_hs"
+            "hsp_ag"
+            "hfp_hf"
+            "hfp_ag"
+          ];
+        };
+      };
+    };
+
     spice-vdagentd.enable = true;
     qemuGuest.enable = true;
     spice-webdavd.enable = true;
   };
+
+  security.rtkit.enable = true;
 
   networking.firewall = rec {
     # nfs server
@@ -132,8 +147,6 @@
     spiceUSBRedirection.enable = true;
   };
 
-  programs.virt-manager.enable = true;
-
   users.users.${username}.extraGroups = [ "libvirtd" ];
 
   power.ups = {
@@ -151,13 +164,6 @@
       powerValue = 1;
       user = "nutmon";
     };
-  };
-
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";
