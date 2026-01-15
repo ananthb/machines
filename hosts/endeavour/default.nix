@@ -2,7 +2,6 @@
   inputs,
   lib,
   pkgs,
-  ulaPrefix,
   ...
 }:
 {
@@ -87,26 +86,44 @@
       mountdPort = 4002;
       statdPort = 4000;
       exports = ''
-        /srv ${ulaPrefix}::55(rw,sync,no_subtree_check,crossmnt,no_root_squash)
+        /srv enterprise(rw,sync,no_subtree_check,crossmnt,no_root_squash)
       '';
     };
   };
 
-  networking.firewall = {
-    allowedTCPPorts = [
-      111
-      2049
-      4000
-      4001
-      4002
-    ];
-    allowedUDPPorts = [
-      111
-      2049
-      4000
-      4001
-      4002
-    ];
+  networking = {
+    bonds.bond0 = {
+      interfaces = [
+        "enp2s0"
+        "enp4s0"
+      ];
+      driverOptions = {
+        mode = "balance-alb";
+        miimon = "100";
+      };
+    };
+    interfaces = {
+      bond0.useDHCP = true;
+      enp2s0.useDHCP = false;
+      enp4s0.useDHCP = false;
+    };
+
+    firewall = {
+      allowedTCPPorts = [
+        111
+        2049
+        4000
+        4001
+        4002
+      ];
+      allowedUDPPorts = [
+        111
+        2049
+        4000
+        4001
+        4002
+      ];
+    };
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";

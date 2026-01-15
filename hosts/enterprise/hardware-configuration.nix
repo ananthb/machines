@@ -3,9 +3,7 @@
 # to /etc/nixos/configuration.nix instead.
 {
   lib,
-  meta,
   modulesPath,
-  ulaPrefix,
   ...
 }:
 
@@ -49,7 +47,7 @@
 
     # NFS mount from endeavour
     "/srv" = {
-      device = "[${ulaPrefix}::50]:/srv";
+      device = "endeavour:/srv";
       fsType = "nfs";
     };
   };
@@ -59,12 +57,12 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   networking = {
     useDHCP = lib.mkDefault false;
-    interfaces.${meta.primaryInterface}.useDHCP = lib.mkDefault false;
+    interfaces.enp86s0.useDHCP = lib.mkDefault false;
     networkmanager.ensureProfiles.profiles.primary = {
       connection = {
         id = "primary";
         type = "ethernet";
-        interface-name = meta.primaryInterface;
+        interface-name = "enp86s0";
       };
       ipv4 = {
         method = "auto";
