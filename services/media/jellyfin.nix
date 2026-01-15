@@ -2,6 +2,7 @@
   config,
   pkgs,
   username,
+  ipv6Token,
   ...
 }:
 
@@ -74,32 +75,32 @@
 
         let
           getIPv6 = pkgs.writeShellScript "get-ipv6" ''
-                    # ------------------------------------------------------------------------
-                    # ddns custom IPv6 getter
-                    # Criteria: 
-                    #   1. Must be set on enp87s0 in the 2400::/11 Global Unicast Address Space
-                    #   2. Must end with static ip suffix
-                    # ------------------------------------------------------------------------
+            # ------------------------------------------------------------------------
+            # ddns custom IPv6 getter
+            # Returns all public internet reachable IPv6 addresses separated by commas
+            # filtered by the token set for this host (${ipv6Token})
+            # ------------------------------------------------------------------------
 
-            	${pkgs.iproute2}/bin/ip -6 addr show scope global | \
-                      ${pkgs.gawk}/bin/awk '/inet6 24[0-1].*::0f\// { sub(/\/.*$/, "", $2); print $2 }'
+            ${pkgs.iproute2}/bin/ip -6 addr show scope global | \
+              ${pkgs.gawk}/bin/awk '/inet6 .*${ipv6Token}\// { sub(/\/.*$/, "", $2); print $2 }' | \
+              ${pkgs.coreutils}/bin/paste -sd "," -
           '';
         in
 
         ''
-                email srv.acme@kedi.dev
-                acme_ca https://acme-v02.api.letsencrypt.org/directory
+          email srv.acme@kedi.dev
+          acme_ca https://acme-v02.api.letsencrypt.org/directory
 
-                dynamic_dns {
-                  provider cloudflare {$CLOUDFLARE_API_TOKEN}
-          	domains {
-          	  kedi.dev tv
-          	}
-                  ip_source command ${getIPv6}
-          	versions ipv6
-                  check_interval 5m
-                  ttl 1h
-                }
+          dynamic_dns {
+            provider cloudflare {$CLOUDFLARE_API_TOKEN}
+            domains {
+              kedi.dev tv
+            }
+            ip_source command ${getIPv6}
+            versions ipv6
+            check_interval 5m
+            ttl 1h
+          }
         '';
 
       virtualHosts."tv.kedi.dev" = {

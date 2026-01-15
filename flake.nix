@@ -134,7 +134,10 @@
         endeavour = mkNixosHost {
           hostname = "endeavour";
           system = "x86_64-linux";
-          extraModules = [ lanzaboote.nixosModules.lanzaboote ];
+          extraModules = [
+            lanzaboote.nixosModules.lanzaboote
+            { _module.args.ipv6Token = "::e4de:a704"; }
+          ];
         };
 
         enterprise = mkNixosHost {
