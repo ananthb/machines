@@ -4,7 +4,7 @@
 # 3. Add the tunnel ID and name below
 # 4. Add the credentials to sops: sops secrets/cloudflare/tunnels/<tunnel-id>/credentials
 {
-  mkTunnels = _ulaPrefix: {
+  tunnels = {
     endeavour = [
       {
         tunnelId = "5fd5fbd5-fc21-4766-b92e-a8b577b4bda5";
@@ -49,10 +49,9 @@
   };
 
   mkCftunnel =
-    { hostname, ulaPrefix }:
+    { hostname }:
     let
-      tunnels = (import ./cftunnel.nix).mkTunnels ulaPrefix;
-      cfgs = tunnels.${hostname};
+      cfgs = (import ./cftunnel.nix).tunnels.${hostname};
     in
     { config, ... }:
     {

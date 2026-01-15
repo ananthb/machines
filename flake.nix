@@ -82,9 +82,6 @@
       ...
     }@inputs:
     let
-      localPrefix = "10.15.16";
-      trustedIPs = "::1 127.0.0.0/8 ${ulaPrefix}::0/64 ${localPrefix}.0/24";
-      ulaPrefix = "fdc0:6625:5195";
       username = "ananth";
 
       mkNixosHost =
@@ -92,7 +89,6 @@
           hostname,
           system,
           extraModules ? [ ],
-          meta ? { },
         }:
         nixpkgs.lib.nixosSystem {
           inherit system;
@@ -100,11 +96,7 @@
             inherit
               hostname
               inputs
-              localPrefix
-              meta
               system
-              trustedIPs
-              ulaPrefix
               username
               ;
             outputs = self;
@@ -125,8 +117,6 @@
             inherit
               system
               hostname
-              trustedIPs
-              ulaPrefix
               username
               inputs
               meta
@@ -147,20 +137,12 @@
           hostname = "endeavour";
           system = "x86_64-linux";
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
-          meta = {
-            staticIPSuffix = "50";
-            primaryInterface = "enp2s0";
-          };
         };
 
         enterprise = mkNixosHost {
           hostname = "enterprise";
           system = "x86_64-linux";
           extraModules = [ lanzaboote.nixosModules.lanzaboote ];
-          meta = {
-            staticIPSuffix = "55";
-            primaryInterface = "enp86s0";
-          };
         };
 
         stargazer = mkNixosHost {
