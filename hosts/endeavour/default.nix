@@ -132,8 +132,8 @@
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
     script = ''
-      "${pkgs.procps}/bin/sysctl -w net.ipv6.conf.bond0.accept_ra=2"
-      "${pkgs.iproute2}/bin/ip token set ${ipv6Token} dev bond0"
+      ${pkgs.procps}/bin/sysctl -w net.ipv6.conf.bond0.accept_ra=2
+      ${pkgs.iproute2}/bin/ip token set ${ipv6Token} dev bond0
     '';
     serviceConfig = {
       Type = "oneshot";
