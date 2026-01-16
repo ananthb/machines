@@ -1,7 +1,7 @@
 { config, ... }:
 {
   my-services.rclone-syncs = {
-    "ananth-taxes-sync" = {
+    "ananth-taxes" = {
       type = "bisync";
       source = "seafile:";
       sourceSubPath = "/Finance/Taxes";
@@ -17,7 +17,7 @@
       };
     };
 
-    "bhaskar-documents-sync" = {
+    "bhaskar-documents" = {
       type = "bisync";
       source = "seafile:";
       sourceSubPath = "/Documents";
@@ -33,7 +33,7 @@
       };
     };
 
-    "bhaskar-family-library-sync" = {
+    "bhaskar-family-library" = {
       type = "bisync";
       source = "seafile:";
       sourceSubPath = "/Family Library";
