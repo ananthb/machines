@@ -31,6 +31,7 @@ in
       "steam"
       "steam-unwrapped"
       "terraform"
+      "unrar"
       "vscode"
       "xow_dongle-firmware"
     ];
