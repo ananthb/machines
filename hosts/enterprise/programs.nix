@@ -2,7 +2,6 @@
 {
   # System packages
   environment.systemPackages = with pkgs; [
-    easyeffects
     gnome-tweaks
     logitech-udev-rules
     solaar
