@@ -128,9 +128,15 @@
       wantedBy = [ "graphical.target" ];
     };
 
-    # More aggressive than default to prevent GUI lag from memory-heavy workloads
-    oomd.settings.OOM = {
-      DefaultMemoryPressureDurationSec = "5s";
+    # Enable systemd-oomd for memory pressure management
+    oomd = {
+      enable = true;
+      enableRootSlice = true;
+      enableUserSlices = true;
+      enableSystemSlice = true;
+      settings.OOM = {
+        DefaultMemoryPressureDurationSec = "5s";
+      };
     };
   };
 
