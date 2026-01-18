@@ -138,6 +138,18 @@
         DefaultMemoryPressureDurationSec = "5s";
       };
     };
+
+    # Protect critical services from oomd
+    services = {
+      tailscaled.serviceConfig.ManagedOOMPreference = "none";
+      display-manager.serviceConfig.ManagedOOMPreference = "none";
+    };
+
+    # Protect GNOME user session services from oomd
+    user.services = {
+      gnome-shell.serviceConfig.ManagedOOMPreference = "none";
+      gsd-xsettings.serviceConfig.ManagedOOMPreference = "none";
+    };
   };
 
   virtualisation = {
