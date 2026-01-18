@@ -68,6 +68,7 @@
   # System packages
   environment.systemPackages = with pkgs; [
     tpm2-tss
+    unrar
   ];
 
   # Set your time zone.
