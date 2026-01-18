@@ -20,7 +20,7 @@
     gimp
     google-chrome
     inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-    #inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
+    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     jellyfin-media-player
     junction
     rpi-imager
@@ -31,10 +31,13 @@
     vscode
     wireshark
     wl-clipboard
-    #zed-editor
+    zed-editor
   ];
 
-  services.gnome-keyring.enable = true;
+  services = {
+    easyeffects.enable = true;
+    gnome-keyring.enable = true;
+  };
 
   programs.gnome-shell = {
     enable = true;
