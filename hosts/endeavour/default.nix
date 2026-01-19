@@ -17,7 +17,8 @@
     ./rclone.nix
     ../../lib/rclone-sync.nix
     ../../services/actual.nix
-    ../../services/davis.nix
+    # TODO: not working yet, but it should start working soon
+    # ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
