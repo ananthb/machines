@@ -66,6 +66,8 @@
     };
     desktopManager.gnome.enable = true;
 
+    devmon.enable = true;
+
     fwupd.enable = true;
 
     gvfs = {
@@ -105,6 +107,8 @@
     spice-vdagentd.enable = true;
     qemuGuest.enable = true;
     spice-webdavd.enable = true;
+
+    udisks2.enable = true;
   };
 
   security.rtkit.enable = true;
