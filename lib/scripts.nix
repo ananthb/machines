@@ -1,5 +1,24 @@
-{ pkgs, lib, ... }:
-
+{
+  pkgs,
+  lib,
+  outputs,
+  ...
+}:
+let
+  # Find which host has victoriametrics enabled
+  victoriaMetricsHost =
+    let
+      nixosHosts = lib.mapAttrsToList (name: value: {
+        inherit name;
+        inherit (value) config;
+      }) outputs.nixosConfigurations;
+      vmHosts = builtins.filter (host: host.config.services.victoriametrics.enable or false) nixosHosts;
+    in
+    if vmHosts == [ ] then
+      throw "No host with victoriametrics.service enabled found"
+    else
+      (builtins.head vmHosts).name;
+in
 {
   options.my-scripts = {
     kopia-snapshot-backup = lib.mkOption {
@@ -149,21 +168,21 @@
           exit "$code"
         }
 
-        # Sends a metric to VictoriaMetrics in JSON format.
-        # Usage: write_metrics <metric_name> <labels> <value>
+        # Sends a metric to VictoriaMetrics in Prometheus text format.
+        # Usage: write_metric <metric_name> <labels> <value>
         # <labels> should be a comma-separated string like "job=api,instance=server1"
-        # VM_URL environment variable (default: http://endeavour:8428) selects
+        # VM_URL environment variable (default: http://${victoriaMetricsHost}:8428) selects
         # the VictoriaMetrics endpoint to send metrics to.
         write_metric() {
           local metric_name="$1"
           local labels_str="$2"
           local value="$3"
           # Use environment variable for URL or default
-          local vm_url="''${VM_URL:-http://endeavour:8428}"
+          local vm_url="''${VM_URL:-http://${victoriaMetricsHost}:8428}"
 
           if [[ $# -lt 3 ]]; then
-            echo 'Usage: write_metrics <metric_name> <labels> <value>' >&2
-            echo 'Example: write_metrics http_requests_total "job=httpie-test,instance=localhost" 15' >&2
+            echo 'Usage: write_metric <metric_name> <labels> <value>' >&2
+            echo 'Example: write_metric http_requests_total "job=httpie-test,instance=localhost" 15' >&2
             exit 1
           fi
 
@@ -190,15 +209,15 @@
           # Construct the Prometheus text format line
           local line="''${metric_name}''${prom_labels} ''${value} ''${timestamp_ms}"
 
-          # Send the data using httpie to the prometheus write endpoint
+          # Send the data using curl to the prometheus write endpoint
           printf 'Sending line to %s: %s\n' "$vm_url" "$line" >&2
 
-          # Send the data using httpie, ignoring errors
-          echo "$line" | ${pkgs.httpie}/bin/http \
-            --quiet \
-            --timeout=1 \
-            --ignore-stdin \
-            post "$vm_url/api/v1/import/prometheus" || true
+          # Send the data using curl, ignoring errors
+          ${pkgs.curl}/bin/curl \
+            --silent \
+            --max-time 2 \
+            --data-binary "$line" \
+            "$vm_url/api/v1/import/prometheus" || true
         }
       '';
     };
