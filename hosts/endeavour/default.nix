@@ -17,6 +17,7 @@
     ./rclone.nix
     ../../lib/rclone-sync.nix
     ../../services/actual.nix
+    ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
