@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -19,8 +18,6 @@
     git-credential-manager
     gimp
     google-chrome
-    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     jellyfin-media-player
     junction
     rpi-imager
