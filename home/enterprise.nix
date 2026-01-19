@@ -43,6 +43,7 @@
     enable = true;
     extensions = with pkgs.gnomeExtensions; [
       { package = appindicator; }
+      { package = brightness-control-using-ddcutil; }
       { package = easyeffects-preset-selector; }
       { package = gsconnect; }
       { package = night-theme-switcher; }
