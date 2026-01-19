@@ -68,6 +68,11 @@
 
     fwupd.enable = true;
 
+    gvfs = {
+      enable = true;
+      package = pkgs.gnome.gvfs;
+    };
+
     ollama = {
       enable = true;
       # See https://ollama.com/library
