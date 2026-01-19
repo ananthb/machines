@@ -1,5 +1,4 @@
-{ pkgs, inputs, ... }:
-{
+_: {
   imports = [
     ./dev.nix
   ];
@@ -14,7 +13,5 @@
     };
   };
 
-  home.packages = [
-    inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+  home.packages = [ ];
 }

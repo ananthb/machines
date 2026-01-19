@@ -22,6 +22,7 @@
     lazygit
     mosh
     nix-output-monitor
+    opencode
     ripgrep
   ];
 
