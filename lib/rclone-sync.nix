@@ -1,3 +1,87 @@
+# rclone-sync.nix - NixOS module for scheduled rclone sync jobs
+#
+# This module provides a declarative way to configure rclone sync and bisync
+# jobs as systemd services with timers.
+#
+# USAGE:
+#
+#   my-services.rclone-syncs.<name> = {
+#     type = "sync" | "bisync";     # One-way or two-way sync (default: "sync")
+#     source = "remote:path";        # Source path (rclone remote or local)
+#     destination = "remote:path";   # Destination path
+#     rcloneConfig = /path/to/rclone.conf;
+#
+#     # Optional
+#     sourceSubPath = "subdir";      # Appended to source path
+#     destSubPath = "subdir";        # Appended to destination path
+#     interval = "daily";            # Systemd OnCalendar spec (default: "daily")
+#     user = "root";                 # User to run as (default: "root")
+#     checkAccess = true;            # Test file access before sync (default: true)
+#     environment = { };             # Extra environment variables
+#     excludePatterns = [ ];         # Additional exclude patterns
+#     deleteExcluded = null;         # Delete excluded files from destination
+#   };
+#
+# EXCLUDE PATTERNS:
+#
+#   Default patterns are always applied (macOS, Windows, Linux system files):
+#     ._*, Icon*, .DS_Store, Thumbs.db, Desktop.ini, ~$*, .~lock.*, etc.
+#
+#   Add custom patterns with excludePatterns:
+#     excludePatterns = [ "*.tmp" "node_modules" ".git" ];
+#
+# DELETE EXCLUDED (--delete-excluded):
+#
+#   Controls whether files matching exclude patterns are deleted from the
+#   destination. This cleans up system junk files on the remote.
+#
+#   Behavior when deleteExcluded = null (default):
+#     - No custom excludePatterns → deleteExcluded = true (safe for defaults)
+#     - Custom excludePatterns provided → deleteExcluded = false (opt-in)
+#
+#   This default is conservative: the built-in patterns are safe to delete,
+#   but user-provided patterns might accidentally match wanted files.
+#
+#   Override explicitly if needed:
+#     deleteExcluded = true;   # Always delete excluded files
+#     deleteExcluded = false;  # Never delete excluded files
+#
+# EXAMPLES:
+#
+#   # Simple one-way backup (deletes default junk files on destination)
+#   my-services.rclone-syncs.photos-backup = {
+#     source = "/home/user/Photos";
+#     destination = "gdrive:Backups/Photos";
+#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     interval = "daily";
+#   };
+#
+#   # Two-way sync between local and remote
+#   my-services.rclone-syncs.documents = {
+#     type = "bisync";
+#     source = "/home/user/Documents";
+#     destination = "dropbox:Documents";
+#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     interval = "hourly";
+#   };
+#
+#   # With custom excludes (deleteExcluded defaults to false)
+#   my-services.rclone-syncs.projects = {
+#     source = "/home/user/Projects";
+#     destination = "b2:bucket/Projects";
+#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     excludePatterns = [ "node_modules" ".git" "target" "*.log" ];
+#   };
+#
+#   # Custom excludes with explicit deleteExcluded
+#   my-services.rclone-syncs.projects = {
+#     source = "/home/user/Projects";
+#     destination = "b2:bucket/Projects";
+#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     excludePatterns = [ "node_modules" ".git" ];
+#     deleteExcluded = true;  # Also delete node_modules/.git on destination
+#   };
+
 {
   config,
   lib,
@@ -98,6 +182,11 @@ in
             default = [ ];
             description = "Additional patterns to exclude from sync (passed to rclone --exclude). Default patterns (._*, Icon*) are always included.";
           };
+          deleteExcluded = mkOption {
+            type = types.nullOr types.bool;
+            default = null;
+            description = "Whether to delete excluded files from the destination (--delete-excluded). If null (default), automatically set to true when no custom excludePatterns are provided, false otherwise.";
+          };
         };
       }
     );
@@ -163,6 +252,16 @@ in
             )
           })
 
+          # Determine if we should delete excluded files
+          # Default: true if no custom patterns, false if custom patterns provided
+          DELETE_EXCLUDED=${
+            let
+              effectiveDeleteExcluded =
+                if job.deleteExcluded != null then job.deleteExcluded else (job.excludePatterns == [ ]);
+            in
+            if effectiveDeleteExcluded then "1" else ""
+          }
+
           if [ "${job.type}" = "bisync" ]; then
             BISYNC_ARGS=(
               "--config" "${job.rcloneConfig}"
@@ -171,6 +270,7 @@ in
               "--remove-empty-dirs"
               "''${EXCLUDE_ARGS[@]}"
             )
+            [ -n "$DELETE_EXCLUDED" ] && BISYNC_ARGS+=("--delete-excluded")
 
             if [ ! -d "$XDG_CACHE_HOME/rclone/bisync" ] || [ -z "$(ls -A "$XDG_CACHE_HOME/rclone/bisync")" ]; then
               echo "First run detected or cache empty. Using --resync."
@@ -214,13 +314,18 @@ in
 
           else
             # Normal sync
+            SYNC_ARGS=(
+              "--config" "${job.rcloneConfig}"
+              "--verbose"
+              "--use-mmap"
+              "--transfers" "4"
+              "--checkers" "8"
+              "''${EXCLUDE_ARGS[@]}"
+            )
+            [ -n "$DELETE_EXCLUDED" ] && SYNC_ARGS+=("--delete-excluded")
+
             if ${pkgs.rclone}/bin/rclone sync \
-              --config "${job.rcloneConfig}" \
-              --verbose \
-              --use-mmap \
-              --transfers 4 \
-              --checkers 8 \
-              "''${EXCLUDE_ARGS[@]}" \
+              "''${SYNC_ARGS[@]}" \
               "$FULL_SOURCE" "$FULL_DEST"; then
               
               echo "Sync successful"
