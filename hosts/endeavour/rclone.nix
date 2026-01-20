@@ -1,16 +1,19 @@
 { config, ... }:
 {
   my-services.rclone-syncs = {
-    "ananth-taxes" = {
+    "ananth-finance" = {
       type = "bisync";
       source = "seafile:";
-      sourceSubPath = "/Finance/Taxes";
+      sourceSubPath = "/Finance";
       destination = "gdrive:";
-      destSubPath = "/Finance/Taxes";
+      destSubPath = "/Finance";
       checkAccess = false;
       rcloneConfig = config.sops.secrets."rclone/ananth".path;
       interval = "*:0/5";
-      excludePatterns = [ "Icon?" ];
+      excludePatterns = [
+        "Icon?"
+        "._Icon"
+      ];
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
         RCLONE_CONFIG_SEAFILE_TYPE = "webdav";
