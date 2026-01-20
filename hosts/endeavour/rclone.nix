@@ -11,8 +11,8 @@
       rcloneConfig = config.sops.secrets."rclone/ananth".path;
       interval = "*:0/5";
       excludePatterns = [
-        "Icon?"
-        "._Icon"
+        "Icon\?"
+        "._Icon*"
       ];
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
