@@ -246,10 +246,9 @@ in
           write_metric rclone_sync_status "job=${name},stage=start,type=${job.type}" 1
 
           # Build exclude arguments (default patterns + user patterns)
+          # Use single quotes to prevent bash variable expansion (e.g., $RECYCLE.BIN)
           EXCLUDE_ARGS=(${
-            lib.concatMapStringsSep " " (p: "\"--exclude\" \"${p}\"") (
-              defaultExcludePatterns ++ job.excludePatterns
-            )
+            lib.concatMapStringsSep " " (p: "--exclude '${p}'") (defaultExcludePatterns ++ job.excludePatterns)
           })
 
           # Determine if we should delete excluded files
