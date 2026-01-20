@@ -64,6 +64,11 @@ in
             default = { };
             description = "Environment variables for the sync job";
           };
+          excludePatterns = mkOption {
+            type = types.listOf types.str;
+            default = [ ];
+            description = "Patterns to exclude from sync (passed to rclone --exclude)";
+          };
         };
       }
     );
@@ -122,12 +127,16 @@ in
 
           write_metric rclone_sync_status "job=${name},stage=start,type=${job.type}" 1
 
+          # Build exclude arguments
+          EXCLUDE_ARGS=(${lib.concatMapStringsSep " " (p: "\"--exclude\" \"${p}\"") job.excludePatterns})
+
           if [ "${job.type}" = "bisync" ]; then
             BISYNC_ARGS=(
               "--config" "${job.rcloneConfig}"
               "--verbose"
               ${lib.optionalString job.checkAccess "\"--check-access\""}
               "--remove-empty-dirs"
+              "''${EXCLUDE_ARGS[@]}"
             )
 
             if [ ! -d "$XDG_CACHE_HOME/rclone/bisync" ] || [ -z "$(ls -A "$XDG_CACHE_HOME/rclone/bisync")" ]; then
@@ -178,6 +187,7 @@ in
               --use-mmap \
               --transfers 4 \
               --checkers 8 \
+              "''${EXCLUDE_ARGS[@]}" \
               "$FULL_SOURCE" "$FULL_DEST"; then
               
               echo "Sync successful"

@@ -10,6 +10,7 @@
       checkAccess = false;
       rcloneConfig = config.sops.secrets."rclone/ananth".path;
       interval = "*:0/5";
+      excludePatterns = [ "Icon?" ];
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
         RCLONE_CONFIG_SEAFILE_TYPE = "webdav";
@@ -26,6 +27,7 @@
       checkAccess = false;
       rcloneConfig = config.sops.secrets."rclone/bhaskar".path;
       interval = "*:0/5";
+      excludePatterns = [ "Icon?" ];
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
         RCLONE_CONFIG_SEAFILE_TYPE = "webdav";
@@ -42,6 +44,7 @@
       checkAccess = false;
       rcloneConfig = config.sops.secrets."rclone/bhaskar".path;
       interval = "*:0/5";
+      excludePatterns = [ "Icon?" ];
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
         RCLONE_CONFIG_SEAFILE_TYPE = "webdav";
