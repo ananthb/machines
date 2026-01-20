@@ -8,6 +8,35 @@
 let
   inherit (lib) mkOption types;
   cfg = config.my-services.rclone-syncs;
+
+  defaultExcludePatterns = [
+    # macOS
+    "._*"
+    "Icon*"
+    ".DS_Store"
+    ".Spotlight-V100"
+    ".Trashes"
+    ".fseventsd"
+    ".TemporaryItems"
+    ".AppleDouble"
+    # Windows
+    "Thumbs.db"
+    "ehthumbs.db"
+    "Desktop.ini"
+    "$RECYCLE.BIN"
+    "System Volume Information"
+    # Linux
+    ".Trash-*"
+    ".directory"
+    "*~"
+    # Android
+    ".thumbnails"
+    ".thumbdata*"
+    "LOST.DIR"
+    # Office lock files
+    "~$*"
+    ".~lock.*"
+  ];
 in
 {
   options.my-services.rclone-syncs = mkOption {
@@ -67,7 +96,7 @@ in
           excludePatterns = mkOption {
             type = types.listOf types.str;
             default = [ ];
-            description = "Patterns to exclude from sync (passed to rclone --exclude)";
+            description = "Additional patterns to exclude from sync (passed to rclone --exclude). Default patterns (._*, Icon*) are always included.";
           };
         };
       }
@@ -127,8 +156,12 @@ in
 
           write_metric rclone_sync_status "job=${name},stage=start,type=${job.type}" 1
 
-          # Build exclude arguments
-          EXCLUDE_ARGS=(${lib.concatMapStringsSep " " (p: "\"--exclude\" \"${p}\"") job.excludePatterns})
+          # Build exclude arguments (default patterns + user patterns)
+          EXCLUDE_ARGS=(${
+            lib.concatMapStringsSep " " (p: "\"--exclude\" \"${p}\"") (
+              defaultExcludePatterns ++ job.excludePatterns
+            )
+          })
 
           if [ "${job.type}" = "bisync" ]; then
             BISYNC_ARGS=(
