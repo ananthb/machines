@@ -31,6 +31,20 @@
           RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
         };
       };
+      Network = {
+        Proxy = {
+          AuthEnabled = false;
+          HostnameLookupEnabled = true;
+          IP = "127.0.0.1";
+          Port = 8888;
+          Type = "SOCKS5";
+          Profiles = {
+            BitTorrent = true;
+            Misc = true;
+            RSS = true;
+          };
+        };
+      };
     };
   };
 

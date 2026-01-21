@@ -22,7 +22,6 @@
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
-    ../../services/media/dl.nix
     ../../services/media/jellyfin.nix
     ../../services/media/news.nix
     ../../services/monitoring/blackbox.nix
@@ -31,6 +30,7 @@
     ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
+    ../../services/qbittorrent.nix
     ../../services/radicale.nix
     ../../services/seafile.nix
     ../../services/vaultwarden.nix
