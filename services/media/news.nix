@@ -64,7 +64,7 @@
     enable = true;
     enableTCPIP = true;
     authentication = ''
-      host wallabag wallabag 10.98.0.0/16 md5
+      host wallabag wallabag 10.88.0.0/16 md5
     '';
     ensureDatabases = [
       "wallabag"
@@ -81,7 +81,7 @@
   sops.templates."wallabag/env".content = ''
     SYMFONY__ENV__DOMAIN_NAME=https://wallabag.kedi.dev
     SYMFONY__ENV__DATABASE_DRIVER=pdo_pgsql
-    SYMFONY__ENV__DATABASE_HOST=10.98.0.1
+    SYMFONY__ENV__DATABASE_HOST=10.88.0.1
     SYMFONY__ENV__DATABASE_PORT=5432
     SYMFONY__ENV__DATABASE_NAME=wallabag
     SYMFONY__ENV__DATABASE_USER=${config.sops.placeholder."wallabag/db/username"}
