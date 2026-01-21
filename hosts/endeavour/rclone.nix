@@ -8,6 +8,7 @@
       destination = "gdrive:";
       destSubPath = "/Finance";
       checkAccess = false;
+      sizeOnly = true;
       rcloneConfig = config.sops.secrets."rclone/ananth".path;
       interval = "*:0/5";
       environment = {
@@ -24,6 +25,7 @@
       destination = "gdrive:";
       destSubPath = "/Documents";
       checkAccess = false;
+      sizeOnly = true;
       rcloneConfig = config.sops.secrets."rclone/bhaskar".path;
       interval = "*:0/5";
       environment = {
@@ -40,6 +42,7 @@
       destination = "gdrive:";
       destSubPath = "/Reference";
       checkAccess = false;
+      sizeOnly = true;
       rcloneConfig = config.sops.secrets."rclone/bhaskar".path;
       interval = "*:0/5";
       environment = {

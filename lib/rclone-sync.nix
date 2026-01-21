@@ -171,6 +171,11 @@ in
             default = false;
             description = "Whether to delete excluded files from the destination (--delete-excluded). Default is false.";
           };
+          sizeOnly = mkOption {
+            type = types.bool;
+            default = false;
+            description = "Ignore modification times and compare only by size (--size-only). Useful for backends with unreliable timestamps.";
+          };
         };
       }
     );
@@ -238,6 +243,9 @@ in
           # Determine if we should delete excluded files
           DELETE_EXCLUDED=${if job.deleteExcluded then "1" else ""}
 
+          # Determine if we should use size-only comparison
+          SIZE_ONLY=${if job.sizeOnly then "1" else ""}
+
           if [ "${job.type}" = "bisync" ]; then
             BISYNC_ARGS=(
               "--config" "${job.rcloneConfig}"
@@ -247,6 +255,7 @@ in
               "''${EXCLUDE_ARGS[@]}"
             )
             [ -n "$DELETE_EXCLUDED" ] && BISYNC_ARGS+=("--delete-excluded")
+            [ -n "$SIZE_ONLY" ] && BISYNC_ARGS+=("--size-only")
 
             if [ ! -d "$XDG_CACHE_HOME/rclone/bisync" ] || [ -z "$(ls -A "$XDG_CACHE_HOME/rclone/bisync")" ]; then
               echo "First run detected or cache empty. Using --resync."
@@ -299,6 +308,7 @@ in
               "''${EXCLUDE_ARGS[@]}"
             )
             [ -n "$DELETE_EXCLUDED" ] && SYNC_ARGS+=("--delete-excluded")
+            [ -n "$SIZE_ONLY" ] && SYNC_ARGS+=("--size-only")
 
             if ${pkgs.rclone}/bin/rclone sync \
               "''${SYNC_ARGS[@]}" \
