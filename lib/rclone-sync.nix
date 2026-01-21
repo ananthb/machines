@@ -19,7 +19,7 @@
 #     checkAccess = true;            # Test file access before sync (default: true)
 #     environment = { };             # Extra environment variables
 #     excludePatterns = [ ];         # Additional exclude patterns
-#     deleteExcluded = null;         # Delete excluded files from destination
+#     deleteExcluded = false;        # Delete excluded files from destination (default: false)
 #   };
 #
 # EXCLUDE PATTERNS:
@@ -35,20 +35,12 @@
 #   Controls whether files matching exclude patterns are deleted from the
 #   destination. This cleans up system junk files on the remote.
 #
-#   Behavior when deleteExcluded = null (default):
-#     - No custom excludePatterns → deleteExcluded = true (safe for defaults)
-#     - Custom excludePatterns provided → deleteExcluded = false (opt-in)
-#
-#   This default is conservative: the built-in patterns are safe to delete,
-#   but user-provided patterns might accidentally match wanted files.
-#
-#   Override explicitly if needed:
-#     deleteExcluded = true;   # Always delete excluded files
-#     deleteExcluded = false;  # Never delete excluded files
+#   Default is false. Set to true only if you want excluded files deleted
+#   from the destination.
 #
 # EXAMPLES:
 #
-#   # Simple one-way backup (deletes default junk files on destination)
+#   # Simple one-way backup
 #   my-services.rclone-syncs.photos-backup = {
 #     source = "/home/user/Photos";
 #     destination = "gdrive:Backups/Photos";
@@ -65,21 +57,13 @@
 #     interval = "hourly";
 #   };
 #
-#   # With custom excludes (deleteExcluded defaults to false)
+#   # With custom excludes and deleteExcluded enabled
 #   my-services.rclone-syncs.projects = {
 #     source = "/home/user/Projects";
 #     destination = "b2:bucket/Projects";
 #     rcloneConfig = config.sops.secrets.rclone-config.path;
 #     excludePatterns = [ "node_modules" ".git" "target" "*.log" ];
-#   };
-#
-#   # Custom excludes with explicit deleteExcluded
-#   my-services.rclone-syncs.projects = {
-#     source = "/home/user/Projects";
-#     destination = "b2:bucket/Projects";
-#     rcloneConfig = config.sops.secrets.rclone-config.path;
-#     excludePatterns = [ "node_modules" ".git" ];
-#     deleteExcluded = true;  # Also delete node_modules/.git on destination
+#     deleteExcluded = true;  # Also delete excluded files on destination
 #   };
 
 {
@@ -183,9 +167,9 @@ in
             description = "Additional patterns to exclude from sync (passed to rclone --exclude). Default patterns (._*, Icon*) are always included.";
           };
           deleteExcluded = mkOption {
-            type = types.nullOr types.bool;
-            default = null;
-            description = "Whether to delete excluded files from the destination (--delete-excluded). If null (default), automatically set to true when no custom excludePatterns are provided, false otherwise.";
+            type = types.bool;
+            default = false;
+            description = "Whether to delete excluded files from the destination (--delete-excluded). Default is false.";
           };
         };
       }
@@ -252,14 +236,7 @@ in
           })
 
           # Determine if we should delete excluded files
-          # Default: true if no custom patterns, false if custom patterns provided
-          DELETE_EXCLUDED=${
-            let
-              effectiveDeleteExcluded =
-                if job.deleteExcluded != null then job.deleteExcluded else (job.excludePatterns == [ ]);
-            in
-            if effectiveDeleteExcluded then "1" else ""
-          }
+          DELETE_EXCLUDED=${if job.deleteExcluded then "1" else ""}
 
           if [ "${job.type}" = "bisync" ]; then
             BISYNC_ARGS=(
