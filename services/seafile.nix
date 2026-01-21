@@ -258,8 +258,7 @@
         };
         mysqld = {
           skip-name-resolve = 1;
-          # localhost and podman bridge network
-          bind-address = "::1,10.89.0.1";
+          bind-address = "*";
           # See https://github.com/MariaDB/mariadb-docker/issues/560#issuecomment-1956517890
           character-set-server = "utf8mb4";
           collation-server = "utf8mb4_bin";
@@ -286,7 +285,7 @@
 
     redis.servers.seafile = {
       enable = true;
-      bind = "10.89.0.1";
+      bind = "0.0.0.0";
       port = 6400;
       unixSocket = null;
       settings.protected-mode = "no";
