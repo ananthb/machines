@@ -66,6 +66,8 @@
     '';
   };
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   networking = {
     hostName = hostname;
     firewall = {
@@ -113,6 +115,12 @@
   programs.mosh.enable = true;
 
   services = {
+    # sched-ext userspace schedulers
+    scx = {
+      enable = true;
+      scheduler = "scx_lavd";
+    };
+
     openssh = {
       enable = true;
       settings.PermitRootLogin = "no";
