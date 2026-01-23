@@ -116,8 +116,8 @@
   programs.mosh.enable = true;
 
   services = {
-    # sched-ext userspace schedulers
-    scx = {
+    # sched-ext userspace schedulers (amd64 only)
+    scx = lib.mkIf (system == "x86_64-linux") {
       enable = true;
       scheduler = "scx_lavd";
     };
