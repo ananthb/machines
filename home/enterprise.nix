@@ -18,6 +18,7 @@
     git-credential-manager
     gimp
     google-chrome
+    jamesdsp
     jellyfin-media-player
     junction
     rpi-imager
@@ -32,7 +33,6 @@
   ];
 
   services = {
-    easyeffects.enable = true;
     gnome-keyring.enable = true;
   };
 
@@ -42,7 +42,6 @@
       { package = appindicator; }
       { package = gsconnect; }
       { package = night-theme-switcher; }
-      { package = solaar-extension; }
       { package = system-monitor; }
       { package = tailscale-status; }
       { package = tiling-shell; }

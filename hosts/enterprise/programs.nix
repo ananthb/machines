@@ -1,11 +1,15 @@
 { pkgs, username, ... }:
 {
+  imports = [
+    ../../services/logiops.nix
+  ];
+
   # System packages
   environment.systemPackages = with pkgs; [
     ddcutil
     gnome-tweaks
     logitech-udev-rules
-    solaar
+    rnnoise-plugin
     tpm2-tss
   ];
 
@@ -50,18 +54,38 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      wireplumber.extraConfig.bluetoothEnhancements = {
-        "monitor.bluez.properties" = {
-          "bluez5.enable-sbc-xq" = true;
-          "bluez5.enable-msbc" = true;
-          "bluez5.enable-hw-volume" = true;
-          "bluez5.roles" = [
-            "hsp_hs"
-            "hsp_ag"
-            "hfp_hf"
-            "hfp_ag"
-          ];
-        };
+
+      extraConfig.pipewire."93-rnnoise" = {
+        "context.modules" = [
+          {
+            name = "libpipewire-module-filter-chain";
+            args = {
+              "node.description" = "Noise Canceling Microphone";
+              "media.name" = "Noise Canceling Microphone";
+              "filter.graph" = {
+                nodes = [
+                  {
+                    type = "ladspa";
+                    name = "rnnoise";
+                    plugin = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
+                    label = "noise_suppressor_mono";
+                    control = {
+                      "VAD Threshold (%)" = 50.0;
+                    };
+                  }
+                ];
+              };
+              "capture.props" = {
+                "node.name" = "capture.rnnoise_source";
+                "node.passive" = true;
+              };
+              "playback.props" = {
+                "node.name" = "rnnoise_source";
+                "media.class" = "Audio/Source";
+              };
+            };
+          }
+        ];
       };
     };
 
