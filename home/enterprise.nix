@@ -39,6 +39,7 @@
   programs.gnome-shell = {
     enable = true;
     extensions = with pkgs.gnomeExtensions; [
+      { package = another-window-session-manager; }
       { package = appindicator; }
       { package = gsconnect; }
       { package = night-theme-switcher; }
