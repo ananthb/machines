@@ -7,6 +7,7 @@
 }:
 {
   imports = [
+    inputs.ht32-panel.nixosModules.default
     inputs.tsnsrv.nixosModules.default
 
     ../linux.nix
@@ -34,7 +35,6 @@
     ../../services/radicale.nix
     ../../services/seafile.nix
     ../../services/vaultwarden.nix
-    ../../services/agni.nix
   ];
 
   # systemd-boot
@@ -83,6 +83,11 @@
   services = {
     fwupd.enable = true;
     bcachefs.autoScrub.enable = true;
+
+    ht32-panel = {
+      enable = true;
+      led.theme = 2; # breathing
+    };
 
     # NFS server - export /srv
     nfs.server = {

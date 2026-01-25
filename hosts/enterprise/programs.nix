@@ -55,37 +55,55 @@
       alsa.support32Bit = true;
       pulse.enable = true;
 
-      extraConfig.pipewire."93-rnnoise" = {
-        "context.modules" = [
-          {
-            name = "libpipewire-module-filter-chain";
-            args = {
-              "node.description" = "Noise Canceling Microphone";
-              "media.name" = "Noise Canceling Microphone";
-              "filter.graph" = {
-                nodes = [
-                  {
-                    type = "ladspa";
-                    name = "rnnoise";
-                    plugin = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
-                    label = "noise_suppressor_mono";
-                    control = {
-                      "VAD Threshold (%)" = 50.0;
-                    };
-                  }
-                ];
+      extraConfig = {
+        pipewire."92-low-latency" = {
+          "context.properties" = {
+            "default.clock.quantum" = 4096;
+            "default.clock.min-quantum" = 2048;
+            "default.clock.max-quantum" = 8192;
+          };
+        };
+
+        pipewire-pulse."92-pulse-latency" = {
+          "pulse.properties" = {
+            "pulse.min.req" = "4096/48000";
+            "pulse.default.req" = "4096/48000";
+            "pulse.min.quantum" = "4096/48000";
+          };
+        };
+
+        pipewire."93-rnnoise" = {
+          "context.modules" = [
+            {
+              name = "libpipewire-module-filter-chain";
+              args = {
+                "node.description" = "Noise Canceling Microphone";
+                "media.name" = "Noise Canceling Microphone";
+                "filter.graph" = {
+                  nodes = [
+                    {
+                      type = "ladspa";
+                      name = "rnnoise";
+                      plugin = "${pkgs.rnnoise-plugin}/lib/ladspa/librnnoise_ladspa.so";
+                      label = "noise_suppressor_mono";
+                      control = {
+                        "VAD Threshold (%)" = 50.0;
+                      };
+                    }
+                  ];
+                };
+                "capture.props" = {
+                  "node.name" = "capture.rnnoise_source";
+                  "node.passive" = true;
+                };
+                "playback.props" = {
+                  "node.name" = "rnnoise_source";
+                  "media.class" = "Audio/Source";
+                };
               };
-              "capture.props" = {
-                "node.name" = "capture.rnnoise_source";
-                "node.passive" = true;
-              };
-              "playback.props" = {
-                "node.name" = "rnnoise_source";
-                "media.class" = "Audio/Source";
-              };
-            };
-          }
-        ];
+            }
+          ];
+        };
       };
     };
 
