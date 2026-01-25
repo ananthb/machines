@@ -34,6 +34,7 @@
     ../../services/radicale.nix
     ../../services/seafile.nix
     ../../services/vaultwarden.nix
+    ../../services/agni.nix
   ];
 
   # systemd-boot
