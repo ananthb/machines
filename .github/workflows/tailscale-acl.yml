@@ -22,4 +22,4 @@ jobs:
         with:
           api-key: ${{ secrets.TS_API_KEY }}
           tailnet: ${{ secrets.TS_TAILNET }}
-          acl-file: tailscale/acls.hujson
+          policy-file: tailscale/acls.hujson
