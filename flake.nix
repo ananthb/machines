@@ -69,11 +69,17 @@
       url = "github:boinkor-net/tsnsrv";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
+      deploy-rs,
       lanzaboote,
       nix-darwin,
       nixos-hardware,
@@ -166,5 +172,45 @@
           extraModules = [ sops-nix.darwinModules.sops ];
         };
       };
+
+      deploy.nodes = {
+        endeavour = {
+          hostname = "endeavour";
+          profiles.system = {
+            user = "root";
+            sshUser = username;
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.endeavour;
+          };
+        };
+
+        enterprise = {
+          hostname = "enterprise";
+          profiles.system = {
+            user = "root";
+            sshUser = username;
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.enterprise;
+          };
+        };
+
+        stargazer = {
+          hostname = "stargazer";
+          profiles.system = {
+            user = "root";
+            sshUser = username;
+            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
+          };
+        };
+
+        voyager = {
+          hostname = "voyager";
+          profiles.system = {
+            user = "root";
+            sshUser = username;
+            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
+          };
+        };
+      };
+
+      checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
 }
