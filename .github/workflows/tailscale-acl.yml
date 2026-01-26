@@ -1,0 +1,25 @@
+name: Update Tailscale ACL
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - tailscale/acls.hujson
+  workflow_dispatch:
+
+jobs:
+  update-acl:
+    name: Update ACL
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy ACL to Tailscale
+        uses: tailscale/gitops-acl-action@v1
+        with:
+          api-key: ${{ secrets.TS_API_KEY }}
+          tailnet: ${{ secrets.TS_TAILNET }}
+          acl-file: tailscale/acls.hujson

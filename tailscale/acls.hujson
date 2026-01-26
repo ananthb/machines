@@ -1,0 +1,145 @@
+{
+	// Declare static groups of users. Use autogroups for all users or users with a specific role.
+	// "groups": {
+	//   "group:example": ["alice@example.com", "bob@example.com"],
+	// },
+
+	"tagOwners": {
+		"tag:deploy":         ["autogroup:owner"],
+		"tag:tsnsrv":         ["autogroup:owner"],
+		"tag:server":         ["autogroup:owner"],
+		"tag:infrastructure": ["autogroup:owner"],
+	},
+
+	// Define users and devices that can use Tailscale SSH.
+	"ssh": [
+		// Allow all users to SSH into their own devices in check mode.
+		// Comment this section out if you want to define specific restrictions.
+		{
+			"action": "accept",
+			"src":    ["autogroup:member"],
+			"dst":    ["autogroup:self"],
+			"users":  ["autogroup:nonroot", "root"],
+		},
+		{
+			"src":    ["autogroup:admin"],
+			"dst":    ["tag:server", "tag:infrastructure"],
+			"users":  ["autogroup:nonroot", "root"],
+			"action": "accept",
+		},
+		{
+			"src":    ["tag:server"],
+			"dst":    ["tag:server", "tag:infrastructure"],
+			"users":  ["autogroup:nonroot"],
+			"action": "accept",
+		},
+		// Allow deploy tag (CI) to SSH to servers for deployment
+		{
+			"src":    ["tag:deploy"],
+			"dst":    ["tag:server"],
+			"users":  ["autogroup:nonroot", "root"],
+			"action": "accept",
+		},
+	],
+
+	"nodeAttrs": [
+		{
+			"target": ["tag:tsnsrv"],
+			"attr":   ["funnel"],
+		},
+		{
+			"target": ["tag:server", "autogroup:admin"],
+			"attr":   ["drive:share", "drive:access"],
+		},
+		{
+			"target": ["*"],
+			"attr":   ["drive:access"],
+		},
+	],
+
+	"grants": [
+		{
+			"src": ["autogroup:admin"],
+			"dst": ["tag:server"],
+
+			"app": {
+				"tailscale.com/cap/drive": [
+					{
+						"access": "rw",
+						"shares": ["*"],
+					},
+				],
+			},
+		},
+		{
+			"src": ["autogroup:admin"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		{
+			"src": ["tag:server"],
+			"dst": ["tag:infrastructure", "tag:server", "tag:tsnsrv"],
+			"ip":  ["*"],
+		},
+		// Allow deploy tag (CI) to access servers for deployment
+		{
+			"src": ["tag:deploy"],
+			"dst": ["tag:server"],
+			"ip":  ["*"],
+		},
+		// Read-only taildrive access to all members.
+		{
+			"src": ["autogroup:member"],
+			"dst": ["tag:server"],
+
+			"app": {
+				"tailscale.com/cap/drive": [
+					{
+						"access": "ro",
+						"shares": ["*"],
+					},
+				],
+			},
+		},
+		{
+			"src": ["autogroup:shared"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		// Allow servers to access compute containers and scrape metrics from my machines.
+		{
+			"src": ["tag:server"],
+			"dst": ["antsub@gmail.com"],
+
+			"ip": [
+				"tcp:9980",
+				"tcp:9633",
+				"tcp:9115",
+				"tcp:9177",
+				"tcp:9100",
+				"tcp:9199",
+				"tcp:3003",
+			],
+		},
+	],
+
+	"sshTests": [
+		{
+			"src":    "antsub@gmail.com",
+			"dst":    ["tag:server", "tag:infrastructure"],
+			"accept": ["autogroup:nonroot", "root"],
+		},
+	],
+
+	"autoApprovers": {"services": {"tag:tsnsrv": ["tag:server"]}},
+
+	// Test access rules every time they're saved.
+	// "tests": [
+	//   {
+	//       "src": "alice@example.com",
+	//       "accept": ["tag:example"],
+	//       "deny": ["100.101.102.103:443"],
+	//   },
+	// ],
+}
+

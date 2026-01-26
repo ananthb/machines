@@ -5,9 +5,6 @@
   inputs,
   ...
 }:
-let
-  nixCache = import ../../lib/nix-cache.nix;
-in
 {
   imports = [
     inputs.NixVirt.nixosModules.default
@@ -130,12 +127,6 @@ in
   };
 
   sops.secrets."nut/users/nutmon".mode = "0444";
-
-  # Use endeavour as a binary cache substituter
-  nix.settings = {
-    substituters = [ "http://${nixCache.cacheHost}:${toString nixCache.cachePort}" ];
-    trusted-public-keys = [ nixCache.publicKey ];
-  };
 
   # 32GB swapfile
   swapDevices = [
