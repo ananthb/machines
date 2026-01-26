@@ -15,7 +15,6 @@
     firefox
     gcr
     ghostty
-    git-credential-manager
     gimp
     google-chrome
     jamesdsp
@@ -74,9 +73,8 @@
 
   programs.git.settings = {
     credential = {
-      helper = "manager";
+      helper = "!/etc/profiles/per-user/ananth/bin/gh auth git-credential";
       "https://github.com".username = "ananthb";
-      credentialStore = "secretservice";
     };
   };
 
