@@ -92,7 +92,10 @@
 
     ht32-panel = {
       enable = true;
-      led.theme = 2; # breathing
+      web = {
+        enable = true;
+        listen = "[::]:8686";
+      };
     };
 
     # NFS server - export /srv
