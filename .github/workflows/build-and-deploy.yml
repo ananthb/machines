@@ -155,6 +155,13 @@ jobs:
           tags: tag:deploy
           ssh: true
 
+      - name: Add SSH host keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "endeavour ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJxgao1yX2VxxPIozAKlL3cbk2SpBPfxjF29q7S/oFf" >> ~/.ssh/known_hosts
+          echo "enterprise ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFQt03m35by3UEWbU2KiEsr+9jnxXoFwRNflQYKCjE6n" >> ~/.ssh/known_hosts
+          echo "stargazer ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1jqNdM9sPcuX9qkMPvlTMnkzyUQY1CnMGYHv2Epogo" >> ~/.ssh/known_hosts
+
       - name: Deploy from endeavour
         run: |
           ssh ananth@endeavour "cd ~/src/machines && git pull && nix run github:serokell/deploy-rs -- --skip-checks"
