@@ -53,6 +53,9 @@
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
+  # Mount binfmt_misc at boot for cross-compilation
+  systemd.units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
+
   # hardware accelerated graphics
   # used by immich and jellyfin
   nixpkgs.config.packageOverrides = pkgs: {
