@@ -8,6 +8,7 @@
 let
   cftunnelLib = import ../lib/cftunnel.nix;
   hasTunnel = cftunnelLib.tunnels ? ${hostname};
+  nixCache = import ../lib/nix-cache.nix;
 in
 {
   imports = lib.optionals hasTunnel [
@@ -44,6 +45,10 @@ in
         "root"
         username
       ];
+
+      # Use endeavour as a binary cache
+      substituters = [ "http://${nixCache.cacheHost}:${toString nixCache.cachePort}" ];
+      trusted-public-keys = [ nixCache.publicKey ];
     };
 
     # Optimise space

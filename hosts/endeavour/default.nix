@@ -49,6 +49,8 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
+    # Enable cross-compilation for aarch64-linux
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   # hardware accelerated graphics
