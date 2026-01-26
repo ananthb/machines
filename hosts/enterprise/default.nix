@@ -21,6 +21,8 @@
     ../../services/monitoring/libvirt.nix
   ];
 
+  documentation.nixos.enable = true;
+
   # systemd-boot
   boot = {
     loader = {

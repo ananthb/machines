@@ -164,4 +164,4 @@ jobs:
 
       - name: Deploy from endeavour
         run: |
-          ssh ananth@endeavour "cd ~/src/machines && git pull && nix run github:serokell/deploy-rs -- --skip-checks"
+          ssh ananth@endeavour "cd ~/machines && git pull && nix run github:serokell/deploy-rs -- --skip-checks"
