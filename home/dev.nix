@@ -212,7 +212,7 @@
         lualine.enable = true;
         navic.enable = true;
         nix.enable = true;
-        noice.enable = true;
+        noice.enable = false;
         none-ls.enable = true;
         nvim-autopairs.enable = true;
         sleuth.enable = true;

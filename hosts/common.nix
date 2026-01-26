@@ -24,7 +24,6 @@ in
       "copilot.vim"
       "crush"
       "discord"
-      "git-credential-manager"
       "google-chrome"
       "intel-ocl"
       "slack"
@@ -51,10 +50,6 @@ in
     gc.automatic = true;
     optimise.automatic = true;
   };
-
-  environment.systemPackages = with pkgs; [
-    git-credential-manager
-  ];
 
   users.users.${username} = {
     name = username;
