@@ -35,6 +35,7 @@
     ../../services/radicale.nix
     ../../services/seafile.nix
     ../../services/vaultwarden.nix
+    ../../services/harmonia.nix
   ];
 
   # systemd-boot

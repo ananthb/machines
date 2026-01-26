@@ -87,7 +87,13 @@ let
     host: if hasExporter host.config "ecoflow" then [ "${host.name}:2112" ] else [ ]
   ) nixosHosts;
 
-  # 7. App Exporters (Radarr, Sonarr, Prowlarr, Postgres, Immich, Jellyfin)
+  # 7. Harmonia (Nix binary cache)
+  # Target: hostname:5000
+  harmoniaTargets = concatMap (
+    host: if hasService host.config "harmonia" then [ "${host.name}:5000" ] else [ ]
+  ) nixosHosts;
+
+  # 8. App Exporters (Radarr, Sonarr, Prowlarr, Postgres, Immich, Jellyfin)
   appTargets =
     let
       getAppTargets =
@@ -496,6 +502,16 @@ in
               targets = libvirtTargets;
               labels.type = "exporter";
               labels.role = "hypervisor";
+            }
+          ];
+        }
+        {
+          job_name = "harmonia";
+          static_configs = [
+            {
+              targets = harmoniaTargets;
+              labels.type = "app";
+              labels.app = "harmonia";
             }
           ];
         }
