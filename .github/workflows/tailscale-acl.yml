@@ -8,6 +8,10 @@ on:
       - tailscale/acls.hujson
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   update-acl:
     name: Update ACL
