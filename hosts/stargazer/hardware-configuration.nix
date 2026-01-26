@@ -37,7 +37,6 @@
     raspberry-pi."4" = {
       apply-overlays-dtmerge.enable = true;
       i2c1.enable = true;
-      fkms-3d.enable = true;
     };
 
     deviceTree.enable = true;
