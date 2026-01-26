@@ -68,6 +68,29 @@
       AllowSuspend=no
       AllowHibernation=no
     '';
+
+    # Enable systemd-oomd for memory pressure management
+    oomd = {
+      enable = true;
+      enableRootSlice = true;
+      enableUserSlices = true;
+      enableSystemSlice = true;
+    };
+
+    # Protect critical services from oomd
+    services.tailscaled.serviceConfig.ManagedOOMPreference = "none";
+  };
+
+  # Journald size limits
+  services.journald.extraConfig = ''
+    SystemMaxUse=500M
+    RuntimeMaxUse=100M
+  '';
+
+  boot.kernel.sysctl = {
+    # Auto-reboot on kernel panic after 10 seconds
+    "kernel.panic" = 10;
+    "kernel.panic_on_oops" = 1;
   };
 
   boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;

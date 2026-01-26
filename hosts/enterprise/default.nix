@@ -83,28 +83,13 @@
     ];
 
     # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
-    services.gnome-remote-desktop = {
-      wantedBy = [ "graphical.target" ];
-    };
+    services.gnome-remote-desktop.wantedBy = [ "graphical.target" ];
 
-    # Enable systemd-oomd for memory pressure management
-    oomd = {
-      enable = true;
-      enableRootSlice = true;
-      enableUserSlices = true;
-      enableSystemSlice = true;
-      settings.OOM = {
-        DefaultMemoryPressureDurationSec = "5s";
-      };
-    };
+    # Desktop-specific oomd tuning (base config in linux.nix)
+    oomd.settings.OOM.DefaultMemoryPressureDurationSec = "5s";
 
-    # Protect critical services from oomd
-    services = {
-      tailscaled.serviceConfig.ManagedOOMPreference = "none";
-      display-manager.serviceConfig.ManagedOOMPreference = "none";
-    };
-
-    # Protect GNOME user session services from oomd
+    # Protect desktop services from oomd
+    services.display-manager.serviceConfig.ManagedOOMPreference = "none";
     user.services = {
       gnome-shell.serviceConfig.ManagedOOMPreference = "none";
       gsd-xsettings.serviceConfig.ManagedOOMPreference = "none";
