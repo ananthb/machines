@@ -46,6 +46,9 @@
 
   nix.gc.dates = "weekly";
 
+  # Disable NixOS documentation generation on servers.
+  documentation.nixos.enable = false;
+
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
