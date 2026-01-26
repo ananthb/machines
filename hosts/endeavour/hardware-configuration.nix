@@ -36,6 +36,10 @@
     "/" = {
       device = "/dev/disk/by-uuid/63de0249-73cc-4608-b228-a9d26f8b110c";
       fsType = "btrfs";
+      options = [
+        "noatime"
+        "compress=zstd"
+      ];
     };
     "/boot" = {
       device = "/dev/disk/by-uuid/E445-A150";
