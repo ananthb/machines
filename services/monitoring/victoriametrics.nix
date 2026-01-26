@@ -13,6 +13,8 @@ let
     hasAttr
     ;
 
+  nixCache = import ../../lib/nix-cache.nix;
+
   # Helper functions to check for enabled services/exporters
   hasService = c: name: hasAttr name c.services && c.services.${name}.enable or false;
   hasExporter =
@@ -88,9 +90,9 @@ let
   ) nixosHosts;
 
   # 7. Harmonia (Nix binary cache)
-  # Target: hostname:5000
   harmoniaTargets = concatMap (
-    host: if hasService host.config "harmonia" then [ "${host.name}:5000" ] else [ ]
+    host:
+    if hasService host.config "harmonia" then [ "${host.name}:${toString nixCache.cachePort}" ] else [ ]
   ) nixosHosts;
 
   # 8. App Exporters (Radarr, Sonarr, Prowlarr, Postgres, Immich, Jellyfin)
