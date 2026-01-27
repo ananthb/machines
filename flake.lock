@@ -451,11 +451,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1769526315,
-        "narHash": "sha256-a/H2kT5TLtdBm4j8W+nZ1lxZfQ/KfAZTr14eVKEFLmI=",
+        "lastModified": 1769531849,
+        "narHash": "sha256-u6doKBB4YDs6uaGz88iDGsfu21GxupK7RVKfnD5X8SA=",
         "owner": "ananthb",
         "repo": "ht32-panel",
-        "rev": "32d34ff3417cabd1fa147943d0146c4d424bd14d",
+        "rev": "58cf36a433b8783f024d19def8d28f5498850d7d",
         "type": "github"
       },
       "original": {
