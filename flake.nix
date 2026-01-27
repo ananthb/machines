@@ -74,6 +74,8 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    devenv.url = "github:cachix/devenv";
   };
 
   outputs =
@@ -212,5 +214,23 @@
       };
 
       checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+
+      devShells =
+        let
+          mkDevShell =
+            system:
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+            in
+            inputs.devenv.lib.mkShell {
+              inherit inputs pkgs;
+              modules = [ ./devenv.nix ];
+            };
+        in
+        {
+          x86_64-linux.default = mkDevShell "x86_64-linux";
+          aarch64-linux.default = mkDevShell "aarch64-linux";
+          aarch64-darwin.default = mkDevShell "aarch64-darwin";
+        };
     };
 }
