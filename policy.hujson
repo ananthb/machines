@@ -113,27 +113,19 @@
 			"dst": ["*"],
 			"ip":  ["*"],
 		},
-		// Allow servers to access compute containers and scrape metrics from my machines.
-		{
-			"src": ["tag:server"],
-			"dst": ["antsub@gmail.com"],
-
-			"ip": [
-				"tcp:9980",
-				"tcp:9633",
-				"tcp:9115",
-				"tcp:9177",
-				"tcp:9100",
-				"tcp:9199",
-				"tcp:3003",
-			],
-		},
 	],
 
 	"sshTests": [
+	        // deploy machines should have access to deploy to servers and workstations
 		{
-			"src":    "antsub@gmail.com",
-			"dst":    ["tag:server", "tag:infrastructure"],
+			"src":    "tag:deploy",
+			"dst":    ["tag:server", "tag:workstation"],
+			"accept": ["autogroup:nonroot", "root"],
+		},
+		// workstations should have access to everything
+		{
+			"src":    "tag:workstation",
+			"dst":    ["tag:server", "tag:infrastructure", "tag:workstation"],
 			"accept": ["autogroup:nonroot", "root"],
 		},
 	],
