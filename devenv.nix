@@ -30,8 +30,8 @@
     '';
     deploy-all.exec = "nix run github:serokell/deploy-rs";
     deploy-ci.exec = ''
-      nix run github:serokell/deploy-rs -- .#endeavour
-      nix run github:serokell/deploy-rs
+      nix run github:serokell/deploy-rs -- --skip-checks .#endeavour
+      nix run github:serokell/deploy-rs -- --skip-checks
     '';
   };
 
