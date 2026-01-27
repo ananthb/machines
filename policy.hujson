@@ -9,6 +9,7 @@
 		"tag:tsnsrv":         ["autogroup:owner"],
 		"tag:server":         ["autogroup:owner"],
 		"tag:infrastructure": ["autogroup:owner"],
+		"tag:workstation":    ["autogroup:owner"],
 	},
 
 	// Define users and devices that can use Tailscale SSH.
@@ -33,10 +34,10 @@
 			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
-		// Allow deploy tag (CI) to SSH to servers and my devices for deployment
+		// Allow deploy tag (CI) to SSH to servers and workstations for deployment
 		{
 			"src":    ["tag:deploy"],
-			"dst":    ["tag:server", "antsub@gmail.com"],
+			"dst":    ["tag:server", "tag:workstation"],
 			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
@@ -73,6 +74,12 @@
 		},
 		{
 			"src": ["autogroup:admin"],
+			"dst": ["*"],
+			"ip":  ["*"],
+		},
+		// Workstations have access to everything
+		{
+			"src": ["tag:workstation"],
 			"dst": ["*"],
 			"ip":  ["*"],
 		},

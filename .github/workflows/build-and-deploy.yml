@@ -130,9 +130,32 @@ jobs:
       - name: Build ${{ matrix.host }}
         run: nix build .#darwinConfigurations.${{ matrix.host }}.system --accept-flake-config --dry-run
 
+  sync-acls:
+    name: Sync Tailscale ACLs
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch version-cache.json
+        uses: actions/cache@v4
+        with:
+          path: ./version-cache.json
+          key: version-cache.json-${{ github.run_id }}
+          restore-keys: |
+            version-cache.json-
+
+      - name: Deploy ACL
+        uses: tailscale/gitops-acl-action@v1
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tailnet: ${{ secrets.TS_TAILNET }}
+          action: apply
+
   deploy:
     name: Deploy
-    needs: [build-nixos]
+    needs: [build-nixos, sync-acls]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 60
