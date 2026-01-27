@@ -138,8 +138,25 @@
 
   environment.shells = [ pkgs.fish ];
 
-  programs.fish.enable = true;
-  programs.mosh.enable = true;
+  programs = {
+    fish.enable = true;
+    mosh.enable = true;
+    # SSH known hosts for deploy-rs to SSH between servers
+    ssh.knownHosts = {
+      endeavour = {
+        hostNames = [ "endeavour" ];
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJxgao1yX2VxxPIozAKlL3cbk2SpBPfxjF29q7S/oFf";
+      };
+      enterprise = {
+        hostNames = [ "enterprise" ];
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFQt03m35by3UEWbU2KiEsr+9jnxXoFwRNflQYKCjE6n";
+      };
+      stargazer = {
+        hostNames = [ "stargazer" ];
+        publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1jqNdM9sPcuX9qkMPvlTMnkzyUQY1CnMGYHv2Epogo";
+      };
+    };
+  };
 
   services = {
     # sched-ext userspace schedulers (amd64 only)
