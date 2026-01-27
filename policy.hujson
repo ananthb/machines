@@ -30,7 +30,7 @@
 		{
 			"src":    ["tag:server"],
 			"dst":    ["tag:server", "tag:infrastructure"],
-			"users":  ["autogroup:nonroot"],
+			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
 		// Allow deploy tag (CI) to SSH to servers for deployment
