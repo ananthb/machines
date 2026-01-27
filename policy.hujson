@@ -23,12 +23,6 @@
 			"users":  ["autogroup:nonroot", "root"],
 		},
 		{
-			"src":    ["autogroup:admin"],
-			"dst":    ["tag:server", "tag:infrastructure"],
-			"users":  ["autogroup:nonroot", "root"],
-			"action": "accept",
-		},
-		{
 			"src":    ["tag:server"],
 			"dst":    ["tag:server", "tag:infrastructure"],
 			"users":  ["autogroup:nonroot", "root"],
@@ -38,6 +32,12 @@
 		{
 			"src":    ["tag:deploy"],
 			"dst":    ["tag:server", "tag:workstation"],
+			"users":  ["autogroup:nonroot", "root"],
+			"action": "accept",
+		},
+		{
+			"src":    ["tag:workstation"],
+			"dst":    ["tag:server", "tag:workstation", "tag:infrastructure"],
 			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
@@ -72,26 +72,16 @@
 				],
 			},
 		},
+		// Workstations and admins have access to everything
 		{
-			"src": ["autogroup:admin"],
+			"src": ["autogroup:admin", "tag:workstation"],
 			"dst": ["*"],
 			"ip":  ["*"],
 		},
-		// Workstations have access to everything
-		{
-			"src": ["tag:workstation"],
-			"dst": ["*"],
-			"ip":  ["*"],
-		},
+		// Servers can access everything on infrastructure, servers, and tsnsrv
 		{
 			"src": ["tag:server"],
 			"dst": ["tag:infrastructure", "tag:server", "tag:tsnsrv"],
-			"ip":  ["*"],
-		},
-		// Allow deploy tag (CI) to access servers for deployment
-		{
-			"src": ["tag:deploy"],
-			"dst": ["tag:server"],
 			"ip":  ["*"],
 		},
 		// Read-only taildrive access to all members.
