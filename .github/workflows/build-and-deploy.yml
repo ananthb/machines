@@ -164,4 +164,4 @@ jobs:
 
       - name: Deploy all hosts
         run: |
-          ssh ananth@endeavour "cd ~/machines && git pull && devenv shell deploy-ci"
+          ssh ananth@endeavour "cd ~/machines && git pull && nix develop --command deploy-ci"

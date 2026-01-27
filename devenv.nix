@@ -19,18 +19,22 @@
 
   # https://devenv.sh/scripts/
   scripts = {
-    deploy.exec = "nix run github:serokell/deploy-rs -- --skip-checks";
-    deploy-darwin.exec = "darwin-rebuild switch --flake .#$1";
+    deploy.exec = ''
+      if [ "$(uname)" = "Darwin" ]; then
+        darwin-rebuild switch --flake .#"$1"
+      else
+        sudo nixos-rebuild switch --flake .#"$1"
+      fi
+    '';
+    deploy-all.exec = "nix run github:serokell/deploy-rs";
     deploy-ci.exec = ''
-      echo "Deploying endeavour first..."
-      nix run github:serokell/deploy-rs -- --skip-checks .#endeavour
-      echo "Deploying all hosts..."
-
+      nix run github:serokell/deploy-rs -- .#endeavour
+      nix run github:serokell/deploy-rs
     '';
   };
 
   enterShell = ''
     echo "Welcome to the machines development environment!"
-    echo "Available commands: deploy, deploy-darwin, deploy-ci"
+    echo "Available commands: deploy, deploy-all, deploy-ci"
   '';
 }
