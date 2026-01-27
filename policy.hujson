@@ -78,6 +78,12 @@
 			"dst": ["*"],
 			"ip":  ["*"],
 		},
+		// Deploy tag needs network access to servers and workstations for deployment
+		{
+			"src": ["tag:deploy"],
+			"dst": ["tag:server", "tag:workstation"],
+			"ip":  ["*"],
+		},
 		// Servers can access everything on infrastructure, servers, and tsnsrv
 		{
 			"src": ["tag:server"],
