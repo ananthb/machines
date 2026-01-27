@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  devenv.flakesIntegration = true;
+
   # https://devenv.sh/packages/
   packages = [
     pkgs.nixfmt
