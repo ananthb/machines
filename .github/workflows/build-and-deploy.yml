@@ -178,12 +178,10 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:deploy
 
-      - name: Add SSH host keys
+      - name: Add SSH host key for endeavour
         run: |
           mkdir -p ~/.ssh
           echo "endeavour ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJxgao1yX2VxxPIozAKlL3cbk2SpBPfxjF29q7S/oFf" >> ~/.ssh/known_hosts
-          echo "enterprise ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFQt03m35by3UEWbU2KiEsr+9jnxXoFwRNflQYKCjE6n" >> ~/.ssh/known_hosts
-          echo "stargazer ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1jqNdM9sPcuX9qkMPvlTMnkzyUQY1CnMGYHv2Epogo" >> ~/.ssh/known_hosts
 
       - name: Deploy all hosts
         run: |
