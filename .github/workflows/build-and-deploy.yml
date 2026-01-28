@@ -186,4 +186,4 @@ jobs:
           echo "stargazer ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1jqNdM9sPcuX9qkMPvlTMnkzyUQY1CnMGYHv2Epogo" >> ~/.ssh/known_hosts
 
       - name: Deploy all hosts
-        run: nix run github:serokell/deploy-rs -- --skip-checks
+        run: nix run github:serokell/deploy-rs -- --skip-checks --remote-build
