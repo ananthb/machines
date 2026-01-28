@@ -160,11 +160,11 @@
           extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
         };
 
-        #voyager = mkNixosHost {
-        #  hostname = "voyager";
-        #  system = "aarch64-linux";
-        #  extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
-        #};
+        voyager = mkNixosHost {
+          hostname = "voyager";
+          system = "aarch64-linux";
+          extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
+        };
       };
 
       darwinConfigurations = {
@@ -200,13 +200,13 @@
           };
         };
 
-        voyager = {
-          hostname = "voyager";
-          profiles.system = {
-            sshUser = username;
-            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
-          };
-        };
+        #voyager = {
+        #  hostname = "voyager";
+        #  profiles.system = {
+        #    sshUser = username;
+        #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
+        #  };
+        #};
       };
 
       checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
