@@ -28,15 +28,11 @@
         sudo nixos-rebuild switch --flake .#"$1"
       fi
     '';
-    deploy-all.exec = "nix run github:serokell/deploy-rs";
-    deploy-ci.exec = ''
-      nix run github:serokell/deploy-rs -- --skip-checks .#endeavour
-      nix run github:serokell/deploy-rs -- --skip-checks
-    '';
+    deploy-all.exec = ''nix run github:serokell/deploy-rs "$@"'';
   };
 
   enterShell = ''
     echo "Welcome to the machines development environment!"
-    echo "Available commands: deploy, deploy-all, deploy-ci"
+    echo "Available commands: deploy, deploy-all"
   '';
 }
