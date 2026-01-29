@@ -8,7 +8,6 @@
 {
   imports = [
     inputs.NixVirt.nixosModules.default
-    inputs.tsnsrv.nixosModules.default
 
     ../linux.nix
     ./hardware-configuration.nix
