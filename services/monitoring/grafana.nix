@@ -32,14 +32,22 @@
         };
 
         users = {
-          allow_sign_up = true;
+          allow_sign_up = false;
+        };
+
+        "auth.basic" = {
+          enabled = false;
+        };
+
+        auth = {
+          disable_login_form = true;
         };
 
         "auth.google" = {
           enabled = true;
           client_id = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path}}";
           client_secret = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path}}";
-          allow_sign_up = true;
+          allow_sign_up = false;
           auto_login = true;
           skip_org_role_sync = true;
           scopes = "openid email profile";
