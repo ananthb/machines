@@ -64,7 +64,7 @@
         enable = true;
         tunnels = builtins.listToAttrs (
           map (cfg: {
-            name = cfg.tunnelName;
+            name = cfg.tunnelId;
             value = {
               default = "http_status:404";
               inherit (cfg) ingress;
