@@ -53,9 +53,6 @@
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
-  # Mount binfmt_misc at boot for cross-compilation
-  systemd.units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
-
   # hardware accelerated graphics
   # used by immich and jellyfin
   nixpkgs.config.packageOverrides = pkgs: {
@@ -111,21 +108,8 @@
   };
 
   networking = {
-    bonds.bond0 = {
-      interfaces = [
-        "enp2s0"
-        "enp4s0"
-      ];
-      driverOptions = {
-        mode = "balance-alb";
-        miimon = "100";
-      };
-    };
-    interfaces = {
-      bond0.useDHCP = true;
-      enp2s0.useDHCP = false;
-      enp4s0.useDHCP = false;
-    };
+    useNetworkd = true;
+    useDHCP = false;
 
     firewall = {
       allowedTCPPorts = [
@@ -145,17 +129,40 @@
     };
   };
 
-  systemd.services.bond0-ipv6 = {
-    description = "Set IPv6 configuration for bond0";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-    script = ''
-      ${pkgs.procps}/bin/sysctl -w net.ipv6.conf.bond0.accept_ra=2
-      ${pkgs.iproute2}/bin/ip token set ${ipv6Token} dev bond0
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
+  systemd = {
+    # Mount binfmt_misc at boot for cross-compilation
+    units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
+
+    network = {
+      netdevs."10-bond0" = {
+        netdevConfig = {
+          Kind = "bond";
+          Name = "bond0";
+        };
+        bondConfig = {
+          Mode = "balance-alb";
+          MIIMonitorSec = "100ms";
+        };
+      };
+      networks = {
+        "30-enp2s0" = {
+          matchConfig.Name = "enp2s0";
+          networkConfig.Bond = "bond0";
+        };
+        "30-enp4s0" = {
+          matchConfig.Name = "enp4s0";
+          networkConfig.Bond = "bond0";
+        };
+        "40-bond0" = {
+          matchConfig.Name = "bond0";
+          networkConfig = {
+            DHCP = "ipv4";
+            IPv6AcceptRA = true;
+          };
+          ipv6AcceptRAConfig.Token = ipv6Token;
+          linkConfig.RequiredForOnline = "carrier";
+        };
+      };
     };
   };
 
