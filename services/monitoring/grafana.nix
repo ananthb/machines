@@ -77,7 +77,8 @@
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
-    "gcloud/oauth/self-hosted_clients/id".owner = config.users.users.grafana.name;
-    "gcloud/oauth/self-hosted_clients/secret".owner = config.users.users.grafana.name;
+    # Shared OAuth secrets - mode 0444 so multiple services can read
+    "gcloud/oauth/self-hosted_clients/id".mode = "0444";
+    "gcloud/oauth/self-hosted_clients/secret".mode = "0444";
   };
 }
