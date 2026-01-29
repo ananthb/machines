@@ -32,7 +32,6 @@
         ingress = {
           "win11.kedi.dev" = "rdp://192.168.122.11:3389";
           "coder.kedi.dev" = "http://localhost:3030";
-          "*.coder.kedi.dev" = "http://localhost:3030";
         };
       }
     ];

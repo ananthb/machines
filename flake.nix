@@ -151,7 +151,10 @@
         enterprise = mkNixosHost {
           hostname = "enterprise";
           system = "x86_64-linux";
-          extraModules = [ lanzaboote.nixosModules.lanzaboote ];
+          extraModules = [
+            lanzaboote.nixosModules.lanzaboote
+            { _module.args.ipv6Token = "::c0de:1"; }
+          ];
         };
 
         stargazer = mkNixosHost {
