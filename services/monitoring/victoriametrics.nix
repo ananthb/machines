@@ -573,8 +573,8 @@ in
                 "https://6a.kedi.dev",
                 "https://actual.kedi.dev",
                 "https://mealie.kedi.dev",
-                 "https://mon.${config.sops.placeholder."tailscale_api/tailnet"}",
-                 "https://radicale.kedi.dev",
+                "https://metrics.kedi.dev",
+                "https://radicale.kedi.dev",
                 "https://vault.kedi.dev"
               ],
               "labels": {
