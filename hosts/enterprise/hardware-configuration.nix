@@ -72,7 +72,7 @@
       ipv6 = {
         method = "auto";
         route-metric = 10;
-        addr-gen-mode = "token";
+        addr-gen-mode = "eui64";
         token = ipv6Token;
       };
     };
