@@ -35,7 +35,6 @@
         tunnelId = "cc636509-3456-4589-ae08-d4be710305a5";
         tunnelName = "kedi-compute-1";
         ingress = {
-          "win11.kedi.dev" = "rdp://192.168.122.11:3389";
           "coder.kedi.dev" = "http://localhost:3030";
         };
       }
