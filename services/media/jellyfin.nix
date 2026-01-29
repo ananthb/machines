@@ -77,13 +77,13 @@
           getIPv6 = pkgs.writeShellScript "get-ipv6" ''
             # ------------------------------------------------------------------------
             # ddns custom IPv6 getter
-            # Returns all public internet reachable IPv6 addresses separated by commas
+            # Returns a GUA (Global Unicast Address) IPv6 address
             # filtered by the token set for this host (${ipv6Token})
+            # GUA addresses are in the 2000::/3 range (start with 2 or 3)
             # ------------------------------------------------------------------------
 
             ${pkgs.iproute2}/bin/ip -6 addr show scope global | \
-              ${pkgs.gawk}/bin/awk '/inet6 .*${ipv6Token}\// { sub(/\/.*$/, "", $2); print $2 }' | \
-              ${pkgs.coreutils}/bin/paste -sd "," -
+              ${pkgs.gawk}/bin/awk '/inet6 [23].*${ipv6Token}\// { sub(/\/.*$/, "", $2); print $2; exit }'
           '';
         in
 
