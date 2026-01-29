@@ -2,13 +2,12 @@
   config,
   pkgs,
   username,
-  ipv6Token,
   ...
 }:
 
 {
   imports = [
-    ../caddy.nix
+    ((import ../../lib/caddy-ddns.nix).mkCaddyDdns { domains = [ "tv" ]; })
   ];
 
   users.groups.media.members = [
@@ -60,60 +59,16 @@
       };
     };
 
-    caddy = {
-      enable = true;
-      package = pkgs.caddy.withPlugins {
-        plugins = [
-          "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
-          "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
-          "github.com/caddy-dns/cloudflare@v0.2.2"
-        ];
-        hash = "sha256-kNPGPreK/BPvkfjIrDKDKxoTUIZxF1k9sEy3VhsT2iI=";
-      };
+    caddy.virtualHosts."tv.kedi.dev" = {
+      extraConfig = ''
+        header {
+          Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+          X-Content-Type-Options    "nosniff"
+          X-XSS-Protection          "1; mode=block"
+        }
 
-      globalConfig =
-
-        let
-          getIPv6 = pkgs.writeShellScript "get-ipv6" ''
-            # ------------------------------------------------------------------------
-            # ddns custom IPv6 getter
-            # Returns a GUA (Global Unicast Address) IPv6 address
-            # filtered by the token set for this host (${ipv6Token})
-            # GUA addresses are in the 2000::/3 range (start with 2 or 3)
-            # ------------------------------------------------------------------------
-
-            ${pkgs.iproute2}/bin/ip -6 addr show scope global | \
-              ${pkgs.gawk}/bin/awk '/inet6 [23].*${ipv6Token}\// { sub(/\/.*$/, "", $2); print $2; exit }'
-          '';
-        in
-
-        ''
-          email srv.acme@kedi.dev
-          acme_ca https://acme-v02.api.letsencrypt.org/directory
-
-          dynamic_dns {
-            provider cloudflare {$CLOUDFLARE_API_TOKEN}
-            domains {
-              kedi.dev tv
-            }
-            ip_source command ${getIPv6}
-            versions ipv6
-            check_interval 5m
-            ttl 1h
-          }
-        '';
-
-      virtualHosts."tv.kedi.dev" = {
-        extraConfig = ''
-          header {
-            Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-            X-Content-Type-Options    "nosniff"
-            X-XSS-Protection          "1; mode=block"
-          }
-
-          reverse_proxy localhost:8096
-        '';
-      };
+        reverse_proxy localhost:8096
+      '';
     };
   };
 
@@ -121,23 +76,10 @@
     caddy = {
       after = [ "jellyfin.service" ];
       wants = [ "jellyfin.service" ];
-      serviceConfig = {
-        EnvironmentFile = config.sops.templates."caddy/secrets.env".path;
-      };
     };
     tsnsrv-tv.wants = [ "jellyfin.service" ];
     tsnsrv-tv.after = [ "jellyfin.service" ];
   };
 
-  networking.firewall.allowedTCPPorts = [ 443 ];
-
-  sops.secrets = {
-    "cloudflare/api_tokens/ddns" = { };
-    "tailscale_api/auth_key" = { };
-  };
-
-  sops.templates."caddy/secrets.env".content = ''
-    CLOUDFLARE_API_TOKEN=${config.sops.placeholder."cloudflare/api_tokens/ddns"}
-  '';
-
+  sops.secrets."tailscale_api/auth_key" = { };
 }

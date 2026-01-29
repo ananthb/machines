@@ -4,6 +4,7 @@
 {
   lib,
   modulesPath,
+  ipv6Token,
   ...
 }:
 
@@ -71,6 +72,8 @@
       ipv6 = {
         method = "auto";
         route-metric = 10;
+        addr-gen-mode = "token";
+        token = ipv6Token;
       };
     };
   };

@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 {
+  imports = [
+    ((import ../lib/caddy-ddns.nix).mkCaddyDdns { domains = [ "*.coder" ]; })
+  ];
+
   services.coder = {
     enable = true;
     accessUrl = "https://coder.kedi.dev";
@@ -13,6 +17,14 @@
         CODER_PROMETHEUS_ADDRESS = "[::]:2112";
       };
       file = config.sops.templates."coder/env".path;
+    };
+  };
+
+  services.caddy.virtualHosts = {
+    "*.coder.kedi.dev" = {
+      extraConfig = ''
+        reverse_proxy [::1]:3030
+      '';
     };
   };
 
