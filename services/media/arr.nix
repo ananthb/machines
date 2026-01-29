@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   username,
   ...
 }:
@@ -12,6 +13,7 @@
   # Media group membership
   users.groups.media.members = [
     username
+    "qbittorrent"
     "radarr"
     "sonarr"
     "cross-seed"
@@ -19,6 +21,53 @@
 
   # Services
   services = {
+    qbittorrent = {
+      enable = true;
+      group = "media";
+      openFirewall = true;
+      serverConfig = {
+        LegalNotice.Accepted = true;
+        BitTorrent = {
+          MergeTrackersEnabled = true;
+          Session = {
+            AddTorrentStopped = false;
+            DefaultSavePath = "/srv/media/Downloads";
+            MaxActiveTorrents = -1;
+            MaxActiveUploads = -1;
+            MaxConnections = -1;
+            MaxConnectionsPerTorrent = -1;
+            MaxUploads = -1;
+            MaxUploadsPerTorrent = -1;
+            ProxyPeerConnections = false;
+            QueueingSystemEnabled = true;
+          };
+        };
+        Preferences = {
+          WebUI = {
+            LocalHostAuth = false;
+            AuthSubnetWhitelist = "0.0.0.0/0,::/0";
+            AuthSubnetWhitelistEnabled = true;
+            AlternativeUIEnabled = true;
+            RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
+          };
+        };
+        Network = {
+          Proxy = {
+            AuthEnabled = false;
+            HostnameLookupEnabled = true;
+            IP = "127.0.0.1";
+            Port = 8888;
+            Type = "SOCKS5";
+            Profiles = {
+              BitTorrent = true;
+              Misc = true;
+              RSS = true;
+            };
+          };
+        };
+      };
+    };
+
     radarr = {
       enable = true;
       group = "media";
@@ -41,6 +90,15 @@
     cross-seed = {
       enable = true;
       group = "media";
+      settings = {
+        torrentClients = [ "qbittorrent:http://localhost:8080" ];
+        dataDirs = [ "/srv/media/Downloads" ];
+        linkType = "hardlink";
+        matchMode = "safe";
+        action = "inject";
+        duplicateCategories = true;
+      };
+      settingsFile = config.sops.templates."cross-seed/config.json".path;
     };
 
     postgresql = {
@@ -100,6 +158,8 @@
   };
 
   systemd.services = {
+    qbittorrent.serviceConfig.UMask = "0002";
+
     radarr = {
       serviceConfig.UMask = "0002";
       after = [ "postgresql.service" ];
@@ -133,8 +193,14 @@
     };
 
     cross-seed = {
-      after = [ "qbittorrent.service" ];
-      wants = [ "qbittorrent.service" ];
+      after = [
+        "qbittorrent.service"
+        "prowlarr.service"
+      ];
+      wants = [
+        "qbittorrent.service"
+        "prowlarr.service"
+      ];
       serviceConfig.UMask = "0002";
     };
   };
@@ -144,5 +210,17 @@
     "arr_apis/radarr".mode = "0444";
     "arr_apis/sonarr".mode = "0444";
     "arr_apis/prowlarr".mode = "0444";
+  };
+
+  # Indexers: 1=TorrentLeech, 2=Nyaa.si, 3=FearNoPeer
+  sops.templates."cross-seed/config.json" = {
+    owner = "cross-seed";
+    content = builtins.toJSON {
+      torznab = [
+        "http://localhost:9696/1/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
+        "http://localhost:9696/2/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
+        "http://localhost:9696/3/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
+      ];
+    };
   };
 }
