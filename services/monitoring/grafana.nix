@@ -18,7 +18,8 @@
 
         server = {
           http_addr = "::";
-          domain = "$__file{${config.sops.templates."fqdns/grafana.txt".path}}";
+          domain = "metrics.kedi.dev";
+          root_url = "https://metrics.kedi.dev";
         };
 
         smtp = {
@@ -28,6 +29,15 @@
           host = "$__file{${config.sops.secrets."email/smtp/host".path}}:587";
           from_address = "$__file{${config.sops.secrets."email/from/grafana".path}}";
           startTLS_policy = "MandatoryStartTLS";
+        };
+
+        "auth.google" = {
+          enabled = true;
+          client_id = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path}}";
+          client_secret = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path}}";
+          allowed_domains = "kedi.dev";
+          allow_sign_up = true;
+          auto_login = true;
         };
       };
 
@@ -58,44 +68,16 @@
         }
       ];
     };
-
-    tsnsrv = {
-      enable = true;
-
-      defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
-      defaults.urlParts.host = "localhost";
-
-      services.mon = {
-        funnel = true;
-        urlParts.port = 3000;
-      };
-    };
   };
 
-  systemd.services.grafana.environment = {
-    GF_AUTH_DISABLE_LOGIN_FORM = "true";
-    GF_AUTH_BASIC_ENABLED = "false";
-    GF_AUTH_PROXY_ENABLED = "true";
-    GF_AUTH_PROXY_HEADER_NAME = "X-Tailscale-User-LoginName";
-    GF_AUTH_PROXY_HEADER_PROPERTY = "username";
-    GF_AUTH_PROXY_AUTO_SIGN_UP = "false";
-    GF_AUTH_PROXY_SYNC_TTL = "60";
-    GF_AUTH_PROXY_WHITELIST = "::1";
-    GF_AUTH_PROXY_HEADERS = "Name:X-Tailscale-User-DisplayName";
-    GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN = "true";
-  };
+  networking.firewall.allowedTCPPorts = [ 3000 ];
 
   sops.secrets = {
     "email/from/grafana".owner = config.users.users.grafana.name;
     "email/smtp/host".owner = config.users.users.grafana.name;
     "email/smtp/username".owner = config.users.users.grafana.name;
     "email/smtp/password".owner = config.users.users.grafana.name;
-    "tailscale_api/auth_key" = { };
-    "tailscale_api/tailnet" = { };
-  };
-
-  sops.templates."fqdns/grafana.txt" = {
-    owner = config.users.users.grafana.name;
-    content = "mon.${config.sops.placeholder."tailscale_api/tailnet"}";
+    "gcloud/oauth/self-hosted_clients/id".owner = config.users.users.grafana.name;
+    "gcloud/oauth/self-hosted_clients/secret".owner = config.users.users.grafana.name;
   };
 }

@@ -198,7 +198,7 @@
                 "Grafana" = {
                   icon = "grafana";
                   description = "Monitoring";
-                  href = "https://mon.tail42937.ts.net";
+                  href = "https://metrics.kedi.dev";
                 };
               }
               {
