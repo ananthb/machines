@@ -31,6 +31,10 @@
           startTLS_policy = "MandatoryStartTLS";
         };
 
+        users = {
+          allow_sign_up = true;
+        };
+
         "auth.google" = {
           enabled = true;
           client_id = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path}}";
@@ -38,6 +42,7 @@
           allow_sign_up = true;
           auto_login = true;
           skip_org_role_sync = true;
+          scopes = "openid email profile";
         };
       };
 
