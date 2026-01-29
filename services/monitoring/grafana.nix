@@ -35,7 +35,6 @@
           enabled = true;
           client_id = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path}}";
           client_secret = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path}}";
-          allowed_domains = "kedi.dev";
           allow_sign_up = true;
           auto_login = true;
         };
