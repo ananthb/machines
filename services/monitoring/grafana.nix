@@ -37,6 +37,7 @@
           client_secret = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path}}";
           allow_sign_up = true;
           auto_login = true;
+          skip_org_role_sync = true;
         };
       };
 
