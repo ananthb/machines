@@ -46,9 +46,9 @@ in
         username
       ];
 
-      # Use endeavour as a binary cache
-      substituters = [ "http://${nixCache.cacheHost}:${toString nixCache.cachePort}" ];
-      trusted-public-keys = [ nixCache.publicKey ];
+      # Use endeavour as a binary cache (with public cache as fallback)
+      extra-substituters = [ "http://${nixCache.cacheHost}:${toString nixCache.cachePort}" ];
+      extra-trusted-public-keys = [ nixCache.publicKey ];
     };
 
     # Optimise space
