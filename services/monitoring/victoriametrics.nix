@@ -562,6 +562,7 @@ in
   sops.secrets = {
     "home-assistant/6a/access_token".mode = "0444";
     "home-assistant/t1/access_token".mode = "0444";
+    "tailscale_api/tailnet" = { };
   };
 
   sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
