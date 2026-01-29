@@ -4,11 +4,11 @@
 # 3. Add the tunnel ID and name below
 # 4. Add the credentials to sops: sops secrets/cloudflare/tunnels/<tunnel-id>/credentials
 #
-# For dashboard-managed tunnels (required for browser-based RDP, etc.):
-# - Add to `dashboardManaged` instead of `tunnels`
-# - Configure public hostnames in Cloudflare Zero Trust dashboard
+# For browser-based RDP:
+# - Add a Private Network route in Cloudflare Zero Trust dashboard (Networks → Tunnels → Private Network)
+# - Add an Access Target (Access → Infrastructure → Targets) for the RDP host IP
+# - Create an Access Application with Browser Rendering → RDP enabled
 {
-  # Locally-managed tunnels (ingress rules defined here)
   tunnels = {
     endeavour = [
       {
@@ -30,6 +30,17 @@
       }
     ];
 
+    enterprise = [
+      {
+        tunnelId = "cc636509-3456-4589-ae08-d4be710305a5";
+        tunnelName = "kedi-compute-1";
+        ingress = {
+          "win11.kedi.dev" = "rdp://192.168.122.11:3389";
+          "coder.kedi.dev" = "http://localhost:3030";
+        };
+      }
+    ];
+
     stargazer = [
       {
         tunnelId = "b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7";
@@ -42,15 +53,6 @@
     ];
   };
 
-  # Dashboard-managed tunnels (ingress rules configured in Cloudflare dashboard)
-  dashboardManaged = {
-    enterprise = {
-      tunnelId = "547c677a-cb80-471c-b5b2-c4ab61ff2750";
-      tunnelName = "kedi-compute-1";
-    };
-  };
-
-  # For locally-managed tunnels
   mkCftunnel =
     { hostname }:
     let
@@ -78,24 +80,5 @@
           value = { };
         }) cfgs
       );
-    };
-
-  # For dashboard-managed tunnels (config fetched from Cloudflare)
-  mkDashboardManagedTunnel =
-    { hostname }:
-    let
-      cfg = (import ./cftunnel.nix).dashboardManaged.${hostname};
-    in
-    { config, ... }:
-    {
-      services.cloudflared = {
-        enable = true;
-        tunnels.${cfg.tunnelName} = {
-          credentialsFile = config.sops.secrets."cloudflare/tunnels/${cfg.tunnelId}/credentials".path;
-          default = "http_status:404";
-        };
-      };
-
-      sops.secrets."cloudflare/tunnels/${cfg.tunnelId}/credentials" = { };
     };
 }

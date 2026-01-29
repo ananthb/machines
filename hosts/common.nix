@@ -7,18 +7,13 @@
 }:
 let
   cftunnelLib = import ../lib/cftunnel.nix;
-  hasLocalTunnel = cftunnelLib.tunnels ? ${hostname};
-  hasDashboardTunnel = cftunnelLib.dashboardManaged ? ${hostname};
+  hasTunnel = cftunnelLib.tunnels ? ${hostname};
   nixCache = import ../lib/nix-cache.nix;
 in
 {
-  imports =
-    lib.optionals hasLocalTunnel [
-      (cftunnelLib.mkCftunnel { inherit hostname; })
-    ]
-    ++ lib.optionals hasDashboardTunnel [
-      (cftunnelLib.mkDashboardManagedTunnel { inherit hostname; })
-    ];
+  imports = lib.optionals hasTunnel [
+    (cftunnelLib.mkCftunnel { inherit hostname; })
+  ];
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
