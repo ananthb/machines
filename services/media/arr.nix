@@ -14,6 +14,7 @@
     username
     "radarr"
     "sonarr"
+    "cross-seed"
   ];
 
   # Services
@@ -36,6 +37,11 @@
     };
 
     jellyseerr.enable = true;
+
+    cross-seed = {
+      enable = true;
+      group = "media";
+    };
 
     postgresql = {
       enable = true;
@@ -124,6 +130,12 @@
       DB_SOCKET_PATH = "/var/run/postgresql";
       DB_USER = "jellyseerr";
       DB_NAME = "jellyseerr";
+    };
+
+    cross-seed = {
+      after = [ "qbittorrent.service" ];
+      wants = [ "qbittorrent.service" ];
+      serviceConfig.UMask = "0002";
     };
   };
 
