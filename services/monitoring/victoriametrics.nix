@@ -13,8 +13,6 @@ let
     hasAttr
     ;
 
-  nixCache = import ../../lib/nix-cache.nix;
-
   # Helper functions to check for enabled services/exporters
   hasService = c: name: hasAttr name c.services && c.services.${name}.enable or false;
   hasExporter =
@@ -89,13 +87,7 @@ let
     host: if hasExporter host.config "ecoflow" then [ "${host.name}:2112" ] else [ ]
   ) nixosHosts;
 
-  # 7. Harmonia (Nix binary cache)
-  harmoniaTargets = concatMap (
-    host:
-    if hasService host.config "harmonia" then [ "${host.name}:${toString nixCache.cachePort}" ] else [ ]
-  ) nixosHosts;
-
-  # 8. App Exporters (Radarr, Sonarr, Prowlarr, Postgres, Immich, Jellyfin)
+  # 7. App Exporters (Radarr, Sonarr, Prowlarr, Postgres, Immich, Jellyfin)
   appTargets =
     let
       getAppTargets =
@@ -504,16 +496,6 @@ in
               targets = libvirtTargets;
               labels.type = "exporter";
               labels.role = "hypervisor";
-            }
-          ];
-        }
-        {
-          job_name = "harmonia";
-          static_configs = [
-            {
-              targets = harmoniaTargets;
-              labels.type = "app";
-              labels.app = "harmonia";
             }
           ];
         }
