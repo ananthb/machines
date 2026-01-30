@@ -23,6 +23,9 @@
   services.caddy.virtualHosts = {
     "*.coder.kedi.dev" = {
       extraConfig = ''
+        tls {
+          dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        }
         reverse_proxy [::1]:3030
       '';
     };
