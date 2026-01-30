@@ -608,11 +608,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1769793059,
-        "narHash": "sha256-DvK5dHKFrj3Vtav3apeyc/xWoyfaPcGy0B0PEizUic8=",
+        "lastModified": 1769795547,
+        "narHash": "sha256-tA+UNqGKBd8nstNUnoBWNO9ydXnfQvsU6QzoSQ9xjpc=",
         "owner": "ananthb",
         "repo": "ht32-panel",
-        "rev": "6e71e8a598246a612ce74a67347b7db5533cc971",
+        "rev": "dd86ee18fefdd39c63d8840e49074758aaec4350",
         "type": "github"
       },
       "original": {
