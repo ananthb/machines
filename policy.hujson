@@ -41,6 +41,13 @@
 			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
+		// Allow workstations to SSH into shared-in devices
+		{
+			"src":    ["tag:workstation"],
+			"dst":    ["autogroup:shared"],
+			"users":  ["autogroup:nonroot", "root"],
+			"action": "accept",
+		},
 	],
 
 	"nodeAttrs": [
