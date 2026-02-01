@@ -15,7 +15,6 @@
 	// Define users and devices that can use Tailscale SSH.
 	"ssh": [
 		// Allow all users to SSH into their own devices in check mode.
-		// Comment this section out if you want to define specific restrictions.
 		{
 			"action": "accept",
 			"src":    ["autogroup:member"],
@@ -24,7 +23,7 @@
 		},
 		// Allow admins and workstation machines to ssh into everything
 		{
-		        "action": "accept":
+		        "action": "accept",
 			"src":    ["autogroup:admin", "tag:workstation"],
 			"dst":    ["tag:server", "tag:infrastructure", "tag:workstation"],
 			"users":  ["autogroup:nonroot", "root"],
