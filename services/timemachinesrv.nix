@@ -28,7 +28,7 @@
 
         timemachine = {
           path = "/srv/timemachine";
-          "valid users" = username;
+          "valid users" = "timemachine";
           browseable = "yes";
           writeable = "yes";
           "fruit:time machine" = "yes";
