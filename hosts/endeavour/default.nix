@@ -33,7 +33,7 @@
     ../../services/monitoring/victoriametrics.nix
     ../../services/radicale.nix
     ../../services/seafile.nix
-    ../../services/timemachine.nix
+    ../../services/timemachinesrv.nix
     ../../services/vaultwarden.nix
   ];
 

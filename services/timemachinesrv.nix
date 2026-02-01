@@ -1,4 +1,6 @@
 {
+  config,
+  pkgs,
   username,
   ...
 }:
@@ -46,7 +48,30 @@
     };
   };
 
-  systemd.tmpfiles.rules = [
-    "d /srv/timemachine 0750 ${username} users -"
-  ];
+  systemd = {
+    tmpfiles.rules = [
+      "d /srv/timemachine 0750 ${username} users -"
+    ];
+
+    services.samba-setup-timemachine = {
+      description = "Set up Samba user for Time Machine";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "samba-smbd.service" ];
+      after = [ "samba-nmbd.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        SMB_USER=$(cat ${config.sops.secrets."samba/timemachinesrv/username".path})
+        SMB_PASS=$(cat ${config.sops.secrets."samba/timemachinesrv/password".path})
+        echo -e "$SMB_PASS\n$SMB_PASS" | ${pkgs.samba}/bin/smbpasswd -s -a "$SMB_USER"
+      '';
+    };
+  };
+
+  sops.secrets = {
+    "samba/timemachinesrv/username" = { };
+    "samba/timemachinesrv/password" = { };
+  };
 }
