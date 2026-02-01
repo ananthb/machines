@@ -59,15 +59,10 @@ in
                 "libosinfo:libosinfo"."@xmlns:libosinfo" = "http://libosinfo.org/xmlns/libvirt/domain/1.0";
                 "libosinfo:libosinfo"."libosinfo:os"."@id" = "http://microsoft.com/win/11";
               };
-              memoryBacking = {
-                source.type = "memfd";
-                access.mode = "shared";
-              };
               devices = {
                 graphics = {
-                  gl = {
-                    rendernode = "/dev/dri/by-path/pci-0000:00:02.0-render";
-                  };
+                  type = "spice";
+                  autoport = "yes";
                 };
                 disk = [
                   {
