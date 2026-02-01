@@ -41,6 +41,12 @@
 			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
+		{
+		        "src":    ["bhaskar.yampet@gmail.com"],
+			"dst":    ["tag:workstation"],
+			"users":  ["autogroup:nonroot", "root"],
+			"action": "check",
+		},
 	],
 
 	"nodeAttrs": [
