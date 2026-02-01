@@ -15,6 +15,7 @@
       aionut
       jellyfin-apiclient-python
       psycopg2
+      pywizlight
       qbittorrent-api
     ];
   extraComponents = [
