@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  username,
-  ...
-}:
-{
+_: {
   services = {
     # Time Machine server via Samba
     samba = {
@@ -14,6 +8,13 @@
         global = {
           "server string" = "Time Machine";
           "server role" = "standalone server";
+
+          # Listen only on Tailscale
+          interfaces = "tailscale0";
+          "bind interfaces only" = "yes";
+
+          # Guest access
+          "map to guest" = "Bad User";
 
           # macOS compatibility
           "vfs objects" = "catia fruit streams_xattr";
@@ -28,9 +29,11 @@
 
         timemachine = {
           path = "/srv/timemachine";
-          "valid users" = "timemachine";
           browseable = "yes";
           writeable = "yes";
+          "guest ok" = "yes";
+          "force user" = "nobody";
+          "force group" = "nogroup";
           "fruit:time machine" = "yes";
           "fruit:time machine max size" = "1T";
         };
@@ -48,30 +51,7 @@
     };
   };
 
-  systemd = {
-    tmpfiles.rules = [
-      "d /srv/timemachine 0750 ${username} users -"
-    ];
-
-    services.samba-setup-timemachine = {
-      description = "Set up Samba user for Time Machine";
-      wantedBy = [ "multi-user.target" ];
-      before = [ "samba-smbd.service" ];
-      after = [ "samba-nmbd.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-      };
-      script = ''
-        SMB_USER=$(cat ${config.sops.secrets."samba/timemachinesrv/username".path})
-        SMB_PASS=$(cat ${config.sops.secrets."samba/timemachinesrv/password".path})
-        echo -e "$SMB_PASS\n$SMB_PASS" | ${pkgs.samba}/bin/smbpasswd -s -a "$SMB_USER"
-      '';
-    };
-  };
-
-  sops.secrets = {
-    "samba/timemachinesrv/username" = { };
-    "samba/timemachinesrv/password" = { };
-  };
+  systemd.tmpfiles.rules = [
+    "d /srv/timemachine 0777 nobody nogroup -"
+  ];
 }
