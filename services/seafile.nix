@@ -344,6 +344,10 @@
   };
 
   # Config files
+  systemd.tmpfiles.rules = [
+    "d /srv/seafile 0755 root root -"
+  ];
+
   sops = {
     templates = {
       "seafile/seafile.env" = {

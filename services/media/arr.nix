@@ -205,6 +205,13 @@
     };
   };
 
+  systemd.tmpfiles.rules = [
+    "d /srv/media 0775 root media -"
+    "d /srv/media/Downloads 0775 root media -"
+    "d /srv/media/Movies 0775 root media -"
+    "d /srv/media/Shows 0775 root media -"
+  ];
+
   # Secrets
   sops.secrets = {
     "arr_apis/radarr".mode = "0444";
