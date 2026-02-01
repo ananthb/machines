@@ -22,6 +22,14 @@
 			"dst":    ["autogroup:self"],
 			"users":  ["autogroup:nonroot", "root"],
 		},
+		// Allow admins and workstation machines to ssh into everything
+		{
+		        "action": "accept":
+			"src":    ["autogroup:admin", "tag:workstation"],
+			"dst":    ["tag:server", "tag:infrastructure", "tag:workstation"],
+			"users":  ["autogroup:nonroot", "root"],
+		},
+		// Allow servers to ssh into servers and infrastructure
 		{
 			"src":    ["tag:server"],
 			"dst":    ["tag:server", "tag:infrastructure"],
@@ -35,12 +43,7 @@
 			"users":  ["autogroup:nonroot"],
 			"action": "accept",
 		},
-		{
-			"src":    ["tag:workstation"],
-			"dst":    ["tag:server", "tag:workstation", "tag:infrastructure"],
-			"users":  ["autogroup:nonroot", "root"],
-			"action": "accept",
-		},
+		// Allow user to ssh into workstations
 		{
 		        "src":    ["bhaskar.yampet@gmail.com"],
 			"dst":    ["tag:workstation"],
@@ -66,8 +69,8 @@
 
 	"grants": [
 		{
-			"src": ["autogroup:admin"],
-			"dst": ["tag:server"],
+			"src": ["autogroup:admin", "tag:workstation"],
+			"dst": ["tag:server", "tag:workstation"],
 
 			"app": {
 				"tailscale.com/cap/drive": [
