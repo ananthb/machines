@@ -33,6 +33,7 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
+
     kernelModules = [ "i2c-dev" ];
   };
 
@@ -93,6 +94,7 @@
       gnome-shell.serviceConfig.ManagedOOMPreference = "none";
       gsd-xsettings.serviceConfig.ManagedOOMPreference = "none";
     };
+
   };
 
   power.ups = {
