@@ -9,8 +9,8 @@ _: {
           "server string" = "Time Machine";
           "server role" = "standalone server";
 
-          # Listen only on Tailscale
-          interfaces = "tailscale0";
+          # Listen only on Tailscale (lo required for internal communication)
+          interfaces = "lo tailscale0";
           "bind interfaces only" = "yes";
 
           # Guest access
