@@ -3,6 +3,7 @@ _: {
     # Time Machine server via Samba
     samba = {
       enable = true;
+      nmbd.enable = false;
       openFirewall = true;
       settings = {
         global = {
