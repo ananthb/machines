@@ -1,8 +1,14 @@
-{ inputs, lib, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (inputs.NixVirt.lib) domain network;
 in
 {
+
   virtualisation.libvirt.connections."qemu:///system" = {
     networks = [
       {
@@ -121,5 +127,81 @@ in
         );
       }
     ];
+  };
+
+  # Allow host to listen on VM IPs when VMs are down (for socket activation)
+  boot.kernel.sysctl."net.ipv4.ip_nonlocal_bind" = 1;
+
+  systemd = {
+    # Socket activation for VMs on RDP - template unit with IP as instance
+    # Usage: systemctl enable --now vm-rdp@192.168.122.11.socket
+    sockets."vm-rdp@" = {
+      description = "Socket activation for VM RDP (%i)";
+      after = [
+        "libvirtd.service"
+        "network-online.target"
+      ];
+      wants = [ "network-online.target" ];
+      requires = [ "libvirtd.service" ];
+      socketConfig = {
+        ListenStream = "%i:3389";
+        FreeBind = true;
+        Accept = false;
+      };
+    };
+
+    services."vm-rdp@" = {
+      description = "Start VM and proxy RDP connection (%i)";
+      after = [ "libvirtd.service" ];
+      requires = [ "libvirtd.service" ];
+      serviceConfig = {
+        Type = "notify";
+        ExecStart =
+          pkgs.writeShellScript "vm-rdp-proxy" ''
+            set -euo pipefail
+
+            VM_IP="$1"
+            RDP_PORT="3389"
+
+            # Find VM name by looking up which domain has this IP in DHCP reservation
+            VM_NAME=$(${pkgs.libvirt}/bin/virsh net-dumpxml default | \
+              ${pkgs.gnugrep}/bin/grep -B1 "ip='$VM_IP'" | \
+              ${pkgs.gnugrep}/bin/grep -oP "name='\K[^']+")
+
+            if [ -z "$VM_NAME" ]; then
+              echo "No VM found with IP $VM_IP in DHCP reservations"
+              exit 1
+            fi
+
+            echo "Found VM: $VM_NAME for IP: $VM_IP"
+
+            # Check if VM is already running
+            if ! ${pkgs.libvirt}/bin/virsh domstate "$VM_NAME" 2>/dev/null | grep -q "running"; then
+              echo "Starting VM $VM_NAME..."
+              ${pkgs.libvirt}/bin/virsh start "$VM_NAME"
+            fi
+
+            # Wait for RDP port to be available on the VM
+            echo "Waiting for RDP service on $VM_IP:$RDP_PORT..."
+            for i in $(seq 1 120); do
+              if ${pkgs.netcat}/bin/nc -z "$VM_IP" "$RDP_PORT" 2>/dev/null; then
+                echo "RDP service is ready"
+                break
+              fi
+              sleep 1
+            done
+
+            # Proxy the connection
+            exec ${pkgs.systemd}/lib/systemd/systemd-socket-proxyd "$VM_IP:$RDP_PORT"
+          ''
+          + " %i";
+      };
+    };
+
+    # Enable socket activation for win11 VM
+    sockets."vm-rdp@192.168.122.11" = {
+      wantedBy = [ "sockets.target" ];
+      overrideStrategy = "asDropin";
+    };
   };
 }
