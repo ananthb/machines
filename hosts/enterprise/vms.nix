@@ -41,7 +41,7 @@ in
     domains = [
       {
         active = true;
-        autostart = true;
+        autostart = false;
         definition = domain.writeXML (
           lib.recursiveUpdate
             (domain.templates.windows {
