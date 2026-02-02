@@ -227,6 +227,7 @@
         "http://localhost:9696/1/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
         "http://localhost:9696/2/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
         "http://localhost:9696/3/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
+        "http://localhost:9696/4/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
       ];
     };
   };
