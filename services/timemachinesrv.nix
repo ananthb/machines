@@ -28,9 +28,12 @@ _: {
           path = "/srv/timemachine";
           browseable = "yes";
           writeable = "yes";
+          public = "yes";
           "guest ok" = "yes";
           "force user" = "nobody";
           "force group" = "nogroup";
+          "create mask" = "0666";
+          "directory mask" = "0777";
           "fruit:time machine" = "yes";
           "fruit:time machine max size" = "1T";
         };
