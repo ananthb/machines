@@ -92,8 +92,8 @@
       group = "media";
       settings = {
         torrentClients = [ "qbittorrent:http://localhost:8080" ];
-        dataDirs = [ "/srv/media/Downloads" ];
         linkType = "hardlink";
+        linkDirs = [ "/srv/media/Downloads/cross-seed" ];
         matchMode = "partial";
         action = "inject";
         duplicateCategories = true;
