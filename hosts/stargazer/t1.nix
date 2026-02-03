@@ -6,5 +6,6 @@
   extraPackages =
     python3Packages: with python3Packages; [
       pyipp
+      pywizlight
     ];
 })
