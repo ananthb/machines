@@ -94,7 +94,7 @@
         torrentClients = [ "qbittorrent:http://localhost:8080" ];
         dataDirs = [ "/srv/media/Downloads" ];
         linkType = "hardlink";
-        matchMode = "safe";
+        matchMode = "partial";
         action = "inject";
         duplicateCategories = true;
       };
@@ -223,6 +223,8 @@
   sops.templates."cross-seed/config.json" = {
     owner = "cross-seed";
     content = builtins.toJSON {
+      radarr = [ "http://localhost:7878/?apikey=${config.sops.placeholder."arr_apis/radarr"}" ];
+      sonarr = [ "http://localhost:8989/?apikey=${config.sops.placeholder."arr_apis/sonarr"}" ];
       torznab = [
         "http://localhost:9696/1/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
         "http://localhost:9696/2/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
