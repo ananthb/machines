@@ -32,6 +32,7 @@ in
       "terraform"
       "unrar"
       "vscode"
+      "xone-dongle-firmware"
       "xow_dongle-firmware"
     ];
 
