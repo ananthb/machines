@@ -38,9 +38,10 @@
         {
           plugin = copycat;
         }
-        {
-          plugin = fingers;
-        }
+        # TODO: https://github.com/nixos/nixpkgs/issues/487193
+        #{
+        #  plugin = fingers;
+        #}
         {
           plugin = urlview;
         }
