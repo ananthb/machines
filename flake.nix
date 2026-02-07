@@ -185,6 +185,7 @@
           hostname = "endeavour";
           profiles.system = {
             sshUser = username;
+            user = "root";
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.endeavour;
           };
         };
@@ -193,6 +194,7 @@
           hostname = "enterprise";
           profiles.system = {
             sshUser = username;
+            user = "root";
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.enterprise;
           };
         };
@@ -201,6 +203,7 @@
           hostname = "stargazer";
           profiles.system = {
             sshUser = username;
+            user = "root";
             path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
           };
         };
@@ -209,6 +212,7 @@
         #  hostname = "voyager";
         #  profiles.system = {
         #    sshUser = username;
+        #    user = "root";
         #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
         #  };
         #};
