@@ -1,0 +1,63 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tailscale-acl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: ./version-cache.json
+          key: version-cache.json-${{ github.run_id }}
+          restore-keys: version-cache.json-
+
+      - name: Test ACL
+        if: github.event_name == 'pull_request'
+        uses: tailscale/gitops-acl-action@v1
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tailnet: ${{ secrets.TS_TAILNET }}
+          action: test
+
+      - name: Apply ACL
+        if: github.event_name == 'push'
+        uses: tailscale/gitops-acl-action@v1
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tailnet: ${{ secrets.TS_TAILNET }}
+          action: apply
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tailscale-acl
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:deploy
+
+      - name: Add SSH host keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "endeavour ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJxgao1yX2VxxPIozAKlL3cbk2SpBPfxjF29q7S/oFf" >> ~/.ssh/known_hosts
+          echo "enterprise ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFQt03m35by3UEWbU2KiEsr+9jnxXoFwRNflQYKCjE6n" >> ~/.ssh/known_hosts
+          echo "stargazer ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1jqNdM9sPcuX9qkMPvlTMnkzyUQY1CnMGYHv2Epogo" >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: nix run github:serokell/deploy-rs -- --skip-checks --remote-build
