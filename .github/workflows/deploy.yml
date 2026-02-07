@@ -47,18 +47,33 @@ jobs:
         run: |
           echo "Waiting for Garnix checks to complete..."
           for i in {1..60}; do
-            status=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }}/status --jq '.state')
-            echo "Attempt $i: Status is $status"
-            if [ "$status" = "success" ]; then
-              echo "All checks passed!"
-              exit 0
-            elif [ "$status" = "failure" ] || [ "$status" = "error" ]; then
-              echo "Checks failed!"
-              exit 1
+            # Get all check runs for this commit
+            result=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }}/check-runs \
+              --jq '{
+                total: .total_count,
+                garnix: [.check_runs[] | select(.app.slug == "garnix-ci")],
+                pending: [.check_runs[] | select(.app.slug == "garnix-ci" and .status != "completed")] | length,
+                failed: [.check_runs[] | select(.app.slug == "garnix-ci" and .status == "completed" and .conclusion != "success")] | length
+              }')
+
+            total=$(echo "$result" | jq -r '.garnix | length')
+            pending=$(echo "$result" | jq -r '.pending')
+            failed=$(echo "$result" | jq -r '.failed')
+
+            echo "Attempt $i: $total Garnix checks, $pending pending, $failed failed"
+
+            if [ "$total" -gt 0 ] && [ "$pending" -eq 0 ]; then
+              if [ "$failed" -eq 0 ]; then
+                echo "All Garnix checks passed!"
+                exit 0
+              else
+                echo "Garnix checks failed!"
+                exit 1
+              fi
             fi
             sleep 30
           done
-          echo "Timeout waiting for checks"
+          echo "Timeout waiting for Garnix checks"
           exit 1
 
   deploy:
