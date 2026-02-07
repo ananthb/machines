@@ -74,8 +74,6 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    devenv.url = "github:cachix/devenv";
   };
 
   outputs =
@@ -91,6 +89,14 @@
     }@inputs:
     let
       username = "ananth";
+
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
+
+      forAllSystems = nixpkgs.lib.genAttrs systems;
 
       mkNixosHost =
         {
@@ -132,11 +138,7 @@
         };
     in
     {
-      formatter = {
-        x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt;
-        aarch64-linux = nixpkgs.legacyPackages.aarch64-linux.nixfmt;
-        aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt;
-      };
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
 
       nixosConfigurations = {
         endeavour = mkNixosHost {
@@ -212,24 +214,47 @@
         #};
       };
 
-      checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-
-      devShells =
+      checks = forAllSystems (
+        system:
         let
-          mkDevShell =
-            system:
-            let
-              pkgs = nixpkgs.legacyPackages.${system};
-            in
-            inputs.devenv.lib.mkShell {
-              inherit inputs pkgs;
-              modules = [ ./devenv.nix ];
-            };
+          pkgs = nixpkgs.legacyPackages.${system};
+          deployChecks = deploy-rs.lib.${system}.deployChecks self.deploy;
+        in
+        deployChecks
+        // {
+          formatting = pkgs.runCommand "check-formatting" { buildInputs = [ pkgs.nixfmt ]; } ''
+            nixfmt --check ${self}
+            touch $out
+          '';
+          statix = pkgs.runCommand "check-statix" { buildInputs = [ pkgs.statix ]; } ''
+            statix check ${self}
+            touch $out
+          '';
+          deadnix = pkgs.runCommand "check-deadnix" { buildInputs = [ pkgs.deadnix ]; } ''
+            deadnix --fail ${self}
+            touch $out
+          '';
+        }
+      );
+
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          x86_64-linux.default = mkDevShell "x86_64-linux";
-          aarch64-linux.default = mkDevShell "aarch64-linux";
-          aarch64-darwin.default = mkDevShell "aarch64-darwin";
-        };
+          default = pkgs.mkShell {
+            packages = [
+              pkgs.nixfmt
+              pkgs.statix
+              pkgs.deadnix
+              pkgs.sops
+              pkgs.age
+              pkgs.gh
+              deploy-rs.packages.${system}.default
+            ];
+          };
+        }
+      );
     };
 }
