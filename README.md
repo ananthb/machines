@@ -10,5 +10,5 @@ for the bulk of their configuration.
 
 ## LICENSE
 
-This project is licensed under the MIT License.
+This project is licensed under the GPL v3 License.
 See the [LICENSE](LICENSE) file for details.
