@@ -19,8 +19,8 @@ in
     builtins.elem (lib.getName pkg) [
       "b43-firmware"
       "broadcom-bt-firmware"
-      "claude-code"
       "cloudflare-warp"
+      "codex"
       "copilot.vim"
       "crush"
       "discord"

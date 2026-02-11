@@ -10,8 +10,7 @@
   ];
 
   home.packages = with pkgs; [
-    claude-code
-    crush
+    codex
     delta
     devenv
     fzf
