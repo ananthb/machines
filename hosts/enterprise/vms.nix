@@ -139,9 +139,7 @@ in
       description = "Socket activation for VM RDP (%i)";
       after = [
         "libvirtd.service"
-        "network-online.target"
       ];
-      wants = [ "network-online.target" ];
       requires = [ "libvirtd.service" ];
       socketConfig = {
         ListenStream = "%i:3389";
