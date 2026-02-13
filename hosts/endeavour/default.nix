@@ -133,12 +133,23 @@
     units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
 
     network = {
+      networks."20-enp2s0" = {
+        matchConfig.Name = "enp2s0";
+        networkConfig = {
+          DHCP = "ipv4";
+          IPv6AcceptRA = true;
+        };
+        dhcpV4Config.RouteMetric = 100;
+        ipv6AcceptRAConfig.Token = ipv6Token;
+        linkConfig.RequiredForOnline = "carrier";
+      };
       networks."30-enp4s0" = {
         matchConfig.Name = "enp4s0";
         networkConfig = {
           DHCP = "ipv4";
           IPv6AcceptRA = true;
         };
+        dhcpV4Config.RouteMetric = 100;
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
