@@ -53,6 +53,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pre-commit-hooks-nix = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -84,6 +89,7 @@
       nix-darwin,
       nixos-hardware,
       nixpkgs,
+      pre-commit-hooks-nix,
       sops-nix,
       ...
     }@inputs:
@@ -223,9 +229,18 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           deployChecks = deploy-rs.lib.${system}.deployChecks self.deploy;
+          preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixfmt.enable = true;
+              statix.enable = true;
+              deadnix.enable = true;
+            };
+          };
         in
         deployChecks
         // {
+          pre-commit = preCommitCheck;
           formatting = pkgs.runCommand "check-formatting" { buildInputs = [ pkgs.nixfmt ]; } ''
             nixfmt --check ${self}
             touch $out
@@ -245,10 +260,19 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixfmt.enable = true;
+              statix.enable = true;
+              deadnix.enable = true;
+            };
+          };
         in
         {
           default = pkgs.mkShell {
-            packages = [
+            inherit (preCommitCheck) shellHook;
+            packages = preCommitCheck.enabledPackages ++ [
               pkgs.nixfmt
               pkgs.statix
               pkgs.deadnix

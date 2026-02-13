@@ -108,7 +108,7 @@
 
   networking = {
     useNetworkd = true;
-    useDHCP = false;
+    useDHCP = true;
 
     firewall = {
       allowedTCPPorts = [
@@ -133,34 +133,14 @@
     units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
 
     network = {
-      netdevs."10-bond0" = {
-        netdevConfig = {
-          Kind = "bond";
-          Name = "bond0";
+      networks."30-enp4s0" = {
+        matchConfig.Name = "enp4s0";
+        networkConfig = {
+          DHCP = "ipv4";
+          IPv6AcceptRA = true;
         };
-        bondConfig = {
-          Mode = "balance-alb";
-          MIIMonitorSec = "100ms";
-        };
-      };
-      networks = {
-        "30-enp2s0" = {
-          matchConfig.Name = "enp2s0";
-          networkConfig.Bond = "bond0";
-        };
-        "30-enp4s0" = {
-          matchConfig.Name = "enp4s0";
-          networkConfig.Bond = "bond0";
-        };
-        "40-bond0" = {
-          matchConfig.Name = "bond0";
-          networkConfig = {
-            DHCP = "ipv4";
-            IPv6AcceptRA = true;
-          };
-          ipv6AcceptRAConfig.Token = ipv6Token;
-          linkConfig.RequiredForOnline = "carrier";
-        };
+        ipv6AcceptRAConfig.Token = ipv6Token;
+        linkConfig.RequiredForOnline = "carrier";
       };
     };
   };
