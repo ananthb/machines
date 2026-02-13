@@ -23,6 +23,7 @@
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
+    ../../services/media/calibre.nix
     ../../services/media/jellyfin.nix
     ../../services/media/news.nix
     ../../services/monitoring/blackbox.nix

@@ -18,6 +18,7 @@
           "6a.kedi.dev" = "http://localhost:8123";
           "actual.kedi.dev" = "http://localhost:3001";
           "apps.kedi.dev" = "http://localhost:8802";
+          "calibre.kedi.dev" = "http://localhost:8086";
           "immich.kedi.dev" = "http://localhost:2283";
           "metrics.kedi.dev" = "http://localhost:3000";
           "miniflux.kedi.dev" = "http://localhost:8088";
