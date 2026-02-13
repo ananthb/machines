@@ -11,9 +11,11 @@
       config,
       pkgs,
       ipv6Token,
+      ipv6Interface ? null,
       ...
     }:
     let
+      ipv6IfaceArg = if ipv6Interface == null then "" else "dev ${ipv6Interface}";
       getIPv6 = pkgs.writeShellScript "get-ipv6" ''
         # ------------------------------------------------------------------------
         # ddns custom IPv6 getter
@@ -22,7 +24,7 @@
         # GUA addresses are in the 2000::/3 range (start with 2 or 3)
         # ------------------------------------------------------------------------
 
-        ${pkgs.iproute2}/bin/ip -6 addr show scope global | \
+        ${pkgs.iproute2}/bin/ip -6 addr show ${ipv6IfaceArg} scope global | \
           ${pkgs.gawk}/bin/awk '/inet6 [23].*${ipv6Token}\// { sub(/\/.*$/, "", $2); print $2; exit }'
       '';
 
