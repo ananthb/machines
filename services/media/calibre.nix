@@ -28,7 +28,7 @@ in
       User = "calibre";
       Group = "calibre";
       ExecStartPre = "${pkgs.bash}/bin/bash -c 'if [ ! -f ${libraryDir}/metadata.db ]; then ${pkgs.calibre}/bin/calibredb list --with-library ${libraryDir} >/dev/null; fi'";
-      ExecStart = "${pkgs.calibre}/bin/calibre-server --port ${toString calibrePort} --listen-on 0.0.0.0 ${libraryDir}";
+      ExecStart = "${pkgs.calibre}/bin/calibre-server --port ${toString calibrePort} --listen-on [::] --trusted-ips 127.0.0.1,::1 ${libraryDir}";
       Restart = "on-failure";
       RestartSec = 5;
     };
