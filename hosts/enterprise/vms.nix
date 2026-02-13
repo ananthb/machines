@@ -46,7 +46,7 @@ in
     ];
     domains = [
       {
-        active = true;
+        active = false;
         autostart = false;
         definition = domain.writeXML (
           lib.recursiveUpdate
