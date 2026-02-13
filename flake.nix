@@ -153,6 +153,7 @@
           extraModules = [
             lanzaboote.nixosModules.lanzaboote
             { _module.args.ipv6Token = "::e4de:a704"; }
+            { _module.args.ipv6Interface = "enp4s0"; }
           ];
         };
 
