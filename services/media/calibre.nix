@@ -4,7 +4,7 @@
 }:
 let
   calibrePort = 8086;
-  libraryDir = "/srv/media/books";
+  libraryDir = "/srv/media/Books";
 in
 {
   users.groups.calibre = { };
