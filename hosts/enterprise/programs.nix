@@ -27,7 +27,6 @@
   services = {
     displayManager.gdm = {
       enable = true;
-      autoSuspend = false;
     };
     desktopManager.gnome.enable = true;
 
@@ -43,7 +42,7 @@
     ollama = {
       enable = true;
       # See https://ollama.com/library
-      loadModels = [
+      models = [
         "llama3.2:3b"
         "deepseek-r1:1.5b"
       ];
