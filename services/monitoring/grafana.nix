@@ -409,7 +409,7 @@
                     type = "telegram";
                     settings = {
                       bottoken = "\"$__file{${config.sops.secrets."telegram/bot_token".path}}\"";
-                      chatid = "$__file{${config.sops.secrets."telegram/chat_id".path}}";
+                      chatid = "\"$__file{${config.sops.secrets."telegram/chat_id".path}}\"";
                     };
                     disableResolveMessage = false;
                   }
