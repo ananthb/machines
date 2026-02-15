@@ -17,8 +17,9 @@ provider "docker" {
 
 data "coder_workspace" "me" {}
 data "coder_workspace_owner" "me" {}
+data "coder_provisioner" "me" {}
 
-resource "coder_parameter" "image" {
+data "coder_parameter" "image" {
   name         = "container_image"
   description  = "Container image to run for the workspace."
   type         = "string"
@@ -28,8 +29,8 @@ resource "coder_parameter" "image" {
 }
 
 resource "coder_agent" "main" {
-  arch = data.coder_workspace.me.arch
-  os   = data.coder_workspace.me.os
+  arch = data.coder_provisioner.me.arch
+  os   = "linux"
 
   startup_script = <<-EOT
     set -e
@@ -107,7 +108,7 @@ resource "docker_volume" "home" {
 
 resource "docker_container" "workspace" {
   name     = "coder-${data.coder_workspace_owner.me.name}-${data.coder_workspace.me.name}"
-  image    = coder_parameter.image.value
+  image    = data.coder_parameter.image.value
   hostname = data.coder_workspace.me.name
 
   env = [
@@ -121,9 +122,18 @@ resource "docker_container" "workspace" {
     container_path = "/home/coder"
   }
 
-  labels = {
-    "coder.workspace_id"   = data.coder_workspace.me.id
-    "coder.workspace_name" = data.coder_workspace.me.name
-    "coder.owner"          = data.coder_workspace_owner.me.name
+  labels {
+    label = "coder.workspace_id"
+    value = data.coder_workspace.me.id
+  }
+
+  labels {
+    label = "coder.workspace_name"
+    value = data.coder_workspace.me.name
+  }
+
+  labels {
+    label = "coder.owner"
+    value = data.coder_workspace_owner.me.name
   }
 }
