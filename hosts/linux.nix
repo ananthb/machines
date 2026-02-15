@@ -130,7 +130,6 @@
         enable = true;
         settings = {
           auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
-          loglevel = "debug";
         };
       };
     };

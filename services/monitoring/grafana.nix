@@ -22,10 +22,6 @@
           root_url = "https://metrics.kedi.dev";
         };
 
-        log = {
-          level = "debug";
-        };
-
         users = {
           allow_sign_up = false;
         };
