@@ -22,6 +22,10 @@
           root_url = "https://metrics.kedi.dev";
         };
 
+        log = {
+          level = "debug";
+        };
+
         users = {
           allow_sign_up = false;
         };
@@ -409,7 +413,7 @@
                     type = "telegram";
                     settings = {
                       bottoken = "\"$__file{${config.sops.secrets."telegram/bot_token".path}}\"";
-                      chatid = "\"$__file{${config.sops.secrets."telegram/chat_id".path}}\"";
+                      chatid = "$__file{${config.sops.secrets."telegram/chat_id".path}}";
                     };
                     disableResolveMessage = false;
                   }
