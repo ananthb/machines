@@ -55,7 +55,7 @@
       8085 # wallabag
       8088 # miniflux
     ];
-    interfaces.podman1.allowedTCPPorts = [
+    interfaces.podman0.allowedTCPPorts = [
       5432 # postgres
     ];
   };
