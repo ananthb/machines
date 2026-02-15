@@ -65,7 +65,11 @@
 
   networking.firewall = rec {
     # nfs server
-    allowedTCPPorts = [ 2049 ];
+    allowedTCPPorts = [
+      80
+      443
+      2049
+    ];
     # gsconnect/kdeconnect
     allowedTCPPortRanges = [
       {
