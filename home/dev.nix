@@ -10,6 +10,7 @@
   ];
 
   home.packages = with pkgs; [
+    coder
     codex
     delta
     devenv
