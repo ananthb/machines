@@ -408,8 +408,7 @@
                     uid = "aex9vvifn6ha8a";
                     type = "telegram";
                     settings = {
-                      bottoken = "$__file{${config.sops.secrets."telegram/bot_token".path}}";
-                      # Force string after file expansion to avoid numeric parsing.
+                      bottoken = "\"$__file{${config.sops.secrets."telegram/bot_token".path}}\"";
                       chatid = "\"$__file{${config.sops.secrets."telegram/chat_id".path}}\"";
                     };
                     disableResolveMessage = false;
