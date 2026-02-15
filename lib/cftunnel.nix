@@ -15,9 +15,9 @@
         tunnelId = "5fd5fbd5-fc21-4766-b92e-a8b577b4bda5";
         tunnelName = "kedi-apps-1";
         ingress = {
+          "kedi.dev" = "http://localhost:8802";
           "6a.kedi.dev" = "http://localhost:8123";
           "actual.kedi.dev" = "http://localhost:3001";
-          "apps.kedi.dev" = "http://localhost:8802";
           "calibre.kedi.dev" = "http://localhost:8086";
           "immich.kedi.dev" = "http://localhost:2283";
           "metrics.kedi.dev" = "http://localhost:3000";

@@ -6,11 +6,11 @@
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8802;
-    allowedHosts = "apps.kedi.dev";
+    allowedHosts = "kedi.dev";
     settings = {
-      title = "KEDI Applications";
-      description = "KEDI Server running apps for the people";
-      base = "https://apps.kedi.dev";
+      title = "KEDI";
+      description = "Self-hosted apps for the people";
+      base = "https://kedi.dev";
       target = "_blank";
     };
     environmentFile = config.sops.templates."homepage-dashboard.env".path;
