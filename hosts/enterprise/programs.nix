@@ -42,7 +42,7 @@
     ollama = {
       enable = true;
       # See https://ollama.com/library
-      models = [
+      loadModels = [
         "llama3.2:3b"
         "deepseek-r1:1.5b"
       ];
