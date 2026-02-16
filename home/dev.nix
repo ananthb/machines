@@ -25,7 +25,6 @@
     nix-output-monitor
     opencode
     ripgrep
-    sprites-cli
   ];
 
   programs = {
