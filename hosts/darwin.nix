@@ -2,6 +2,7 @@
   config,
   hostname,
   inputs,
+  lib,
   pkgs,
   system,
   username,
