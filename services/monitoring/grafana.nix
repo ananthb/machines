@@ -418,8 +418,8 @@
   networking.firewall.allowedTCPPorts = [ 3000 ];
 
   sops.secrets = {
-    "telegram/bot_token".owner = config.users.users.grafana.name;
-    "telegram/chat_id".owner = config.users.users.grafana.name;
+    "telegram/grafana/bot_token".owner = config.users.users.grafana.name;
+    "telegram/grafana/chat_id".owner = config.users.users.grafana.name;
     # Shared OAuth secrets - mode 0444 so multiple services can read
     "gcloud/oauth/self-hosted_clients/id".mode = "0444";
     "gcloud/oauth/self-hosted_clients/secret".mode = "0444";
@@ -436,8 +436,8 @@
             - uid: aex9vvifn6ha8a
               type: telegram
               settings:
-                bottoken: "${config.sops.placeholder."telegram/bot_token"}"
-                chatid: "${config.sops.placeholder."telegram/chat_id"}"
+                bottoken: "${config.sops.placeholder."telegram/grafana/bot_token"}"
+                chatid: "${config.sops.placeholder."telegram/grafana/chat_id"}"
               disableResolveMessage: false
       deleteContactPoints: []
     '';

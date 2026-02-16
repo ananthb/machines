@@ -36,10 +36,14 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         users.${username} = {
-          imports = [
-            ../home/common.nix
-            ../home/${hostname}.nix
-          ];
+          imports =
+            let
+              hostModule = (import ../lib/home-host-module.nix { inherit lib; }) hostname;
+            in
+            [
+              ../home/common.nix
+              hostModule
+            ];
         };
         extraSpecialArgs = {
           inherit

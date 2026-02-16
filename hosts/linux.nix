@@ -16,6 +16,7 @@
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager = {
+        backupFileExtension = "bak";
         sharedModules = [
           inputs.sops-nix.homeManagerModules.sops
           inputs.nix-index-database.homeModules.nix-index
@@ -23,10 +24,14 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         users.${username} = {
-          imports = [
-            ../home/common.nix
-            ../home/${hostname}.nix
-          ];
+          imports =
+            let
+              hostModule = (import ../lib/home-host-module.nix { inherit lib; }) hostname;
+            in
+            [
+              ../home/common.nix
+              hostModule
+            ];
         };
         extraSpecialArgs = {
           inherit hostname system username;

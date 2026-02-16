@@ -14,6 +14,7 @@
     codex
     delta
     devenv
+    flyctl
     fzf
     gh
     git
@@ -24,6 +25,7 @@
     nix-output-monitor
     opencode
     ripgrep
+    sprites-cli
   ];
 
   programs = {
