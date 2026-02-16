@@ -20,10 +20,6 @@
     ../../services/monitoring/libvirt.nix
   ];
 
-  nixpkgs.overlays = [
-    inputs.nix-openclaw.overlays.default
-  ];
-
   documentation.nixos.enable = true;
 
   # systemd-boot

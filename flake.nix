@@ -44,8 +44,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-openclaw.url = "github:openclaw/nix-openclaw";
-
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
