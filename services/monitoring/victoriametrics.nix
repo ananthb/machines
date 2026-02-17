@@ -75,7 +75,6 @@ let
       ];
     in
     dynamic ++ static;
-  libvirtTargets = libvirtTargets ++ [ "framework.tail030950.ts.net:9177" ];
 
   # 4. SmartCTL Exporter
   # Target: hostname:9633
