@@ -50,4 +50,9 @@ in
       "prometheus-nut-exporter"
     ];
   };
+
+  systemd.services.nut-users-secrets = {
+    startLimitIntervalSec = 0;
+    startLimitBurst = 0;
+  };
 }

@@ -84,8 +84,6 @@ in
   vault-secrets.secrets.miniflux = {
     services = [ "miniflux" ];
     secretsKey = null;
-    user = "miniflux";
-    group = "miniflux";
     extraScript = ''
       umask 0077
       printf '%s' "$MINIFLUX_ADMIN_CREDS" > "$secretsPath/admin_creds"
