@@ -12,9 +12,6 @@ in
 
   services.miniflux = {
     enable = true;
-    # Ensure secrets can be chowned before service start.
-    user = "miniflux";
-    group = "miniflux";
     adminCredentialsFile = "${vs.miniflux}/admin_creds";
     config = {
       LISTEN_ADDR = "[::]:8088";
@@ -101,11 +98,18 @@ in
     services = [ "wallabag" ];
   };
 
-  users.groups.miniflux = { };
-  users.users.miniflux = {
-    isSystemUser = true;
-    group = "miniflux";
+  users = {
+    groups.miniflux = { };
+
+    users.miniflux = {
+      isSystemUser = true;
+      group = "miniflux";
+    };
   };
 
-  systemd.services.miniflux.serviceConfig.DynamicUser = false;
+  systemd.services.miniflux.serviceConfig = {
+    DynamicUser = false;
+    User = "miniflux";
+    Group = "miniflux";
+  };
 }
