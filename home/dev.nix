@@ -24,6 +24,7 @@
     mosh
     nix-output-monitor
     ripgrep
+    vault
   ];
 
   programs = {
