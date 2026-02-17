@@ -7,9 +7,6 @@ _: {
       path = "/var/lib/vault"
       node_id = "endeavour"
     '';
-    listenerExtraConfig = ''
-      tls_disable = 1
-    '';
     extraConfig = ''
       ui = true
       disable_mlock = true
