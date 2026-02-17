@@ -8,7 +8,6 @@
   homebrew.casks = [
     "1password"
     "activitywatch"
-    "firefox"
     "gimp"
     "ghostty"
     "google-chrome"
@@ -18,7 +17,6 @@
     "raspberry-pi-imager"
     "rectangle-pro"
     "scroll-reverser"
-    "seadrive"
     "signal"
     "slack-cli"
     "timemator"
