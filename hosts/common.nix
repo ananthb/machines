@@ -29,6 +29,7 @@ in
       "slack"
       "steam"
       "steam-unwrapped"
+      "vault"
       "terraform"
       "unrar"
       "vscode"

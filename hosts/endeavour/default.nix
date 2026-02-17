@@ -35,6 +35,7 @@
     ../../services/radicale.nix
     ../../services/seafile.nix
     ../../services/timemachinesrv.nix
+    ../../services/vault.nix
     ../../services/vaultwarden.nix
   ];
 
