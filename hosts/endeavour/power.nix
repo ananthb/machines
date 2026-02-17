@@ -3,6 +3,8 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
+  users.groups.nut-exporter = { };
+
   power.ups = {
     enable = true;
     mode = "netserver";
