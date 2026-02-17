@@ -49,6 +49,9 @@ in
       "upsmon"
       "prometheus-nut-exporter"
     ];
+    owner = "root";
+    group = "nut-exporter";
+    mode = "0440";
   };
 
   systemd.services.nut-users-secrets = {
