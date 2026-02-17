@@ -46,7 +46,7 @@ in
   vault-secrets.secrets.nut-users = {
     services = [
       "upsd"
-      "nut-monitor"
+      "upsmon"
       "prometheus-nut-exporter"
     ];
   };

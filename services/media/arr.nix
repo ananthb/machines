@@ -221,6 +221,9 @@ in
       "sonarr"
       "prowlarr"
       "cross-seed"
+      "prometheus-exportarr-radarr-exporter"
+      "prometheus-exportarr-sonarr-exporter"
+      "prometheus-exportarr-prowlarr-exporter"
     ];
     secretsKey = null;
     group = "media";

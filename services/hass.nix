@@ -19,7 +19,7 @@
 lib.recursiveUpdate (
   let
     vs = config.vault-secrets.secrets;
-    secretName = "home-assistant-" + (lib.replaceStrings [ "/" ] [ "-" ] secretsPrefix);
+    secretName = lib.replaceStrings [ "/" ] [ "-" ] secretsPrefix;
   in
   {
     services.home-assistant = {
