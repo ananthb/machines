@@ -49,8 +49,12 @@ let
       mac = concatMap (
         host: if hasBrew host.config "node_exporter" then [ "${host.name}:9100" ] else [ ]
       ) darwinHosts;
+      # Static Tailscale targets for machines outside Nix host lists.
+      static = [
+        "framework.tail030950.ts.net:9100"
+      ];
     in
-    linux ++ mac;
+    linux ++ mac ++ static;
 
   # 2. Blackbox Exporter (The prober itself)
   # Target: hostname:9115
@@ -60,9 +64,18 @@ let
 
   # 3. Libvirt Exporter
   # Target: hostname:9177
-  libvirtTargets = concatMap (
-    host: if hasExporter host.config "libvirt" then [ "${host.name}:9177" ] else [ ]
-  ) nixosHosts;
+  libvirtTargets =
+    let
+      dynamic = concatMap (
+        host: if hasExporter host.config "libvirt" then [ "${host.name}:9177" ] else [ ]
+      ) nixosHosts;
+      # Static Tailscale targets for machines outside Nix host lists.
+      static = [
+        "framework.tail030950.ts.net:9177"
+      ];
+    in
+    dynamic ++ static;
+  libvirtTargets = libvirtTargets ++ [ "framework.tail030950.ts.net:9177" ];
 
   # 4. SmartCTL Exporter
   # Target: hostname:9633
