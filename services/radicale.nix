@@ -39,7 +39,5 @@ in
 
   vault-secrets.secrets.radicale = {
     services = [ "radicale" ];
-    user = "radicale";
-    group = "radicale";
   };
 }

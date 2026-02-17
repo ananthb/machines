@@ -559,8 +559,6 @@ in
     secrets = {
       victoriametrics = {
         services = [ "victoriametrics" ];
-        user = "victoriametrics";
-        group = "victoriametrics";
       };
 
       home-assistant-6a.services = lib.mkAfter [ "victoriametrics" ];
