@@ -12,6 +12,9 @@ in
 
   services.miniflux = {
     enable = true;
+    # Ensure secrets can be chowned before service start.
+    user = "miniflux";
+    group = "miniflux";
     adminCredentialsFile = "${vs.miniflux}/admin_creds";
     config = {
       LISTEN_ADDR = "[::]:8088";
@@ -84,6 +87,8 @@ in
   vault-secrets.secrets.miniflux = {
     services = [ "miniflux" ];
     secretsKey = null;
+    user = "miniflux";
+    group = "miniflux";
     extraScript = ''
       umask 0077
       printf '%s' "$MINIFLUX_ADMIN_CREDS" > "$secretsPath/admin_creds"
@@ -95,4 +100,12 @@ in
   vault-secrets.secrets.wallabag = {
     services = [ "wallabag" ];
   };
+
+  users.groups.miniflux = { };
+  users.users.miniflux = {
+    isSystemUser = true;
+    group = "miniflux";
+  };
+
+  systemd.services.miniflux.serviceConfig.DynamicUser = false;
 }

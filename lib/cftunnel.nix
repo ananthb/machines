@@ -81,7 +81,7 @@
         map (cfg: {
           name = "cloudflare-tunnel-${cfg.tunnelId}";
           value = {
-            services = [ "cloudflared" ];
+            services = [ "cloudflared-tunnel-${cfg.tunnelId}" ];
           };
         }) cfgs
       );
