@@ -8,7 +8,6 @@
   homebrew.casks = [
     "1password"
     "activitywatch"
-    "discord"
     "firefox"
     "gimp"
     "ghostty"
@@ -21,7 +20,6 @@
     "scroll-reverser"
     "seadrive"
     "signal"
-    "slack"
     "slack-cli"
     "timemator"
     "visual-studio-code"
@@ -35,8 +33,6 @@
     "Keynote" = 409183694;
     "Numbers" = 409203825;
     "Pages" = 409201541;
-    "Telegram" = 747648890;
     "Velja" = 1607635845;
-    "WhatsApp" = 310633997;
   };
 }
