@@ -53,11 +53,15 @@
   };
 
   sops.secrets = lib.mapAttrs' (
-    name: _value:
+    name: value:
+    let
+      user = value.user or "root";
+      group = value.group or "root";
+      mode = if user != "root" || group != "root" then "0440" else "0400";
+    in
     lib.nameValuePair "approles/${name}" {
-      mode = "0400";
-      owner = "root";
-      group = "root";
+      owner = user;
+      inherit group mode;
     }
   ) config.vault-secrets.secrets;
 
