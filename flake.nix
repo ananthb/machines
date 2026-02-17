@@ -188,6 +188,7 @@
 
       deploy.nodes = {
         endeavour = {
+          system = "x86_64-linux";
           hostname = "endeavour";
           profiles.system = {
             sshUser = username;
@@ -197,6 +198,7 @@
         };
 
         enterprise = {
+          system = "x86_64-linux";
           hostname = "enterprise";
           profiles.system = {
             sshUser = username;
@@ -206,6 +208,7 @@
         };
 
         stargazer = {
+          system = "aarch64-linux";
           hostname = "stargazer";
           profiles.system = {
             sshUser = username;
@@ -228,7 +231,12 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          deployChecks = deploy-rs.lib.${system}.deployChecks self.deploy;
+          deployChecks = deploy-rs.lib.${system}.deployChecks (
+            self.deploy
+            // {
+              nodes = nixpkgs.lib.filterAttrs (_: node: node.system == system) self.deploy.nodes;
+            }
+          );
           preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
             src = ./.;
             hooks = {
