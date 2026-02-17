@@ -559,7 +559,6 @@ in
     secrets = {
       victoriametrics = {
         services = [ "victoriametrics" ];
-        environmentKey = null;
         user = "victoriametrics";
         group = "victoriametrics";
       };

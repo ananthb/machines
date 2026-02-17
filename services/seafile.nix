@@ -359,12 +359,10 @@ in
       "seafile-ai"
       "seadoc-server"
     ];
-    environmentKey = null;
   };
 
   vault-secrets.secrets.collabora = {
     services = [ "collabora-code" ];
-    environmentKey = null;
   };
 
 }

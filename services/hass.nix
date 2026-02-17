@@ -124,7 +124,6 @@ lib.recursiveUpdate (
 
     vault-secrets.secrets.${secretName} = {
       services = [ "home-assistant" ];
-      environmentKey = null;
       user = config.users.users.hass.name;
       inherit (config.users.users.hass) group;
     };

@@ -58,7 +58,6 @@ in
 
   vault-secrets.secrets.rclone-ananth = {
     services = [ "rclone-sync-ananth-finance" ];
-    environmentKey = null;
   };
 
   vault-secrets.secrets.rclone-bhaskar = {
@@ -66,6 +65,5 @@ in
       "rclone-sync-bhaskar-documents"
       "rclone-sync-bhaskar-family-library"
     ];
-    environmentKey = null;
   };
 }

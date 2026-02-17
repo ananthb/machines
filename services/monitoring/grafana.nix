@@ -422,7 +422,6 @@ in
 
   vault-secrets.secrets.grafana = {
     services = [ "grafana" ];
-    environmentKey = null;
     user = "grafana";
     group = "grafana";
   };

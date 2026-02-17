@@ -33,6 +33,5 @@ in
 
   vault-secrets.secrets.davis = {
     services = [ "davis" ];
-    environmentKey = null;
   };
 }

@@ -18,6 +18,5 @@ in
 
   vault-secrets.secrets.ecoflow = {
     services = [ "prometheus-ecoflow-exporter" ];
-    environmentKey = null;
   };
 }

@@ -49,6 +49,5 @@ in
       "nut-monitor"
       "prometheus-nut-exporter"
     ];
-    environmentKey = null;
   };
 }

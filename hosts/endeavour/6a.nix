@@ -52,7 +52,6 @@
     imports = [ ../../services/monitoring/postgres.nix ];
     vault-secrets.secrets.openwrt-atlantis = {
       services = [ "home-assistant" ];
-      environmentKey = null;
     };
     services = {
       frigate = {

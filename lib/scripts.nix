@@ -225,11 +225,9 @@ in
     vault-secrets.secrets = {
       gcloud-service-accounts = {
         services = [ ];
-        environmentKey = null;
       };
       kopia-gcs = {
         services = [ ];
-        environmentKey = null;
       };
     };
   };

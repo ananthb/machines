@@ -44,7 +44,6 @@ in
       "immich-server"
       "immich-microservices"
     ];
-    environmentKey = null;
     user = "immich";
     group = "immich";
   };

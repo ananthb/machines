@@ -123,7 +123,6 @@ in
 
   vault-secrets.secrets.nut-users = {
     services = [ "nut-monitor" ];
-    environmentKey = null;
   };
 
   # 32GB swapfile
