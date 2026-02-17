@@ -4,6 +4,10 @@ let
 in
 {
   users.groups.nut-exporter = { };
+  users.users.nut-exporter = {
+    isSystemUser = true;
+    group = "nut-exporter";
+  };
 
   power.ups = {
     enable = true;
