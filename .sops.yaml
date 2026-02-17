@@ -12,18 +12,34 @@ keys:
   - &host_voyager age13hhdcqa4dcn49w5uy03vfxd2lgurhep53tufawc3gyvc3q9lwf5qs4uu09
   - &host_voyager_user_ananth age1ecj27gptwns0tlm9t9kphhcf7ngkhgzwa8pg7nc5559v96lxzf9qxr6v5q
 creation_rules:
-  - path_regex: secrets.yaml$
+  - path_regex: secrets/discovery.yaml$
     key_groups:
       - pgp:
           - *admin_ananth
         age:
           - *host_discovery
           - *host_discovery_user_ananth
+
+  - path_regex: secrets/endeavour.yaml$
+    key_groups:
+      - pgp:
+          - *admin_ananth
+        age:
           - *host_endeavour
           - *host_endeavour_user_ananth
-          - *host_enterprise
-          - *host_enterprise_user_ananth
+
+  - path_regex: secrets/stargazer.yaml$
+    key_groups:
+      - pgp:
+          - *admin_ananth
+        age:
           - *host_stargazer
           - *host_stargazer_user_ananth
+
+  - path_regex: secrets/voyager.yaml$
+    key_groups:
+      - pgp:
+          - *admin_ananth
+        age:
           - *host_voyager
           - *host_voyager_user_ananth

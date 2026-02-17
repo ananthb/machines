@@ -58,6 +58,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vault-secrets = {
       url = "github:serokell/vault-secrets";
       inputs.nixpkgs.follows = "nixpkgs";

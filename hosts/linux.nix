@@ -1,4 +1,5 @@
 {
+  config,
   hostname,
   inputs,
   lib,
@@ -11,6 +12,7 @@
 {
 
   imports = [
+    inputs.sops-nix.nixosModules.sops
     inputs.vault-secrets.nixosModules.vault-secrets
     inputs.quadlet-nix.nixosModules.quadlet
     inputs.home-manager.nixosModules.home-manager
@@ -43,6 +45,18 @@
     ./common.nix
     ../lib/scripts.nix
   ];
+
+  sops = {
+    defaultSopsFile = ../secrets/${hostname}.yaml;
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+  };
+
+  sops.secrets = lib.mapAttrs (name: _value: {
+    path = "/run/secrets/approles/${name}";
+    mode = "0400";
+    owner = "root";
+    group = "root";
+  }) config.vault-secrets.secrets;
 
   nix.gc.dates = "weekly";
 
@@ -77,8 +91,20 @@
       enableSystemSlice = true;
     };
 
-    # Protect critical services from oomd
-    services.tailscaled.serviceConfig.ManagedOOMPreference = "none";
+    services = lib.mkMerge [
+      {
+        # Protect critical services from oomd
+        tailscaled.serviceConfig.ManagedOOMPreference = "none";
+      }
+      (lib.mapAttrs' (
+        name: _value:
+        lib.nameValuePair "${name}-secrets" {
+          requires = [ "sops-install-secrets.service" ];
+          after = [ "sops-install-secrets.service" ];
+          serviceConfig.EnvironmentFile = "/run/secrets/approles/${name}";
+        }
+      ) config.vault-secrets.secrets)
+    ];
   };
 
   # Journald size limits
