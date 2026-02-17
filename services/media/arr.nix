@@ -233,13 +233,13 @@ in
       mkdir -p "$secretsPath/cross-seed"
       cat > "$secretsPath/cross-seed/config.json" <<EOF
       {
-        "radarr": ["http://localhost:7878/?apikey=${RADARR_API_KEY}"],
-        "sonarr": ["http://localhost:8989/?apikey=${SONARR_API_KEY}"],
+        "radarr": ["http://localhost:7878/?apikey=''${RADARR_API_KEY}"],
+        "sonarr": ["http://localhost:8989/?apikey=''${SONARR_API_KEY}"],
         "torznab": [
-          "http://localhost:9696/1/api?apikey=${PROWLARR_API_KEY}",
-          "http://localhost:9696/2/api?apikey=${PROWLARR_API_KEY}",
-          "http://localhost:9696/3/api?apikey=${PROWLARR_API_KEY}",
-          "http://localhost:9696/4/api?apikey=${PROWLARR_API_KEY}"
+          "http://localhost:9696/1/api?apikey=''${PROWLARR_API_KEY}",
+          "http://localhost:9696/2/api?apikey=''${PROWLARR_API_KEY}",
+          "http://localhost:9696/3/api?apikey=''${PROWLARR_API_KEY}",
+          "http://localhost:9696/4/api?apikey=''${PROWLARR_API_KEY}"
         ]
       }
       EOF
