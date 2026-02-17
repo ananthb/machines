@@ -54,7 +54,6 @@
   sops.secrets = lib.mapAttrs' (
     name: _value:
     lib.nameValuePair "approles/${name}" {
-      key = "approles.${name}";
       mode = "0400";
       owner = "root";
       group = "root";
