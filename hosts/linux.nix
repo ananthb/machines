@@ -51,12 +51,15 @@
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
   };
 
-  sops.secrets = lib.mapAttrs (name: _value: {
-    path = "/run/secrets/approles/${name}";
-    mode = "0400";
-    owner = "root";
-    group = "root";
-  }) config.vault-secrets.secrets;
+  sops.secrets = lib.mapAttrs' (
+    name: _value:
+    lib.nameValuePair "approles/${name}" {
+      key = "approles.${name}";
+      mode = "0400";
+      owner = "root";
+      group = "root";
+    }
+  ) config.vault-secrets.secrets;
 
   nix.gc.dates = "weekly";
 
@@ -101,7 +104,7 @@
         lib.nameValuePair "${name}-secrets" {
           requires = [ "sops-install-secrets.service" ];
           after = [ "sops-install-secrets.service" ];
-          serviceConfig.EnvironmentFile = "/run/secrets/approles/${name}";
+          serviceConfig.EnvironmentFile = lib.mkForce config.sops.secrets."approles/${name}".path;
         }
       ) config.vault-secrets.secrets)
     ];
