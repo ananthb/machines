@@ -2,6 +2,9 @@
   config,
   ...
 }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   services.homepage-dashboard = {
     enable = true;
@@ -13,7 +16,7 @@
       base = "https://kedi.dev";
       target = "_blank";
     };
-    environmentFile = config.sops.templates."homepage-dashboard.env".path;
+    environmentFile = "${vs.homepage}/environment";
     services = [
       {
         "Media" = [
@@ -270,29 +273,7 @@
     ];
   };
 
-  sops.templates."homepage-dashboard.env" = {
-    content = ''
-      HOMEPAGE_VAR_ADGUARD_USERNAME=${config.sops.placeholder."adguard-home/username"}
-      HOMEPAGE_VAR_ADGUARD_PASSWORD=${config.sops.placeholder."adguard-home/password"}
-      HOMEPAGE_VAR_HA_6A_TOKEN=${config.sops.placeholder."home-assistant/6a/access_token"}
-      HOMEPAGE_VAR_HA_T1_TOKEN=${config.sops.placeholder."home-assistant/t1/access_token"}
-      HOMEPAGE_VAR_IMMICH_API_KEY=${config.sops.placeholder."immich/admin_api_key"}
-      HOMEPAGE_VAR_JELLYSEERR_API_KEY=${config.sops.placeholder."jellyseerr/api_key"}
-      HOMEPAGE_VAR_JELLYFIN_API_KEY=${config.sops.placeholder."jellyfin/api_key"}
-      HOMEPAGE_VAR_MEALIE_API_KEY=${config.sops.placeholder."mealie/api_key"}
-      HOMEPAGE_VAR_MINIFLUX_API_KEY=${config.sops.placeholder."miniflux/api_key"}
-    '';
-  };
-
-  sops.secrets = {
-    "adguard-home/username" = { };
-    "adguard-home/password" = { };
-    "home-assistant/6a/access_token" = { };
-    "home-assistant/t1/access_token" = { };
-    "immich/admin_api_key" = { };
-    "jellyseerr/api_key" = { };
-    "jellyfin/api_key" = { };
-    "mealie/api_key" = { };
-    "miniflux/api_key" = { };
+  vault-secrets.secrets.homepage = {
+    services = [ "homepage-dashboard" ];
   };
 }

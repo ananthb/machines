@@ -11,14 +11,13 @@
 {
 
   imports = [
-    inputs.sops-nix.nixosModules.sops
+    inputs.vault-secrets.nixosModules.vault-secrets
     inputs.quadlet-nix.nixosModules.quadlet
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager = {
         backupFileExtension = "bak";
         sharedModules = [
-          inputs.sops-nix.homeManagerModules.sops
           inputs.nix-index-database.homeModules.nix-index
         ];
         useGlobalPkgs = true;
@@ -43,10 +42,6 @@
 
     ./common.nix
     ../lib/scripts.nix
-  ];
-
-  sops.age.sshKeyPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
   ];
 
   nix.gc.dates = "weekly";
@@ -218,12 +213,12 @@
 
   zramSwap.enable = true;
 
-  sops.secrets = {
-    "email/smtp/host" = { };
-    "email/smtp/password" = { };
-    "email/smtp/username" = { };
-    "gcloud/service_accounts/kopia-hathi-backups.json" = { };
-    "kopia/gcs/hathi-backups" = { };
-    "nut/users/nutmon" = { };
+  vault-secrets = {
+    vaultAddress = "http://endeavour:8200";
+    vaultPrefix = "kv/servers/${hostname}";
   };
+
+  systemd.tmpfiles.rules = [
+    "d /root/vault-secrets.env.d 0700 root root -"
+  ];
 }

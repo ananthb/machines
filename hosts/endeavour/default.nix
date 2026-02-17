@@ -158,8 +158,6 @@
     };
   };
 
-  sops.secrets."nut/users/nutmon".mode = "0444";
-
   # 16GB swapfile
   swapDevices = [
     {

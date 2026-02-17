@@ -4,7 +4,9 @@
   username,
   ...
 }:
-
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     ((import ../../lib/caddy-ddns.nix).mkCaddyDdns { domains = [ "tv" ]; })
@@ -51,7 +53,7 @@
 
     tsnsrv = {
       enable = true;
-      defaults.authKeyPath = config.sops.secrets."tailscale_api/auth_key".path;
+      defaults.authKeyPath = "${vs.tailscale-api}/auth_key";
       defaults.urlParts.host = "localhost";
       services.tv = {
         funnel = true;
@@ -81,5 +83,9 @@
     tsnsrv-tv.after = [ "jellyfin.service" ];
   };
 
-  sops.secrets."tailscale_api/auth_key" = { };
+  vault-secrets.secrets.tailscale-api = {
+    services = [
+      "tsnsrv-tv"
+    ];
+  };
 }

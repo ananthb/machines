@@ -14,6 +14,7 @@
       ...
     }:
     let
+      vs = config.vault-secrets.secrets;
       getIPv6 = pkgs.writeShellScript "get-ipv6" ''
         # ------------------------------------------------------------------------
         # ddns custom IPv6 getter
@@ -65,15 +66,13 @@
       };
 
       systemd.services.caddy.serviceConfig = {
-        EnvironmentFile = config.sops.templates."caddy/secrets.env".path;
+        EnvironmentFile = "${vs.caddy-ddns}/environment";
       };
 
       networking.firewall.allowedTCPPorts = [ 443 ];
 
-      sops.secrets."cloudflare/api_tokens/ddns" = { };
-
-      sops.templates."caddy/secrets.env".content = ''
-        CLOUDFLARE_API_TOKEN=${config.sops.placeholder."cloudflare/api_tokens/ddns"}
-      '';
+      vault-secrets.secrets.caddy-ddns = {
+        services = [ "caddy" ];
+      };
     };
 }

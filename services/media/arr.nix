@@ -4,6 +4,9 @@
   username,
   ...
 }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     ../warp.nix
@@ -98,7 +101,7 @@
         action = "inject";
         duplicateCategories = true;
       };
-      settingsFile = config.sops.templates."cross-seed/config.json".path;
+      settingsFile = "${vs.arr}/cross-seed/config.json";
     };
 
     postgresql = {
@@ -138,21 +141,21 @@
         enable = true;
         url = "http://localhost:7878";
         port = 9708;
-        apiKeyFile = config.sops.secrets."arr_apis/radarr".path;
+        apiKeyFile = "${vs.arr}/radarr";
       };
 
       exportarr-sonarr = {
         enable = true;
         url = "http://localhost:8989";
         port = 9709;
-        apiKeyFile = config.sops.secrets."arr_apis/sonarr".path;
+        apiKeyFile = "${vs.arr}/sonarr";
       };
 
       exportarr-prowlarr = {
         enable = true;
         url = "http://localhost:9696";
         port = 9710;
-        apiKeyFile = config.sops.secrets."arr_apis/prowlarr".path;
+        apiKeyFile = "${vs.arr}/prowlarr";
       };
     };
   };
@@ -212,25 +215,34 @@
     "d /srv/media/Shows 0775 root media -"
   ];
 
-  # Secrets
-  sops.secrets = {
-    "arr_apis/radarr".mode = "0444";
-    "arr_apis/sonarr".mode = "0444";
-    "arr_apis/prowlarr".mode = "0444";
-  };
+  vault-secrets.secrets.arr = {
+    services = [
+      "radarr"
+      "sonarr"
+      "prowlarr"
+      "cross-seed"
+    ];
+    secretsKey = null;
+    group = "media";
+    extraScript = ''
+      umask 0077
+      printf '%s' "$RADARR_API_KEY" > "$secretsPath/radarr"
+      printf '%s' "$SONARR_API_KEY" > "$secretsPath/sonarr"
+      printf '%s' "$PROWLARR_API_KEY" > "$secretsPath/prowlarr"
 
-  # Indexers: 1=TorrentLeech, 2=Nyaa.si, 3=FearNoPeer
-  sops.templates."cross-seed/config.json" = {
-    owner = "cross-seed";
-    content = builtins.toJSON {
-      radarr = [ "http://localhost:7878/?apikey=${config.sops.placeholder."arr_apis/radarr"}" ];
-      sonarr = [ "http://localhost:8989/?apikey=${config.sops.placeholder."arr_apis/sonarr"}" ];
-      torznab = [
-        "http://localhost:9696/1/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
-        "http://localhost:9696/2/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
-        "http://localhost:9696/3/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
-        "http://localhost:9696/4/api?apikey=${config.sops.placeholder."arr_apis/prowlarr"}"
-      ];
-    };
+      mkdir -p "$secretsPath/cross-seed"
+      cat > "$secretsPath/cross-seed/config.json" <<EOF
+      {
+        "radarr": ["http://localhost:7878/?apikey=${RADARR_API_KEY}"],
+        "sonarr": ["http://localhost:8989/?apikey=${SONARR_API_KEY}"],
+        "torznab": [
+          "http://localhost:9696/1/api?apikey=${PROWLARR_API_KEY}",
+          "http://localhost:9696/2/api?apikey=${PROWLARR_API_KEY}",
+          "http://localhost:9696/3/api?apikey=${PROWLARR_API_KEY}",
+          "http://localhost:9696/4/api?apikey=${PROWLARR_API_KEY}"
+        ]
+      }
+      EOF
+    '';
   };
 }

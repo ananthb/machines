@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     ((import ../lib/caddy-ddns.nix).mkCaddyDdns { domains = [ "*.coder" ]; })
@@ -16,7 +19,7 @@
         DOCKER_HOST = "unix:///run/podman/podman.sock";
         CODER_PROMETHEUS_ADDRESS = "[::]:2112";
       };
-      file = config.sops.templates."coder/env".path;
+      file = "${vs.coder}/environment";
     };
   };
 
@@ -66,15 +69,7 @@
     }
   ];
 
-  sops.templates."coder/env" = {
-    content = ''
-      CODER_OAUTH2_GITHUB_CLIENT_ID=${config.sops.placeholder."github/oauth/kedi-coder/id"}
-      CODER_OAUTH2_GITHUB_CLIENT_SECRET=${config.sops.placeholder."github/oauth/kedi-coder/secret"}
-    '';
-  };
-
-  sops.secrets = {
-    "github/oauth/kedi-coder/id" = { };
-    "github/oauth/kedi-coder/secret" = { };
+  vault-secrets.secrets.coder = {
+    services = [ "coder" ];
   };
 }

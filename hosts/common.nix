@@ -64,11 +64,4 @@ in
 
   programs.fish.enable = true;
 
-  sops.defaultSopsFile = ../secrets.yaml;
-  sops.secrets = {
-    "ssh/yubikey_5c" = { };
-    "ssh/yubikey_5c.pub" = { };
-    "ssh/yubikey_5c_nano" = { };
-    "ssh/yubikey_5c_nano.pub" = { };
-  };
 }

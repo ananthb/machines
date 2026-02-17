@@ -13,6 +13,8 @@ let
     hasAttr
     ;
 
+  vs = config.vault-secrets.secrets;
+
   # Helper functions to check for enabled services/exporters
   hasService = c: name: hasAttr name c.services && c.services.${name}.enable or false;
   hasExporter =
@@ -346,7 +348,7 @@ in
           file_sd_configs = [
             {
               files = [
-                config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
+                "${vs.victoriametrics}/blackbox_https_2xx_private.json"
               ];
             }
           ];
@@ -426,7 +428,7 @@ in
           file_sd_configs = [
             {
               files = [
-                config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
+                "${vs.victoriametrics}/blackbox_https_2xx_private.json"
               ];
             }
           ];
@@ -517,7 +519,7 @@ in
           scheme = "https";
           authorization = {
             type = "Bearer";
-            credentials_file = config.sops.secrets."home-assistant/6a/access_token".path;
+            credentials_file = "${vs.home-assistant-6a}/access_token";
           };
           static_configs = [
             {
@@ -533,7 +535,7 @@ in
           scheme = "https";
           authorization = {
             type = "Bearer";
-            credentials_file = config.sops.secrets."home-assistant/t1/access_token".path;
+            credentials_file = "${vs.home-assistant-t1}/access_token";
           };
           static_configs = [
             {
@@ -548,79 +550,23 @@ in
   };
 
   systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
-    config.sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json".path
-    config.sops.secrets."home-assistant/6a/access_token".path
-    config.sops.secrets."home-assistant/t1/access_token".path
+    "${vs.victoriametrics}/blackbox_https_2xx_private.json"
+    "${vs.home-assistant-6a}/access_token"
+    "${vs.home-assistant-t1}/access_token"
   ];
 
-  sops.secrets = {
-    "home-assistant/6a/access_token".mode = "0444";
-    "home-assistant/t1/access_token".mode = "0444";
-    "tailscale_api/tailnet" = { };
-  };
+  vault-secrets = {
+    secrets = {
+      victoriametrics = {
+        services = [ "victoriametrics" ];
+        environmentKey = null;
+        user = "victoriametrics";
+        group = "victoriametrics";
+      };
 
-  sops.templates."victoriametrics/file_sd_configs/blackbox_https_2xx_private.json" = {
-    mode = "0444";
-    content = ''
-      [
-          {
-              "targets": [
-                "https://6a.kedi.dev",
-                "https://actual.kedi.dev",
-                "https://mealie.kedi.dev",
-                "https://metrics.kedi.dev",
-                "https://radicale.kedi.dev",
-                "https://vault.kedi.dev"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server"
-              }
-          },
-          {
-              "targets": [
-                "https://wallabag.kedi.dev",
-                "https://miniflux.kedi.dev"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "news"
-              }
-          },
-          {
-              "targets": [
-                "https://immich.kedi.dev/auth/login"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "immich"
-              }
-          },
-          {
-              "targets": [
-                "https://seafile.kedi.dev/accounts/login/"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "seafile"
-              }
-          },
-          {
-              "targets": [
-                "https://tv.${config.sops.placeholder."tailscale_api/tailnet"}/web/",
-                "https://tv.kedi.dev/web/"
-              ],
-              "labels": {
-                  "type": "app",
-                  "role": "server",
-                  "app": "jellyfin"
-              }
-          }
-      ]
-    '';
+      home-assistant-6a.services = lib.mkAfter [ "victoriametrics" ];
+      home-assistant-t1.services = lib.mkAfter [ "victoriametrics" ];
+    };
   };
 
 }

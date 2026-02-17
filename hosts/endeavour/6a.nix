@@ -43,17 +43,17 @@
       {
         platform = "ubus";
         host = "atlantis";
-        username = "!include /run/secrets/openwrt/atlantis/username";
-        password = "!include /run/secrets/openwrt/atlantis/password";
+        username = "!include /run/secrets/openwrt-atlantis/username";
+        password = "!include /run/secrets/openwrt-atlantis/password";
       }
     ];
   };
-  extraSecrets = {
-    "openwrt/atlantis/username" = null;
-    "openwrt/atlantis/password" = null;
-  };
   extraModules = {
     imports = [ ../../services/monitoring/postgres.nix ];
+    vault-secrets.secrets.openwrt-atlantis = {
+      services = [ "home-assistant" ];
+      environmentKey = null;
+    };
     services = {
       frigate = {
         enable = true;

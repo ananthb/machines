@@ -1,4 +1,7 @@
 { config, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
 
   imports = [
@@ -36,8 +39,8 @@
 
         "auth.google" = {
           enabled = true;
-          client_id = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path}}";
-          client_secret = "$__file{${config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path}}";
+          client_id = "$__file{${vs.grafana}/oauth_client_id}";
+          client_secret = "$__file{${vs.grafana}/oauth_client_secret}";
           allow_sign_up = false;
           auto_login = true;
           skip_org_role_sync = true;
@@ -397,7 +400,7 @@
               }
             ];
           };
-          contactPoints.path = config.sops.templates."grafana/contactpoints".path;
+          contactPoints.path = "${vs.grafana}/contactpoints.yaml";
         };
       };
     };
@@ -417,29 +420,10 @@
 
   networking.firewall.allowedTCPPorts = [ 3000 ];
 
-  sops.secrets = {
-    "telegram/grafana/bot_token".owner = config.users.users.grafana.name;
-    "telegram/grafana/chat_id".owner = config.users.users.grafana.name;
-    # Shared OAuth secrets - mode 0444 so multiple services can read
-    "gcloud/oauth/self-hosted_clients/id".mode = "0444";
-    "gcloud/oauth/self-hosted_clients/secret".mode = "0444";
-  };
-
-  sops.templates."grafana/contactpoints" = {
-    owner = config.users.users.grafana.name;
-    content = ''
-      apiVersion: 1
-      contactPoints:
-        - orgId: 1
-          name: grafana-default-telegram
-          receivers:
-            - uid: aex9vvifn6ha8a
-              type: telegram
-              settings:
-                bottoken: "${config.sops.placeholder."telegram/grafana/bot_token"}"
-                chatid: "${config.sops.placeholder."telegram/grafana/chat_id"}"
-              disableResolveMessage: false
-      deleteContactPoints: []
-    '';
+  vault-secrets.secrets.grafana = {
+    services = [ "grafana" ];
+    environmentKey = null;
+    user = "grafana";
+    group = "grafana";
   };
 }

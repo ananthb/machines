@@ -5,6 +5,9 @@
   inputs,
   ...
 }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     inputs.NixVirt.nixosModules.default
@@ -107,7 +110,7 @@
 
     users = {
       "nutmon" = {
-        passwordFile = config.sops.secrets."nut/users/nutmon".path;
+        passwordFile = "${vs.nut-users}/nutmon";
         upsmon = "primary";
       };
     };
@@ -118,7 +121,10 @@
     };
   };
 
-  sops.secrets."nut/users/nutmon".mode = "0444";
+  vault-secrets.secrets.nut-users = {
+    services = [ "nut-monitor" ];
+    environmentKey = null;
+  };
 
   # 32GB swapfile
   swapDevices = [

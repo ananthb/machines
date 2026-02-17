@@ -58,17 +58,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    vault-secrets = {
+      url = "github:serokell/vault-secrets";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
-
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     tsnsrv = {
       url = "github:boinkor-net/tsnsrv";
@@ -90,7 +90,6 @@
       nixos-hardware,
       nixpkgs,
       pre-commit-hooks-nix,
-      sops-nix,
       ...
     }@inputs:
     let
@@ -182,7 +181,7 @@
         discovery = mkDarwinHost {
           hostname = "discovery";
           system = "aarch64-darwin";
-          extraModules = [ sops-nix.darwinModules.sops ];
+          extraModules = [ ];
         };
       };
 
@@ -284,8 +283,6 @@
               pkgs.nixfmt
               pkgs.statix
               pkgs.deadnix
-              pkgs.sops
-              pkgs.age
               pkgs.gh
               deploy-rs.packages.${system}.default
             ];

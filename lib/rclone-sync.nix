@@ -44,7 +44,7 @@
 #   my-services.rclone-syncs.photos-backup = {
 #     source = "/home/user/Photos";
 #     destination = "gdrive:Backups/Photos";
-#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     rcloneConfig = "/run/secrets/rclone/config";
 #     interval = "daily";
 #   };
 #
@@ -53,7 +53,7 @@
 #     type = "bisync";
 #     source = "/home/user/Documents";
 #     destination = "dropbox:Documents";
-#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     rcloneConfig = "/run/secrets/rclone/config";
 #     interval = "hourly";
 #   };
 #
@@ -61,7 +61,7 @@
 #   my-services.rclone-syncs.projects = {
 #     source = "/home/user/Projects";
 #     destination = "b2:bucket/Projects";
-#     rcloneConfig = config.sops.secrets.rclone-config.path;
+#     rcloneConfig = "/run/secrets/rclone/config";
 #     excludePatterns = [ "node_modules" ".git" "target" "*.log" ];
 #     deleteExcluded = true;  # Also delete excluded files on destination
 #   };
@@ -144,7 +144,7 @@ in
           };
           rcloneConfig = mkOption {
             type = types.path;
-            description = "Path to rclone.conf file (usually a sops secret)";
+            description = "Path to rclone.conf file (usually a vault-secrets file)";
           };
           interval = mkOption {
             type = types.str;

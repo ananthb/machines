@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   services.radicale = {
     enable = true;
@@ -6,7 +9,7 @@
       server.hosts = [ "[::]:5232" ];
       auth = {
         type = "htpasswd";
-        htpasswd_filename = "${config.sops.secrets."radicale/htpasswd".path}";
+        htpasswd_filename = "${vs.radicale}/htpasswd";
         htpasswd_encryption = "autodetect";
       };
     };
@@ -34,5 +37,9 @@
     };
   };
 
-  sops.secrets."radicale/htpasswd".owner = "radicale";
+  vault-secrets.secrets.radicale = {
+    services = [ "radicale" ];
+    user = "radicale";
+    group = "radicale";
+  };
 }

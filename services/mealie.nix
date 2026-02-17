@@ -1,10 +1,13 @@
 { config, pkgs, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
 
   services.mealie = {
     enable = true;
     listenAddress = "[::1]";
-    credentialsFile = config.sops.templates."mealie/env".path;
+    credentialsFile = "${vs.mealie}/environment";
   };
 
   systemd.services."mealie-backup" = {
@@ -42,52 +45,14 @@
     serviceConfig = {
       User = "root";
       Type = "oneshot";
-      EnvironmentFile = "${config.sops.templates."mealie/api_key".path}";
+      EnvironmentFile = "${vs.mealie}/environment";
     };
   };
 
-  sops.secrets = {
-    "email/from/mealie" = { };
-    "gcloud/oauth/self-hosted_clients/id" = { };
-    "gcloud/oauth/self-hosted_clients/secret" = { };
-    "mealie/api_key" = { };
-  };
-
-  sops.templates = {
-    "mealie/api_key" = {
-      content = ''
-        MEALIE_BACKUP_API_KEY=${config.sops.placeholder."mealie/api_key"}
-      '';
-    };
-    "mealie/env" = {
-      content = ''
-        # general
-        BASE_URL=https://mealie.kedi.dev
-
-        # TODO: this blasted setting doesn't work
-        #FORWARDED_ALLOW_IPS=[::1],127.0.0.1
-        FORWARDED_ALLOW_IPS=*
-
-        # auth
-        ALLOW_PASSWORD_LOGIN=False
-        OIDC_AUTH_ENABLED=True
-        OIDC_SIGNUP_ENABLED=False
-        OIDC_CLIENT_ID=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}
-        OIDC_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}
-        OIDC_PROVIDER_NAME=Google
-        OIDC_CONFIGURATION_URL=https://accounts.google.com/.well-known/openid-configuration
-
-        # smtp
-        SMTP_HOST=${config.sops.placeholder."email/smtp/host"}
-        SMTP_FROM_EMAIL=${config.sops.placeholder."email/from/mealie"}
-        SMTP_USER=${config.sops.placeholder."email/smtp/username"}
-        SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
-
-        # ollama
-        OPENAI_BASE_URL=http://enterprise:11434/v1
-        OPENAI_MODEL=gemma3:12b
-        OPENAI_API_KEY=dummy
-      '';
-    };
+  vault-secrets.secrets.mealie = {
+    services = [
+      "mealie"
+      "mealie-backup"
+    ];
   };
 }

@@ -31,7 +31,6 @@
     {
       home-manager = {
         sharedModules = [
-          inputs.sops-nix.homeModules.sops
           inputs.nix-index-database.homeModules.nix-index
         ];
         useGlobalPkgs = true;

@@ -2,7 +2,7 @@
 # 1. cloudflared tunnel login <the-token-you-see-in-dashboard>
 # 2. cloudflared tunnel create ConvenientTunnelName
 # 3. Add the tunnel ID and name below
-# 4. Add the credentials to sops: sops secrets/cloudflare/tunnels/<tunnel-id>/credentials
+# 4. Add the credentials to Vault (vault-secrets) under the tunnel secret path
 #
 # For browser-based RDP:
 # - Add a Private Network route in Cloudflare Zero Trust dashboard (Networks → Tunnels → Private Network)
@@ -59,6 +59,9 @@
       cfgs = (import ./cftunnel.nix).tunnels.${hostname};
     in
     { config, ... }:
+    let
+      vs = config.vault-secrets.secrets;
+    in
     {
       services.cloudflared = {
         enable = true;
@@ -68,16 +71,18 @@
             value = {
               default = "http_status:404";
               inherit (cfg) ingress;
-              credentialsFile = config.sops.secrets."cloudflare/tunnels/${cfg.tunnelId}/credentials".path;
+              credentialsFile = "${vs."cloudflare-tunnel-${cfg.tunnelId}"}/credentials";
             };
           }) cfgs
         );
       };
 
-      sops.secrets = builtins.listToAttrs (
+      vault-secrets.secrets = builtins.listToAttrs (
         map (cfg: {
-          name = "cloudflare/tunnels/${cfg.tunnelId}/credentials";
-          value = { };
+          name = "cloudflare-tunnel-${cfg.tunnelId}";
+          value = {
+            services = [ "cloudflared" ];
+          };
         }) cfgs
       );
     };

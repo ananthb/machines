@@ -1,12 +1,20 @@
 { config, pkgs, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   services.actual.enable = true;
   services.actual.settings.port = 3001;
 
-  systemd.services.actual.serviceConfig.EnvironmentFile =
-    config.sops.templates."actual/config.env".path;
-
   systemd.services = {
+    actual = {
+      serviceConfig.EnvironmentFile = "${vs.actual}/environment";
+      environment = {
+        ACTUAL_OPENID_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration";
+        ACTUAL_OPENID_SERVER_HOSTNAME = "https://actual.kedi.dev";
+      };
+    };
+
     "actual-backup" = {
       startAt = "daily";
       environment.KOPIA_CHECK_FOR_UPDATES = "false";
@@ -30,16 +38,8 @@
     };
   };
 
-  sops.templates."actual/config.env".content = ''
-    ACTUAL_OPENID_DISCOVERY_URL=https://accounts.google.com/.well-known/openid-configuration
-    ACTUAL_OPENID_SERVER_HOSTNAME=https://actual.kedi.dev
-    ACTUAL_OPENID_CLIENT_ID=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/id"}
-    ACTUAL_OPENID_CLIENT_SECRET=${config.sops.placeholder."gcloud/oauth/self-hosted_clients/secret"}
-  '';
-
-  sops.secrets = {
-    "gcloud/oauth/self-hosted_clients/id" = { };
-    "gcloud/oauth/self-hosted_clients/secret" = { };
+  vault-secrets.secrets.actual = {
+    services = [ "actual" ];
   };
 
 }

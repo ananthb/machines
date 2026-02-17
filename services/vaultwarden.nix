@@ -3,6 +3,9 @@
   pkgs,
   ...
 }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     ./monitoring/postgres.nix
@@ -22,7 +25,7 @@
       INVITATIONS_ALLOWED = true;
       SIGNUPS_ALLOWED = false;
     };
-    environmentFile = config.sops.templates."vaultwarden/secrets.env".path;
+    environmentFile = "${vs.vaultwarden}/environment";
   };
 
   systemd.services."vaultwarden-backup" = {
@@ -70,31 +73,7 @@
     ];
   };
 
-  sops.secrets = {
-    "email/from/vaultwarden" = { };
-    "vaultwarden/admin_token" = { };
-    "vaultwarden/installation_id" = { };
-    "vaultwarden/installation_key" = { };
+  vault-secrets.secrets.vaultwarden = {
+    services = [ "vaultwarden" ];
   };
-
-  sops.templates."vaultwarden/secrets.env".content = ''
-    DOMAIN=https://vault.kedi.dev
-    ADMIN_TOKEN=${config.sops.placeholder."vaultwarden/admin_token"}
-
-    # smtp
-    SMTP_HOST=${config.sops.placeholder."email/smtp/host"}
-    SMTP_PORT=587
-    SMTP_SECURITY=starttls
-    SMTP_USERNAME=${config.sops.placeholder."email/smtp/username"}
-    SMTP_PASSWORD=${config.sops.placeholder."email/smtp/password"}
-    SMTP_FROM=${config.sops.placeholder."email/from/vaultwarden"}
-    SMTP_FROM_NAME=KEDI Vaultwarden
-
-    # push notifications
-    PUSH_ENABLED=true
-    PUSH_RELAY_URI=https://api.bitwarden.eu
-    PUSH_IDENTITY_URI=https://identity.bitwarden.eu
-    PUSH_INSTALLATION_ID=${config.sops.placeholder."vaultwarden/installation_id"}
-    PUSH_INSTALLATION_KEY=${config.sops.placeholder."vaultwarden/installation_key"}
-  '';
 }

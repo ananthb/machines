@@ -3,6 +3,9 @@
   options,
   ...
 }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     ./caddy.nix
@@ -10,11 +13,11 @@
 
   services.davis = {
     enable = true;
-    adminPasswordFile = config.sops.secrets."davis/admin_password".path;
-    appSecretFile = config.sops.secrets."davis/app_secret".path;
+    adminPasswordFile = "${vs.davis}/admin_password";
+    appSecretFile = "${vs.davis}/app_secret";
     database.driver = "postgresql";
     mail = {
-      dsnFile = config.sops.templates."davis/mail-dsn".path;
+      dsnFile = "${vs.davis}/mail-dsn";
       inviteFromAddress = "davis@kedi.dev";
     };
     nginx = null;
@@ -28,16 +31,8 @@
     reverse_proxy unix//run/phpfpm/davis.sock
   '';
 
-  sops.secrets = {
-    "davis/admin_password" = { };
-    "davis/app_secret" = { };
-  };
-
-  sops.templates."davis/mail-dsn" = {
-    content = ''
-      smtp://${config.sops.placeholder."email/smtp/username"}:${
-        config.sops.placeholder."email/smtp/password"
-      }@${config.sops.placeholder."email/smtp/host"}:587
-    '';
+  vault-secrets.secrets.davis = {
+    services = [ "davis" ];
+    environmentKey = null;
   };
 }

@@ -1,5 +1,7 @@
 { config, ... }:
-
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   power.ups = {
     enable = true;
@@ -7,13 +9,13 @@
 
     users = {
       "admin" = {
-        passwordFile = config.sops.secrets."nut/users/admin".path;
+        passwordFile = "${vs.nut-users}/admin";
         upsmon = "primary";
         instcmds = [ "ALL" ];
         actions = [ "SET" ];
       };
       "nutmon" = {
-        passwordFile = config.sops.secrets."nut/users/nutmon".path;
+        passwordFile = "${vs.nut-users}/nutmon";
         upsmon = "primary";
       };
     };
@@ -38,8 +40,15 @@
   services.prometheus.exporters.nut = {
     enable = true;
     nutUser = "nutmon";
-    passwordPath = config.sops.secrets."nut/users/nutmon".path;
+    passwordPath = "${vs.nut-users}/nutmon";
   };
 
-  sops.secrets."nut/users/admin" = { };
+  vault-secrets.secrets.nut-users = {
+    services = [
+      "upsd"
+      "nut-monitor"
+      "prometheus-nut-exporter"
+    ];
+    environmentKey = null;
+  };
 }

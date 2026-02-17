@@ -139,8 +139,8 @@ in
         # Open remote kopia repository
         ${pkgs.kopia}/bin/kopia repository connect gcs \
           --bucket hathi-backups \
-          --credentials-file /run/secrets/gcloud/service_accounts/kopia-hathi-backups.json \
-          --password $(cat /run/secrets/kopia/gcs/hathi-backups)
+          --credentials-file /run/secrets/gcloud-service-accounts/kopia-hathi-backups.json \
+          --password $(cat /run/secrets/kopia-gcs/hathi-backups)
 
         write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_connect" 0
 
@@ -220,6 +220,17 @@ in
             "$vm_url/api/v1/import/prometheus" || true
         }
       '';
+    };
+
+    vault-secrets.secrets = {
+      gcloud-service-accounts = {
+        services = [ ];
+        environmentKey = null;
+      };
+      kopia-gcs = {
+        services = [ ];
+        environmentKey = null;
+      };
     };
   };
 }

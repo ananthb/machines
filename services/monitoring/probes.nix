@@ -2,7 +2,9 @@
   config,
   ...
 }:
-
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   virtualisation.quadlet =
     let
@@ -22,7 +24,7 @@
           networks = [ "host" ];
           addCapabilities = [ "NET_RAW" ];
           environmentFiles = [
-            config.sops.templates."globalping/probe.env".path
+            "${vs.globalping}/environment"
           ];
         };
 
@@ -52,15 +54,7 @@
       };
     };
 
-  sops.secrets = {
-    "globalping/probeToken" = { };
-  };
-
-  sops.templates = {
-    "globalping/probe.env" = {
-      content = ''
-        GP_ADOPTION_TOKEN=${config.sops.placeholder."globalping/probeToken"}
-      '';
-    };
+  vault-secrets.secrets.globalping = {
+    services = [ "globalping-probe" ];
   };
 }

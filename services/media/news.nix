@@ -2,6 +2,9 @@
   config,
   ...
 }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   imports = [
     ../monitoring/postgres.nix
@@ -9,7 +12,7 @@
 
   services.miniflux = {
     enable = true;
-    adminCredentialsFile = config.sops.secrets."miniflux/admin_creds".path;
+    adminCredentialsFile = "${vs.miniflux}/admin_creds";
     config = {
       LISTEN_ADDR = "[::]:8088";
       BASE_URL = "https://miniflux.kedi.dev";
@@ -17,8 +20,8 @@
       METRICS_COLLECTOR = "1";
       DISABLE_LOCAL_AUTH = "1";
       OAUTH2_USER_CREATION = "1";
-      OAUTH2_CLIENT_ID_FILE = config.sops.secrets."gcloud/oauth/self-hosted_clients/id".path;
-      OAUTH2_CLIENT_SECRET_FILE = config.sops.secrets."gcloud/oauth/self-hosted_clients/secret".path;
+      OAUTH2_CLIENT_ID_FILE = "${vs.miniflux}/oauth_client_id";
+      OAUTH2_CLIENT_SECRET_FILE = "${vs.miniflux}/oauth_client_secret";
       OAUTH2_OIDC_DISCOVERY_ENDPOINT = "https://accounts.google.com";
       OAUTH2_PROVIDER = "google";
       OAUTH2_REDIRECT_URL = "https://miniflux.kedi.dev/oauth2/oidc/callback";
@@ -46,7 +49,7 @@
           "${volumes.wallabag-images.ref}:/var/www/wallabag/web/assets/images"
         ];
         publishPorts = [ "8085:80" ];
-        environmentFiles = [ config.sops.templates."wallabag/env".path ];
+        environmentFiles = [ "${vs.wallabag}/environment" ];
       };
     };
 
@@ -78,27 +81,20 @@
     ];
   };
 
-  sops.templates."wallabag/env".content = ''
-    SYMFONY__ENV__DOMAIN_NAME=https://wallabag.kedi.dev
-    SYMFONY__ENV__DATABASE_DRIVER=pdo_pgsql
-    SYMFONY__ENV__DATABASE_HOST=host.containers.internal
-    SYMFONY__ENV__DATABASE_PORT=5432
-    SYMFONY__ENV__DATABASE_NAME=wallabag
-    SYMFONY__ENV__DATABASE_USER=${config.sops.placeholder."wallabag/db/username"}
-    SYMFONY__ENV__DATABASE_PASSWORD=${config.sops.placeholder."wallabag/db/password"}
-    SYMFONY__ENV__DATABASE_CHARSET=utf8
-    SYMFONY__ENV__MAILER_HOST=${config.sops.placeholder."email/smtp/host"}
-    SYMFONY__ENV__MAILER_USER=${config.sops.placeholder."email/smtp/username"}
-    SYMFONY__ENV__MAILER_PASSWORD=${config.sops.placeholder."email/smtp/password"}
-    SYMFONY__ENV__FROM_EMAIL=${config.sops.placeholder."email/from/wallabag"}
-  '';
+  vault-secrets.secrets.miniflux = {
+    services = [ "miniflux" ];
+    secretsKey = null;
+    user = "miniflux";
+    group = "miniflux";
+    extraScript = ''
+      umask 0077
+      printf '%s' "$MINIFLUX_ADMIN_CREDS" > "$secretsPath/admin_creds"
+      printf '%s' "$GCLOUD_OAUTH_CLIENT_ID" > "$secretsPath/oauth_client_id"
+      printf '%s' "$GCLOUD_OAUTH_CLIENT_SECRET" > "$secretsPath/oauth_client_secret"
+    '';
+  };
 
-  sops.secrets = {
-    "email/from/wallabag" = { };
-    "gcloud/oauth/self-hosted_clients/id".mode = "0444";
-    "gcloud/oauth/self-hosted_clients/secret".mode = "0444";
-    "miniflux/admin_creds" = { };
-    "wallabag/db/username" = { };
-    "wallabag/db/password" = { };
+  vault-secrets.secrets.wallabag = {
+    services = [ "wallabag" ];
   };
 }

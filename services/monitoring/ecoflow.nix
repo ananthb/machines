@@ -1,11 +1,14 @@
 { config, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   services.prometheus.exporters.ecoflow = {
     enable = true;
     exporterType = "mqtt";
-    ecoflowEmailFile = config.sops.secrets."ecoflow/email".path;
-    ecoflowPasswordFile = config.sops.secrets."ecoflow/password".path;
-    ecoflowDevicesPrettyNamesFile = config.sops.secrets."ecoflow/devices_pretty_names".path;
+    ecoflowEmailFile = "${vs.ecoflow}/email";
+    ecoflowPasswordFile = "${vs.ecoflow}/password";
+    ecoflowDevicesPrettyNamesFile = "${vs.ecoflow}/devices_pretty_names";
   };
 
   systemd.services.prometheus-ecoflow-exporter = {
@@ -13,9 +16,8 @@
     wants = [ "network-online.target" ];
   };
 
-  sops.secrets = {
-    "ecoflow/email".mode = "0444";
-    "ecoflow/password".mode = "0444";
-    "ecoflow/devices_pretty_names".mode = "0444";
+  vault-secrets.secrets.ecoflow = {
+    services = [ "prometheus-ecoflow-exporter" ];
+    environmentKey = null;
   };
 }

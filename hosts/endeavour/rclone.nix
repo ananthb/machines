@@ -1,4 +1,7 @@
 { config, ... }:
+let
+  vs = config.vault-secrets.secrets;
+in
 {
   my-services.rclone-syncs = {
     "ananth-finance" = {
@@ -9,7 +12,7 @@
       destSubPath = "/Finance";
       checkAccess = false;
       sizeOnly = true;
-      rcloneConfig = config.sops.secrets."rclone/ananth".path;
+      rcloneConfig = "${vs.rclone-ananth}/config";
       interval = "*:0/5";
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
@@ -26,7 +29,7 @@
       destSubPath = "/Documents";
       checkAccess = false;
       sizeOnly = true;
-      rcloneConfig = config.sops.secrets."rclone/bhaskar".path;
+      rcloneConfig = "${vs.rclone-bhaskar}/config";
       interval = "*:0/5";
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
@@ -43,7 +46,7 @@
       destSubPath = "/Reference";
       checkAccess = false;
       sizeOnly = true;
-      rcloneConfig = config.sops.secrets."rclone/bhaskar".path;
+      rcloneConfig = "${vs.rclone-bhaskar}/config";
       interval = "*:0/5";
       environment = {
         RCLONE_CONFIG_SEAFILE_URL = "http://localhost:4444/seafdav";
@@ -53,8 +56,16 @@
     };
   };
 
-  sops.secrets = {
-    "rclone/ananth" = { };
-    "rclone/bhaskar" = { };
+  vault-secrets.secrets.rclone-ananth = {
+    services = [ "rclone-sync-ananth-finance" ];
+    environmentKey = null;
+  };
+
+  vault-secrets.secrets.rclone-bhaskar = {
+    services = [
+      "rclone-sync-bhaskar-documents"
+      "rclone-sync-bhaskar-family-library"
+    ];
+    environmentKey = null;
   };
 }
