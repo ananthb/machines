@@ -84,7 +84,7 @@ in
   vault-secrets.secrets.miniflux = {
     services = [ "miniflux" ];
     secretsKey = null;
-    user = "root";
+    user = "miniflux";
     group = "miniflux";
     extraScript = ''
       umask 0077
@@ -99,8 +99,8 @@ in
   };
 
   users.groups.miniflux = { };
-
-  systemd.services.miniflux.serviceConfig = {
-    SupplementaryGroups = [ "miniflux" ];
+  users.users.miniflux = {
+    isSystemUser = true;
+    group = "miniflux";
   };
 }
