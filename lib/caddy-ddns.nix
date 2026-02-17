@@ -60,7 +60,7 @@
             ip_source command ${getIPv6}
             versions ipv6
             check_interval 5m
-            ttl 1h
+            ttl auto
           }
         '';
       };
