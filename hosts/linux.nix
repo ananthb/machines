@@ -246,8 +246,4 @@
     vaultAddress = "http://endeavour:8200";
     vaultPrefix = "kv/servers/${hostname}";
   };
-
-  systemd.tmpfiles.rules = [
-    "d /root/vault-secrets.env.d 0700 root root -"
-  ];
 }
