@@ -122,7 +122,7 @@ in
   };
 
   vault-secrets.secrets.nut-users = {
-    services = [ "nut-monitor" ];
+    services = [ "upsmon" ];
   };
 
   # 32GB swapfile
