@@ -62,10 +62,5 @@ in
   systemd.services.nut-users-secrets = {
     startLimitIntervalSec = 0;
     startLimitBurst = 0;
-    serviceConfig.ExecStartPost = [
-      "${pkgs.coreutils}/bin/chown -R root:nut-exporter /run/secrets/nut-users"
-      "${pkgs.coreutils}/bin/chmod 0750 /run/secrets/nut-users"
-      "${pkgs.coreutils}/bin/chmod 0440 /run/secrets/nut-users/*"
-    ];
   };
 }
