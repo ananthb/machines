@@ -28,6 +28,14 @@ creation_rules:
           - *host_endeavour
           - *host_endeavour_user_ananth
 
+  - path_regex: secrets/enterprise.yaml$
+    key_groups:
+      - pgp:
+          - *admin_ananth
+        age:
+          - *host_enterprise
+          - *host_enterprise_user_ananth
+
   - path_regex: secrets/stargazer.yaml$
     key_groups:
       - pgp:
