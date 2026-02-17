@@ -555,10 +555,18 @@ in
     "${vs.home-assistant-t1}/access_token"
   ];
 
+  users.groups.victoriametrics = lib.mkDefault { };
+  users.users.victoriametrics = lib.mkDefault {
+    isSystemUser = true;
+    group = "victoriametrics";
+  };
+
   vault-secrets = {
     secrets = {
       victoriametrics = {
         services = [ "victoriametrics" ];
+        user = "victoriametrics";
+        group = "victoriametrics";
       };
 
       home-assistant-6a.services = lib.mkAfter [ "victoriametrics" ];

@@ -422,5 +422,7 @@ in
 
   vault-secrets.secrets.grafana = {
     services = [ "grafana" ];
+    user = "grafana";
+    group = "grafana";
   };
 }

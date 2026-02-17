@@ -82,6 +82,8 @@
           name = "cloudflare-tunnel-${cfg.tunnelId}";
           value = {
             services = [ "cloudflared" ];
+            user = "cloudflared";
+            group = "cloudflared";
           };
         }) cfgs
       );

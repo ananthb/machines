@@ -44,6 +44,8 @@ in
       "immich-server"
       "immich-microservices"
     ];
+    user = "immich";
+    group = "immich";
   };
 
 }
