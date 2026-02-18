@@ -187,342 +187,356 @@ let
     concatMap getTargets nixosHosts;
 
   # 10. Blackbox scrape configs (one per blackbox exporter)
-  blackboxScrapes = concatMap (exporter: [
-    {
-      job_name = "blackbox_ping";
-      metrics_path = "/probe";
-      relabel_configs = [
+  blackboxScrapes =
+    let
+      indexed = lib.imap0 (idx: exporter: {
+        inherit idx exporter;
+      }) blackboxExporterTargets;
+      suffixFor = item: "-${toString item.idx}";
+    in
+    concatMap (
+      item:
+      let
+        inherit (item) exporter;
+        suffix = suffixFor item;
+      in
+      [
         {
-          source_labels = [ "__address__" ];
-          target_label = "__param_target";
-        }
-        {
-          source_labels = [ "__param_target" ];
-          target_label = "instance";
-        }
-        {
-          source_labels = [ "type" ];
-          regex = "^$";
-          target_label = "type";
-          replacement = "app";
-          action = "replace";
-        }
-        {
-          source_labels = [ "role" ];
-          regex = "^$";
-          target_label = "role";
-          replacement = "server";
-          action = "replace";
-        }
-        {
-          target_label = "__address__";
-          replacement = exporter;
-        }
-      ];
-      params.module = [ "icmp" ];
-      static_configs = [
-        {
-          targets = pingTargets;
-          labels = {
-            type = "node";
-            os = "linux"; # Generic, though some are mac
-            role = "server";
-          };
-        }
-        {
-          targets = [
-            "atlantis"
-            "ds9"
-            "intrepid"
+          job_name = "blackbox_ping${suffix}";
+          metrics_path = "/probe";
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
+              target_label = "__address__";
+              replacement = exporter;
+            }
           ];
-          labels = {
-            type = "node";
-            os = "openwrt";
-            role = "router";
-          };
-        }
-        {
-          targets = [
-            "2001:4860:4860::8888"
-            "2001:4860:4860::8844"
-            "2606:4700:4700::1001"
-            "2606:4700:4700::1111"
-            "8.8.8.8"
-            "8.8.4.4"
-            "1.1.1.1"
-            "1.0.0.1"
+          params.module = [ "icmp" ];
+          static_configs = [
+            {
+              targets = pingTargets;
+              labels = {
+                type = "node";
+                os = "linux"; # Generic, though some are mac
+                role = "server";
+              };
+            }
+            {
+              targets = [
+                "atlantis"
+                "ds9"
+                "intrepid"
+              ];
+              labels = {
+                type = "node";
+                os = "openwrt";
+                role = "router";
+              };
+            }
+            {
+              targets = [
+                "2001:4860:4860::8888"
+                "2001:4860:4860::8844"
+                "2606:4700:4700::1001"
+                "2606:4700:4700::1111"
+                "8.8.8.8"
+                "8.8.4.4"
+                "1.1.1.1"
+                "1.0.0.1"
+              ];
+              labels = {
+                role = "canary";
+                type = "internet-dns";
+              };
+            }
           ];
-          labels = {
-            role = "canary";
-            type = "internet-dns";
-          };
-        }
-      ];
-    }
-    {
-      job_name = "blackbox_http_2xx";
-      metrics_path = "/probe";
-      params.module = [ "http_2xx" ];
-      relabel_configs = [
-        {
-          source_labels = [ "__address__" ];
-          target_label = "__param_target";
         }
         {
-          source_labels = [ "__param_target" ];
-          target_label = "instance";
-        }
-        {
-          source_labels = [
-            "app"
-            "__param_target"
+          job_name = "blackbox_http_2xx${suffix}";
+          metrics_path = "/probe";
+          params.module = [ "http_2xx" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";https?://([^.]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";([^.:/]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
+              target_label = "__address__";
+              replacement = exporter;
+            }
           ];
-          regex = ";https?://([^.]+).*";
-          target_label = "app";
-          replacement = "$1";
-          action = "replace";
-        }
-        {
-          source_labels = [
-            "app"
-            "__param_target"
-          ];
-          regex = ";([^.:/]+).*";
-          target_label = "app";
-          replacement = "$1";
-          action = "replace";
-        }
-        {
-          source_labels = [ "type" ];
-          regex = "^$";
-          target_label = "type";
-          replacement = "app";
-          action = "replace";
-        }
-        {
-          source_labels = [ "role" ];
-          regex = "^$";
-          target_label = "role";
-          replacement = "server";
-          action = "replace";
-        }
-        {
-          target_label = "__address__";
-          replacement = exporter;
-        }
-      ];
-      static_configs =
-        # Generated per-host based on enabled services.
-        blackboxHttpTargets ++ [
-          {
-            targets = [
-              "http://atlantis"
-              "http://ds9"
-              "http://intrepid"
+          static_configs =
+            # Generated per-host based on enabled services.
+            blackboxHttpTargets ++ [
+              {
+                targets = [
+                  "http://atlantis"
+                  "http://ds9"
+                  "http://intrepid"
+                ];
+                labels = {
+                  os = "openwrt";
+                  type = "node";
+                  role = "router";
+                };
+              }
             ];
-            labels = {
-              os = "openwrt";
-              type = "node";
-              role = "router";
-            };
-          }
-        ];
-    }
-    {
-      job_name = "blackbox_https_2xx";
-      metrics_path = "/probe";
-      params.module = [ "https_2xx" ];
-      relabel_configs = [
-        {
-          source_labels = [ "__address__" ];
-          target_label = "__param_target";
         }
         {
-          source_labels = [ "__param_target" ];
-          target_label = "instance";
-        }
-        {
-          target_label = "__address__";
-          replacement = exporter;
-        }
-      ];
-      static_configs = [
-        {
-          targets = [
-            "https://bhaskararaman.com"
-            "https://calculon.tech"
-            "https://coredump.blog"
-            "https://lilaartscentre.com"
-            "https://shakthipalace.com"
+          job_name = "blackbox_https_2xx${suffix}";
+          metrics_path = "/probe";
+          params.module = [ "https_2xx" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = exporter;
+            }
           ];
-          labels.type = "internet-host";
-          labels.role = "server";
-        }
-        {
-          targets = [
-            "https://www.google.com"
-            "https://www.cloudflare.com"
-          ];
-          labels.type = "internet-host";
-          labels.role = "canary";
-        }
-      ];
-    }
-    {
-      job_name = "blackbox_https_2xx_private";
-      metrics_path = "/probe";
-      params.module = [ "https_2xx" ];
-      relabel_configs = [
-        {
-          source_labels = [ "__address__" ];
-          target_label = "__param_target";
-        }
-        {
-          source_labels = [ "__param_target" ];
-          target_label = "instance";
-        }
-        {
-          target_label = "__address__";
-          replacement = exporter;
-        }
-      ];
-      file_sd_configs = [
-        {
-          files = [
-            "${vs.victoriametrics}/blackbox_https_2xx_private.json"
+          static_configs = [
+            {
+              targets = [
+                "https://bhaskararaman.com"
+                "https://calculon.tech"
+                "https://coredump.blog"
+                "https://lilaartscentre.com"
+                "https://shakthipalace.com"
+              ];
+              labels.type = "internet-host";
+              labels.role = "server";
+            }
+            {
+              targets = [
+                "https://www.google.com"
+                "https://www.cloudflare.com"
+              ];
+              labels.type = "internet-host";
+              labels.role = "canary";
+            }
           ];
         }
-      ];
-    }
-    {
-      job_name = "blackbox_https_2xx_via_warp";
-      metrics_path = "/probe";
-      params.module = [ "https_2xx_via_warp" ];
-      relabel_configs = [
         {
-          source_labels = [ "__address__" ];
-          target_label = "__param_target";
-        }
-        {
-          source_labels = [ "__param_target" ];
-          target_label = "instance";
-        }
-        {
-          source_labels = [ "type" ];
-          regex = "^$";
-          target_label = "type";
-          replacement = "app";
-          action = "replace";
-        }
-        {
-          source_labels = [ "role" ];
-          regex = "^$";
-          target_label = "role";
-          replacement = "server";
-          action = "replace";
-        }
-        {
-          target_label = "__address__";
-          replacement = exporter;
-        }
-        {
-          source_labels = [ "__address__" ];
-          regex = ".*";
-          replacement = "warp";
-          target_label = "via";
-          action = "replace";
-        }
-      ];
-      static_configs = [
-        {
-          targets = [
-            "https://bhaskararaman.com"
-            "https://calculon.tech"
-            "https://coredump.blog"
-            "https://lilaartscentre.com"
-            "https://shakthipalace.com"
+          job_name = "blackbox_https_2xx_private${suffix}";
+          metrics_path = "/probe";
+          params.module = [ "https_2xx" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              target_label = "__address__";
+              replacement = exporter;
+            }
           ];
-          labels.type = "internet-host";
-          labels.role = "server";
-        }
-        {
-          targets = [
-            "https://www.google.com"
-            "https://www.cloudflare.com"
-          ];
-          labels.type = "internet-host";
-          labels.role = "canary";
-        }
-      ];
-    }
-    {
-      job_name = "blackbox_https_2xx_via_warp_private";
-      metrics_path = "/probe";
-      params.module = [ "https_2xx_via_warp" ];
-      relabel_configs = [
-        {
-          source_labels = [ "__address__" ];
-          target_label = "__param_target";
-        }
-        {
-          source_labels = [ "__param_target" ];
-          target_label = "instance";
-        }
-        {
-          source_labels = [
-            "app"
-            "__param_target"
-          ];
-          regex = ";https?://([^.]+).*";
-          target_label = "app";
-          replacement = "$1";
-          action = "replace";
-        }
-        {
-          source_labels = [
-            "app"
-            "__param_target"
-          ];
-          regex = ";([^.:/]+).*";
-          target_label = "app";
-          replacement = "$1";
-          action = "replace";
-        }
-        {
-          source_labels = [ "type" ];
-          regex = "^$";
-          target_label = "type";
-          replacement = "app";
-          action = "replace";
-        }
-        {
-          source_labels = [ "role" ];
-          regex = "^$";
-          target_label = "role";
-          replacement = "server";
-          action = "replace";
-        }
-        {
-          target_label = "__address__";
-          replacement = exporter;
-        }
-        {
-          source_labels = [ "__address__" ];
-          regex = ".*";
-          replacement = "warp";
-          target_label = "via";
-          action = "replace";
-        }
-      ];
-      file_sd_configs = [
-        {
-          files = [
-            "${vs.victoriametrics}/blackbox_https_2xx_private.json"
+          file_sd_configs = [
+            {
+              files = [
+                "${vs.victoriametrics}/blackbox_https_2xx_private.json"
+              ];
+            }
           ];
         }
-      ];
-    }
-  ]) blackboxExporterTargets;
+        {
+          job_name = "blackbox_https_2xx_via_warp${suffix}";
+          metrics_path = "/probe";
+          params.module = [ "https_2xx_via_warp" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
+              target_label = "__address__";
+              replacement = exporter;
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*";
+              replacement = "warp";
+              target_label = "via";
+              action = "replace";
+            }
+          ];
+          static_configs = [
+            {
+              targets = [
+                "https://bhaskararaman.com"
+                "https://calculon.tech"
+                "https://coredump.blog"
+                "https://lilaartscentre.com"
+                "https://shakthipalace.com"
+              ];
+              labels.type = "internet-host";
+              labels.role = "server";
+            }
+            {
+              targets = [
+                "https://www.google.com"
+                "https://www.cloudflare.com"
+              ];
+              labels.type = "internet-host";
+              labels.role = "canary";
+            }
+          ];
+        }
+        {
+          job_name = "blackbox_https_2xx_via_warp_private${suffix}";
+          metrics_path = "/probe";
+          params.module = [ "https_2xx_via_warp" ];
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              target_label = "__param_target";
+            }
+            {
+              source_labels = [ "__param_target" ];
+              target_label = "instance";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";https?://([^.]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";([^.:/]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
+              target_label = "__address__";
+              replacement = exporter;
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*";
+              replacement = "warp";
+              target_label = "via";
+              action = "replace";
+            }
+          ];
+          file_sd_configs = [
+            {
+              files = [
+                "${vs.victoriametrics}/blackbox_https_2xx_private.json"
+              ];
+            }
+          ];
+        }
+      ]
+    ) indexed;
 
 in
 {
