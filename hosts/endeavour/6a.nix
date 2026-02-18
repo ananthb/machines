@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   ...
 }@args:
@@ -52,6 +53,8 @@
     imports = [ ../../services/monitoring/postgres.nix ];
     vault-secrets.secrets.openwrt-atlantis = {
       services = [ "home-assistant" ];
+      user = config.users.users.hass.name;
+      inherit (config.users.users.hass) group;
     };
     services = {
       frigate = {
