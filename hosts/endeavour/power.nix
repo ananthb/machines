@@ -52,6 +52,11 @@ in
     user = "nut-exporter";
   };
 
+  users.users.nut-exporter = {
+    isSystemUser = true;
+    group = "nogroup";
+  };
+
   systemd.services.nut-users-secrets = {
     startLimitIntervalSec = 0;
     startLimitBurst = 0;
