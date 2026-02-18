@@ -3,12 +3,6 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
-  users.groups.nut-exporter = { };
-  users.users.nut-exporter = {
-    isSystemUser = true;
-    group = "nut-exporter";
-  };
-
   power.ups = {
     enable = true;
     mode = "netserver";
@@ -55,8 +49,7 @@ in
       "upsmon"
       "prometheus-nut-exporter"
     ];
-    group = "nut-exporter";
-    user = "root";
+    user = "nutmon";
   };
 
   systemd.services.nut-users-secrets = {
