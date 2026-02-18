@@ -88,6 +88,13 @@
     fwupd.enable = true;
     bcachefs.autoScrub.enable = true;
 
+    vault.tpmUnseal = {
+      handles = [
+        "0x81000001"
+      ];
+      pcrs = "0,2,7";
+    };
+
     ht32-panel = {
       enable = true;
       web = {
