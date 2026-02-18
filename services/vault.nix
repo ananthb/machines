@@ -62,8 +62,8 @@ in
       '';
     };
 
-    # Default to enabling TPM unseal only when Secure Boot is on.
-    services.vault.tpmUnseal.enable = lib.mkDefault secureBootEnabled;
+    # Disable auto-unseal by default
+    services.vault.tpmUnseal.enable = lib.mkDefault false;
 
     environment.systemPackages = lib.mkIf tpmUnseal.enable [
       pkgs.tpm2-tools
