@@ -110,7 +110,7 @@ in
                         model = {
                           disableTextWrap = false;
                           editorMode = "builder";
-                          expr = "up{type=\"app\"}";
+                          expr = "(probe_success{type=\"app\"} or up{type=\"app\", job!~\"blackbox_.*\"} or up{job=\"apps\", role=\"server\"})";
                           fullMetaSearch = false;
                           includeNullMetadata = true;
                           instant = true;
