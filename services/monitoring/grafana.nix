@@ -162,7 +162,8 @@ in
                     for = "1m";
                     keepFiringFor = "1m";
                     annotations = {
-                      summary = "A hosted application is down";
+                      summary = "Application down: {{ if $labels.app }}{{ $labels.app }}{{ else }}{{ $labels.instance }}{{ end }}";
+                      description = "instance={{ $labels.instance }} job={{ $labels.job }} type={{ $labels.type }}";
                     };
                     isPaused = false;
                     notification_settings = {

@@ -50,8 +50,6 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
-    # Enable cross-compilation for aarch64-linux
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   # hardware accelerated graphics
@@ -138,9 +136,6 @@
   };
 
   systemd = {
-    # Mount binfmt_misc at boot for cross-compilation
-    units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
-
     network = {
       networks."20-enp2s0" = {
         matchConfig.Name = "enp2s0";

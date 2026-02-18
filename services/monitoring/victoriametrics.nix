@@ -177,6 +177,20 @@ in
               target_label = "instance";
             }
             {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
               target_label = "__address__";
               replacement = "endeavour:9115";
             }
@@ -235,6 +249,40 @@ in
               target_label = "instance";
             }
             {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";https?://([^.]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";([^.:/]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
               target_label = "__address__";
               replacement = "endeavour:9115";
             }
@@ -247,11 +295,32 @@ in
             {
               targets = [
                 "http://endeavour:7878" # radarr
+              ];
+              labels = {
+                type = "app";
+                role = "server";
+                app = "radarr";
+              };
+            }
+            {
+              targets = [
                 "http://endeavour:8989" # sonarr
+              ];
+              labels = {
+                type = "app";
+                role = "server";
+                app = "sonarr";
+              };
+            }
+            {
+              targets = [
                 "http://endeavour:9696" # prowlarr
               ];
-              labels.type = "app";
-              labels.role = "server";
+              labels = {
+                type = "app";
+                role = "server";
+                app = "prowlarr";
+              };
             }
             {
               targets = [
@@ -367,6 +436,20 @@ in
               target_label = "instance";
             }
             {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
+            }
+            {
               target_label = "__address__";
               replacement = "endeavour:9115";
             }
@@ -412,6 +495,40 @@ in
             {
               source_labels = [ "__param_target" ];
               target_label = "instance";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";https?://([^.]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [
+                "app"
+                "__param_target"
+              ];
+              regex = ";([^.:/]+).*";
+              target_label = "app";
+              replacement = "$1";
+              action = "replace";
+            }
+            {
+              source_labels = [ "type" ];
+              regex = "^$";
+              target_label = "type";
+              replacement = "app";
+              action = "replace";
+            }
+            {
+              source_labels = [ "role" ];
+              regex = "^$";
+              target_label = "role";
+              replacement = "server";
+              action = "replace";
             }
             {
               target_label = "__address__";
@@ -464,6 +581,50 @@ in
         }
         {
           job_name = "apps";
+          relabel_configs = [
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*:9708$";
+              target_label = "app";
+              replacement = "radarr";
+              action = "replace";
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*:9709$";
+              target_label = "app";
+              replacement = "sonarr";
+              action = "replace";
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*:9710$";
+              target_label = "app";
+              replacement = "prowlarr";
+              action = "replace";
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*:8096$";
+              target_label = "app";
+              replacement = "jellyfin";
+              action = "replace";
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*:8081$";
+              target_label = "app";
+              replacement = "immich";
+              action = "replace";
+            }
+            {
+              source_labels = [ "__address__" ];
+              regex = ".*:8082$";
+              target_label = "app";
+              replacement = "immich";
+              action = "replace";
+            }
+          ];
           static_configs = [
             {
               targets = appTargets;

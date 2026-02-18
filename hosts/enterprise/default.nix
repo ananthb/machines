@@ -38,6 +38,9 @@ in
     };
 
     kernelModules = [ "i2c-dev" ];
+
+    # Enable cross-compilation for aarch64-linux
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 
   # hardware accelerated graphics
@@ -101,6 +104,9 @@ in
       gnome-shell.serviceConfig.ManagedOOMPreference = "none";
       gsd-xsettings.serviceConfig.ManagedOOMPreference = "none";
     };
+
+    # Mount binfmt_misc at boot for cross-compilation
+    units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
 
   };
 
