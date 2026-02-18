@@ -67,12 +67,7 @@ let
   # 2. Blackbox Exporter (The prober itself)
   # Target: hostname:9115
   blackboxExporterTargets =
-    let
-      targets = concatMap (
-        host: if hasExporter host.config "blackbox" then [ "${host.name}:9115" ] else [ ]
-      ) nixosHosts;
-    in
-    if targets == [ ] then [ "localhost:9115" ] else targets;
+    if hasExporter config "blackbox" then [ "${config.networking.hostName}:9115" ] else [ ];
 
   # 3. Libvirt Exporter
   # Target: hostname:9177
@@ -745,6 +740,18 @@ in
     "${vs.home-assistant-6a-vm}/access_token"
     "${vs.home-assistant-t1-vm}/access_token"
   ];
+  systemd.services.victoriametrics = {
+    after = [
+      "sops-install-secrets.service"
+      "home-assistant-6a-vm-secrets.service"
+      "home-assistant-t1-vm-secrets.service"
+    ];
+    requires = [
+      "sops-install-secrets.service"
+      "home-assistant-6a-vm-secrets.service"
+      "home-assistant-t1-vm-secrets.service"
+    ];
+  };
 
   users.groups.victoriametrics = lib.mkDefault { };
   users.users.victoriametrics = lib.mkDefault {
