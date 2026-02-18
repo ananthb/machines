@@ -49,7 +49,7 @@ in
       "upsmon"
       "prometheus-nut-exporter"
     ];
-    user = "nutmon";
+    user = "nut-exporter";
   };
 
   systemd.services.nut-users-secrets = {
