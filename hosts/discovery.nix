@@ -19,7 +19,6 @@
     "scroll-reverser"
     "signal"
     "slack-cli"
-    "timemator"
     "visual-studio-code"
     "vlc"
     "yubico-authenticator"
