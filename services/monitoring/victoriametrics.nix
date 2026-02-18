@@ -710,7 +710,7 @@ in
           scheme = "https";
           authorization = {
             type = "Bearer";
-            credentials_file = "${vs.home-assistant-6a}/access_token";
+            credentials_file = "${vs.home-assistant-6a-vm}/access_token";
           };
           static_configs = [
             {
@@ -726,7 +726,7 @@ in
           scheme = "https";
           authorization = {
             type = "Bearer";
-            credentials_file = "${vs.home-assistant-t1}/access_token";
+            credentials_file = "${vs.home-assistant-t1-vm}/access_token";
           };
           static_configs = [
             {
@@ -742,14 +742,15 @@ in
 
   systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
     "${vs.victoriametrics}/blackbox_https_2xx_private.json"
-    "${vs.home-assistant-6a}/access_token"
-    "${vs.home-assistant-t1}/access_token"
+    "${vs.home-assistant-6a-vm}/access_token"
+    "${vs.home-assistant-t1-vm}/access_token"
   ];
 
   users.groups.victoriametrics = lib.mkDefault { };
   users.users.victoriametrics = lib.mkDefault {
     isSystemUser = true;
     group = "victoriametrics";
+    extraGroups = [ "hass" ];
   };
 
   vault-secrets = {
@@ -760,8 +761,16 @@ in
         group = "victoriametrics";
       };
 
-      home-assistant-6a.services = lib.mkAfter [ "victoriametrics" ];
-      home-assistant-t1.services = lib.mkAfter [ "victoriametrics" ];
+      home-assistant-6a-vm = {
+        services = [ "victoriametrics" ];
+        user = "victoriametrics";
+        group = "victoriametrics";
+      };
+      home-assistant-t1-vm = {
+        services = [ "victoriametrics" ];
+        user = "victoriametrics";
+        group = "victoriametrics";
+      };
     };
   };
 
