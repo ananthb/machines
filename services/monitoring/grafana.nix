@@ -46,6 +46,10 @@ in
           skip_org_role_sync = true;
           scopes = "openid email profile";
         };
+
+        security = {
+          secret_key = "$__file{${vs.grafana}/secret_key}";
+        };
       };
 
       provision = {
