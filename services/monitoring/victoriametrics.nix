@@ -184,16 +184,77 @@ let
   # 10. Blackbox scrape configs (one per blackbox exporter)
   blackboxScrapes =
     let
-      indexed = lib.imap0 (idx: exporter: {
-        inherit idx exporter;
-      }) blackboxExporterTargets;
-      suffixFor = item: "-${toString item.idx}";
+      indexed = map (exporter: { inherit exporter; }) blackboxExporterTargets;
+      suffixFor =
+        item:
+        let
+          host = builtins.head (lib.splitString ":" item.exporter);
+        in
+        "-${lib.replaceStrings [ "." ] [ "-" ] host}";
     in
     concatMap (
       item:
       let
         inherit (item) exporter;
         suffix = suffixFor item;
+        privateHttpsConfigs = [
+          {
+            targets = [
+              "https://6a.kedi.dev"
+              "https://actual.kedi.dev"
+              "https://mealie.kedi.dev"
+              "https://metrics.kedi.dev"
+              "https://radicale.kedi.dev"
+              "https://vault.kedi.dev"
+            ];
+            labels = {
+              type = "app";
+              role = "server";
+            };
+          }
+          {
+            targets = [
+              "https://wallabag.kedi.dev"
+              "https://miniflux.kedi.dev"
+            ];
+            labels = {
+              type = "app";
+              role = "server";
+              app = "news";
+            };
+          }
+          {
+            targets = [
+              "https://immich.kedi.dev/auth/login"
+            ];
+            labels = {
+              type = "app";
+              role = "server";
+              app = "immich";
+            };
+          }
+          {
+            targets = [
+              "https://seafile.kedi.dev/accounts/login/"
+            ];
+            labels = {
+              type = "app";
+              role = "server";
+              app = "seafile";
+            };
+          }
+          {
+            targets = [
+              "https://tv.tail42937.ts.net/web/"
+              "https://tv.kedi.dev/web/"
+            ];
+            labels = {
+              type = "app";
+              role = "server";
+              app = "jellyfin";
+            };
+          }
+        ];
       in
       [
         {
@@ -374,33 +435,8 @@ let
               labels.type = "internet-host";
               labels.role = "canary";
             }
-          ];
-        }
-        {
-          job_name = "blackbox_https_2xx_private${suffix}";
-          metrics_path = "/probe";
-          params.module = [ "https_2xx" ];
-          relabel_configs = [
-            {
-              source_labels = [ "__address__" ];
-              target_label = "__param_target";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-            }
-            {
-              target_label = "__address__";
-              replacement = exporter;
-            }
-          ];
-          file_sd_configs = [
-            {
-              files = [
-                "${vs.victoriametrics}/blackbox_https_2xx_private.json"
-              ];
-            }
-          ];
+          ]
+          ++ privateHttpsConfigs;
         }
         {
           job_name = "blackbox_https_2xx_via_warp${suffix}";
@@ -461,74 +497,8 @@ let
               labels.type = "internet-host";
               labels.role = "canary";
             }
-          ];
-        }
-        {
-          job_name = "blackbox_https_2xx_via_warp_private${suffix}";
-          metrics_path = "/probe";
-          params.module = [ "https_2xx_via_warp" ];
-          relabel_configs = [
-            {
-              source_labels = [ "__address__" ];
-              target_label = "__param_target";
-            }
-            {
-              source_labels = [ "__param_target" ];
-              target_label = "instance";
-            }
-            {
-              source_labels = [
-                "app"
-                "__param_target"
-              ];
-              regex = ";https?://([^.]+).*";
-              target_label = "app";
-              replacement = "$1";
-              action = "replace";
-            }
-            {
-              source_labels = [
-                "app"
-                "__param_target"
-              ];
-              regex = ";([^.:/]+).*";
-              target_label = "app";
-              replacement = "$1";
-              action = "replace";
-            }
-            {
-              source_labels = [ "type" ];
-              regex = "^$";
-              target_label = "type";
-              replacement = "app";
-              action = "replace";
-            }
-            {
-              source_labels = [ "role" ];
-              regex = "^$";
-              target_label = "role";
-              replacement = "server";
-              action = "replace";
-            }
-            {
-              target_label = "__address__";
-              replacement = exporter;
-            }
-            {
-              source_labels = [ "__address__" ];
-              regex = ".*";
-              replacement = "warp";
-              target_label = "via";
-              action = "replace";
-            }
-          ];
-          file_sd_configs = [
-            {
-              files = [
-                "${vs.victoriametrics}/blackbox_https_2xx_private.json"
-              ];
-            }
-          ];
+          ]
+          ++ privateHttpsConfigs;
         }
       ]
     ) indexed;
@@ -736,7 +706,6 @@ in
   };
 
   systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
-    "${vs.victoriametrics}/blackbox_https_2xx_private.json"
     "${vs.home-assistant-6a-vm}/access_token"
     "${vs.home-assistant-t1-vm}/access_token"
   ];
@@ -762,12 +731,6 @@ in
 
   vault-secrets = {
     secrets = {
-      victoriametrics = {
-        services = [ "victoriametrics" ];
-        user = "victoriametrics";
-        group = "victoriametrics";
-      };
-
       home-assistant-6a-vm = {
         services = [ "victoriametrics" ];
         user = "victoriametrics";

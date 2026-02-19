@@ -6,8 +6,6 @@
     ../linux.nix
     ./hardware-configuration.nix
 
-    ../../services/monitoring/blackbox.nix
-    ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
   ];
 
