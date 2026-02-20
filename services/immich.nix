@@ -81,8 +81,7 @@ in
         enabled = true;
         urls =
           (builtins.map (host: "http://${host}:3003") outputs.lib.immichMlHosts)
-          ++ (lib.optional (config.services.immich.settings.machineLearning.enabled or false
-          ) "http://localhost:3003");
+          ++ (lib.optional (config.services.immich.machine-learning.enable or false) "http://localhost:3003");
         clip = {
           enabled = true;
           modelName = "ViT-B-32__openai";
