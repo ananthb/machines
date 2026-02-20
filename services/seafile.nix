@@ -19,6 +19,7 @@
 */
 {
   config,
+  containerImages,
   lib,
   pkgs,
   ...
@@ -252,7 +253,7 @@ in
         seafile = {
           containerConfig = {
             name = "seafile";
-            image = "docker.io/seafileltd/seafile-mc:13.0-latest";
+            image = containerImages.seafile;
             autoUpdate = "registry";
             volumes = [
               "/srv/seafile/seafile-server:/shared"
@@ -300,7 +301,7 @@ in
         seafile-notification-server = {
           containerConfig = {
             name = "seafile-notification-server";
-            image = "docker.io/seafileltd/notification-server:13.0-latest";
+            image = containerImages.seafileNotification;
             autoUpdate = "registry";
             networks = [
               networks.seafile.ref
@@ -322,7 +323,7 @@ in
         seafile-md-server = {
           containerConfig = {
             name = "seafile-md-server";
-            image = "docker.io/seafileltd/seafile-md-server:13.0-latest";
+            image = containerImages.seafileMd;
             autoUpdate = "registry";
             volumes = [
               "/srv/seafile/seafile-server:/shared"
@@ -347,7 +348,7 @@ in
         seafile-thumbnail-server = {
           containerConfig = {
             name = "seafile-thumbnail-server";
-            image = "docker.io/seafileltd/thumbnail-server:13.0-latest";
+            image = containerImages.seafileThumbnail;
             autoUpdate = "registry";
             volumes = [
               "/srv/seafile/seafile-server:/shared"
@@ -372,7 +373,7 @@ in
         seafile-ai = {
           containerConfig = {
             name = "seafile-ai";
-            image = "docker.io/seafileltd/seafile-ai:13.0-latest";
+            image = containerImages.seafileAi;
             autoUpdate = "registry";
             volumes = [
               "/srv/seafile/seafile-server:/shared"
@@ -395,7 +396,7 @@ in
         seadoc = {
           containerConfig = {
             name = "seadoc";
-            image = "docker.io/seafileltd/sdoc-server:2.0-latest";
+            image = containerImages.seadoc;
             autoUpdate = "registry";
             volumes = [
               "/srv/seafile/seadoc:/shared"
@@ -415,7 +416,7 @@ in
         collabora-code = {
           containerConfig = {
             name = "collabora-code";
-            image = "docker.io/collabora/code:latest";
+            image = containerImages.collabora;
             podmanArgs = [ "--privileged" ];
             autoUpdate = "registry";
             networks = [

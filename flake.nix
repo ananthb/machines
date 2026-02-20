@@ -99,6 +99,7 @@
     }@inputs:
     let
       username = "ananth";
+      containerImages = import ./lib/container-images.nix;
 
       systems = [
         "x86_64-linux"
@@ -119,6 +120,7 @@
           specialArgs = {
             inherit
               hostname
+              containerImages
               inputs
               system
               username
@@ -147,7 +149,7 @@
           modules = extraModules ++ [ ./hosts/${hostname}.nix ];
         };
     in
-    {
+    rec {
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
 
       nixosConfigurations = {
@@ -179,6 +181,14 @@
           hostname = "voyager";
           system = "aarch64-linux";
           extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
+        };
+      };
+
+      lib = {
+        immichMlHosts = import ./lib/immich-ml-hosts.nix {
+          inherit nixosConfigurations;
+          inherit (nixpkgs) lib;
+          immichMlImage = containerImages.immichMl;
         };
       };
 

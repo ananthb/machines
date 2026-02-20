@@ -1,5 +1,6 @@
 {
   config,
+  containerImages,
   ...
 }:
 let
@@ -20,7 +21,7 @@ in
       containers = {
         globalping-probe.containerConfig = {
           name = "globalping-probe";
-          image = "docker.io/globalping/globalping-probe:latest";
+          image = containerImages.globalpingProbe;
           networks = [ "host" ];
           addCapabilities = [ "NET_RAW" ];
           environmentFiles = [
@@ -30,7 +31,7 @@ in
 
         ripe-atlas-probe.containerConfig = {
           name = "ripe-atlas-probe";
-          image = "ghcr.io/jamesits/ripe-atlas:latest-probe";
+          image = containerImages.ripeAtlasProbe;
           networks = [ "host" ];
           dropCapabilities = [ "all" ];
           addCapabilities = [

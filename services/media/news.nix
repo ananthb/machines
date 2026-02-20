@@ -1,5 +1,6 @@
 {
   config,
+  containerImages,
   ...
 }:
 let
@@ -43,7 +44,7 @@ in
 
       containers.wallabag.containerConfig = {
         name = "wallabag";
-        image = "docker.io/wallabag/wallabag:latest";
+        image = containerImages.wallabag;
         volumes = [
           "${volumes.wallabag-data.ref}:/var/www/wallabag/data"
           "${volumes.wallabag-images.ref}:/var/www/wallabag/web/assets/images"

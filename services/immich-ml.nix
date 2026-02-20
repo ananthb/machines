@@ -1,10 +1,11 @@
-_: {
+{ containerImages, ... }:
+{
   virtualisation.quadlet = {
     autoUpdate.enable = true;
     containers.immich-machine-learning = {
       containerConfig = {
         name = "immich-machine-learning";
-        image = "ghcr.io/immich-app/immich-machine-learning:release";
+        image = containerImages.immichMl;
         autoUpdate = "registry";
         publishPorts = [ "3003:3003" ];
         volumes = [
