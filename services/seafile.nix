@@ -158,7 +158,7 @@ in
             ];
             publishPorts = [ "4450:80" ];
             environmentFiles = [
-              seafileEnv
+              "${seafileEnv}"
               "${vs.seafile}/seafile.env"
             ];
           };
@@ -204,7 +204,7 @@ in
             ];
             publishPorts = [ "8083:8083" ];
             environmentFiles = [
-              notificationServerEnv
+              "${notificationServerEnv}"
               "${vs.seafile}/notification-server.env"
             ];
           };
@@ -229,7 +229,7 @@ in
             ];
             publishPorts = [ "8084:8084" ];
             environmentFiles = [
-              mdServerEnv
+              "${mdServerEnv}"
               "${vs.seafile}/md-server.env"
             ];
           };
@@ -254,7 +254,7 @@ in
             ];
             publishPorts = [ "4453:80" ];
             environmentFiles = [
-              thumbnailServerEnv
+              "${thumbnailServerEnv}"
               "${vs.seafile}/thumbnail-server.env"
             ];
           };
@@ -278,7 +278,7 @@ in
               networks.seafile.ref
             ];
             environmentFiles = [
-              aiEnv
+              "${aiEnv}"
               "${vs.seafile}/ai.env"
             ];
           };
@@ -302,7 +302,7 @@ in
             ];
             publishPorts = [ "4451:80" ];
             environmentFiles = [
-              seadocEnv
+              "${seadocEnv}"
               "${vs.seafile}/seadoc.env"
             ];
           };
