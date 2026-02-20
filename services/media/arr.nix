@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   username,
   ...
@@ -164,13 +165,13 @@ in
     qbittorrent.serviceConfig.UMask = "0002";
 
     radarr = {
-      serviceConfig.UMask = "0002";
+      serviceConfig.UMask = lib.mkForce "0002";
       after = [ "postgresql.service" ];
       wants = [ "qbittorrent.service" ];
     };
 
     sonarr = {
-      serviceConfig.UMask = "0002";
+      serviceConfig.UMask = lib.mkForce "0002";
       after = [ "postgresql.service" ];
       wants = [ "postgresql.service" ];
     };

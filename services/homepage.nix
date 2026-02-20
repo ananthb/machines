@@ -16,7 +16,7 @@ in
       base = "https://kedi.dev";
       target = "_blank";
     };
-    environmentFile = "${vs.homepage}/environment";
+    environmentFiles = [ "${vs.homepage}/environment" ];
     services = [
       {
         "Media" = [
