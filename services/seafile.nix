@@ -26,6 +26,110 @@
 let
   vs = config.vault-secrets.secrets;
   seafileHostname = "seafile.kedi.dev";
+  seahubSettings = pkgs.writeText "seahub_settings.py" ''
+    TIME_ZONE = "Asia/Kolkata"
+
+    CSRF_TRUSTED_ORIGINS = ["https://seafile.kedi.dev", "http://endeavour.local:4000"]
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # OAuth Setup
+    ENABLE_OAUTH = True
+    OAUTH_CREATE_UNKNOWN_USER = True
+    OAUTH_ACTIVATE_USER_AFTER_CREATION = False
+    OAUTH_REDIRECT_URL = "https://seafile.kedi.dev/oauth/callback/"
+    OAUTH_PROVIDER_DOMAIN = "google.com"
+    OAUTH_AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+    OAUTH_TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token"
+    OAUTH_USER_INFO_URL = "https://www.googleapis.com/oauth2/v1/userinfo"
+    OAUTH_SCOPE = [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+    ]
+    OAUTH_ATTRIBUTE_MAP = {
+        "id": (True, "uid"),
+        "name": (False, "name"),
+        "email": (False, "contact_email"),
+    }
+
+    # SMTP
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = "smtp.tem.scw.cloud"
+    EMAIL_PORT = 25
+    DEFAULT_FROM_EMAIL = "seafile@kedi.dev"
+    SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+    # Enable metadata server
+    ENABLE_METADATA_MANAGEMENT = True
+    METADATA_SERVER_URL = "http://seafile-md-server:8084"
+
+    # Collabora Code
+    OFFICE_SERVER_TYPE = "CollaboraOffice"
+    ENABLE_OFFICE_WEB_APP = True
+    OFFICE_WEB_APP_BASE_URL = "http://collabora-code:9980/collabora-code/hosting/discovery"
+
+    # Expiration of WOPI access token
+    # WOPI access token is a string used by Seafile to determine the file's
+    # identity and permissions when use LibreOffice Online view it online
+    # And for security reason, this token should expire after a set time period
+    WOPI_ACCESS_TOKEN_EXPIRATION = 30 * 60  # seconds
+
+    # List of file formats that you want to view through LibreOffice Online
+    # You can change this value according to your preferences
+    # And of course you should make sure your LibreOffice Online supports to preview
+    # the files with the specified extensions
+    OFFICE_WEB_APP_FILE_EXTENSION = (
+        "odp",
+        "ods",
+        "odt",
+        "xls",
+        "xlsb",
+        "xlsm",
+        "xlsx",
+        "ppsx",
+        "ppt",
+        "pptm",
+        "pptx",
+        "doc",
+        "docm",
+        "docx",
+    )
+
+    # Enable edit files through LibreOffice Online
+    ENABLE_OFFICE_WEB_APP_EDIT = True
+
+    # types of files should be editable through LibreOffice Online
+    OFFICE_WEB_APP_EDIT_FILE_EXTENSION = (
+        "odp",
+        "ods",
+        "odt",
+        "xls",
+        "xlsb",
+        "xlsm",
+        "xlsx",
+        "ppsx",
+        "ppt",
+        "pptm",
+        "pptx",
+        "doc",
+        "docm",
+        "docx",
+    )
+  '';
+  seafileConf = pkgs.writeText "seafile.conf" ''
+    [fileserver]
+    port=8082
+    max_download_dir_size=10000
+
+    [notification]
+    enabled = true
+    host = 127.0.0.1
+    port = 8083
+  '';
   seafileEnv = pkgs.writeText "seafile.env" ''
     # initial variables (valid only during first-time init)
     INIT_SEAFILE_ADMIN_EMAIL=admin@example.com
@@ -165,9 +269,13 @@ in
           serviceConfig = {
             Restart = "on-failure";
             ExecStartPre = ''
+              ${pkgs.coreutils}/bin/cat \
+                ${vs.seafile}/seahub_settings.enc.py \
+                ${seahubSettings} \
+                > /srv/seafile/seafile-server/seafile/conf/seahub_settings.py
               ${pkgs.coreutils}/bin/cp \
-                ${vs.seafile}/seahub_settings.py \
-                /srv/seafile/seafile-server/seafile/conf/seahub_settings.py
+                ${seafileConf} \
+                /srv/seafile/seafile-server/seafile/conf/seafile.conf
             '';
           };
           unitConfig = {
