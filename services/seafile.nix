@@ -25,6 +25,105 @@
 }:
 let
   vs = config.vault-secrets.secrets;
+  seafileHostname = "seafile.kedi.dev";
+  seafileEnv = pkgs.writeText "seafile.env" ''
+    # initial variables (valid only during first-time init)
+    INIT_SEAFILE_ADMIN_EMAIL=admin@example.com
+
+    # startup parameters
+    SEAFILE_LOG_TO_STDOUT=true
+    SEAFILE_SERVER_HOSTNAME=${seafileHostname}
+    SEAFILE_SERVER_PROTOCOL=https
+    TIME_ZONE=Asia/Kolkata
+    NON_ROOT=false
+
+    # database
+    SEAFILE_MYSQL_DB_HOST=host.containers.internal
+    SEAFILE_MYSQL_DB_USER=seafile
+    SEAFILE_MYSQL_DB_PORT=3306
+    SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+    SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+    SEAFILE_MYSQL_DB_SEAHUB_DB_NAME=seahub_db
+
+    # redis
+    CACHE_PROVIDER=redis
+    REDIS_HOST=host.containers.internal
+    REDIS_PORT=6400
+
+    # seadoc
+    ENABLE_SEADOC=true
+    SEADOC_SERVER_URL=https://${seafileHostname}/sdoc-server
+
+    # metadata server
+    MD_FILE_COUNT_LIMIT=100000
+
+    # notification server
+    ENABLE_NOTIFICATION_SERVER=true
+    INNER_NOTIFICATION_SERVER_URL=http://seafile-notification-server:8083
+    NOTIFICATION_SERVER_URL=https://${seafileHostname}/notification
+
+    # ai server
+    ENABLE_SEAFILE_AI=true
+    SEAFILE_AI_SERVER_URL=http://seafile-ai:8888
+  '';
+  notificationServerEnv = pkgs.writeText "seafile-notification-server.env" ''
+    SEAFILE_MYSQL_DB_HOST=host.containers.internal
+    SEAFILE_MYSQL_DB_USER=seafile
+    SEAFILE_MYSQL_DB_PORT=3306
+    SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+    SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+    SEAFILE_LOG_TO_STDOUT=true
+    NOTIFICATION_SERVER_LOG_LEVEL=info
+  '';
+  mdServerEnv = pkgs.writeText "seafile-md-server.env" ''
+    SEAFILE_MYSQL_DB_HOST=host.containers.internal
+    SEAFILE_MYSQL_DB_USER=seafile
+    SEAFILE_MYSQL_DB_PORT=3306
+    SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+    SEAFILE_LOG_TO_STDOUT=true
+    MD_PORT=8084
+    MD_LOG_LEVEL=info
+    MD_MAX_CACHE_SIZE=1GB
+    MD_CHECK_UPDATE_INTERVAL=30m
+    MD_FILE_COUNT_LIMIT=100000
+    SEAF_SERVER_STORAGE_TYPE=disk
+    MD_STORAGE_TYPE=disk
+    CACHE_PROVIDER=redis
+    REDIS_HOST=host.containers.internal
+    REDIS_PORT=6400
+  '';
+  thumbnailServerEnv = pkgs.writeText "seafile-thumbnail-server.env" ''
+    TIME_ZONE=Asia/Kolkata
+    SEAFILE_MYSQL_DB_HOST=host.containers.internal
+    SEAFILE_MYSQL_DB_USER=seafile
+    SEAFILE_MYSQL_DB_PORT=3306
+    SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+    SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+    INNER_SEAHUB_SERVICE_URL=http://seafile
+    THUMBNAIL_IMAGE_ORIGINAL_SIZE_LIMIT=256
+    SEAF_SERVER_STORAGE_TYPE=disk
+  '';
+  aiEnv = pkgs.writeText "seafile-ai.env" ''
+    SEAFILE_AI_LLM_TYPE=openai
+    SEAFILE_AI_LLM_URL=http://enterprise:11434/v1
+    SEAFILE_AI_LLM_MODEL=gemma3:12b
+    SEAFILE_SERVER_URL=http://seafile
+    SEAFILE_AI_LOG_LEVEL=info
+    CACHE_PROVIDER=redis
+    REDIS_HOST=host.containers.internal
+    REDIS_PORT=6400
+  '';
+  seadocEnv = pkgs.writeText "seadoc.env" ''
+    SEAFILE_SERVER_HOSTNAME=${seafileHostname}
+    SEAFILE_SERVER_PROTOCOL=https
+    TIME_ZONE=Asia/Kolkata
+    SEAHUB_SERVICE_URL=http://seafile
+    DB_HOST=host.containers.internal
+    DB_USER=seafile
+    DB_PORT=3306
+    DB_NAME=sdoc_db
+    NON_ROOT=false
+  '';
 in
 {
 
@@ -58,7 +157,10 @@ in
               networks.seafile.ref
             ];
             publishPorts = [ "4450:80" ];
-            environmentFiles = [ "${vs.seafile}/seafile.env" ];
+            environmentFiles = [
+              seafileEnv
+              "${vs.seafile}/seafile.env"
+            ];
           };
           serviceConfig = {
             Restart = "on-failure";
@@ -101,7 +203,10 @@ in
               networks.seafile.ref
             ];
             publishPorts = [ "8083:8083" ];
-            environmentFiles = [ "${vs.seafile}/notification-server.env" ];
+            environmentFiles = [
+              notificationServerEnv
+              "${vs.seafile}/notification-server.env"
+            ];
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
@@ -123,7 +228,10 @@ in
               networks.seafile.ref
             ];
             publishPorts = [ "8084:8084" ];
-            environmentFiles = [ "${vs.seafile}/md-server.env" ];
+            environmentFiles = [
+              mdServerEnv
+              "${vs.seafile}/md-server.env"
+            ];
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
@@ -145,7 +253,10 @@ in
               networks.seafile.ref
             ];
             publishPorts = [ "4453:80" ];
-            environmentFiles = [ "${vs.seafile}/thumbnail-server.env" ];
+            environmentFiles = [
+              thumbnailServerEnv
+              "${vs.seafile}/thumbnail-server.env"
+            ];
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
@@ -166,7 +277,10 @@ in
             networks = [
               networks.seafile.ref
             ];
-            environmentFiles = [ "${vs.seafile}/ai.env" ];
+            environmentFiles = [
+              aiEnv
+              "${vs.seafile}/ai.env"
+            ];
           };
           serviceConfig.Restart = "on-failure";
           unitConfig = {
@@ -187,7 +301,10 @@ in
               networks.seafile.ref
             ];
             publishPorts = [ "4451:80" ];
-            environmentFiles = [ "${vs.seafile}/seadoc.env" ];
+            environmentFiles = [
+              seadocEnv
+              "${vs.seafile}/seadoc.env"
+            ];
           };
           serviceConfig.Restart = "on-failure";
         };

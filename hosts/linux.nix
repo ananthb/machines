@@ -248,6 +248,7 @@
 
   vault-secrets = {
     vaultAddress = "http://endeavour:8200";
-    vaultPrefix = "kv/servers/${hostname}";
+    # Keep secrets path host-independent so services can move across hosts.
+    vaultPrefix = lib.mkDefault "kv/services";
   };
 }
