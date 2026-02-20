@@ -268,15 +268,10 @@ in
           };
           serviceConfig = {
             Restart = "on-failure";
-            ExecStartPre = ''
-              ${pkgs.coreutils}/bin/cat \
-                ${vs.seafile}/seahub_settings.enc.py \
-                ${seahubSettings} \
-                > /srv/seafile/seafile-server/seafile/conf/seahub_settings.py
-              ${pkgs.coreutils}/bin/cp \
-                ${seafileConf} \
-                /srv/seafile/seafile-server/seafile/conf/seafile.conf
-            '';
+            ExecStartPre = [
+              "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/cat ${vs.seafile}/seahub_settings.enc.py ${seahubSettings} > /srv/seafile/seafile-server/seafile/conf/seahub_settings.py'"
+              "${pkgs.coreutils}/bin/cp ${seafileConf} /srv/seafile/seafile-server/seafile/conf/seafile.conf"
+            ];
           };
           unitConfig = {
             Before = "caddy.service";
