@@ -109,4 +109,5 @@
   '';
 
   users.users.ananth.extraGroups = [ "dialout" ];
+
 }

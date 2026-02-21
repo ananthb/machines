@@ -44,6 +44,7 @@
 
     ./common.nix
     ../lib/scripts.nix
+    ../lib/restart-target.nix
   ];
 
   sops = {

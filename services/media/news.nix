@@ -104,4 +104,5 @@ in
     isSystemUser = true;
     group = "miniflux";
   };
+
 }

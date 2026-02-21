@@ -127,5 +127,6 @@ lib.recursiveUpdate (
       user = config.users.users.hass.name;
       inherit (config.users.users.hass) group;
     };
+
   }
 ) extraModules

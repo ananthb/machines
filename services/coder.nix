@@ -72,4 +72,5 @@ in
   vault-secrets.secrets.coder = {
     services = [ "coder" ];
   };
+
 }

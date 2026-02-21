@@ -76,4 +76,5 @@ in
   vault-secrets.secrets.vaultwarden = {
     services = [ "vaultwarden" ];
   };
+
 }

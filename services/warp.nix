@@ -4,4 +4,5 @@ _: {
   # setting the mode to proxy, and then setting proxy port to 8888.
   services.cloudflare-warp.enable = true;
   services.cloudflare-warp.openFirewall = false;
+
 }

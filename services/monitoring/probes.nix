@@ -58,4 +58,5 @@ in
   vault-secrets.secrets.globalping = {
     services = [ "globalping-probe" ];
   };
+
 }
