@@ -141,10 +141,14 @@
         table inet mangle {
           chain output {
             type route hook output priority mangle; policy accept;
-            # Keep Tailscale traffic on tailscale0.
+            ## Keep localhost, LAN, link-local, and Tailscale traffic on the main table.
+            # localhost
+            ip daddr 127.0.0.0/8 return
+            ip6 daddr ::1/128 return
+            # Tailscale
             ip daddr 100.64.0.0/10 return
             ip6 daddr fd7a:115c:a1e0::/48 return
-            # Keep LAN/local traffic on the main table.
+            # LAN
             ip daddr 10.0.0.0/8 return
             ip daddr 172.16.0.0/12 return
             ip daddr 192.168.0.0/16 return
