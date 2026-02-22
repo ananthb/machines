@@ -20,6 +20,7 @@
       home-manager = {
         backupFileExtension = "bak";
         sharedModules = [
+          inputs.sops-nix.homeManagerModules.sops
           inputs.nix-index-database.homeModules.nix-index
         ];
         useGlobalPkgs = true;
@@ -153,9 +154,12 @@
     sudo.wheelNeedsPassword = false;
 
     pam = {
+      u2f.enable = true;
+
       services = {
         login.u2fAuth = true;
         sudo.u2fAuth = true;
+        sshd.u2fAuth = true;
         sudo.rssh = true;
         sshd.rssh = true;
       };

@@ -13,5 +13,10 @@ _: {
     };
   };
 
+  programs.ssh.extraConfig = ''
+    Host *
+      IdentityFile ~/.ssh/yubikey_5c_nano
+  '';
+
   home.packages = [ ];
 }

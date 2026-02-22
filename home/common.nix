@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   username,
   ...
@@ -18,6 +19,11 @@ in
   };
 
   programs.home-manager.enable = true;
+
+  sops.secrets."Yubico/u2f_keys" = {
+    sopsFile = ../secrets/global.yaml;
+    path = config.xdg.configHome + "/Yubico/u2f_keys";
+  };
 
   home.packages = with pkgs; [
     git

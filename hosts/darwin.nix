@@ -31,6 +31,7 @@
     {
       home-manager = {
         sharedModules = [
+          inputs.sops-nix.homeManagerModules.sops
           inputs.nix-index-database.homeModules.nix-index
         ];
         useGlobalPkgs = true;
@@ -104,8 +105,6 @@
   programs.ssh.extraConfig = ''
     Host *
       AddKeysToAgent yes
-      IdentityFile ~/.ssh/yubikey_5c
-      IdentityFile ~/.ssh/yubikey_5c_nano
   '';
 
   fonts.packages = [ pkgs.hack-font ];

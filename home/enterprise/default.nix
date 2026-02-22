@@ -50,6 +50,9 @@
     };
 
     git.settings = {
+      gpg.format = "ssh";
+      user.signingkey = "~/.ssh/yubikey_5c";
+      commit.gpgsign = "true";
       credential = {
         helper = "!/etc/profiles/per-user/ananth/bin/gh auth git-credential";
         "https://github.com".username = "ananthb";
@@ -57,6 +60,11 @@
     };
 
   };
+
+  programs.ssh.extraConfig = ''
+    Host *
+      IdentityFile ~/.ssh/yubikey_5c
+  '';
 
   dconf = {
     enable = true;
