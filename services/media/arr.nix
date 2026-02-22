@@ -23,7 +23,7 @@ in
   services = {
     qbittorrent = {
       enable = true;
-      group = config.users.groups.media.name;
+      group = "media";
       openFirewall = true;
       serverConfig = {
         LegalNotice.Accepted = true;
@@ -70,13 +70,13 @@ in
 
     radarr = {
       enable = true;
-      group = config.users.groups.media.name;
+      group = "media";
       openFirewall = true;
     };
 
     sonarr = {
       enable = true;
-      group = config.users.groups.media.name;
+      group = "media";
       openFirewall = true;
     };
 
@@ -89,7 +89,7 @@ in
 
     cross-seed = {
       enable = true;
-      group = config.users.groups.media.name;
+      group = "media";
       settings = {
         torrentClients = [ "qbittorrent:http://localhost:8080" ];
         linkType = "hardlink";
@@ -169,14 +169,14 @@ in
   systemd.services = {
     qbittorrent = {
       serviceConfig.UMask = "0002";
-      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
+      serviceConfig.SupplementaryGroups = [ "media" ];
       partOf = [ "kedi.target" ];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     radarr = {
       serviceConfig.UMask = lib.mkForce "0002";
-      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
+      serviceConfig.SupplementaryGroups = [ "media" ];
       after = [ "postgresql.service" ];
       wants = [ "qbittorrent.service" ];
       partOf = [ "kedi.target" ];
@@ -185,7 +185,7 @@ in
 
     sonarr = {
       serviceConfig.UMask = lib.mkForce "0002";
-      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
+      serviceConfig.SupplementaryGroups = [ "media" ];
       after = [ "postgresql.service" ];
       wants = [ "postgresql.service" ];
       partOf = [ "kedi.target" ];
@@ -193,7 +193,7 @@ in
     };
 
     prowlarr = {
-      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
+      serviceConfig.SupplementaryGroups = [ "media" ];
       after = [
         "postgresql.service"
         "radarr.service"
@@ -229,7 +229,7 @@ in
         "prowlarr.service"
       ];
       serviceConfig.UMask = "0002";
-      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
+      serviceConfig.SupplementaryGroups = [ "media" ];
       partOf = [ "kedi.target" ];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
@@ -237,23 +237,17 @@ in
     prometheus-exportarr-radarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-sonarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-prowlarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
-    prometheus-exportarr-radarr-exporter.serviceConfig.SupplementaryGroups = [
-      config.users.groups.media.name
-    ];
-    prometheus-exportarr-sonarr-exporter.serviceConfig.SupplementaryGroups = [
-      config.users.groups.media.name
-    ];
-    prometheus-exportarr-prowlarr-exporter.serviceConfig.SupplementaryGroups = [
-      config.users.groups.media.name
-    ];
+    prometheus-exportarr-radarr-exporter.serviceConfig.SupplementaryGroups = [ "media" ];
+    prometheus-exportarr-sonarr-exporter.serviceConfig.SupplementaryGroups = [ "media" ];
+    prometheus-exportarr-prowlarr-exporter.serviceConfig.SupplementaryGroups = [ "media" ];
 
   };
 
   systemd.tmpfiles.rules = [
-    "d /srv/media 0775 root ${config.users.groups.media.name} -"
-    "d /srv/media/Downloads 0775 root ${config.users.groups.media.name} -"
-    "d /srv/media/Movies 0775 root ${config.users.groups.media.name} -"
-    "d /srv/media/Shows 0775 root ${config.users.groups.media.name} -"
+    "d /srv/media 0775 root media -"
+    "d /srv/media/Downloads 0775 root media -"
+    "d /srv/media/Movies 0775 root media -"
+    "d /srv/media/Shows 0775 root media -"
   ];
 
   vault-secrets.secrets.arr = {
@@ -267,7 +261,7 @@ in
       "prometheus-exportarr-prowlarr-exporter"
     ];
     secretsKey = null;
-    group = config.users.groups.media.name;
+    group = "media";
     extraScript = ''
       umask 0077
       printf '%s' "$RADARR_API_KEY" > "$secretsPath/radarr"
