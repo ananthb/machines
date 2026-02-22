@@ -135,6 +135,8 @@
     firewall = {
       enable = true;
       allowPing = true;
+      # Let Tailscale ACLs govern access on the Tailscale interface.
+      trustedInterfaces = [ config.services.tailscale.interfaceName ];
     };
   };
 
