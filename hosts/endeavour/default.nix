@@ -18,8 +18,6 @@
     ./rclone.nix
     ../../lib/rclone-sync.nix
     ../../services/actual.nix
-    # TODO: not working yet, but it should start working soon
-    # ../../services/davis.nix
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
@@ -32,7 +30,6 @@
     ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
-    ../../services/radicale.nix
     ../../services/seafile.nix
     ../../services/timemachinesrv.nix
     ../../services/vault.nix

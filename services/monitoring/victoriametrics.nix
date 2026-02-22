@@ -204,7 +204,6 @@ let
               "https://actual.kedi.dev"
               "https://mealie.kedi.dev"
               "https://metrics.kedi.dev"
-              "https://radicale.kedi.dev"
               "https://vault.kedi.dev"
             ];
             labels = {

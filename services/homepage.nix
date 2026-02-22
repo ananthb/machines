@@ -127,14 +127,6 @@ in
             };
           }
           {
-            "Radicale" = {
-              icon = "radicale";
-              description = "Contacts, Calendars, & Tasks";
-              href = "https://radicale.kedi.dev";
-              siteMonitor = "https://radicale.kedi.dev";
-            };
-          }
-          {
             "Vaultwarden" = {
               icon = "vaultwarden";
               description = "Password Manager";

@@ -22,7 +22,6 @@
           "immich.kedi.dev" = "http://localhost:2283";
           "metrics.kedi.dev" = "http://localhost:3000";
           "miniflux.kedi.dev" = "http://localhost:8088";
-          "radicale.kedi.dev" = "http://localhost:5232";
           "seafile.kedi.dev" = "http://localhost:4444";
           "seerr.kedi.dev" = "http://localhost:5055";
           "vault.kedi.dev" = "http://localhost:8222";

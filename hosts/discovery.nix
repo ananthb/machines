@@ -14,6 +14,7 @@
     "jellyfin-media-player"
     "ledger-wallet"
     "logi-options+"
+    "openmtp"
     "raspberry-pi-imager"
     "rectangle-pro"
     "scroll-reverser"
