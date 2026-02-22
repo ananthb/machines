@@ -6,7 +6,6 @@
 }:
 let
   homeDir = config.home.homeDirectory;
-  sshKeyPath = homeDir + "/.ssh/id_ed25519";
 in
 {
   imports = [
@@ -14,7 +13,7 @@ in
   ];
 
   sops = {
-    age.sshKeyPaths = [ sshKeyPath ];
+    age.sshKeyPaths = [ (homeDir + "/.ssh/id_ed25519") ];
     defaultSopsFile = ../secrets/dev.yaml;
 
     secrets = {
