@@ -132,8 +132,8 @@ in
             "Vaultwarden" = {
               icon = "vaultwarden";
               description = "Password Manager";
-              href = "https://vault.kedi.dev";
-              siteMonitor = "https://vault.kedi.dev";
+              href = "https://vaultwarden.kedi.dev";
+              siteMonitor = "https://vaultwarden.kedi.dev";
             };
           }
         ];
