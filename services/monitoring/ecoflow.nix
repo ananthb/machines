@@ -3,6 +3,11 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
+  users.groups.ecoflow-exporter = lib.mkDefault { };
+  users.users.prometheus = lib.mkIf (config.users.users ? prometheus) {
+    extraGroups = lib.mkAfter [ "ecoflow-exporter" ];
+  };
+
   services.prometheus.exporters.ecoflow = {
     enable = true;
     exporterType = "mqtt";
