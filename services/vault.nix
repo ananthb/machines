@@ -44,6 +44,11 @@ in
       default = "http://127.0.0.1:8200";
       description = "Vault address used by the unseal service.";
     };
+    tcti = lib.mkOption {
+      type = lib.types.str;
+      default = "device:/dev/tpmrm0";
+      description = "TCTI string used by tpm2-tools (e.g. device:/dev/tpmrm0 or device:/dev/tpm0).";
+    };
   };
 
   config = {
@@ -88,6 +93,7 @@ in
         Group = "vault";
         Environment = [
           "VAULT_ADDR=${tpmUnseal.vaultAddr}"
+          "TPM2TOOLS_TCTI=${tpmUnseal.tcti}"
         ];
         ExecStart = [
           "${unsealScript}"
