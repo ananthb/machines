@@ -32,6 +32,7 @@ in
       "vault"
       "terraform"
       "unrar"
+      "vault-bin"
       "vscode"
       "xone-dongle-firmware"
       "xow_dongle-firmware"
