@@ -73,6 +73,8 @@
     unrar
   ];
 
+  security.tpm2.enable = true;
+
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 

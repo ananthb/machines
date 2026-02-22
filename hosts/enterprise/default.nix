@@ -67,7 +67,10 @@ in
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
 
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+    tpm2.enable = true;
+  };
 
   networking.firewall = rec {
     # nfs server
