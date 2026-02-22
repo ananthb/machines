@@ -116,7 +116,9 @@
       (lib.mapAttrs' (
         name: value:
         lib.nameValuePair "${name}-secrets" {
-          serviceConfig.UMask = lib.mkIf (value.group != "root" && value.group != "nogroup") "0027";
+          serviceConfig.UMask = lib.mkIf (value.group != "root" && value.group != "nogroup") (
+            lib.mkForce "0027"
+          );
         }
       ) config.vault-secrets.secrets)
     ];
