@@ -160,8 +160,16 @@
         # Jio: keep routes in a separate table for policy routing.
         dhcpV4Config = {
           RouteMetric = 200;
-          RouteTable = 1002;
         };
+        # Add a DHCP-gateway default route into the qBittorrent policy table
+        # so marked traffic can ECMP across enp2s0 + enp4s0.
+        routes = [
+          {
+            Gateway = "_dhcp4";
+            Table = 1002;
+            Metric = 200;
+          }
+        ];
         routingPolicyRules = [
           {
             FirewallMark = "0x1/0x1";
@@ -179,6 +187,22 @@
           IPv6AcceptRA = true;
         };
         dhcpV4Config.RouteMetric = 50;
+        # Add a DHCP-gateway default route into the qBittorrent policy table
+        # so marked traffic can ECMP across enp2s0 + enp4s0.
+        routes = [
+          {
+            Gateway = "_dhcp4";
+            Table = 1002;
+            Metric = 200;
+          }
+        ];
+        routingPolicyRules = [
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1002;
+            Priority = 1000;
+          }
+        ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
