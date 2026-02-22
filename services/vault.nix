@@ -49,6 +49,7 @@ in
   config = {
     services.vault = {
       enable = true;
+      package = pkgs.vault-bin;
       address = "[::]:8200";
       storageBackend = "raft";
       storageConfig = ''
