@@ -3,6 +3,8 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
+  users.groups.mealie = { };
+
   services.mealie = {
     enable = true;
     listenAddress = "[::1]";
@@ -13,6 +15,7 @@ in
 
   systemd.services.mealie = {
     partOf = [ "kedi.target" ];
+    serviceConfig.SupplementaryGroups = [ "mealie" ];
   };
 
   systemd.services."mealie-backup" = {
@@ -59,7 +62,7 @@ in
       "mealie"
       "mealie-backup"
     ];
-    inherit (config.services.mealie) group;
+    group = "mealie";
   };
 
 }

@@ -426,7 +426,7 @@ in
 
   vault-secrets.secrets.grafana = {
     services = [ "grafana" ];
-    inherit (config.services.grafana) group;
+    group = config.users.groups.grafana.name;
   };
 
 }

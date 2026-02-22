@@ -6,6 +6,8 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
+  users.groups."homepage-dashboard" = { };
+
   services.homepage-dashboard = {
     enable = true;
     listenPort = 8802;
@@ -267,13 +269,14 @@ in
 
   vault-secrets.secrets.homepage = {
     services = [ "homepage-dashboard" ];
-    inherit (config.services.homepage-dashboard) group;
+    group = "homepage-dashboard";
   };
 
   my-services.kediTargets.homepage-dashboard = true;
 
   systemd.services.homepage-dashboard = {
     partOf = [ "kedi.target" ];
+    serviceConfig.SupplementaryGroups = [ "homepage-dashboard" ];
   };
 
 }

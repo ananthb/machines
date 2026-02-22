@@ -33,7 +33,7 @@ in
 
   systemd.services.miniflux = {
     partOf = [ "kedi.target" ];
-    serviceConfig.SupplementaryGroups = [ config.services.miniflux.group ];
+    serviceConfig.SupplementaryGroups = [ "news" ];
   };
 
   virtualisation.quadlet =
@@ -92,7 +92,7 @@ in
   vault-secrets.secrets.miniflux = {
     services = [ "miniflux" ];
     secretsKey = null;
-    inherit (config.services.miniflux) group;
+    group = "news";
     extraScript = ''
       umask 0077
       printf '%s' "$MINIFLUX_ADMIN_CREDS" > "$secretsPath/admin_creds"
@@ -103,16 +103,16 @@ in
 
   vault-secrets.secrets.wallabag = {
     services = [ "wallabag" ];
-    group = config.users.groups.wallabag.name;
+    group = "news";
   };
 
-  users.groups.wallabag = { };
+  users.groups.news = { };
 
   my-services.kediTargets.wallabag = true;
 
   systemd.services.wallabag = {
     partOf = [ "kedi.target" ];
-    serviceConfig.SupplementaryGroups = [ config.users.groups.wallabag.name ];
+    serviceConfig.SupplementaryGroups = [ "news" ];
   };
 
 }
