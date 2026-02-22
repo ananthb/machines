@@ -183,21 +183,18 @@ in
   ];
 
   my-services.kediTargets.immich-server = true;
-  my-services.kediTargets.immich-microservices = true;
 
   systemd.services = {
     immich-server = {
       partOf = [ "kedi.target" ];
-    };
-
-    immich-microservices = {
-      partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/var/lib/immich";
     };
 
     immich-backup = {
       # TODO: re-enable after we've trimmed down unnecessary files
       # startAt = "weekly";
       environment.KOPIA_CHECK_FOR_UPDATES = "false";
+      unitConfig.ConditionPathIsMountPoint = "/var/lib/immich";
       serviceConfig = {
         Type = "oneshot";
         User = "root";

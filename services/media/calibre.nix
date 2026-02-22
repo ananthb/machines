@@ -29,6 +29,7 @@ in
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
     partOf = [ "kedi.target" ];
+    unitConfig.ConditionPathIsMountPoint = "/srv";
     serviceConfig = {
       User = "calibre";
       Group = "calibre";

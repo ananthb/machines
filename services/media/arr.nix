@@ -174,6 +174,7 @@ in
     qbittorrent = {
       serviceConfig.UMask = "0002";
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     radarr = {
@@ -181,6 +182,7 @@ in
       after = [ "postgresql.service" ];
       wants = [ "qbittorrent.service" ];
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     sonarr = {
@@ -188,6 +190,7 @@ in
       after = [ "postgresql.service" ];
       wants = [ "postgresql.service" ];
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     prowlarr = {
@@ -202,6 +205,7 @@ in
         "sonarr.service"
       ];
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     jellyseerr = {
@@ -212,6 +216,7 @@ in
         DB_NAME = "jellyseerr";
       };
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     cross-seed = {
@@ -225,7 +230,12 @@ in
       ];
       serviceConfig.UMask = "0002";
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
+
+    prometheus-exportarr-radarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
+    prometheus-exportarr-sonarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
+    prometheus-exportarr-prowlarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
 
   };
 

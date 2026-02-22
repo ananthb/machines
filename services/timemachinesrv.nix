@@ -53,6 +53,7 @@ _: {
       after = [ "tailscaled.service" ];
       wants = [ "tailscaled.service" ];
       partOf = [ "kedi.target" ];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
     };
   };
 
