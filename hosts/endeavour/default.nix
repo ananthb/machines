@@ -141,6 +141,16 @@
         table inet mangle {
           chain output {
             type route hook output priority mangle; policy accept;
+            # Keep Tailscale traffic on tailscale0.
+            ip daddr 100.64.0.0/10 return
+            ip6 daddr fd7a:115c:a1e0::/48 return
+            # Keep LAN/local traffic on the main table.
+            ip daddr 10.0.0.0/8 return
+            ip daddr 172.16.0.0/12 return
+            ip daddr 192.168.0.0/16 return
+            ip daddr 169.254.0.0/16 return
+            ip6 daddr fc00::/7 return
+            ip6 daddr fe80::/10 return
             # Mark qBittorrent packets for Jio policy routing.
             meta skuid 989 mark set 0x1
           }
