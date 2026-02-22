@@ -12,7 +12,7 @@ let
     set -euo pipefail
 
     umask 0077
-    tmpdir="$(mktemp -d /run/vault-unseal.XXXXXX)"
+    tmpdir="$(mktemp -d -p /run/vault-unseal vault-unseal.XXXXXX)"
     trap 'rm -rf "$tmpdir"' EXIT
 
     for handle in ${lib.concatStringsSep " " tpmUnseal.handles}; do
@@ -92,6 +92,7 @@ in
         ExecStart = [
           "${unsealScript}"
         ];
+        RuntimeDirectory = "vault-unseal";
         PrivateTmp = true;
         ProtectSystem = "strict";
         ProtectHome = true;
