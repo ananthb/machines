@@ -130,6 +130,19 @@
         4002
       ];
     };
+
+    nftables = {
+      enable = true;
+      ruleset = ''
+        table inet mangle {
+          chain output {
+            type route hook output priority mangle; policy accept;
+            # Mark qBittorrent packets for Jio policy routing.
+            meta skuid "qbittorrent" mark set 0x1
+          }
+        }
+      '';
+    };
   };
 
   systemd = {
@@ -140,7 +153,18 @@
           DHCP = "ipv4";
           IPv6AcceptRA = true;
         };
-        dhcpV4Config.RouteMetric = 100;
+        # Jio: keep routes in a separate table for policy routing.
+        dhcpV4Config = {
+          RouteMetric = 200;
+          RouteTable = 1002;
+        };
+        routingPolicyRules = [
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1002;
+            Priority = 1000;
+          }
+        ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
@@ -150,7 +174,7 @@
           DHCP = "ipv4";
           IPv6AcceptRA = true;
         };
-        dhcpV4Config.RouteMetric = 100;
+        dhcpV4Config.RouteMetric = 50;
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
