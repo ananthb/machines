@@ -3,7 +3,6 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
-
   services.mealie = {
     enable = true;
     listenAddress = "[::1]";
@@ -60,6 +59,7 @@ in
       "mealie"
       "mealie-backup"
     ];
+    inherit (config.services.mealie) group;
   };
 
 }

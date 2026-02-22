@@ -17,23 +17,13 @@ in
   # Media group membership
   users.groups.media.members = [
     username
-    "qbittorrent"
-    "radarr"
-    "sonarr"
-    "cross-seed"
   ];
-
-  users.users.qbittorrent = {
-    isSystemUser = true;
-    uid = 989;
-    group = "media";
-  };
 
   # Services
   services = {
     qbittorrent = {
       enable = true;
-      group = "media";
+      group = config.users.groups.media.name;
       openFirewall = true;
       serverConfig = {
         LegalNotice.Accepted = true;
@@ -80,13 +70,13 @@ in
 
     radarr = {
       enable = true;
-      group = "media";
+      group = config.users.groups.media.name;
       openFirewall = true;
     };
 
     sonarr = {
       enable = true;
-      group = "media";
+      group = config.users.groups.media.name;
       openFirewall = true;
     };
 
@@ -99,7 +89,7 @@ in
 
     cross-seed = {
       enable = true;
-      group = "media";
+      group = config.users.groups.media.name;
       settings = {
         torrentClients = [ "qbittorrent:http://localhost:8080" ];
         linkType = "hardlink";
@@ -179,12 +169,14 @@ in
   systemd.services = {
     qbittorrent = {
       serviceConfig.UMask = "0002";
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
       partOf = [ "kedi.target" ];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     radarr = {
       serviceConfig.UMask = lib.mkForce "0002";
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
       after = [ "postgresql.service" ];
       wants = [ "qbittorrent.service" ];
       partOf = [ "kedi.target" ];
@@ -193,6 +185,7 @@ in
 
     sonarr = {
       serviceConfig.UMask = lib.mkForce "0002";
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
       after = [ "postgresql.service" ];
       wants = [ "postgresql.service" ];
       partOf = [ "kedi.target" ];
@@ -200,6 +193,7 @@ in
     };
 
     prowlarr = {
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
       after = [
         "postgresql.service"
         "radarr.service"
@@ -235,6 +229,7 @@ in
         "prowlarr.service"
       ];
       serviceConfig.UMask = "0002";
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
       partOf = [ "kedi.target" ];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
@@ -242,14 +237,23 @@ in
     prometheus-exportarr-radarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-sonarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-prowlarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
+    prometheus-exportarr-radarr-exporter.serviceConfig.SupplementaryGroups = [
+      config.users.groups.media.name
+    ];
+    prometheus-exportarr-sonarr-exporter.serviceConfig.SupplementaryGroups = [
+      config.users.groups.media.name
+    ];
+    prometheus-exportarr-prowlarr-exporter.serviceConfig.SupplementaryGroups = [
+      config.users.groups.media.name
+    ];
 
   };
 
   systemd.tmpfiles.rules = [
-    "d /srv/media 0775 root media -"
-    "d /srv/media/Downloads 0775 root media -"
-    "d /srv/media/Movies 0775 root media -"
-    "d /srv/media/Shows 0775 root media -"
+    "d /srv/media 0775 root ${config.users.groups.media.name} -"
+    "d /srv/media/Downloads 0775 root ${config.users.groups.media.name} -"
+    "d /srv/media/Movies 0775 root ${config.users.groups.media.name} -"
+    "d /srv/media/Shows 0775 root ${config.users.groups.media.name} -"
   ];
 
   vault-secrets.secrets.arr = {
@@ -263,7 +267,7 @@ in
       "prometheus-exportarr-prowlarr-exporter"
     ];
     secretsKey = null;
-    group = "media";
+    group = config.users.groups.media.name;
     extraScript = ''
       umask 0077
       printf '%s' "$RADARR_API_KEY" > "$secretsPath/radarr"

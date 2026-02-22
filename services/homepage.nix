@@ -267,6 +267,7 @@ in
 
   vault-secrets.secrets.homepage = {
     services = [ "homepage-dashboard" ];
+    inherit (config.services.homepage-dashboard) group;
   };
 
   my-services.kediTargets.homepage-dashboard = true;

@@ -45,8 +45,7 @@ in
 
   vault-secrets.secrets.radicale = {
     services = [ "radicale" ];
-    user = "radicale";
-    group = "radicale";
+    inherit (config.services.radicale) group;
   };
 
 }

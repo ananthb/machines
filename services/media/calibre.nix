@@ -1,22 +1,13 @@
-{
-  pkgs,
-  ...
-}:
+{ config, pkgs, ... }:
 let
   calibrePort = 8086;
   libraryDir = "/srv/media/Books";
 in
 {
   users.groups.calibre = { };
-  users.users.calibre = {
-    isSystemUser = true;
-    group = "calibre";
-    home = libraryDir;
-    createHome = true;
-  };
 
   systemd.tmpfiles.rules = [
-    "d ${libraryDir} 2775 calibre calibre - -"
+    "d ${libraryDir} 2775 root ${config.users.groups.calibre.name} - -"
   ];
 
   my-services.kediTargets.calibre-server = true;
@@ -31,8 +22,6 @@ in
     partOf = [ "kedi.target" ];
     unitConfig.ConditionPathIsMountPoint = "/srv";
     serviceConfig = {
-      User = "calibre";
-      Group = "calibre";
       ExecStartPre = "${pkgs.bash}/bin/bash -c 'if [ ! -f ${libraryDir}/metadata.db ]; then ${pkgs.calibre}/bin/calibredb list --with-library ${libraryDir} >/dev/null; fi'";
       ExecStart = "${pkgs.calibre}/bin/calibre-server --port ${toString calibrePort} --listen-on :: --trusted-ips 127.0.0.1,::1 ${libraryDir}";
       Restart = "on-failure";

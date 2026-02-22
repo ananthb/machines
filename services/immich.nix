@@ -208,8 +208,7 @@ in
       "immich-server"
       "immich-microservices"
     ];
-    user = "immich";
-    group = "immich";
+    inherit (config.services.immich) group;
   };
 
 }

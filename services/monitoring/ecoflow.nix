@@ -1,20 +1,8 @@
-{ config, lib, ... }:
+{ config, ... }:
 let
   vs = config.vault-secrets.secrets;
 in
 {
-  users = {
-    groups = {
-      ecoflow-exporter = lib.mkIf config.services.prometheus.exporters.ecoflow.enable (lib.mkDefault { });
-      prometheus = lib.mkIf config.services.prometheus.exporters.ecoflow.enable (lib.mkDefault { });
-    };
-    users.prometheus = lib.mkIf config.services.prometheus.exporters.ecoflow.enable {
-      isSystemUser = lib.mkDefault true;
-      group = "prometheus";
-      extraGroups = lib.mkAfter [ "ecoflow-exporter" ];
-    };
-  };
-
   services.prometheus.exporters.ecoflow = {
     enable = true;
     exporterType = "mqtt";
@@ -30,8 +18,7 @@ in
 
   vault-secrets.secrets.ecoflow = {
     services = [ "prometheus-ecoflow-exporter" ];
-    user = "prometheus";
-    group = "ecoflow-exporter";
+    inherit (config.services.prometheus) group;
   };
 
 }

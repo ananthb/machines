@@ -130,8 +130,7 @@ lib.recursiveUpdate (
 
     vault-secrets.secrets.${secretName} = {
       services = [ "home-assistant" ];
-      user = config.users.users.hass.name;
-      inherit (config.users.users.hass) group;
+      inherit (config.services.home-assistant) group;
     };
 
   }

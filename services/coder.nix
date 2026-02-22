@@ -76,6 +76,7 @@ in
 
   vault-secrets.secrets.coder = {
     services = [ "coder" ];
+    inherit (config.services.coder) group;
   };
 
 }

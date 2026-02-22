@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   services.prometheus.exporters.libvirt = {
     enable = true;
@@ -15,7 +20,7 @@
       "AF_INET6"
       "AF_UNIX"
     ];
-    SupplementaryGroups = [ "libvirtd" ];
+    SupplementaryGroups = [ config.users.groups.libvirtd.name ];
   };
 
 }

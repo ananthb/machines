@@ -42,6 +42,7 @@ in
 
   vault-secrets.secrets.actual = {
     services = [ "actual" ];
+    inherit (config.services.actual) group;
   };
 
 }

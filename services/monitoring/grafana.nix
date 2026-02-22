@@ -3,7 +3,6 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
-
   imports = [
     ./postgres.nix
   ];
@@ -427,8 +426,7 @@ in
 
   vault-secrets.secrets.grafana = {
     services = [ "grafana" ];
-    user = "grafana";
-    group = "grafana";
+    inherit (config.services.grafana) group;
   };
 
 }

@@ -709,6 +709,7 @@ in
     "${vs.home-assistant-t1-vm}/access_token"
   ];
   systemd.services.victoriametrics = {
+    serviceConfig.SupplementaryGroups = [ config.services.home-assistant.group ];
     after = [
       "sops-install-secrets.service"
       "home-assistant-6a-vm-secrets.service"
@@ -721,24 +722,15 @@ in
     ];
   };
 
-  users.groups.victoriametrics = lib.mkDefault { };
-  users.users.victoriametrics = lib.mkDefault {
-    isSystemUser = true;
-    group = "victoriametrics";
-    extraGroups = [ "hass" ];
-  };
-
   vault-secrets = {
     secrets = {
       home-assistant-6a-vm = {
         services = [ "victoriametrics" ];
-        user = "victoriametrics";
-        group = "victoriametrics";
+        inherit (config.services.victoriametrics) group;
       };
       home-assistant-t1-vm = {
         services = [ "victoriametrics" ];
-        user = "victoriametrics";
-        group = "victoriametrics";
+        inherit (config.services.victoriametrics) group;
       };
     };
   };

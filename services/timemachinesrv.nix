@@ -1,4 +1,5 @@
-_: {
+{ config, ... }:
+{
   services = {
     # Time Machine server via Samba
     samba = {
@@ -46,7 +47,7 @@ _: {
 
   systemd = {
     tmpfiles.rules = [
-      "d /srv/timemachine 0777 nobody nogroup -"
+      "d /srv/timemachine 0777 nobody ${config.users.groups.nogroup.name} -"
     ];
 
     services.samba-smbd = {

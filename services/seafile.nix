@@ -237,6 +237,8 @@ in
     ./warp.nix
   ];
 
+  users.groups.seafile = { };
+
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) networks;
@@ -591,10 +593,12 @@ in
       "seafile-ai"
       "seadoc-server"
     ];
+    group = config.users.groups.seafile.name;
   };
 
   vault-secrets.secrets.collabora = {
     services = [ "collabora-code" ];
+    group = config.users.groups.seafile.name;
   };
 
 }

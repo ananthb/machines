@@ -7,6 +7,8 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
+  users.groups."globalping-probe" = { };
+
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) volumes;
@@ -57,6 +59,7 @@ in
 
   vault-secrets.secrets.globalping = {
     services = [ "globalping-probe" ];
+    group = config.users.groups."globalping-probe".name;
   };
 
 }

@@ -14,7 +14,6 @@ in
 
   users.groups.media.members = [
     username
-    "jellyfin"
   ];
 
   environment.systemPackages = with pkgs; [
@@ -47,7 +46,7 @@ in
   services = {
     jellyfin = {
       enable = true;
-      group = "media";
+      group = config.users.groups.media.name;
       openFirewall = true;
     };
 
@@ -80,6 +79,7 @@ in
   systemd.services = {
     jellyfin = {
       partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
     };
     caddy = {
       after = [ "jellyfin.service" ];
@@ -90,6 +90,7 @@ in
       wants = [ "jellyfin.service" ];
       after = [ "jellyfin.service" ];
       partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = [ config.users.groups.media.name ];
     };
   };
 
@@ -97,6 +98,7 @@ in
     services = [
       "tsnsrv-tv"
     ];
+    group = config.users.groups.media.name;
   };
 
 }

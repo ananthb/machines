@@ -81,6 +81,7 @@ in
 
   vault-secrets.secrets.vaultwarden = {
     services = [ "vaultwarden" ];
+    inherit (config.services.vaultwarden) group;
   };
 
 }

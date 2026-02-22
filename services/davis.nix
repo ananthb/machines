@@ -39,6 +39,7 @@ in
 
   vault-secrets.secrets.davis = {
     services = [ "davis" ];
+    inherit (config.services.davis) group;
   };
 
 }
