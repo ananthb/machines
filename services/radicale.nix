@@ -41,6 +41,12 @@ in
       Type = "oneshot";
       User = "root";
     };
+    path = [
+      pkgs.coreutils
+      pkgs.curl
+      pkgs.kopia
+      pkgs.systemd
+    ];
   };
 
   vault-secrets.secrets.radicale = {

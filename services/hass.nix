@@ -126,6 +126,11 @@ lib.recursiveUpdate (
         User = "root";
         ExecStart = "${config.my-scripts.kopia-backup} /var/lib/hass/backups";
       };
+      path = [
+        pkgs.coreutils
+        pkgs.curl
+        pkgs.kopia
+      ];
     };
 
     vault-secrets.secrets.${secretName} = {

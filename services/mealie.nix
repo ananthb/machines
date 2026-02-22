@@ -55,6 +55,11 @@ in
       Type = "oneshot";
       EnvironmentFile = "${vs.mealie}/environment";
     };
+    path = [
+      pkgs.coreutils
+      pkgs.curl
+      pkgs.kopia
+    ];
   };
 
   vault-secrets.secrets.mealie = {

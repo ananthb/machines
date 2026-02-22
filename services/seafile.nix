@@ -576,6 +576,13 @@ in
         Type = "oneshot";
         User = "root";
       };
+      path = [
+        pkgs.bcachefs-tools
+        pkgs.btrfs-progs
+        pkgs.coreutils
+        pkgs.curl
+        pkgs.kopia
+      ];
     };
   };
 

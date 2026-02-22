@@ -191,6 +191,11 @@ in
         after = [ "network-online.target" ];
         wants = [ "network-online.target" ];
         inherit (job) environment;
+        path = [
+          pkgs.coreutils
+          pkgs.curl
+          pkgs.gnugrep
+        ];
 
         serviceConfig = {
           Type = "oneshot";

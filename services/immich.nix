@@ -2,6 +2,7 @@
   config,
   lib,
   outputs,
+  pkgs,
   ...
 }:
 let
@@ -200,6 +201,13 @@ in
         User = "root";
         ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
       };
+      path = with pkgs; [
+        bcachefs-tools
+        btrfs-progs
+        coreutils
+        curl
+        kopia
+      ];
     };
   };
 

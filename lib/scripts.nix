@@ -52,7 +52,6 @@ in
         # Creates a filesystem snapshot of <subvol-dir> and creates a kopia snapshot of that fs snapshot.
 
         set -uo pipefail
-
         source ${shell-helpers}
 
         usage() {
@@ -81,13 +80,13 @@ in
 
         if [[ $backup_fs == "bcachefs" ]]; then
           # snapshot bcachefs subvolume
-          if ! ${pkgs.bcachefs-tools}/bin/bcachefs subvolume snapshot -r \
+          if ! bcachefs subvolume snapshot -r \
             "$backup_source" "$snapshot_target"; then
             die "$backup_source might not be a bcachefs subvolume"
           fi
         elif [[ $backup_fs == "btrfs" ]]; then
           # snapshot btrfs subvolume
-          if ! ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r \
+          if ! btrfs subvolume snapshot -r \
             "$backup_source" "$snapshot_target"; then
             die "$backup_source might not be a btrfs subvolume"
           fi
@@ -97,10 +96,10 @@ in
 
         trap '{
           if [[ $backup_fs == "bcachefs" ]]; then
-            ${pkgs.bcachefs-tools}/bin/bcachefs subvolume delete \
+            bcachefs subvolume delete \
               "$snapshot_target"
           elif [[ $backup_fs == "btrfs" ]]; then
-            ${pkgs.btrfs-progs}/bin/btrfs subvolume delete \
+            btrfs subvolume delete \
               "$snapshot_target"
           fi
         }' EXIT
@@ -115,7 +114,6 @@ in
         # <source> is an optional value (default: <directory>) that overrides the kopia snapshot source directory.
 
         set -uo pipefail
-
         source ${shell-helpers}
 
         usage() {
@@ -137,7 +135,7 @@ in
         }' EXIT
 
         # Open remote kopia repository
-        ${pkgs.kopia}/bin/kopia repository connect gcs \
+        kopia repository connect gcs \
           --bucket hathi-backups \
           --credentials-file /run/secrets/gcloud-service-accounts/kopia-hathi-backups.json \
           --password $(cat /run/secrets/kopia-gcs/hathi-backups)
@@ -145,12 +143,12 @@ in
         write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_connect" 0
 
         trap '{
-          ${pkgs.kopia}/bin/kopia repository disconnect
+          kopia repository disconnect
           write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_snapshot" 0
         }' EXIT
 
         write_metric kopia_backups_count "job=hathi-backups,instance=$source,stage=kopia_snapshot" 1
-        ${pkgs.kopia}/bin/kopia snapshot create \
+        kopia snapshot create \
           --disable-color \
           --no-progress \
           --parallel 10 \
@@ -213,7 +211,7 @@ in
           printf 'Sending line to %s: %s\n' "$vm_url" "$line" >&2
 
           # Send the data using curl, ignoring errors
-          ${pkgs.curl}/bin/curl \
+          curl \
             --silent \
             --max-time 2 \
             --data-binary "$line" \
