@@ -18,6 +18,8 @@ in
 
   vault-secrets.secrets.ecoflow = {
     services = [ "prometheus-ecoflow-exporter" ];
+    user = "prometheus";
+    group = "ecoflow-exporter";
   };
 
 }
