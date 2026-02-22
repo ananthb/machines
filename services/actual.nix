@@ -3,6 +3,8 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
+  users.groups.actual = { };
+
   services.actual = {
     enable = true;
     settings.port = 3001;
