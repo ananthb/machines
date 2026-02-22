@@ -24,6 +24,13 @@ in
       # sign ups
       INVITATIONS_ALLOWED = true;
       SIGNUPS_ALLOWED = false;
+
+      DOMAIN = "https://vaultwarden.kedi.dev";
+      PUSH_ENABLED = true;
+      PUSH_IDENTITY_URI = "https://identity.bitwarden.eu";
+      PUSH_RELAY_URI = "https://api.bitwarden.eu";
+      SMTP_FROM = "vault@kedi.dev";
+      SMTP_FROM_NAME = "KEDI Vaultwarden";
     };
     environmentFile = "${vs.vaultwarden}/environment";
   };

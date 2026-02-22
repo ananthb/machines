@@ -25,6 +25,7 @@
           "seafile.kedi.dev" = "http://localhost:4444";
           "seerr.kedi.dev" = "http://localhost:5055";
           "vault.kedi.dev" = "http://localhost:8222";
+          "vaultwarden.kedi.dev" = "http://localhost:8222";
           "wallabag.kedi.dev" = "http://localhost:8085";
         };
       }
