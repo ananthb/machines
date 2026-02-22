@@ -279,4 +279,6 @@ in
     serviceConfig.SupplementaryGroups = [ "homepage-dashboard" ];
   };
 
+  systemd.services.homepage-secrets.serviceConfig.UMask = "0027";
+
 }

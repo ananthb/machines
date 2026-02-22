@@ -704,25 +704,28 @@ in
     };
   };
 
-  systemd.services.victoriametrics.serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
-    "${vs.home-assistant-6a-vm}/access_token"
-    "${vs.home-assistant-t1-vm}/access_token"
-  ];
-  systemd.services.victoriametrics = {
-    serviceConfig.SupplementaryGroups = [
-      "hass"
-      "victoriametrics"
-    ];
-    after = [
-      "sops-install-secrets.service"
-      "home-assistant-6a-vm-secrets.service"
-      "home-assistant-t1-vm-secrets.service"
-    ];
-    requires = [
-      "sops-install-secrets.service"
-      "home-assistant-6a-vm-secrets.service"
-      "home-assistant-t1-vm-secrets.service"
-    ];
+  systemd.services = {
+    victoriametrics = {
+      serviceConfig.ReadOnlyPaths = lib.concatStringsSep " " [
+        "${vs.home-assistant-6a-vm}/access_token"
+        "${vs.home-assistant-t1-vm}/access_token"
+      ];
+      serviceConfig.SupplementaryGroups = [
+        "victoriametrics"
+      ];
+      after = [
+        "sops-install-secrets.service"
+        "home-assistant-6a-vm-secrets.service"
+        "home-assistant-t1-vm-secrets.service"
+      ];
+      requires = [
+        "sops-install-secrets.service"
+        "home-assistant-6a-vm-secrets.service"
+        "home-assistant-t1-vm-secrets.service"
+      ];
+    };
+    "home-assistant-6a-vm-secrets".serviceConfig.UMask = "0027";
+    "home-assistant-t1-vm-secrets".serviceConfig.UMask = "0027";
   };
 
   users.groups.victoriametrics = lib.mkDefault { };

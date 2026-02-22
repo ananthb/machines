@@ -23,6 +23,8 @@ in
       partOf = [ "kedi.target" ];
     };
 
+    actual-secrets.serviceConfig.UMask = "0027";
+
     "actual-backup" = {
       startAt = "daily";
       environment.KOPIA_CHECK_FOR_UPDATES = "false";

@@ -31,9 +31,17 @@ in
 
   my-services.kediTargets.miniflux = true;
 
-  systemd.services.miniflux = {
-    partOf = [ "kedi.target" ];
-    serviceConfig.SupplementaryGroups = [ "news" ];
+  systemd.services = {
+    miniflux = {
+      partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = [ "news" ];
+    };
+    miniflux-secrets.serviceConfig.UMask = "0027";
+    wallabag = {
+      partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = [ "news" ];
+    };
+    wallabag-secrets.serviceConfig.UMask = "0027";
   };
 
   virtualisation.quadlet =
@@ -109,10 +117,5 @@ in
   users.groups.news = { };
 
   my-services.kediTargets.wallabag = true;
-
-  systemd.services.wallabag = {
-    partOf = [ "kedi.target" ];
-    serviceConfig.SupplementaryGroups = [ "news" ];
-  };
 
 }

@@ -113,6 +113,12 @@
           serviceConfig.EnvironmentFile = lib.mkForce config.sops.secrets."approles/${name}".path;
         }
       ) config.vault-secrets.secrets)
+      (lib.mapAttrs' (
+        name: value:
+        lib.nameValuePair "${name}-secrets" {
+          serviceConfig.UMask = lib.mkIf (value.group != "root" && value.group != "nogroup") "0027";
+        }
+      ) config.vault-secrets.secrets)
     ];
   };
 
