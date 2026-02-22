@@ -3,8 +3,12 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
-  services.actual.enable = true;
-  services.actual.settings.port = 3001;
+  services.actual = {
+    enable = true;
+    settings.port = 3001;
+    group = "actual";
+  };
+
   my-services.kediTargets.actual = true;
 
   systemd.services = {
