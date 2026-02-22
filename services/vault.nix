@@ -16,7 +16,11 @@ let
     trap 'rm -rf "$tmpdir"' EXIT
 
     for handle in ${lib.concatStringsSep " " tpmUnseal.handles}; do
-      "${pkgs.tpm2-tools}/bin/tpm2_unseal" -c "$handle" -o "$tmpdir/unseal.key"
+      session="$tmpdir/policy.session"
+      "${pkgs.tpm2-tools}/bin/tpm2_startauthsession" --policy-session -S "$session"
+      "${pkgs.tpm2-tools}/bin/tpm2_policypcr" -S "$session" -l sha256:${tpmUnseal.pcrs}
+      "${pkgs.tpm2-tools}/bin/tpm2_unseal" -c "$handle" -S "$session" -o "$tmpdir/unseal.key"
+      "${pkgs.tpm2-tools}/bin/tpm2_flushcontext" "$session"
       unseal_key="$(cat "$tmpdir/unseal.key")"
       "${pkgs.vault}/bin/vault" operator unseal "$unseal_key"
     done
