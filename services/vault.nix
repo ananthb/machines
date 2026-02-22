@@ -71,6 +71,7 @@ in
     # Disable auto-unseal by default
     services.vault.tpmUnseal.enable = lib.mkDefault false;
     security.tpm2.enable = lib.mkIf tpmUnseal.enable (lib.mkDefault true);
+    users.users.vault.extraGroups = lib.mkIf tpmUnseal.enable (lib.mkAfter [ "tss" ]);
 
     environment.systemPackages = lib.mkIf tpmUnseal.enable [
       pkgs.tpm2-tools
@@ -86,8 +87,15 @@ in
 
     systemd.services.vault-unseal = lib.mkIf tpmUnseal.enable {
       description = "Unseal Vault via TPM2";
-      after = [ "vault.service" ];
-      wants = [ "vault.service" ];
+      after = [
+        "vault.service"
+        "systemd-udevd.service"
+        "tpm2-udev-trigger.service"
+      ];
+      wants = [
+        "vault.service"
+        "tpm2-udev-trigger.service"
+      ];
       serviceConfig = {
         Type = "oneshot";
         User = "vault";
