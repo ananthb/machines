@@ -29,6 +29,12 @@ in
     };
   };
 
+  my-services.kediTargets.miniflux = true;
+
+  systemd.services.miniflux = {
+    partOf = [ "kedi.target" ];
+  };
+
   virtualisation.quadlet =
     let
       inherit (config.virtualisation.quadlet) volumes;
@@ -103,6 +109,12 @@ in
   users.users.miniflux = {
     isSystemUser = true;
     group = "miniflux";
+  };
+
+  my-services.kediTargets.wallabag = true;
+
+  systemd.services.wallabag = {
+    partOf = [ "kedi.target" ];
   };
 
 }

@@ -182,14 +182,27 @@ in
     "render"
   ];
 
-  systemd.services."immich-backup" = {
-    # TODO: re-enable after we've trimmed down unnecessary files
-    # startAt = "weekly";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+  my-services.kediTargets.immich-server = true;
+  my-services.kediTargets.immich-microservices = true;
+
+  systemd.services = {
+    immich-server = {
+      partOf = [ "kedi.target" ];
+    };
+
+    immich-microservices = {
+      partOf = [ "kedi.target" ];
+    };
+
+    immich-backup = {
+      # TODO: re-enable after we've trimmed down unnecessary files
+      # startAt = "weekly";
+      environment.KOPIA_CHECK_FOR_UPDATES = "false";
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+        ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
+      };
     };
   };
 

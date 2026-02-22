@@ -5,6 +5,7 @@ in
 {
   services.actual.enable = true;
   services.actual.settings.port = 3001;
+  my-services.kediTargets.actual = true;
 
   systemd.services = {
     actual = {
@@ -13,6 +14,7 @@ in
         ACTUAL_OPENID_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration";
         ACTUAL_OPENID_SERVER_HOSTNAME = "https://actual.kedi.dev";
       };
+      partOf = [ "kedi.target" ];
     };
 
     "actual-backup" = {

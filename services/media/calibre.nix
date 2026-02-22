@@ -19,11 +19,16 @@ in
     "d ${libraryDir} 2775 calibre calibre - -"
   ];
 
+  my-services.kediTargets.calibre-server = true;
+
   systemd.services.calibre-server = {
     description = "Calibre Content Server";
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = [
+      "multi-user.target"
+    ];
     after = [ "network-online.target" ];
     wants = [ "network-online.target" ];
+    partOf = [ "kedi.target" ];
     serviceConfig = {
       User = "calibre";
       Group = "calibre";

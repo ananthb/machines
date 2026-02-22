@@ -269,4 +269,10 @@ in
     services = [ "homepage-dashboard" ];
   };
 
+  my-services.kediTargets.homepage-dashboard = true;
+
+  systemd.services.homepage-dashboard = {
+    partOf = [ "kedi.target" ];
+  };
+
 }

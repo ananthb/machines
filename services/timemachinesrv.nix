@@ -42,6 +42,8 @@ _: {
 
   };
 
+  my-services.kediTargets.samba-smbd = true;
+
   systemd = {
     tmpfiles.rules = [
       "d /srv/timemachine 0777 nobody nogroup -"
@@ -50,6 +52,7 @@ _: {
     services.samba-smbd = {
       after = [ "tailscaled.service" ];
       wants = [ "tailscaled.service" ];
+      partOf = [ "kedi.target" ];
     };
   };
 

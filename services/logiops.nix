@@ -24,8 +24,11 @@
     description = "Logitech Configuration Daemon";
     startLimitIntervalSec = 0;
     after = [ "multi-user.target" ];
-    wantedBy = [ "graphical.target" ];
+    wantedBy = [
+      "graphical.target"
+    ];
     wants = [ "multi-user.target" ];
+    partOf = [ "kedi.target" ];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.logiops}/bin/logid -v -c /etc/logid.cfg";

@@ -161,19 +161,33 @@ in
     };
   };
 
+  my-services.kediTargets = {
+    qbittorrent = true;
+    radarr = true;
+    sonarr = true;
+    prowlarr = true;
+    jellyseerr = true;
+    cross-seed = true;
+  };
+
   systemd.services = {
-    qbittorrent.serviceConfig.UMask = "0002";
+    qbittorrent = {
+      serviceConfig.UMask = "0002";
+      partOf = [ "kedi.target" ];
+    };
 
     radarr = {
       serviceConfig.UMask = lib.mkForce "0002";
       after = [ "postgresql.service" ];
       wants = [ "qbittorrent.service" ];
+      partOf = [ "kedi.target" ];
     };
 
     sonarr = {
       serviceConfig.UMask = lib.mkForce "0002";
       after = [ "postgresql.service" ];
       wants = [ "postgresql.service" ];
+      partOf = [ "kedi.target" ];
     };
 
     prowlarr = {
@@ -187,13 +201,17 @@ in
         "radarr.service"
         "sonarr.service"
       ];
+      partOf = [ "kedi.target" ];
     };
 
-    jellyseerr.environment = {
-      DB_TYPE = "postgres";
-      DB_SOCKET_PATH = "/var/run/postgresql";
-      DB_USER = "jellyseerr";
-      DB_NAME = "jellyseerr";
+    jellyseerr = {
+      environment = {
+        DB_TYPE = "postgres";
+        DB_SOCKET_PATH = "/var/run/postgresql";
+        DB_USER = "jellyseerr";
+        DB_NAME = "jellyseerr";
+      };
+      partOf = [ "kedi.target" ];
     };
 
     cross-seed = {
@@ -206,7 +224,9 @@ in
         "prowlarr.service"
       ];
       serviceConfig.UMask = "0002";
+      partOf = [ "kedi.target" ];
     };
+
   };
 
   systemd.tmpfiles.rules = [

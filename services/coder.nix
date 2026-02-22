@@ -23,6 +23,8 @@ in
     };
   };
 
+  my-services.kediTargets.coder = true;
+
   services.caddy.virtualHosts = {
     "*.coder.kedi.dev" = {
       extraConfig = ''
@@ -39,11 +41,14 @@ in
     "kvm"
   ];
 
-  systemd.services.coder.path = with pkgs; [
-    firecracker
-    iproute2
-    iptables
-  ];
+  systemd.services.coder = {
+    partOf = [ "kedi.target" ];
+    path = with pkgs; [
+      firecracker
+      iproute2
+      iptables
+    ];
+  };
 
   security.sudo.extraRules = [
     {

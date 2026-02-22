@@ -523,10 +523,13 @@ in
     6400 # redis-seafile
   ];
 
+  my-services.kediTargets.redis-seafile = true;
+
   systemd.services = {
     "redis-seafile" = {
       after = [ "seafile-network.service" ];
       wants = [ "seafile-network.service" ];
+      partOf = [ "kedi.target" ];
     };
     "seafile-mysql-backup" = {
       startAt = "hourly";

@@ -10,6 +10,12 @@ in
     credentialsFile = "${vs.mealie}/environment";
   };
 
+  my-services.kediTargets.mealie = true;
+
+  systemd.services.mealie = {
+    partOf = [ "kedi.target" ];
+  };
+
   systemd.services."mealie-backup" = {
     startAt = "weekly";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";

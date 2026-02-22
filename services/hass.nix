@@ -112,6 +112,12 @@ lib.recursiveUpdate (
       // extraConfig;
     };
 
+    my-services.kediTargets.home-assistant = true;
+
+    systemd.services.home-assistant = {
+      partOf = [ "kedi.target" ];
+    };
+
     systemd.services."home-assistant-backup" = {
       startAt = "daily";
       environment.KOPIA_CHECK_FOR_UPDATES = "false";

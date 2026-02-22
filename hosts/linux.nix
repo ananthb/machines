@@ -44,7 +44,7 @@
 
     ./common.nix
     ../lib/scripts.nix
-    ../lib/restart-target.nix
+    ../lib/kedi-target.nix
   ];
 
   sops = {

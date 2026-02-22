@@ -20,4 +20,10 @@
 
   networking.firewall.allowedTCPPorts = [ 3003 ];
 
+  my-services.kediTargets.immich-machine-learning = true;
+
+  systemd.services.immich-machine-learning = {
+    partOf = [ "kedi.target" ];
+  };
+
 }

@@ -9,11 +9,16 @@
     pkgs.lm_sensors
   ];
 
+  my-services.kediTargets.s1panel = true;
+
   # Clone and run s1panel directly (simpler than packaging)
   systemd.services.s1panel = {
     description = "AceMagic S1 Panel";
     after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = [
+      "multi-user.target"
+    ];
+    partOf = [ "kedi.target" ];
 
     path = with pkgs; [
       nodejs_20

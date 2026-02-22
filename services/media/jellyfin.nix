@@ -74,13 +74,23 @@ in
     };
   };
 
+  my-services.kediTargets.jellyfin = true;
+  my-services.kediTargets.tsnsrv-tv = true;
+
   systemd.services = {
+    jellyfin = {
+      partOf = [ "kedi.target" ];
+    };
     caddy = {
       after = [ "jellyfin.service" ];
       wants = [ "jellyfin.service" ];
+      partOf = [ "kedi.target" ];
     };
-    tsnsrv-tv.wants = [ "jellyfin.service" ];
-    tsnsrv-tv.after = [ "jellyfin.service" ];
+    tsnsrv-tv = {
+      wants = [ "jellyfin.service" ];
+      after = [ "jellyfin.service" ];
+      partOf = [ "kedi.target" ];
+    };
   };
 
   vault-secrets.secrets.tailscale-api = {

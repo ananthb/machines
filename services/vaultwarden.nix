@@ -28,6 +28,12 @@ in
     environmentFile = "${vs.vaultwarden}/environment";
   };
 
+  my-services.kediTargets.vaultwarden = true;
+
+  systemd.services.vaultwarden = {
+    partOf = [ "kedi.target" ];
+  };
+
   systemd.services."vaultwarden-backup" = {
     startAt = "daily";
     environment.KOPIA_CHECK_FOR_UPDATES = "false";

@@ -8,4 +8,10 @@ _: {
     '';
   };
 
+  my-services.kediTargets.caddy = true;
+
+  systemd.services.caddy = {
+    partOf = [ "kedi.target" ];
+  };
+
 }
