@@ -70,6 +70,7 @@ in
 
     # Disable auto-unseal by default
     services.vault.tpmUnseal.enable = lib.mkDefault false;
+    security.tpm2.enable = lib.mkIf tpmUnseal.enable (lib.mkDefault true);
 
     environment.systemPackages = lib.mkIf tpmUnseal.enable [
       pkgs.tpm2-tools
