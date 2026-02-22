@@ -21,7 +21,7 @@ in
   programs.home-manager.enable = true;
 
   sops = {
-    age.keyFile = homeDir + "/.ssh/id_ed25519";
+    age.sshKeyPaths = [ (homeDir + "/.ssh/id_ed25519") ];
 
     secrets."Yubico/u2f_keys" = {
       sopsFile = ../secrets/global.yaml;

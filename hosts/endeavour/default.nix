@@ -138,7 +138,7 @@
           chain output {
             type route hook output priority mangle; policy accept;
             # Mark qBittorrent packets for Jio policy routing.
-            meta skuid "qbittorrent" mark set 0x1
+            meta skuid 989 mark set 0x1
           }
         }
       '';

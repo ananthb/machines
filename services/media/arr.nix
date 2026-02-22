@@ -23,6 +23,12 @@ in
     "cross-seed"
   ];
 
+  users.users.qbittorrent = {
+    isSystemUser = true;
+    uid = 989;
+    group = "media";
+  };
+
   # Services
   services = {
     qbittorrent = {
