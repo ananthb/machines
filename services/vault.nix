@@ -91,10 +91,12 @@ in
         "vault.service"
         "systemd-udevd.service"
         "tpm2-udev-trigger.service"
+        "network-online.target"
       ];
       wants = [
         "vault.service"
         "tpm2-udev-trigger.service"
+        "network-online.target"
       ];
       serviceConfig = {
         Type = "oneshot";
@@ -103,6 +105,9 @@ in
         Environment = [
           "VAULT_ADDR=${tpmUnseal.vaultAddr}"
           "TPM2TOOLS_TCTI=${tpmUnseal.tcti}"
+        ];
+        ExecStartPre = [
+          "${pkgs.bash}/bin/bash -lc 'for i in {1..30}; do ${pkgs.vault}/bin/vault status >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'"
         ];
         ExecStart = [
           "${unsealScript}"
