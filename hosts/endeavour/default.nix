@@ -16,6 +16,7 @@
     ./6a.nix
     ./power.nix
     ./rclone.nix
+    ./ecmp.nix
     ../../lib/rclone-sync.nix
     ../../services/actual.nix
     ../../services/homepage.nix
@@ -175,15 +176,6 @@
         dhcpV4Config = {
           RouteMetric = 200;
         };
-        # Add a DHCP-gateway default route into the qBittorrent policy table
-        # so marked traffic can ECMP across enp2s0 + enp4s0.
-        routes = [
-          {
-            Gateway = "_dhcp4";
-            Table = 1002;
-            Metric = 200;
-          }
-        ];
         routingPolicyRules = [
           {
             FirewallMark = "0x1/0x1";
@@ -201,15 +193,6 @@
           IPv6AcceptRA = true;
         };
         dhcpV4Config.RouteMetric = 50;
-        # Add a DHCP-gateway default route into the qBittorrent policy table
-        # so marked traffic can ECMP across enp2s0 + enp4s0.
-        routes = [
-          {
-            Gateway = "_dhcp4";
-            Table = 1002;
-            Metric = 200;
-          }
-        ];
         routingPolicyRules = [
           {
             FirewallMark = "0x1/0x1";
@@ -221,6 +204,7 @@
         linkConfig.RequiredForOnline = "carrier";
       };
     };
+
   };
 
   # 16GB swapfile
