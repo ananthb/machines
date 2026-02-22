@@ -3,8 +3,10 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
-  users.groups.ecoflow-exporter = lib.mkDefault { };
-  users.users.prometheus = lib.mkIf (config.users.users ? prometheus) {
+  users.groups.ecoflow-exporter = lib.mkIf config.services.prometheus.exporters.ecoflow.enable (
+    lib.mkDefault { }
+  );
+  users.users.prometheus = lib.mkIf config.services.prometheus.exporters.ecoflow.enable {
     extraGroups = lib.mkAfter [ "ecoflow-exporter" ];
   };
 
