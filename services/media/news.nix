@@ -102,7 +102,7 @@ in
     secretsKey = null;
     group = "news";
     extraScript = ''
-      umask 0077
+      umask 0027
       printf '%s' "$MINIFLUX_ADMIN_CREDS" > "$secretsPath/admin_creds"
       printf '%s' "$GCLOUD_OAUTH_CLIENT_ID" > "$secretsPath/oauth_client_id"
       printf '%s' "$GCLOUD_OAUTH_CLIENT_SECRET" > "$secretsPath/oauth_client_secret"

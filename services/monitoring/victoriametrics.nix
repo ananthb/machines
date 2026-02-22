@@ -710,9 +710,7 @@ in
         "${vs.home-assistant-6a-vm}/access_token"
         "${vs.home-assistant-t1-vm}/access_token"
       ];
-      serviceConfig.SupplementaryGroups = [
-        "victoriametrics"
-      ];
+      serviceConfig.SupplementaryGroups = [ "hass" ];
       after = [
         "sops-install-secrets.service"
         "home-assistant-6a-vm-secrets.service"
@@ -728,17 +726,15 @@ in
     "home-assistant-t1-vm-secrets".serviceConfig.UMask = "0027";
   };
 
-  users.groups.victoriametrics = lib.mkDefault { };
-
   vault-secrets = {
     secrets = {
       home-assistant-6a-vm = {
         services = [ "victoriametrics" ];
-        group = "victoriametrics";
+        group = "hass";
       };
       home-assistant-t1-vm = {
         services = [ "victoriametrics" ];
-        group = "victoriametrics";
+        group = "hass";
       };
     };
   };
