@@ -3,7 +3,7 @@
   "services": {
     "svc:esphome": {
       "endpoints": {
-        "tcp:443": "https://localhost:6052"
+        "tcp:443": "http://localhost:6052"
       }
     }
   }
