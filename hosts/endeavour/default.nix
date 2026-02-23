@@ -19,6 +19,7 @@
     ./ecmp.nix
     ../../lib/rclone-sync.nix
     ../../services/actual.nix
+    ../../services/esphome.nix
     ../../services/homepage.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
