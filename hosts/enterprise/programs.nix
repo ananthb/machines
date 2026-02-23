@@ -4,13 +4,23 @@
     ../../services/logiops.nix
   ];
 
+  networking.networkmanager.enable = true;
+  networking.modemmanager.enable = true;
+  hardware.usb-modeswitch.enable = true;
+
   # System packages
   environment.systemPackages = with pkgs; [
     ddcutil
     gnome-tweaks
+    libmbim
+    libqmi
     logitech-udev-rules
+    modemmanager
+    modem-manager-gui
+    ppp
     rnnoise-plugin
     tpm2-tss
+    usb-modeswitch
   ];
 
   programs = {

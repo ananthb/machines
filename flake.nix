@@ -63,6 +63,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    switchyard = {
+      url = "github:alyraffauf/switchyard";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vault-secrets = {
       url = "github:serokell/vault-secrets";
       inputs.nixpkgs.follows = "nixpkgs";
