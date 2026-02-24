@@ -232,8 +232,6 @@ in
             cssls.enable = true;
             dockerls.enable = true;
 
-            ansiblels.enable = true;
-
             gopls = {
               enable = true;
               autostart = true;
@@ -276,7 +274,6 @@ in
             yamlls.enable = true;
             zls.enable = true;
 
-            nomad_lsp.enable = true;
           };
         };
 

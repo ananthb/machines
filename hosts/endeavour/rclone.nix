@@ -7,11 +7,12 @@ in
     "ananth-finance" = {
       type = "bisync";
       source = "seafile:";
-      sourceSubPath = "/Finance";
+      sourceSubPath = "/";
       destination = "gdrive:";
-      destSubPath = "/Finance";
+      destSubPath = "/";
       checkAccess = false;
       sizeOnly = true;
+      excludePatterns = [ "Backups/**" ];
       rcloneConfig = "${vs.rclone-ananth}/config";
       interval = "*:0/5";
       environment = {
