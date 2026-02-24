@@ -143,9 +143,30 @@ in
 
       opts = {
         number = true;
+        updatetime = 300;
       };
 
       globals.mapleader = " ";
+
+      extraConfigLua = ''
+        vim.diagnostic.config({
+          virtual_text = {
+            spacing = 2,
+            prefix = "●",
+          },
+          severity_sort = true,
+          float = {
+            border = "rounded",
+            source = "if_many",
+          },
+        })
+
+        vim.filetype.add({
+          extension = {
+            nomad = "nomad",
+          },
+        })
+      '';
 
       colorschemes.oxocarbon.enable = true;
 
@@ -190,6 +211,19 @@ in
             	  buffer = bufnr,
             	  callback = vim.lsp.codelens.refresh,
             	})
+
+            	local diag_group = vim.api.nvim_create_augroup("LspDiagnosticsFloat." .. bufnr, {})
+            	vim.api.nvim_create_autocmd("CursorHold", {
+            	  group = diag_group,
+            	  buffer = bufnr,
+            	  callback = function()
+            	    local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+            	    if next(vim.diagnostic.get(bufnr, { lnum = lnum })) == nil then
+            	      return
+            	    end
+            	    vim.diagnostic.open_float(nil, { focus = false, scope = "line" })
+            	  end,
+            	})
           '';
 
           servers = {
@@ -197,6 +231,8 @@ in
             clangd.enable = true;
             cssls.enable = true;
             dockerls.enable = true;
+
+            ansiblels.enable = true;
 
             gopls = {
               enable = true;
@@ -235,9 +271,12 @@ in
               installCargo = true;
             };
 
+            terraformls.enable = true;
             ts_ls.enable = true;
             yamlls.enable = true;
             zls.enable = true;
+
+            nomad_lsp.enable = true;
           };
         };
 
@@ -247,7 +286,32 @@ in
         navic.enable = true;
         nix.enable = true;
         noice.enable = false;
-        none-ls.enable = true;
+        none-ls = {
+          enable = true;
+          sources = {
+            diagnostics = {
+              ansiblelint.enable = true;
+              golangci_lint.enable = true;
+              mypy.enable = true;
+              pylint.enable = true;
+              terraform_validate.enable = true;
+              tfsec.enable = true;
+              yamllint.enable = true;
+            };
+            formatting = {
+              black.enable = true;
+              gofmt.enable = true;
+              goimports.enable = true;
+              hclfmt = {
+                enable = true;
+                settings.extra_filetypes = [ "nomad" ];
+              };
+              isort.enable = true;
+              terraform_fmt.enable = true;
+              yamlfix.enable = true;
+            };
+          };
+        };
         nvim-autopairs.enable = true;
         sleuth.enable = true;
 
@@ -374,6 +438,32 @@ in
             ];
           };
         };
+
+        dap = {
+          enable = true;
+          extensionConfigLua = ''
+            local dap_ok, dap = pcall(require, "dap")
+            if dap_ok then
+              local dapui_ok, dapui = pcall(require, "dapui")
+              if dapui_ok then
+                dap.listeners.after.event_initialized["dapui_config"] = function()
+                  dapui.open()
+                end
+                dap.listeners.before.event_terminated["dapui_config"] = function()
+                  dapui.close()
+                end
+                dap.listeners.before.event_exited["dapui_config"] = function()
+                  dapui.close()
+                end
+              end
+            end
+          '';
+        };
+        dap-go.enable = true;
+        dap-lldb.enable = true;
+        dap-python.enable = true;
+        dap-ui.enable = true;
+        dap-virtual-text.enable = true;
 
         trouble.enable = true;
         treesitter.enable = true;
