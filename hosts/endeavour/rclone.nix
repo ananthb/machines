@@ -4,7 +4,7 @@ let
 in
 {
   my-services.rclone-syncs = {
-    "ananth-finance" = {
+    "ananth-drive" = {
       type = "bisync";
       source = "seafile:";
       sourceSubPath = "/";

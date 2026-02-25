@@ -47,6 +47,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-calibre.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
 
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -99,6 +100,7 @@
       nix-darwin,
       nixos-hardware,
       nixpkgs,
+      nixpkgs-calibre,
       pre-commit-hooks-nix,
       ...
     }@inputs:
@@ -113,6 +115,12 @@
       ];
 
       forAllSystems = nixpkgs.lib.genAttrs systems;
+
+      pkgsCalibreFor = system: import nixpkgs-calibre { inherit system; };
+
+      calibreOverlay = final: _: {
+        inherit ((pkgsCalibreFor final.system)) calibre;
+      };
 
       mkNixosHost =
         {
@@ -132,7 +140,10 @@
               ;
             outputs = self;
           };
-          modules = extraModules ++ [ ./hosts/${hostname} ];
+          modules = extraModules ++ [
+            { nixpkgs.overlays = [ calibreOverlay ]; }
+            ./hosts/${hostname}
+          ];
         };
 
       mkDarwinHost =
@@ -151,7 +162,10 @@
               inputs
               ;
           };
-          modules = extraModules ++ [ ./hosts/${hostname}.nix ];
+          modules = extraModules ++ [
+            { nixpkgs.overlays = [ calibreOverlay ]; }
+            ./hosts/${hostname}.nix
+          ];
         };
     in
     rec {
@@ -309,5 +323,6 @@
           };
         }
       );
+
     };
 }
