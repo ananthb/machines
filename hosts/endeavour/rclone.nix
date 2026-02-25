@@ -12,7 +12,10 @@ in
       destSubPath = "/";
       checkAccess = false;
       sizeOnly = true;
-      excludePatterns = [ "Backups/**" ];
+      excludePatterns = [
+        "Backups/**"
+        "Vehicle/**"
+      ];
       rcloneConfig = "${vs.rclone-ananth}/config";
       interval = "*:0/5";
       environment = {
