@@ -3,12 +3,9 @@ let
   vs = config.vault-secrets.secrets;
 in
 {
-  users.groups.actual = { };
-
   services.actual = {
     enable = true;
     settings.port = 3001;
-    group = "actual";
   };
 
   my-services.kediTargets.actual = true;
@@ -22,8 +19,6 @@ in
       };
       partOf = [ "kedi.target" ];
     };
-
-    actual-secrets.serviceConfig.UMask = "0027";
 
     "actual-backup" = {
       startAt = "daily";
@@ -56,7 +51,6 @@ in
 
   vault-secrets.secrets.actual = {
     services = [ "actual" ];
-    inherit (config.services.actual) group;
   };
 
 }
