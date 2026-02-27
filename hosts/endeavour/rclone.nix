@@ -61,7 +61,7 @@ in
   };
 
   vault-secrets.secrets.rclone-ananth = {
-    services = [ "rclone-sync-ananth-finance" ];
+    services = [ "rclone-sync-ananth-drive" ];
   };
 
   vault-secrets.secrets.rclone-bhaskar = {
