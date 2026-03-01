@@ -34,5 +34,4 @@
     "Velja" = 1607635845;
   };
 
-  services.karabiner-elements.enable = false;
 }

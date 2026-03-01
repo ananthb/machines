@@ -72,18 +72,7 @@
   # 'run-services-as-root-for-better-multiuser-support' thing.
   system.primaryUser = username;
 
-  services.karabiner-elements.enable = true;
-  # See: https://github.com/nix-darwin/nix-darwin/issues/1041#issuecomment-2889787482
-  services.karabiner-elements.package = pkgs.karabiner-elements.overrideAttrs (old: {
-    version = "14.13.0";
-
-    src = pkgs.fetchurl {
-      inherit (old.src) url;
-      hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
-    };
-
-    dontFixup = true;
-  });
+  services.karabiner-elements.enable = false;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
