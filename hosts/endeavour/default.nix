@@ -6,6 +6,20 @@
   ...
 }:
 {
+  nixpkgs.overlays = [
+    (_final: prev: {
+      prometheus-node-exporter = prev.prometheus-node-exporter.overrideAttrs (_old: {
+        src = prev.fetchFromGitHub {
+          owner = "ananthb";
+          repo = "node_exporter";
+          rev = "64ddd7cc1bdea6aa51ea87b23c7ed4818d4ba267";
+          hash = "sha256-ZZrUrugWYU/bdrnc+IMa90MZ2SDWfrMYuwzaJpEmTaE=";
+        };
+        vendorHash = "sha256-pZhcc2cMlz4P9HEK2lVE04V7vueY/kXPbruW7ZeaTFM=";
+      });
+    })
+  ];
+
   imports = [
     inputs.ht32-panel.nixosModules.default
     inputs.tsnsrv.nixosModules.default

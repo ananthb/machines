@@ -49,6 +49,21 @@ in
       default = "device:/dev/tpmrm0";
       description = "TCTI string used by tpm2-tools (e.g. device:/dev/tpmrm0 or device:/dev/tpm0).";
     };
+    waitSeconds = lib.mkOption {
+      type = lib.types.int;
+      default = 300;
+      description = "Seconds to wait for Vault to become responsive before unsealing.";
+    };
+    restartOnFailure = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Restart the unseal service if it fails (e.g. Vault not ready yet).";
+    };
+    restartSec = lib.mkOption {
+      type = lib.types.int;
+      default = 10;
+      description = "Delay in seconds before retrying the unseal service.";
+    };
   };
 
   config = {
@@ -107,11 +122,14 @@ in
           "TPM2TOOLS_TCTI=${tpmUnseal.tcti}"
         ];
         ExecStartPre = [
-          "${pkgs.bash}/bin/bash -lc 'for i in {1..30}; do ${pkgs.vault}/bin/vault status >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'"
+          "${pkgs.bash}/bin/bash -lc 'for i in $(${pkgs.coreutils}/bin/seq 1 ${toString tpmUnseal.waitSeconds}); do ${pkgs.vault}/bin/vault status >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'"
         ];
         ExecStart = [
           "${unsealScript}"
         ];
+        TimeoutStartSec = tpmUnseal.waitSeconds + 30;
+        Restart = lib.mkIf tpmUnseal.restartOnFailure "on-failure";
+        RestartSec = lib.mkIf tpmUnseal.restartOnFailure tpmUnseal.restartSec;
         RuntimeDirectory = "vault-unseal";
         PrivateTmp = true;
         ProtectSystem = "strict";
