@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   boot = {
+    supportedFilesystems = [ "bcachefs" ];
     initrd.availableKernelModules = [
       "xhci_pci"
       "usbhid"
@@ -22,7 +23,10 @@
 
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
     kernelParams = [ "psi=1" ];
-    kernelModules = [ "gpio_fan" ];
+    kernelModules = [
+      "bcachefs"
+      "gpio_fan"
+    ];
   };
 
   fileSystems = {

@@ -87,6 +87,7 @@
   environment.systemPackages = with pkgs; [
     tpm2-tss
     unrar
+    bcachefs-tools
   ];
 
   security.tpm2.enable = true;
