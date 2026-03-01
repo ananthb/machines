@@ -33,4 +33,6 @@
     "Pages" = 409201541;
     "Velja" = 1607635845;
   };
+
+  services.karabiner-elements.enable = false;
 }
