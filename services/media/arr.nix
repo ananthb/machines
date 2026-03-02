@@ -25,6 +25,7 @@ in
       enable = true;
       group = "media";
       openFirewall = true;
+      webuiPort = 8081;
       serverConfig = {
         LegalNotice.Accepted = true;
         BitTorrent = {
@@ -44,6 +45,7 @@ in
         };
         Preferences = {
           WebUI = {
+            Port = 8081;
             LocalHostAuth = false;
             AuthSubnetWhitelist = "0.0.0.0/0,::/0";
             AuthSubnetWhitelistEnabled = true;
@@ -91,7 +93,7 @@ in
       enable = true;
       group = "media";
       settings = {
-        torrentClients = [ "qbittorrent:http://localhost:8080" ];
+        torrentClients = [ "qbittorrent:http://localhost:8081" ];
         linkType = "hardlink";
         linkDirs = [ "/srv/media/Downloads/cross-seed" ];
         matchMode = "partial";

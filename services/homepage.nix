@@ -242,10 +242,10 @@ in
                 "qBittorrent" = {
                   icon = "qbittorrent";
                   description = "Torrent downloader";
-                  href = "http://endeavour:8080";
+                  href = "http://endeavour:8081";
                   widget = {
                     type = "qbittorrent";
-                    url = "http://localhost:8080";
+                    url = "http://localhost:8081";
                   };
                 };
               }
