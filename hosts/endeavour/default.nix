@@ -172,6 +172,11 @@
             ip daddr 169.254.0.0/16 return
             ip6 daddr fc00::/7 return
             ip6 daddr fe80::/10 return
+            # Split new outbound flows across uplinks and persist per-connection.
+            ct mark set meta mark
+            meta mark 0x0 ct state new meta l4proto { tcp, udp } \
+              numgen inc mod 2 map { 0 : meta mark set 0x1, 1 : meta mark set 0x2 }
+            ct mark set meta mark
           }
         }
       '';
@@ -190,6 +195,30 @@
         dhcpV4Config = {
           RouteMetric = 200;
         };
+        routingPolicyRules = [
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1001;
+            Priority = 1000;
+          }
+          {
+            FirewallMark = "0x2/0x2";
+            Table = 1002;
+            Priority = 1001;
+          }
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1001;
+            Priority = 1000;
+            Family = "ipv6";
+          }
+          {
+            FirewallMark = "0x2/0x2";
+            Table = 1002;
+            Priority = 1001;
+            Family = "ipv6";
+          }
+        ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
@@ -200,6 +229,30 @@
           IPv6AcceptRA = true;
         };
         dhcpV4Config.RouteMetric = 50;
+        routingPolicyRules = [
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1001;
+            Priority = 1000;
+          }
+          {
+            FirewallMark = "0x2/0x2";
+            Table = 1002;
+            Priority = 1001;
+          }
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1001;
+            Priority = 1000;
+            Family = "ipv6";
+          }
+          {
+            FirewallMark = "0x2/0x2";
+            Table = 1002;
+            Priority = 1001;
+            Family = "ipv6";
+          }
+        ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };

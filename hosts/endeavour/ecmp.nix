@@ -4,7 +4,7 @@ let
     set -euo pipefail
     state_dir="/run/ecmp-v6"
     state_file="$state_dir/state"
-    script_version="1"
+    script_version="2"
     mkdir -p "$state_dir"
 
     link_id_for_network() {
@@ -36,25 +36,19 @@ let
     fi
     echo "$cur_hash" > "$state_file"
 
-    gws=()
-    for dev in enp2s0 enp4s0; do
-      gw="$(
-        ip -6 route show default proto ra dev "$dev" \
-          | awk -v d="$dev" '{for (i=1; i<=NF; i++) if ($i=="via") {print $(i+1) "@" d; exit}}'
-      )"
-      if [ -n "$gw" ]; then
-        gws+=("$gw")
-      fi
-    done
-    if [ "''${#gws[@]}" -eq 0 ]; then
-      exit 0
+    gw2="$(
+      ip -6 route show default proto ra dev enp2s0 \
+        | awk '{for (i=1; i<=NF; i++) if ($i=="via") {print $(i+1); exit}}'
+    )"
+    gw4="$(
+      ip -6 route show default proto ra dev enp4s0 \
+        | awk '{for (i=1; i<=NF; i++) if ($i=="via") {print $(i+1); exit}}'
+    )"
+    if [ -n "$gw2" ]; then
+      ip -6 route replace table 1001 default via "$gw2" dev enp2s0
     fi
-    if [ "''${#gws[@]}" -eq 1 ]; then
-      ip -6 route replace default via "''${gws[0]%@*}" dev "''${gws[0]#*@}"
-    else
-      ip -6 route replace default \
-        nexthop via "''${gws[0]%@*}" dev "''${gws[0]#*@}" weight 1 \
-        nexthop via "''${gws[1]%@*}" dev "''${gws[1]#*@}" weight 1
+    if [ -n "$gw4" ]; then
+      ip -6 route replace table 1002 default via "$gw4" dev enp4s0
     fi
     ip -6 route flush cache
   '';
@@ -64,15 +58,20 @@ in
     network.networks."20-enp2s0".routes = [
       {
         Destination = "0.0.0.0/0";
-        MultiPathRoute = [
-          "192.168.29.1@enp2s0 1"
-          "10.15.16.1@enp4s0 1"
-        ];
+        Gateway = "192.168.29.1";
+        Table = 1001;
+      }
+    ];
+    network.networks."30-enp4s0".routes = [
+      {
+        Destination = "0.0.0.0/0";
+        Gateway = "10.15.16.1";
+        Table = 1002;
       }
     ];
 
     services.ecmp-v6 = {
-      description = "Install IPv6 ECMP default route";
+      description = "Install IPv6 default routes for uplink tables";
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
