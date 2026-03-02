@@ -1,6 +1,4 @@
-{
-  ...
-}:
+{ pkgs, ... }:
 {
   imports = [
     ../linux.nix
@@ -18,12 +16,7 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
 
-  services.bcachefs.autoScrub.enable = true;
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
+  #services.bcachefs.autoScrub.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
