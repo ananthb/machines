@@ -174,8 +174,8 @@
             ip6 daddr fe80::/10 return
             # Split new outbound flows across uplinks and persist per-connection.
             ct mark set meta mark
-            meta mark 0x0 ct state new meta l4proto { tcp, udp } \
-              numgen inc mod 2 map { 0 : meta mark set 0x1, 1 : meta mark set 0x2 }
+            meta mark 0x0 ct state new meta l4proto { tcp, udp } meta mark set numgen inc mod 2
+            meta mark 0x0 ct state new meta l4proto { tcp, udp } meta mark set meta mark + 1
             ct mark set meta mark
           }
         }
