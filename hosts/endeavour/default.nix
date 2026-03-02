@@ -172,8 +172,6 @@
             ip daddr 169.254.0.0/16 return
             ip6 daddr fc00::/7 return
             ip6 daddr fe80::/10 return
-            # Mark qBittorrent packets for Jio policy routing.
-            meta skuid 989 mark set 0x1
           }
         }
       '';
@@ -192,30 +190,6 @@
         dhcpV4Config = {
           RouteMetric = 200;
         };
-        routingPolicyRules = [
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1002;
-            Priority = 1000;
-          }
-          {
-            User = "qbittorrent";
-            Table = 1002;
-            Priority = 1001;
-          }
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1002;
-            Priority = 1000;
-            Family = "ipv6";
-          }
-          {
-            User = "qbittorrent";
-            Table = 1002;
-            Priority = 1001;
-            Family = "ipv6";
-          }
-        ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
@@ -226,30 +200,6 @@
           IPv6AcceptRA = true;
         };
         dhcpV4Config.RouteMetric = 50;
-        routingPolicyRules = [
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1002;
-            Priority = 1000;
-          }
-          {
-            User = "qbittorrent";
-            Table = 1002;
-            Priority = 1001;
-          }
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1002;
-            Priority = 1000;
-            Family = "ipv6";
-          }
-          {
-            User = "qbittorrent";
-            Table = 1002;
-            Priority = 1001;
-            Family = "ipv6";
-          }
-        ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
