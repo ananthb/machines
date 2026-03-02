@@ -119,7 +119,7 @@
       pkgsCalibreFor = system: import nixpkgs-calibre { inherit system; };
 
       calibreOverlay = final: _: {
-        inherit ((pkgsCalibreFor final.system)) calibre;
+        inherit ((pkgsCalibreFor final.stdenv.hostPlatform.system)) calibre;
       };
 
       mkNixosHost =
