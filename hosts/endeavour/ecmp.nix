@@ -69,6 +69,9 @@ in
 
     services.qbittorrent-ecmp-v6 = {
       description = "Install IPv6 ECMP default route for qBittorrent policy table";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = qbittorrentEcmpV6Script;
@@ -93,6 +96,10 @@ in
     };
   };
 
-  boot.kernel.sysctl."net.ipv4.fib_multipath_hash_policy" = 1;
-  boot.kernel.sysctl."net.ipv6.fib_multipath_hash_policy" = 1;
+  boot.kernel.sysctl = {
+    "net.ipv4.fib_multipath_hash_policy" = 1;
+    "net.ipv4.fib_multipath_use_neigh" = 1;
+    "net.ipv6.fib_multipath_hash_policy" = 1;
+    "net.ipv6.fib_multipath_use_neigh" = 1;
+  };
 }
