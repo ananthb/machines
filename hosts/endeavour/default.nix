@@ -194,6 +194,7 @@
         # Jio: keep routes in a separate table for policy routing.
         dhcpV4Config = {
           RouteMetric = 200;
+          UseRoutes = false;
         };
         routingPolicyRules = [
           {
@@ -219,7 +220,10 @@
             Family = "ipv6";
           }
         ];
-        ipv6AcceptRAConfig.Token = ipv6Token;
+        ipv6AcceptRAConfig = {
+          Token = ipv6Token;
+          UseRoutes = false;
+        };
         linkConfig.RequiredForOnline = "carrier";
       };
       networks."30-enp4s0" = {
@@ -228,7 +232,10 @@
           DHCP = "ipv4";
           IPv6AcceptRA = true;
         };
-        dhcpV4Config.RouteMetric = 50;
+        dhcpV4Config = {
+          RouteMetric = 50;
+          UseRoutes = false;
+        };
         routingPolicyRules = [
           {
             FirewallMark = "0x1/0x1";
@@ -253,7 +260,10 @@
             Family = "ipv6";
           }
         ];
-        ipv6AcceptRAConfig.Token = ipv6Token;
+        ipv6AcceptRAConfig = {
+          Token = ipv6Token;
+          UseRoutes = false;
+        };
         linkConfig.RequiredForOnline = "carrier";
       };
     };
