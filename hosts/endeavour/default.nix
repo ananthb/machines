@@ -222,7 +222,7 @@
         ];
         ipv6AcceptRAConfig = {
           Token = ipv6Token;
-          UseRoutes = false;
+          RouteTable = 1001;
         };
         linkConfig.RequiredForOnline = "carrier";
       };
@@ -262,7 +262,7 @@
         ];
         ipv6AcceptRAConfig = {
           Token = ipv6Token;
-          UseRoutes = false;
+          RouteTable = 1002;
         };
         linkConfig.RequiredForOnline = "carrier";
       };
