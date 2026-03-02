@@ -198,6 +198,11 @@
             Table = 1002;
             Priority = 1000;
           }
+          {
+            User = "qbittorrent";
+            Table = 1002;
+            Priority = 1001;
+          }
         ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
