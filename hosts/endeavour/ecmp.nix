@@ -94,4 +94,5 @@ in
   };
 
   boot.kernel.sysctl."net.ipv4.fib_multipath_hash_policy" = 1;
+  boot.kernel.sysctl."net.ipv6.fib_multipath_hash_policy" = 1;
 }

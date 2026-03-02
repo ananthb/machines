@@ -203,6 +203,18 @@
             Table = 1002;
             Priority = 1001;
           }
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1002;
+            Priority = 1000;
+            Family = "ipv6";
+          }
+          {
+            User = "qbittorrent";
+            Table = 1002;
+            Priority = 1001;
+            Family = "ipv6";
+          }
         ];
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
@@ -219,6 +231,23 @@
             FirewallMark = "0x1/0x1";
             Table = 1002;
             Priority = 1000;
+          }
+          {
+            User = "qbittorrent";
+            Table = 1002;
+            Priority = 1001;
+          }
+          {
+            FirewallMark = "0x1/0x1";
+            Table = 1002;
+            Priority = 1000;
+            Family = "ipv6";
+          }
+          {
+            User = "qbittorrent";
+            Table = 1002;
+            Priority = 1001;
+            Family = "ipv6";
           }
         ];
         ipv6AcceptRAConfig.Token = ipv6Token;
