@@ -36,7 +36,10 @@ let
 
     gws=()
     for dev in enp2s0 enp4s0; do
-      gw="$(ip -6 route show default proto ra dev "$dev" | awk -v d="$dev" '{print $3 "@" d}' | head -n 1)"
+      gw="$(
+        ip -6 route show default proto ra dev "$dev" \
+          | awk -v d="$dev" '{for (i=1; i<=NF; i++) if ($i=="via") {print $(i+1) "@" d; exit}}'
+      )"
       if [ -n "$gw" ]; then
         gws+=("$gw")
       fi
