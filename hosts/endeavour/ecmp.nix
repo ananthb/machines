@@ -4,7 +4,7 @@ let
     set -euo pipefail
     state_dir="/run/ecmp-v6"
     state_file="$state_dir/state"
-    script_version="2"
+    script_version="3"
     mkdir -p "$state_dir"
 
     link_id_for_network() {
@@ -50,6 +50,16 @@ let
     if [ -n "$gw4" ]; then
       ip -6 route replace table 1002 default via "$gw4" dev enp4s0
     fi
+
+    if [ -n "$gw2" ] && [ -n "$gw4" ]; then
+      ip -6 route replace default \
+        nexthop via "$gw2" dev enp2s0 weight 1 \
+        nexthop via "$gw4" dev enp4s0 weight 1
+    elif [ -n "$gw2" ]; then
+      ip -6 route replace default via "$gw2" dev enp2s0
+    elif [ -n "$gw4" ]; then
+      ip -6 route replace default via "$gw4" dev enp4s0
+    fi
     ip -6 route flush cache
   '';
 in
@@ -60,6 +70,13 @@ in
         Destination = "0.0.0.0/0";
         Gateway = "192.168.29.1";
         Table = 1001;
+      }
+      {
+        Destination = "0.0.0.0/0";
+        MultiPathRoute = [
+          "192.168.29.1@enp2s0 1"
+          "10.15.16.1@enp4s0 1"
+        ];
       }
     ];
     network.networks."30-enp4s0".routes = [

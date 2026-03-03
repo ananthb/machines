@@ -46,8 +46,11 @@
     };
   };
 
-  programs.ssh.extraConfig = ''
-    Host *
-      IdentityFile ~/.ssh/yubikey_5c
-  '';
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      identityFile = "~/.ssh/yubikey_5c";
+    };
+  };
 }

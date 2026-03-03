@@ -30,6 +30,7 @@
     inputs.home-manager.darwinModules.home-manager
     {
       home-manager = {
+        backupFileExtension = "hm-backup";
         sharedModules = [
           inputs.sops-nix.homeManagerModules.sops
           inputs.nix-index-database.homeModules.nix-index
