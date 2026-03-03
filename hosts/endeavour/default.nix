@@ -30,7 +30,6 @@
     ./6a.nix
     ./power.nix
     ./rclone.nix
-    ./ecmp.nix
     ../../lib/rclone-sync.nix
     ../../services/actual.nix
     ../../services/esphome.nix
@@ -134,12 +133,6 @@
   networking = {
     useNetworkd = true;
     useDHCP = true;
-    nameservers = [
-      "1.1.1.1"
-      "8.8.8.8"
-      "2606:4700:4700::1111"
-      "2001:4860:4860::8888"
-    ];
 
     firewall = {
       allowedTCPPorts = [
@@ -157,36 +150,6 @@
         4002
       ];
     };
-
-    nftables = {
-      enable = true;
-      ruleset = ''
-        table inet mangle {
-          chain output {
-            type route hook output priority mangle; policy accept;
-            ## Keep localhost, LAN, link-local, and Tailscale traffic on the main table.
-            # localhost
-            ip daddr 127.0.0.0/8 return
-            ip6 daddr ::1/128 return
-            # Tailscale
-            ip daddr 100.64.0.0/10 return
-            ip6 daddr fd7a:115c:a1e0::/48 return
-            # LAN
-            ip daddr 10.0.0.0/8 return
-            ip daddr 172.16.0.0/12 return
-            ip daddr 192.168.0.0/16 return
-            ip daddr 169.254.0.0/16 return
-            ip6 daddr fc00::/7 return
-            ip6 daddr fe80::/10 return
-            # Split new outbound flows across uplinks and persist per-connection.
-            meta mark set ct mark
-            meta mark 0x0 ct state new meta l4proto { tcp, udp } \
-              meta mark set numgen inc mod 2 map { 0 : 0x1, 1 : 0x2 }
-            ct mark set meta mark
-          }
-        }
-      '';
-    };
   };
 
   systemd = {
@@ -196,41 +159,8 @@
         networkConfig = {
           DHCP = "ipv4";
           IPv6AcceptRA = true;
-          DNSDefaultRoute = false;
         };
-        # Jio: keep routes in a separate table for policy routing.
-        dhcpV4Config = {
-          RouteMetric = 200;
-          UseRoutes = false;
-        };
-        routingPolicyRules = [
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1001;
-            Priority = 1000;
-          }
-          {
-            FirewallMark = "0x2/0x2";
-            Table = 1002;
-            Priority = 1001;
-          }
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1001;
-            Priority = 1000;
-            Family = "ipv6";
-          }
-          {
-            FirewallMark = "0x2/0x2";
-            Table = 1002;
-            Priority = 1001;
-            Family = "ipv6";
-          }
-        ];
-        ipv6AcceptRAConfig = {
-          Token = ipv6Token;
-          RouteTable = 1001;
-        };
+        ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
       networks."30-enp4s0" = {
@@ -238,44 +168,11 @@
         networkConfig = {
           DHCP = "ipv4";
           IPv6AcceptRA = true;
-          DNSDefaultRoute = false;
         };
-        dhcpV4Config = {
-          RouteMetric = 50;
-          UseRoutes = false;
-        };
-        routingPolicyRules = [
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1001;
-            Priority = 1000;
-          }
-          {
-            FirewallMark = "0x2/0x2";
-            Table = 1002;
-            Priority = 1001;
-          }
-          {
-            FirewallMark = "0x1/0x1";
-            Table = 1001;
-            Priority = 1000;
-            Family = "ipv6";
-          }
-          {
-            FirewallMark = "0x2/0x2";
-            Table = 1002;
-            Priority = 1001;
-            Family = "ipv6";
-          }
-        ];
-        ipv6AcceptRAConfig = {
-          Token = ipv6Token;
-          RouteTable = 1002;
-        };
+        ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
     };
-
   };
 
   # 16GB swapfile
