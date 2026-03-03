@@ -134,6 +134,12 @@
   networking = {
     useNetworkd = true;
     useDHCP = true;
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+      "2606:4700:4700::1111"
+      "2001:4860:4860::8888"
+    ];
 
     firewall = {
       allowedTCPPorts = [
@@ -190,6 +196,7 @@
         networkConfig = {
           DHCP = "ipv4";
           IPv6AcceptRA = true;
+          DNSDefaultRoute = false;
         };
         # Jio: keep routes in a separate table for policy routing.
         dhcpV4Config = {
@@ -231,6 +238,7 @@
         networkConfig = {
           DHCP = "ipv4";
           IPv6AcceptRA = true;
+          DNSDefaultRoute = false;
         };
         dhcpV4Config = {
           RouteMetric = 50;
