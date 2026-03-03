@@ -122,6 +122,16 @@
         inherit ((pkgsCalibreFor final.stdenv.hostPlatform.system)) calibre;
       };
 
+      pyhumpsOverlay = _final: prev: {
+        pythonPackagesExtensions = (prev.pythonPackagesExtensions or [ ]) ++ [
+          (_python-final: python-prev: {
+            pyhumps = python-prev.pyhumps.overrideAttrs (_old: {
+              doCheck = false;
+            });
+          })
+        ];
+      };
+
       mkNixosHost =
         {
           hostname,
@@ -141,7 +151,12 @@
             outputs = self;
           };
           modules = extraModules ++ [
-            { nixpkgs.overlays = [ calibreOverlay ]; }
+            {
+              nixpkgs.overlays = [
+                calibreOverlay
+                pyhumpsOverlay
+              ];
+            }
             ./hosts/${hostname}
           ];
         };

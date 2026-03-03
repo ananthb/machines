@@ -2,18 +2,6 @@
   ...
 }:
 {
-  nixpkgs.overlays = [
-    (_final: prev: {
-      pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-        (_python-final: python-prev: {
-          pyhumps = python-prev.pyhumps.overrideAttrs (_old: {
-            doCheck = false;
-          });
-        })
-      ];
-    })
-  ];
-
   imports = [
     ../linux.nix
     ./hardware-configuration.nix
