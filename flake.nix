@@ -128,6 +128,7 @@
           pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
             (_pfinal: pprev: {
               pyhumps = pprev.pyhumps.overrideAttrs (old: {
+                doCheck = false;
                 patches = (old.patches or [ ]) ++ [
                   (prev.fetchpatch {
                     url = "https://github.com/nficano/humps/commit/f61bb34de152e0cc6904400c573bcf83cfdb67f9.patch";
@@ -137,6 +138,7 @@
               });
             })
           ];
+          mealie = prev.mealie.override { nodejs = prev.nodejs_22; };
         };
 
       mkNixosHost =
