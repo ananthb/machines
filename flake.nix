@@ -138,7 +138,6 @@
               });
             })
           ];
-          mealie = prev.mealie.override { nodejs = prev.nodejs_22; };
         };
 
       mkNixosHost =
