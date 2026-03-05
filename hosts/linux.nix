@@ -9,9 +9,6 @@
   ...
 }:
 
-let
-  serveConfigPath = ./. + "/${hostname}/serveconfig.json";
-in
 {
 
   imports = [
@@ -124,19 +121,6 @@ in
           );
         }
       ) config.vault-secrets.secrets)
-      (lib.mkIf (builtins.pathExists serveConfigPath) {
-        tailscale-serve-config = {
-          description = "Apply Tailscale serve config";
-          wantedBy = [ "multi-user.target" ];
-          after = [ "tailscaled.service" ];
-          wants = [ "tailscaled.service" ];
-          restartIfChanged = true;
-          serviceConfig = {
-            Type = "oneshot";
-            ExecStart = "${pkgs.tailscale}/bin/tailscale serve set-config --all ${serveConfigPath}";
-          };
-        };
-      })
     ];
   };
 

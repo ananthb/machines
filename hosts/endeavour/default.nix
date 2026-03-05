@@ -130,6 +130,17 @@
     };
   };
 
+  my-services.tailscaleServeConfig = {
+    version = "0.0.1";
+    services = {
+      "svc:esphome" = {
+        endpoints = {
+          "tcp:443" = "http://localhost:6052";
+        };
+      };
+    };
+  };
+
   networking = {
     useNetworkd = true;
     useDHCP = true;

@@ -7,12 +7,17 @@
 }:
 let
   cftunnelLib = import ../lib/cftunnel.nix;
+  tailscaleServeLib = import ../lib/tailscale-serve-config.nix;
   hasTunnel = cftunnelLib.tunnels ? ${hostname};
 in
 {
-  imports = lib.optionals hasTunnel [
-    (cftunnelLib.mkCftunnel { inherit hostname; })
-  ];
+  imports =
+    lib.optionals hasTunnel [
+      (cftunnelLib.mkCftunnel { inherit hostname; })
+    ]
+    ++ [
+      (tailscaleServeLib.mkTailscaleServeConfig { inherit hostname; })
+    ];
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
