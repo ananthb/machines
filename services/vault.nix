@@ -122,7 +122,7 @@ in
           "TPM2TOOLS_TCTI=${tpmUnseal.tcti}"
         ];
         ExecStartPre = [
-          "${pkgs.bash}/bin/bash -lc 'for i in $(${pkgs.coreutils}/bin/seq 1 ${toString tpmUnseal.waitSeconds}); do ${pkgs.vault}/bin/vault status >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'"
+          "${pkgs.bash}/bin/bash -lc 'for i in $(${pkgs.coreutils}/bin/seq 1 ${toString tpmUnseal.waitSeconds}); do ${pkgs.curl}/bin/curl -sS --connect-timeout 1 \"${tpmUnseal.vaultAddr}/v1/sys/health\" >/dev/null 2>&1 && exit 0; sleep 1; done; exit 1'"
         ];
         ExecStart = [
           "${unsealScript}"
