@@ -8,7 +8,9 @@
   username,
   ...
 }:
-
+let
+  tailscaleServeLib = import ../lib/tailscale-serve-config.nix;
+in
 {
 
   imports = [
@@ -46,6 +48,7 @@
     ./common.nix
     ../lib/scripts.nix
     ../lib/kedi-target.nix
+    (tailscaleServeLib.mkTailscaleServeConfig { inherit hostname; })
   ];
 
   sops = {
