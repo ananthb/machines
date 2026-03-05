@@ -10,6 +10,7 @@
 }:
 let
   tailscaleServeLib = import ../lib/tailscale-serve-config.nix;
+  cftunnelLib = import ../lib/cftunnel.nix;
 in
 {
 
@@ -49,6 +50,7 @@ in
     ../lib/scripts.nix
     ../lib/kedi-target.nix
     (tailscaleServeLib.mkTailscaleServeConfig { inherit hostname; })
+    cftunnelLib.mkCftunnel
   ];
 
   sops = {

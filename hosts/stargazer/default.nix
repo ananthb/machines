@@ -26,6 +26,17 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
+  my-services.cftunnelConfig = [
+    {
+      tunnelId = "b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7";
+      tunnelName = "kedi-ext-1";
+      ingress = {
+        "t1.kedi.dev" = "http://localhost:8123";
+        "mealie.kedi.dev" = "http://localhost:9000";
+      };
+    }
+  ];
+
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #

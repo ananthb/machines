@@ -1,20 +1,10 @@
 {
-  hostname,
   lib,
   pkgs,
   username,
   ...
 }:
-let
-  cftunnelLib = import ../lib/cftunnel.nix;
-  inherit (pkgs.stdenv) isLinux;
-  hasTunnel = isLinux && builtins.hasAttr hostname cftunnelLib.tunnels;
-in
 {
-  imports = lib.optionals hasTunnel [
-    (cftunnelLib.mkCftunnel { inherit hostname; })
-  ];
-
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [

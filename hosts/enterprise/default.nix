@@ -67,6 +67,16 @@ in
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
 
+  my-services.cftunnelConfig = [
+    {
+      tunnelId = "cc636509-3456-4589-ae08-d4be710305a5";
+      tunnelName = "kedi-compute-1";
+      ingress = {
+        "coder.kedi.dev" = "http://localhost:3030";
+      };
+    }
+  ];
+
   security = {
     rtkit.enable = true;
     tpm2.enable = true;
