@@ -32,6 +32,10 @@ in
           };
         };
 
+        detect = {
+          enabled = true;
+        };
+
         auth.enabled = false;
 
         record = {
@@ -52,6 +56,9 @@ in
         };
 
         cameras."front_door_cam" = {
+          detect = {
+            enabled = true;
+          };
           audio.enabled = true;
           onvif = {
             host = "10.15.16.142";
