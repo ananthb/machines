@@ -21,6 +21,10 @@ in
     nginx.virtualHosts.${hostName} = {
       listen = [
         {
+          addr = "0.0.0.0";
+          inherit port;
+        }
+        {
           addr = "[::]";
           inherit port;
         }

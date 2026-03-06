@@ -194,7 +194,7 @@ in
     };
   };
 
-  systemd.services.frigate.serviceConfig.RequiresMountsFor = [
+  systemd.services.frigate.requiresMountsFor = [
     "/var/lib/frigate/recordings"
     "/var/lib/frigate/clips"
     "/var/lib/frigate/exports"
