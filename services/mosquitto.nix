@@ -4,7 +4,7 @@ _: {
     listeners = [
       {
         port = 1883;
-        address = "[::]";
+        address = "::";
         users = { };
         settings.allow_anonymous = true;
       }
