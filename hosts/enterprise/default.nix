@@ -23,7 +23,10 @@ in
     ../../services/monitoring/libvirt.nix
     (import ../../services/frigate.nix {
       settings = {
-        mqtt.enabled = false;
+        mqtt = {
+          enabled = true;
+          host = "endeavour";
+        };
 
         detectors = {
           ov = {

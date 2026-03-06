@@ -32,6 +32,10 @@
       url = "http://enterprise:8967";
     };
 
+    mqtt = {
+      broker = "endeavour";
+    };
+
     automation = [
       {
         alias = "Frigate - Front Door Person Detected";
