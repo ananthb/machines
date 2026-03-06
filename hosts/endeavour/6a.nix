@@ -28,6 +28,32 @@
       db_url = "postgresql://@/hass";
     };
 
+    frigate = {
+      url = "http://enterprise:8967";
+    };
+
+    automation = [
+      {
+        alias = "Frigate - Front Door Person Detected";
+        mode = "single";
+        trigger = [
+          {
+            platform = "state";
+            entity_id = "binary_sensor.front_door_cam_person";
+            to = "on";
+          }
+        ];
+        action = [
+          {
+            service = "notify.notify";
+            data = {
+              message = "Person detected at front door cam.";
+            };
+          }
+        ];
+      }
+    ];
+
     fan = [
       {
         platform = "smartir";
@@ -57,44 +83,6 @@
       inherit (config.users.users.hass) group;
     };
     services = {
-      frigate = {
-        enable = true;
-        hostname = "endeavour.local";
-
-        settings = {
-          mqtt.enabled = false;
-
-          record = {
-            enabled = true;
-            retain = {
-              days = 2;
-              mode = "all";
-            };
-          };
-
-          ffmpeg.hwaccel_args = "preset-vaapi";
-
-          cameras."frontdoor" = {
-            ffmpeg.inputs = [
-              {
-                path = "rtsp://192.168.1.142:8000/test1";
-                input_args = "preset-rtsp-restream";
-                roles = [ "record" ];
-              }
-            ];
-          };
-        };
-      };
-
-      nginx.virtualHosts."endeavour.local" = {
-        listen = [
-          {
-            addr = "[::]";
-            port = 8967;
-          }
-        ];
-      };
-
       postgresql = {
         enable = true;
         ensureDatabases = [ "hass" ];

@@ -21,6 +21,52 @@ in
     ../../services/immich-ml.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
+    (import ../../services/frigate.nix {
+      settings = {
+        mqtt.enabled = false;
+
+        detectors = {
+          ov = {
+            type = "openvino";
+            device = "GPU";
+          };
+        };
+
+        model = {
+          width = 300;
+          height = 300;
+          input_tensor = "nhwc";
+          input_pixel_format = "bgr";
+          path = "/openvino-model/ssdlite_mobilenet_v2.xml";
+          labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
+        };
+
+        record = {
+          enabled = true;
+          retain = {
+            days = 2;
+            mode = "all";
+          };
+        };
+
+        ffmpeg.hwaccel_args = "preset-vaapi";
+
+        cameras."front door cam" = {
+          ffmpeg.inputs = [
+            {
+              path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel0";
+              input_args = "preset-rtsp-restream";
+              roles = [ "record" ];
+            }
+            {
+              path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel1";
+              input_args = "preset-rtsp-restream";
+              roles = [ "detect" ];
+            }
+          ];
+        };
+      };
+    })
   ];
 
   documentation.nixos.enable = true;
@@ -103,6 +149,11 @@ in
     tmpfiles.rules = [
       # Set default ACL for group-writable files (umask 002)
       "A+ /srv/media - - - - default:group::rwx"
+      # Store Frigate recordings on the main RAID (/srv)
+      "d /srv/frigate 0750 frigate frigate - -"
+      "d /srv/frigate/recordings 0750 frigate frigate - -"
+      "d /srv/frigate/clips 0750 frigate frigate - -"
+      "d /srv/frigate/exports 0750 frigate frigate - -"
     ];
 
     # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
@@ -122,6 +173,41 @@ in
     units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
 
   };
+
+  fileSystems = {
+    "/var/lib/frigate/recordings" = {
+      device = "/srv/frigate/recordings";
+      fsType = "none";
+      options = [
+        "bind"
+        "x-systemd.requires-mounts-for=/srv"
+      ];
+    };
+
+    "/var/lib/frigate/clips" = {
+      device = "/srv/frigate/clips";
+      fsType = "none";
+      options = [
+        "bind"
+        "x-systemd.requires-mounts-for=/srv"
+      ];
+    };
+
+    "/var/lib/frigate/exports" = {
+      device = "/srv/frigate/exports";
+      fsType = "none";
+      options = [
+        "bind"
+        "x-systemd.requires-mounts-for=/srv"
+      ];
+    };
+  };
+
+  systemd.services.frigate.serviceConfig.RequiresMountsFor = [
+    "/var/lib/frigate/recordings"
+    "/var/lib/frigate/clips"
+    "/var/lib/frigate/exports"
+  ];
 
   power.ups = {
     enable = true;
