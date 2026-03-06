@@ -45,6 +45,12 @@ in
         ffmpeg.hwaccel_args = "preset-vaapi";
 
         cameras."front_door_cam" = {
+          onvif = {
+            host = "10.15.16.142";
+            port = 8000;
+            user = "admin";
+            password = "onvif";
+          };
           ffmpeg.inputs = [
             {
               path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel0";
