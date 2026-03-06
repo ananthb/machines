@@ -42,9 +42,17 @@ in
           };
         };
 
-        ffmpeg.hwaccel_args = "preset-vaapi";
+        audio.enabled = true;
+
+        ffmpeg = {
+          hwaccel_args = "preset-vaapi";
+          output_args = {
+            record = "preset-record-generic-audio-aac";
+          };
+        };
 
         cameras."front_door_cam" = {
+          audio.enabled = true;
           onvif = {
             host = "10.15.16.142";
             port = 8000;
@@ -60,7 +68,10 @@ in
             {
               path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel1";
               input_args = "preset-rtsp-restream";
-              roles = [ "detect" ];
+              roles = [
+                "detect"
+                "audio"
+              ];
             }
           ];
         };
