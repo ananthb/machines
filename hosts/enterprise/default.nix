@@ -32,6 +32,8 @@ in
           };
         };
 
+        auth.enabled = false;
+
         record = {
           enabled = true;
           retain = {
