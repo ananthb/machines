@@ -44,7 +44,7 @@ in
 
         ffmpeg.hwaccel_args = "preset-vaapi";
 
-        cameras."front door cam" = {
+        cameras."front_door_cam" = {
           ffmpeg.inputs = [
             {
               path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel0";
