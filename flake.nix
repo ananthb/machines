@@ -96,73 +96,76 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      deploy-rs,
-      lanzaboote,
-      nix-darwin,
-      nixos-hardware,
-      nixpkgs,
-      nixpkgs-calibre,
-      pre-commit-hooks-nix,
-      ...
-    }@inputs:
-    let
-      username = "ananth";
-      containerImages = import ./lib/container-images.nix;
+  outputs = {
+    self,
+    deploy-rs,
+    lanzaboote,
+    nix-darwin,
+    nixos-hardware,
+    nixpkgs,
+    nixpkgs-calibre,
+    pre-commit-hooks-nix,
+    ...
+  } @ inputs: let
+    username = "ananth";
+    containerImages = import ./lib/container-images.nix;
 
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ];
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "aarch64-darwin"
+    ];
 
-      forAllSystems = nixpkgs.lib.genAttrs systems;
+    forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      pkgsCalibreFor = system: import nixpkgs-calibre { inherit system; };
+    pkgsCalibreFor = system: import nixpkgs-calibre {inherit system;};
 
-      calibreOverlay = final: _: {
-        inherit ((pkgsCalibreFor final.stdenv.hostPlatform.system)) calibre;
-      };
+    calibreOverlay = final: _: {
+      inherit ((pkgsCalibreFor final.stdenv.hostPlatform.system)) calibre;
+    };
 
-      pyhumpsOverlay =
-        # Until: https://github.com/NixOS/nixpkgs/issues/494075
-        _final: prev: {
-          pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+    pyhumpsOverlay =
+      # Until: https://github.com/NixOS/nixpkgs/issues/494075
+      _final: prev: {
+        pythonPackagesExtensions =
+          prev.pythonPackagesExtensions
+          ++ [
             (_pfinal: pprev: {
               pyhumps = pprev.pyhumps.overrideAttrs (old: {
                 doCheck = false;
-                patches = (old.patches or [ ]) ++ [
-                  (prev.fetchpatch {
-                    url = "https://github.com/nficano/humps/commit/f61bb34de152e0cc6904400c573bcf83cfdb67f9.patch";
-                    hash = "sha256-nLmRRxedpB/O4yVBMY0cqNraDUJ6j7kSBG4J8JKZrrE=";
-                  })
-                ];
+                patches =
+                  (old.patches or [])
+                  ++ [
+                    (prev.fetchpatch {
+                      url = "https://github.com/nficano/humps/commit/f61bb34de152e0cc6904400c573bcf83cfdb67f9.patch";
+                      hash = "sha256-nLmRRxedpB/O4yVBMY0cqNraDUJ6j7kSBG4J8JKZrrE=";
+                    })
+                  ];
               });
             })
           ];
-        };
+      };
 
-      mkNixosHost =
-        {
-          hostname,
-          system,
-          extraModules ? [ ],
-        }:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit
-              hostname
-              containerImages
-              inputs
-              system
-              username
-              ;
-            outputs = self;
-          };
-          modules = extraModules ++ [
+    mkNixosHost = {
+      hostname,
+      system,
+      extraModules ? [],
+    }:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit
+            hostname
+            containerImages
+            inputs
+            system
+            username
+            ;
+          outputs = self;
+        };
+        modules =
+          extraModules
+          ++ [
             {
               nixpkgs.overlays = [
                 calibreOverlay
@@ -171,185 +174,185 @@
             }
             ./hosts/${hostname}
           ];
-        };
+      };
 
-      mkDarwinHost =
-        {
-          hostname,
-          system,
-          extraModules ? [ ],
-        }:
-        nix-darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = {
-            inherit
-              system
-              hostname
-              username
-              inputs
-              ;
-          };
-          modules = extraModules ++ [
-            { nixpkgs.overlays = [ calibreOverlay ]; }
+    mkDarwinHost = {
+      hostname,
+      system,
+      extraModules ? [],
+    }:
+      nix-darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = {
+          inherit
+            system
+            hostname
+            username
+            inputs
+            ;
+        };
+        modules =
+          extraModules
+          ++ [
+            {nixpkgs.overlays = [calibreOverlay];}
             ./hosts/${hostname}.nix
           ];
-        };
-    in
-    rec {
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+      };
+  in rec {
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
-      nixosConfigurations = {
-        endeavour = mkNixosHost {
-          hostname = "endeavour";
-          system = "x86_64-linux";
-          extraModules = [
-            lanzaboote.nixosModules.lanzaboote
-            { _module.args.ipv6Token = "::e4de:a704"; }
-          ];
-        };
+    nixosConfigurations = {
+      endeavour = mkNixosHost {
+        hostname = "endeavour";
+        system = "x86_64-linux";
+        extraModules = [
+          lanzaboote.nixosModules.lanzaboote
+          {_module.args.ipv6Token = "::e4de:a704";}
+        ];
+      };
 
-        enterprise = mkNixosHost {
-          hostname = "enterprise";
-          system = "x86_64-linux";
-          extraModules = [
-            lanzaboote.nixosModules.lanzaboote
-            { _module.args.ipv6Token = "::c0de:1"; }
-          ];
-        };
+      enterprise = mkNixosHost {
+        hostname = "enterprise";
+        system = "x86_64-linux";
+        extraModules = [
+          lanzaboote.nixosModules.lanzaboote
+          {_module.args.ipv6Token = "::c0de:1";}
+        ];
+      };
 
-        stargazer = mkNixosHost {
-          hostname = "stargazer";
-          system = "aarch64-linux";
-          extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
-        };
+      stargazer = mkNixosHost {
+        hostname = "stargazer";
+        system = "aarch64-linux";
+        extraModules = [nixos-hardware.nixosModules.raspberry-pi-4];
+      };
 
-        voyager = mkNixosHost {
-          hostname = "voyager";
-          system = "aarch64-linux";
-          extraModules = [ nixos-hardware.nixosModules.raspberry-pi-4 ];
+      voyager = mkNixosHost {
+        hostname = "voyager";
+        system = "aarch64-linux";
+        extraModules = [nixos-hardware.nixosModules.raspberry-pi-4];
+      };
+    };
+
+    lib = {
+      immichMlHosts = import ./lib/immich-ml-hosts.nix {
+        inherit nixosConfigurations;
+        inherit (nixpkgs) lib;
+        immichMlImage = containerImages.immichMl;
+      };
+    };
+
+    darwinConfigurations = {
+      discovery = mkDarwinHost {
+        hostname = "discovery";
+        system = "aarch64-darwin";
+        extraModules = [];
+      };
+    };
+
+    deploy.nodes = {
+      endeavour = {
+        system = "x86_64-linux";
+        hostname = "endeavour";
+        profiles.system = {
+          sshUser = username;
+          user = "root";
+          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.endeavour;
         };
       };
 
-      lib = {
-        immichMlHosts = import ./lib/immich-ml-hosts.nix {
-          inherit nixosConfigurations;
-          inherit (nixpkgs) lib;
-          immichMlImage = containerImages.immichMl;
+      enterprise = {
+        system = "x86_64-linux";
+        hostname = "enterprise";
+        profiles.system = {
+          sshUser = username;
+          user = "root";
+          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.enterprise;
         };
       };
 
-      darwinConfigurations = {
-        discovery = mkDarwinHost {
-          hostname = "discovery";
-          system = "aarch64-darwin";
-          extraModules = [ ];
+      stargazer = {
+        system = "aarch64-linux";
+        hostname = "stargazer";
+        profiles.system = {
+          sshUser = username;
+          user = "root";
+          path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
         };
       };
 
-      deploy.nodes = {
-        endeavour = {
-          system = "x86_64-linux";
-          hostname = "endeavour";
-          profiles.system = {
-            sshUser = username;
-            user = "root";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.endeavour;
+      #voyager = {
+      #  hostname = "voyager";
+      #  profiles.system = {
+      #    sshUser = username;
+      #    user = "root";
+      #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
+      #  };
+      #};
+    };
+
+    checks = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+        formatterPkg = self.formatter.${system};
+        deployChecks = deploy-rs.lib.${system}.deployChecks (
+          self.deploy
+          // {
+            nodes = nixpkgs.lib.filterAttrs (_: node: node.system == system) self.deploy.nodes;
+          }
+        );
+        preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            alejandra.enable = true;
+            statix.enable = true;
+            deadnix.enable = true;
           };
         };
-
-        enterprise = {
-          system = "x86_64-linux";
-          hostname = "enterprise";
-          profiles.system = {
-            sshUser = username;
-            user = "root";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.enterprise;
-          };
-        };
-
-        stargazer = {
-          system = "aarch64-linux";
-          hostname = "stargazer";
-          profiles.system = {
-            sshUser = username;
-            user = "root";
-            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
-          };
-        };
-
-        #voyager = {
-        #  hostname = "voyager";
-        #  profiles.system = {
-        #    sshUser = username;
-        #    user = "root";
-        #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
-        #  };
-        #};
-      };
-
-      checks = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          deployChecks = deploy-rs.lib.${system}.deployChecks (
-            self.deploy
-            // {
-              nodes = nixpkgs.lib.filterAttrs (_: node: node.system == system) self.deploy.nodes;
-            }
-          );
-          preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              nixfmt.enable = true;
-              statix.enable = true;
-              deadnix.enable = true;
-            };
-          };
-        in
+      in
         deployChecks
         // {
           pre-commit = preCommitCheck;
-          formatting = pkgs.runCommand "check-formatting" { buildInputs = [ pkgs.nixfmt ]; } ''
-            nixfmt --check ${self}
+          formatting = pkgs.runCommand "check-formatting" {buildInputs = [formatterPkg];} ''
+            ${pkgs.lib.getExe formatterPkg} --check ${self}
             touch $out
           '';
-          statix = pkgs.runCommand "check-statix" { buildInputs = [ pkgs.statix ]; } ''
+          statix = pkgs.runCommand "check-statix" {buildInputs = [pkgs.statix];} ''
             statix check ${self}
             touch $out
           '';
-          deadnix = pkgs.runCommand "check-deadnix" { buildInputs = [ pkgs.deadnix ]; } ''
+          deadnix = pkgs.runCommand "check-deadnix" {buildInputs = [pkgs.deadnix];} ''
             deadnix --fail ${self}
             touch $out
           '';
         }
-      );
+    );
 
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-          preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              nixfmt.enable = true;
-              statix.enable = true;
-              deadnix.enable = true;
-            };
+    devShells = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+        formatterPkg = self.formatter.${system};
+        preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            alejandra.enable = true;
+            statix.enable = true;
+            deadnix.enable = true;
           };
-        in
-        {
-          default = pkgs.mkShell {
-            inherit (preCommitCheck) shellHook;
-            packages = preCommitCheck.enabledPackages ++ [
-              pkgs.nixfmt
+        };
+      in {
+        default = pkgs.mkShell {
+          inherit (preCommitCheck) shellHook;
+          packages =
+            preCommitCheck.enabledPackages
+            ++ [
+              formatterPkg
               pkgs.statix
               pkgs.deadnix
               pkgs.gh
               deploy-rs.packages.${system}.default
             ];
-          };
-        }
-      );
-
-    };
+        };
+      }
+    );
+  };
 }

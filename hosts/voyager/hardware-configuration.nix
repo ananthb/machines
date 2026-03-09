@@ -1,7 +1,6 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   boot = {
-    supportedFilesystems = [ "bcachefs" ];
+    supportedFilesystems = ["bcachefs"];
     initrd.availableKernelModules = [
       "xhci_pci"
       "usbhid"
@@ -22,7 +21,7 @@
     };
 
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
-    kernelParams = [ "psi=1" ];
+    kernelParams = ["psi=1"];
     kernelModules = [
       "gpio_fan"
     ];
@@ -32,22 +31,22 @@
     "/" = {
       device = "/dev/disk/by-label/NIXOS_SD";
       fsType = "ext4";
-      options = [ "noatime" ];
+      options = ["noatime"];
     };
     "/home" = {
       device = "/dev/disk/by-label/storage";
       fsType = "btrfs";
-      options = [ "subvol=@home,compress=zstd" ];
+      options = ["subvol=@home,compress=zstd"];
     };
     "/nix" = {
       device = "/dev/disk/by-label/storage";
       fsType = "btrfs";
-      options = [ "subvol=@nix,compress=zstd" ];
+      options = ["subvol=@nix,compress=zstd"];
     };
     "/var" = {
       device = "/dev/disk/by-label/storage";
       fsType = "btrfs";
-      options = [ "subvol=@var,compress=zstd" ];
+      options = ["subvol=@var,compress=zstd"];
     };
   };
 

@@ -5,7 +5,7 @@ _: {
       {
         port = 1883;
         address = "::";
-        users = { };
+        users = {};
         settings.allow_anonymous = true;
       }
     ];

@@ -1,7 +1,4 @@
-{
-  ...
-}:
-{
+{...}: {
   imports = [
     ../linux.nix
     ./hardware-configuration.nix
@@ -13,7 +10,7 @@
   ];
 
   # System packages
-  environment.systemPackages = [ ];
+  environment.systemPackages = [];
 
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";

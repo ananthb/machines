@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   # lm_sensors for temperature monitoring
   environment.systemPackages = [
     pkgs.lm_sensors
@@ -14,11 +13,11 @@
   # Clone and run s1panel directly (simpler than packaging)
   systemd.services.s1panel = {
     description = "AceMagic S1 Panel";
-    after = [ "network.target" ];
+    after = ["network.target"];
     wantedBy = [
       "multi-user.target"
     ];
-    partOf = [ "kedi.target" ];
+    partOf = ["kedi.target"];
 
     path = with pkgs; [
       nodejs_20
@@ -71,19 +70,19 @@
         rm -rf /var/lib/s1panel/repo
         cd /var/lib/s1panel/s1panel
         export PKG_CONFIG_PATH="${
-          lib.makeSearchPath "lib/pkgconfig" [
-            pkgs.libusb1.dev
-            pkgs.udev.dev
-            pkgs.cairo.dev
-            pkgs.pango.dev
-            pkgs.pixman
-            pkgs.glib.dev
-            pkgs.freetype.dev
-            pkgs.fontconfig.dev
-            pkgs.libpng.dev
-            pkgs.harfbuzz.dev
-          ]
-        }"
+        lib.makeSearchPath "lib/pkgconfig" [
+          pkgs.libusb1.dev
+          pkgs.udev.dev
+          pkgs.cairo.dev
+          pkgs.pango.dev
+          pkgs.pixman
+          pkgs.glib.dev
+          pkgs.freetype.dev
+          pkgs.fontconfig.dev
+          pkgs.libpng.dev
+          pkgs.harfbuzz.dev
+        ]
+      }"
         ${pkgs.nodejs_20}/bin/npm install --legacy-peer-deps
         cd gui
         ${pkgs.nodejs_20}/bin/npm install --legacy-peer-deps
@@ -113,6 +112,5 @@
     SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE="0666", GROUP="dialout"
   '';
 
-  users.users.ananth.extraGroups = [ "dialout" ];
-
+  users.users.ananth.extraGroups = ["dialout"];
 }

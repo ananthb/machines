@@ -65,15 +65,12 @@
 #     excludePatterns = [ "node_modules" ".git" "target" "*.log" ];
 #     deleteExcluded = true;  # Also delete excluded files on destination
 #   };
-
 {
   config,
   lib,
   pkgs,
   ...
-}:
-
-let
+}: let
   inherit (lib) mkOption types;
   cfg = config.my-services.rclone-syncs;
 
@@ -105,8 +102,7 @@ let
     "~$*"
     ".~lock.*"
   ];
-in
-{
+in {
   options.my-services.rclone-syncs = mkOption {
     type = types.attrsOf (
       types.submodule {
@@ -158,12 +154,12 @@ in
           };
           environment = mkOption {
             type = types.attrsOf types.str;
-            default = { };
+            default = {};
             description = "Environment variables for the sync job";
           };
           excludePatterns = mkOption {
             type = types.listOf types.str;
-            default = [ ];
+            default = [];
             description = "Additional patterns to exclude from sync (passed to rclone --exclude). Default patterns (._*, Icon*) are always included.";
           };
           deleteExcluded = mkOption {
@@ -179,169 +175,181 @@ in
         };
       }
     );
-    default = { };
+    default = {};
     description = "Rclone sync jobs";
   };
 
   config = {
-    systemd.services = lib.mapAttrs' (name: job: {
-      name = "rclone-sync-${name}";
-      value = {
-        description = "Rclone sync job: ${name}";
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
-        inherit (job) environment;
-        path = [
-          pkgs.coreutils
-          pkgs.curl
-          pkgs.gnugrep
-        ];
+    systemd.services =
+      lib.mapAttrs' (name: job: {
+        name = "rclone-sync-${name}";
+        value = {
+          description = "Rclone sync job: ${name}";
+          after = ["network-online.target"];
+          wants = ["network-online.target"];
+          inherit (job) environment;
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.gnugrep
+          ];
 
-        serviceConfig = {
-          Type = "oneshot";
-          User = job.user;
-          # 12h timeout for large syncs
-          TimeoutStartSec = "12h";
-          # Create a cache directory for bisync state
-          CacheDirectory = "rclone-sync-${name}";
-          CacheDirectoryMode = "0700";
-        };
+          serviceConfig = {
+            Type = "oneshot";
+            User = job.user;
+            # 12h timeout for large syncs
+            TimeoutStartSec = "12h";
+            # Create a cache directory for bisync state
+            CacheDirectory = "rclone-sync-${name}";
+            CacheDirectoryMode = "0700";
+          };
 
-        script = ''
-          set -uo pipefail
-          source ${config.my-scripts.shell-helpers}
+          script = ''
+            set -uo pipefail
+            source ${config.my-scripts.shell-helpers}
 
-          if [ ! -f "${job.rcloneConfig}" ]; then
-            die "Rclone config not found at ${job.rcloneConfig}"
-          fi
-
-          # Set cache directory for bisync listings
-          export XDG_CACHE_HOME="/var/cache/rclone-sync-${name}"
-
-          # Construct full paths (using rclone syntax)
-          FULL_SOURCE="${job.source}"
-          if [ -n "${job.sourceSubPath}" ]; then
-             clean_source="''${FULL_SOURCE%/}"
-             clean_sub="${lib.strings.removePrefix "/" job.sourceSubPath}"
-             FULL_SOURCE="''${clean_source}/''${clean_sub}"
-          fi
-
-          FULL_DEST="${job.destination}"
-          if [ -n "${job.destSubPath}" ]; then
-             clean_dest="''${FULL_DEST%/}"
-             clean_sub_dest="${lib.strings.removePrefix "/" job.destSubPath}"
-             FULL_DEST="''${clean_dest}/''${clean_sub_dest}"
-          fi
-
-          echo "Starting rclone job (${job.type}): ${name}"
-          echo "Source: $FULL_SOURCE"
-          echo "Destination: $FULL_DEST"
-
-          write_metric rclone_sync_status "job=${name},stage=start,type=${job.type}" 1
-
-          # Build exclude arguments (default patterns + user patterns)
-          # Use single quotes to prevent bash variable expansion (e.g., $RECYCLE.BIN)
-          EXCLUDE_ARGS=(${
-            lib.concatMapStringsSep " " (p: "--exclude '${p}'") (defaultExcludePatterns ++ job.excludePatterns)
-          })
-
-          # Determine if we should delete excluded files
-          DELETE_EXCLUDED=${if job.deleteExcluded then "1" else ""}
-
-          # Determine if we should use size-only comparison
-          SIZE_ONLY=${if job.sizeOnly then "1" else ""}
-
-          if [ "${job.type}" = "bisync" ]; then
-            BISYNC_ARGS=(
-              "--config" "${job.rcloneConfig}"
-              "--verbose"
-              ${lib.optionalString job.checkAccess "\"--check-access\""}
-              "--remove-empty-dirs"
-              "''${EXCLUDE_ARGS[@]}"
-            )
-            [ -n "$DELETE_EXCLUDED" ] && BISYNC_ARGS+=("--delete-excluded")
-            [ -n "$SIZE_ONLY" ] && BISYNC_ARGS+=("--size-only")
-
-            if [ ! -d "$XDG_CACHE_HOME/rclone/bisync" ] || [ -z "$(ls -A "$XDG_CACHE_HOME/rclone/bisync")" ]; then
-              echo "First run detected or cache empty. Using --resync."
-              BISYNC_ARGS+=("--resync")
+            if [ ! -f "${job.rcloneConfig}" ]; then
+              die "Rclone config not found at ${job.rcloneConfig}"
             fi
 
-            TEMP_LOG=$(mktemp)
-            trap 'rm -f "$TEMP_LOG"' EXIT
+            # Set cache directory for bisync listings
+            export XDG_CACHE_HOME="/var/cache/rclone-sync-${name}"
 
-            if ${pkgs.rclone}/bin/rclone bisync \
-              "''${BISYNC_ARGS[@]}" \
-              "$FULL_SOURCE" "$FULL_DEST" 2>&1 | tee "$TEMP_LOG"; then
-              
-              echo "Bisync successful"
-              write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
-              write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
-            else
-              EXIT_CODE=$?
-              echo "Bisync failed with code $EXIT_CODE"
+            # Construct full paths (using rclone syntax)
+            FULL_SOURCE="${job.source}"
+            if [ -n "${job.sourceSubPath}" ]; then
+               clean_source="''${FULL_SOURCE%/}"
+               clean_sub="${lib.strings.removePrefix "/" job.sourceSubPath}"
+               FULL_SOURCE="''${clean_source}/''${clean_sub}"
+            fi
 
-              if grep -q "Must run --resync to recover" "$TEMP_LOG"; then
-                 echo "Critical state error detected. Attempting auto-recovery with --resync..."
-                 BISYNC_ARGS+=("--resync")
-                 if ${pkgs.rclone}/bin/rclone bisync \
-                    "''${BISYNC_ARGS[@]}" \
-                    "$FULL_SOURCE" "$FULL_DEST"; then
-                     echo "Recovery bisync successful"
-                     write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
-                     write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
-                 else
-                     echo "Recovery bisync failed"
-                     write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
-                     die "Rclone bisync failed even after resync attempt"
-                 fi
+            FULL_DEST="${job.destination}"
+            if [ -n "${job.destSubPath}" ]; then
+               clean_dest="''${FULL_DEST%/}"
+               clean_sub_dest="${lib.strings.removePrefix "/" job.destSubPath}"
+               FULL_DEST="''${clean_dest}/''${clean_sub_dest}"
+            fi
+
+            echo "Starting rclone job (${job.type}): ${name}"
+            echo "Source: $FULL_SOURCE"
+            echo "Destination: $FULL_DEST"
+
+            write_metric rclone_sync_status "job=${name},stage=start,type=${job.type}" 1
+
+            # Build exclude arguments (default patterns + user patterns)
+            # Use single quotes to prevent bash variable expansion (e.g., $RECYCLE.BIN)
+            EXCLUDE_ARGS=(${
+              lib.concatMapStringsSep " " (p: "--exclude '${p}'") (defaultExcludePatterns ++ job.excludePatterns)
+            })
+
+            # Determine if we should delete excluded files
+            DELETE_EXCLUDED=${
+              if job.deleteExcluded
+              then "1"
+              else ""
+            }
+
+            # Determine if we should use size-only comparison
+            SIZE_ONLY=${
+              if job.sizeOnly
+              then "1"
+              else ""
+            }
+
+            if [ "${job.type}" = "bisync" ]; then
+              BISYNC_ARGS=(
+                "--config" "${job.rcloneConfig}"
+                "--verbose"
+                ${lib.optionalString job.checkAccess "\"--check-access\""}
+                "--remove-empty-dirs"
+                "''${EXCLUDE_ARGS[@]}"
+              )
+              [ -n "$DELETE_EXCLUDED" ] && BISYNC_ARGS+=("--delete-excluded")
+              [ -n "$SIZE_ONLY" ] && BISYNC_ARGS+=("--size-only")
+
+              if [ ! -d "$XDG_CACHE_HOME/rclone/bisync" ] || [ -z "$(ls -A "$XDG_CACHE_HOME/rclone/bisync")" ]; then
+                echo "First run detected or cache empty. Using --resync."
+                BISYNC_ARGS+=("--resync")
+              fi
+
+              TEMP_LOG=$(mktemp)
+              trap 'rm -f "$TEMP_LOG"' EXIT
+
+              if ${pkgs.rclone}/bin/rclone bisync \
+                "''${BISYNC_ARGS[@]}" \
+                "$FULL_SOURCE" "$FULL_DEST" 2>&1 | tee "$TEMP_LOG"; then
+
+                echo "Bisync successful"
+                write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
+                write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
               else
-                 echo "Bisync failed"
-                 write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
-                 die "Rclone bisync failed"
+                EXIT_CODE=$?
+                echo "Bisync failed with code $EXIT_CODE"
+
+                if grep -q "Must run --resync to recover" "$TEMP_LOG"; then
+                   echo "Critical state error detected. Attempting auto-recovery with --resync..."
+                   BISYNC_ARGS+=("--resync")
+                   if ${pkgs.rclone}/bin/rclone bisync \
+                      "''${BISYNC_ARGS[@]}" \
+                      "$FULL_SOURCE" "$FULL_DEST"; then
+                       echo "Recovery bisync successful"
+                       write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
+                       write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
+                   else
+                       echo "Recovery bisync failed"
+                       write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
+                       die "Rclone bisync failed even after resync attempt"
+                   fi
+                else
+                   echo "Bisync failed"
+                   write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
+                   die "Rclone bisync failed"
+                fi
+              fi
+
+            else
+              # Normal sync
+              SYNC_ARGS=(
+                "--config" "${job.rcloneConfig}"
+                "--verbose"
+                "--use-mmap"
+                "--transfers" "4"
+                "--checkers" "8"
+                "''${EXCLUDE_ARGS[@]}"
+              )
+              [ -n "$DELETE_EXCLUDED" ] && SYNC_ARGS+=("--delete-excluded")
+              [ -n "$SIZE_ONLY" ] && SYNC_ARGS+=("--size-only")
+
+              if ${pkgs.rclone}/bin/rclone sync \
+                "''${SYNC_ARGS[@]}" \
+                "$FULL_SOURCE" "$FULL_DEST"; then
+
+                echo "Sync successful"
+                write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
+                write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
+              else
+                echo "Sync failed"
+                write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
+                die "Rclone sync failed"
               fi
             fi
-
-          else
-            # Normal sync
-            SYNC_ARGS=(
-              "--config" "${job.rcloneConfig}"
-              "--verbose"
-              "--use-mmap"
-              "--transfers" "4"
-              "--checkers" "8"
-              "''${EXCLUDE_ARGS[@]}"
-            )
-            [ -n "$DELETE_EXCLUDED" ] && SYNC_ARGS+=("--delete-excluded")
-            [ -n "$SIZE_ONLY" ] && SYNC_ARGS+=("--size-only")
-
-            if ${pkgs.rclone}/bin/rclone sync \
-              "''${SYNC_ARGS[@]}" \
-              "$FULL_SOURCE" "$FULL_DEST"; then
-              
-              echo "Sync successful"
-              write_metric rclone_sync_status "job=${name},stage=complete,type=${job.type}" 1
-              write_metric rclone_sync_last_success_timestamp "job=${name}" "$(date +%s)"
-            else
-              echo "Sync failed"
-              write_metric rclone_sync_status "job=${name},stage=error,type=${job.type}" 1
-              die "Rclone sync failed"
-            fi
-          fi
-        '';
-      };
-    }) cfg;
-
-    systemd.timers = lib.mapAttrs' (name: job: {
-      name = "rclone-sync-${name}";
-      value = {
-        timerConfig = {
-          OnCalendar = job.interval;
-          Persistent = true;
-          RandomizedDelaySec = "15m";
+          '';
         };
-        wantedBy = [ "timers.target" ];
-      };
-    }) cfg;
+      })
+      cfg;
+
+    systemd.timers =
+      lib.mapAttrs' (name: job: {
+        name = "rclone-sync-${name}";
+        value = {
+          timerConfig = {
+            OnCalendar = job.interval;
+            Persistent = true;
+            RandomizedDelaySec = "15m";
+          };
+          wantedBy = ["timers.target"];
+        };
+      })
+      cfg;
   };
 }

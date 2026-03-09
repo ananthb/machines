@@ -7,10 +7,7 @@
   system,
   username,
   ...
-}:
-
-{
-
+}: {
   imports = [
     inputs.nix-homebrew.darwinModules.nix-homebrew
     {
@@ -38,14 +35,12 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         users.${username} = {
-          imports =
-            let
-              hostModule = (import ../lib/home-host-module.nix { inherit lib; }) hostname;
-            in
-            [
-              ../home/common.nix
-              hostModule
-            ];
+          imports = let
+            hostModule = (import ../lib/home-host-module.nix {inherit lib;}) hostname;
+          in [
+            ../home/common.nix
+            hostModule
+          ];
         };
         extraSpecialArgs = {
           inherit
@@ -97,7 +92,7 @@
       AddKeysToAgent yes
   '';
 
-  fonts.packages = [ pkgs.hack-font ];
+  fonts.packages = [pkgs.hack-font];
 
   homebrew = {
     enable = true;

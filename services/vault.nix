@@ -4,8 +4,7 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   secureBootEnabled = config.boot.lanzaboote.enable or false;
   inherit (config.services.vault) tpmUnseal;
   unsealScript = pkgs.writeShellScript "vault-unseal-tpm" ''
@@ -21,8 +20,7 @@ let
       "${pkgs.vault}/bin/vault" operator unseal "$unseal_key"
     done
   '';
-in
-{
+in {
   options.services.vault.tpmUnseal = {
     enable = lib.mkEnableOption "TPM2-based boot-time unseal for Vault (OSS)";
     handles = lib.mkOption {
@@ -36,7 +34,10 @@ in
     };
     pcrs = lib.mkOption {
       type = lib.types.str;
-      default = if secureBootEnabled then "0,2,7" else "0,2";
+      default =
+        if secureBootEnabled
+        then "0,2,7"
+        else "0,2";
       description = "PCRs used when sealing unseal shares to TPM (manual setup).";
     };
     vaultAddr = lib.mkOption {
@@ -86,7 +87,7 @@ in
     # Disable auto-unseal by default
     services.vault.tpmUnseal.enable = lib.mkDefault false;
     security.tpm2.enable = lib.mkIf tpmUnseal.enable (lib.mkDefault true);
-    users.users.vault.extraGroups = lib.mkIf tpmUnseal.enable (lib.mkAfter [ "tss" ]);
+    users.users.vault.extraGroups = lib.mkIf tpmUnseal.enable (lib.mkAfter ["tss"]);
 
     environment.systemPackages = lib.mkIf tpmUnseal.enable [
       pkgs.tpm2-tools
@@ -95,7 +96,7 @@ in
 
     assertions = [
       {
-        assertion = (!tpmUnseal.enable) || (tpmUnseal.handles != [ ]);
+        assertion = (!tpmUnseal.enable) || (tpmUnseal.handles != []);
         message = "services.vault.tpmUnseal.enable is true but no TPM handles are configured.";
       }
     ];
@@ -134,9 +135,9 @@ in
         PrivateTmp = true;
         ProtectSystem = "strict";
         ProtectHome = true;
-        ReadWritePaths = [ "/run" ];
+        ReadWritePaths = ["/run"];
       };
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
     };
 
     # Manual setup for TPM-bound unseal shares (OSS):

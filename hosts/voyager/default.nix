@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ../linux.nix
     ./hardware-configuration.nix
@@ -8,7 +7,7 @@
   ];
 
   # System packages
-  environment.systemPackages = [ pkgs.bcachefs-tools ];
+  environment.systemPackages = [pkgs.bcachefs-tools];
 
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";

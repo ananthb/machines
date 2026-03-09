@@ -3,8 +3,7 @@
   inputs,
   pkgs,
   ...
-}:
-let
+}: let
   homeDir = config.home.homeDirectory;
   askpass = pkgs.stdenv.mkDerivation {
     name = "askpass";
@@ -16,14 +15,13 @@ let
       chmod +x $out/bin/askpass.sh
     '';
   };
-in
-{
+in {
   imports = [
     inputs.nixvim.homeModules.nixvim
   ];
 
   sops = {
-    age.sshKeyPaths = [ (homeDir + "/.ssh/id_ed25519") ];
+    age.sshKeyPaths = [(homeDir + "/.ssh/id_ed25519")];
     defaultSopsFile = ../secrets/dev.yaml;
 
     secrets = {
@@ -52,8 +50,7 @@ in
     };
   };
 
-  home.packages =
-    with pkgs;
+  home.packages = with pkgs;
     [
       coder
       codex
@@ -72,7 +69,7 @@ in
       ripgrep
       vault
     ]
-    ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [ askpass ];
+    ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [askpass];
 
   programs = {
     direnv = {
@@ -82,7 +79,7 @@ in
 
     gpg = {
       enable = true;
-      publicKeys = [ ];
+      publicKeys = [];
       settings = {
         use-agent = true;
       };
@@ -194,9 +191,9 @@ in
           enable = true;
           autoEnableSources = true;
           settings.sources = [
-            { name = "nvim_lsp"; }
-            { name = "path"; }
-            { name = "buffer"; }
+            {name = "nvim_lsp";}
+            {name = "path";}
+            {name = "buffer";}
           ];
         };
         cmp-nvim-lsp.enable = true;
@@ -216,28 +213,28 @@ in
           inlayHints = true;
 
           onAttach = ''
-                    if not client.supports_method("textDocument/codeLens") then
-            	  return
-            	end
-            	local group = vim.api.nvim_create_augroup("LspCodeLens." .. bufnr, {})
-            	vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-            	  group = group,
-            	  buffer = bufnr,
-            	  callback = vim.lsp.codelens.refresh,
-            	})
+                   if not client.supports_method("textDocument/codeLens") then
+              return
+            end
+            local group = vim.api.nvim_create_augroup("LspCodeLens." .. bufnr, {})
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              group = group,
+              buffer = bufnr,
+              callback = vim.lsp.codelens.refresh,
+            })
 
-            	local diag_group = vim.api.nvim_create_augroup("LspDiagnosticsFloat." .. bufnr, {})
-            	vim.api.nvim_create_autocmd("CursorHold", {
-            	  group = diag_group,
-            	  buffer = bufnr,
-            	  callback = function()
-            	    local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
-            	    if next(vim.diagnostic.get(bufnr, { lnum = lnum })) == nil then
-            	      return
-            	    end
-            	    vim.diagnostic.open_float(nil, { focus = false, scope = "line" })
-            	  end,
-            	})
+            local diag_group = vim.api.nvim_create_augroup("LspDiagnosticsFloat." .. bufnr, {})
+            vim.api.nvim_create_autocmd("CursorHold", {
+              group = diag_group,
+              buffer = bufnr,
+              callback = function()
+                local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+                if next(vim.diagnostic.get(bufnr, { lnum = lnum })) == nil then
+                  return
+                end
+                vim.diagnostic.open_float(nil, { focus = false, scope = "line" })
+              end,
+            })
           '';
 
           servers = {
@@ -287,7 +284,6 @@ in
             ts_ls.enable = true;
             yamlls.enable = true;
             zls.enable = true;
-
           };
         };
 
@@ -315,7 +311,7 @@ in
               goimports.enable = true;
               hclfmt = {
                 enable = true;
-                settings.extra_filetypes = [ "nomad" ];
+                settings.extra_filetypes = ["nomad"];
               };
               isort.enable = true;
               terraform_fmt.enable = true;
@@ -484,5 +480,4 @@ in
       };
     };
   };
-
 }

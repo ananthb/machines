@@ -2,14 +2,14 @@
   config,
   pkgs,
   ...
-}@args:
+} @ args:
 (import ../../services/hass.nix {
   name = "6A";
   secretsPrefix = "home-assistant/6a";
   externalUrl = "https://6a.kedi.dev";
   internalUrl = "http://endeavour.local:8123";
-  extraPackages =
-    python3Packages: with python3Packages; [
+  extraPackages = python3Packages:
+    with python3Packages; [
       adguardhome
       aioimmich
       aiomealie
@@ -76,16 +76,16 @@
     ];
   };
   extraModules = {
-    imports = [ ../../services/monitoring/postgres.nix ];
+    imports = [../../services/monitoring/postgres.nix];
     vault-secrets.secrets.openwrt-atlantis = {
-      services = [ "home-assistant" ];
+      services = ["home-assistant"];
       user = config.users.users.hass.name;
       inherit (config.users.users.hass) group;
     };
     services = {
       postgresql = {
         enable = true;
-        ensureDatabases = [ "hass" ];
+        ensureDatabases = ["hass"];
         ensureUsers = [
           {
             name = "hass";
@@ -97,4 +97,4 @@
     };
   };
 })
-  (args // { inherit pkgs; })
+(args // {inherit pkgs;})

@@ -3,10 +3,8 @@
   pkgs,
   username,
   ...
-}:
-{
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
+}: {
+  nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "b43-firmware"
       "broadcom-bt-firmware"
@@ -55,5 +53,4 @@
   };
 
   programs.fish.enable = true;
-
 }

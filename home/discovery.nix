@@ -2,8 +2,7 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   askpass = pkgs.stdenv.mkDerivation {
     name = "askpass";
     src = ../lib/askpass.sh;
@@ -14,8 +13,7 @@ let
       chmod +x $out/bin/askpass.sh
     '';
   };
-in
-{
+in {
   imports = [
     ./dev.nix
   ];
@@ -52,5 +50,5 @@ in
     };
   };
 
-  home.packages = [ ];
+  home.packages = [];
 }

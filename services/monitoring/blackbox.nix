@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   services.prometheus.exporters = {
     blackbox = {
       enable = true;
@@ -28,7 +27,5 @@
               fail_if_not_ssl: true
       '';
     };
-
   };
-
 }

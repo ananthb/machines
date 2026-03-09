@@ -1,15 +1,16 @@
 # From https://github.com/NixOS/nixpkgs/issues/226575#issuecomment-2813539847
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   nixpkgs.overlays = [
     (_: prev: {
       logiops = prev.logiops.overrideAttrs (old: {
-        patches = (old.patches or [ ]) ++ [
-          (prev.fetchpatch {
-            url = "https://github.com/PixlOne/logiops/commit/91aa0c12175f33a4184ccaf41181b0a799f7cc55.patch";
-            hash = "sha256-A+StDD+Dp7lPWVpuYR9JR5RuvwPU/5h50B0lY8Qu7nY=";
-          })
-        ];
+        patches =
+          (old.patches or [])
+          ++ [
+            (prev.fetchpatch {
+              url = "https://github.com/PixlOne/logiops/commit/91aa0c12175f33a4184ccaf41181b0a799f7cc55.patch";
+              hash = "sha256-A+StDD+Dp7lPWVpuYR9JR5RuvwPU/5h50B0lY8Qu7nY=";
+            })
+          ];
       });
     })
   ];
@@ -23,12 +24,12 @@
   systemd.services.logiops = {
     description = "Logitech Configuration Daemon";
     startLimitIntervalSec = 0;
-    after = [ "multi-user.target" ];
+    after = ["multi-user.target"];
     wantedBy = [
       "graphical.target"
     ];
-    wants = [ "multi-user.target" ];
-    partOf = [ "kedi.target" ];
+    wants = ["multi-user.target"];
+    partOf = ["kedi.target"];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.logiops}/bin/logid -v -c /etc/logid.cfg";
@@ -160,5 +161,4 @@
         });
     });
   '';
-
 }

@@ -3,11 +3,15 @@
   pkgs,
   username,
   ...
-}:
-let
-  homeDir = (if pkgs.stdenv.isLinux then "/home/" else "/Users/") + username;
-in
-{
+}: let
+  homeDir =
+    (
+      if pkgs.stdenv.isLinux
+      then "/home/"
+      else "/Users/"
+    )
+    + username;
+in {
   imports = [
     ./shell.nix
   ];
@@ -21,7 +25,7 @@ in
   programs.home-manager.enable = true;
 
   sops = {
-    age.sshKeyPaths = [ (homeDir + "/.ssh/id_ed25519") ];
+    age.sshKeyPaths = [(homeDir + "/.ssh/id_ed25519")];
 
     secrets."Yubico/u2f_keys" = {
       sopsFile = ../secrets/global.yaml;

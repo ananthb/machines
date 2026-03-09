@@ -3,13 +3,11 @@
   inputs,
   pkgs,
   ...
-}:
-let
+}: let
   switchyard = inputs.switchyard.packages.${pkgs.stdenv.hostPlatform.system}.default;
   switchyardConfigPath = "${config.xdg.configHome}/switchyard/config.toml";
   chromeWorkDesktopId = "chrome-triton.desktop";
-in
-{
+in {
   home = {
     packages = [
       switchyard
@@ -28,14 +26,14 @@ in
       "Network"
       "WebBrowser"
     ];
-    mimeType = [ "x-scheme-handler/org-protocol" ];
+    mimeType = ["x-scheme-handler/org-protocol"];
   };
 
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "x-scheme-handler/http" = [ "io.github.alyraffauf.Switchyard.desktop" ];
-      "x-scheme-handler/https" = [ "io.github.alyraffauf.Switchyard.desktop" ];
+      "x-scheme-handler/http" = ["io.github.alyraffauf.Switchyard.desktop"];
+      "x-scheme-handler/https" = ["io.github.alyraffauf.Switchyard.desktop"];
     };
   };
 

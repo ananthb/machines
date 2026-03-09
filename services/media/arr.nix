@@ -4,11 +4,9 @@
   pkgs,
   username,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   imports = [
     ../warp.nix
     ../monitoring/postgres.nix
@@ -93,9 +91,9 @@ in
       enable = true;
       group = "media";
       settings = {
-        torrentClients = [ "qbittorrent:http://localhost:18080" ];
+        torrentClients = ["qbittorrent:http://localhost:18080"];
         linkType = "hardlink";
-        linkDirs = [ "/srv/media/Downloads/cross-seed" ];
+        linkDirs = ["/srv/media/Downloads/cross-seed"];
         matchMode = "partial";
         action = "inject";
         duplicateCategories = true;
@@ -171,31 +169,31 @@ in
   systemd.services = {
     qbittorrent = {
       serviceConfig.UMask = "0002";
-      serviceConfig.SupplementaryGroups = [ "media" ];
-      partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = ["media"];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     radarr = {
       serviceConfig.UMask = lib.mkForce "0002";
-      serviceConfig.SupplementaryGroups = [ "media" ];
-      after = [ "postgresql.service" ];
-      wants = [ "qbittorrent.service" ];
-      partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = ["media"];
+      after = ["postgresql.service"];
+      wants = ["qbittorrent.service"];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     sonarr = {
       serviceConfig.UMask = lib.mkForce "0002";
-      serviceConfig.SupplementaryGroups = [ "media" ];
-      after = [ "postgresql.service" ];
-      wants = [ "postgresql.service" ];
-      partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = ["media"];
+      after = ["postgresql.service"];
+      wants = ["postgresql.service"];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     prowlarr = {
-      serviceConfig.SupplementaryGroups = [ "media" ];
+      serviceConfig.SupplementaryGroups = ["media"];
       after = [
         "postgresql.service"
         "radarr.service"
@@ -206,7 +204,7 @@ in
         "radarr.service"
         "sonarr.service"
       ];
-      partOf = [ "kedi.target" ];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
@@ -217,7 +215,7 @@ in
         DB_USER = "jellyseerr";
         DB_NAME = "jellyseerr";
       };
-      partOf = [ "kedi.target" ];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
@@ -231,18 +229,17 @@ in
         "prowlarr.service"
       ];
       serviceConfig.UMask = "0002";
-      serviceConfig.SupplementaryGroups = [ "media" ];
-      partOf = [ "kedi.target" ];
+      serviceConfig.SupplementaryGroups = ["media"];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
     prometheus-exportarr-radarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-sonarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-prowlarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
-    prometheus-exportarr-radarr-exporter.serviceConfig.SupplementaryGroups = [ "media" ];
-    prometheus-exportarr-sonarr-exporter.serviceConfig.SupplementaryGroups = [ "media" ];
-    prometheus-exportarr-prowlarr-exporter.serviceConfig.SupplementaryGroups = [ "media" ];
-
+    prometheus-exportarr-radarr-exporter.serviceConfig.SupplementaryGroups = ["media"];
+    prometheus-exportarr-sonarr-exporter.serviceConfig.SupplementaryGroups = ["media"];
+    prometheus-exportarr-prowlarr-exporter.serviceConfig.SupplementaryGroups = ["media"];
   };
 
   systemd.tmpfiles.rules = [
@@ -285,5 +282,4 @@ in
       EOF
     '';
   };
-
 }

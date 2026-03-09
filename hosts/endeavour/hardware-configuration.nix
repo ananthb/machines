@@ -2,9 +2,7 @@
   lib,
   modulesPath,
   ...
-}:
-
-{
+}: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -54,7 +52,7 @@
     "/var/lib/immich" = {
       device = "/srv/immich";
       fsType = "bind";
-      options = [ "bind" ];
+      options = ["bind"];
     };
   };
 

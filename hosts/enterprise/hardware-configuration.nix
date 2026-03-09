@@ -6,9 +6,7 @@
   modulesPath,
   ipv6Token,
   ...
-}:
-
-{
+}: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -25,10 +23,10 @@
         "sd_mod"
         "sr_mod"
       ];
-      kernelModules = [ "kvm-intel" ];
+      kernelModules = ["kvm-intel"];
       luks.devices."root".device = "/dev/disk/by-uuid/342c86a9-4b5a-4c14-b7fa-4bfb6e031ee1";
     };
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = ["kvm-intel"];
   };
 
   fileSystems = {

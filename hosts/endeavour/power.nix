@@ -1,8 +1,6 @@
-{ config, ... }:
-let
+{config, ...}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   power.ups = {
     enable = true;
     mode = "netserver";
@@ -11,8 +9,8 @@ in
       "admin" = {
         passwordFile = "${vs.nut-users}/admin";
         upsmon = "primary";
-        instcmds = [ "ALL" ];
-        actions = [ "SET" ];
+        instcmds = ["ALL"];
+        actions = ["SET"];
       };
       "nutmon" = {
         passwordFile = "${vs.nut-users}/nutmon";
@@ -21,8 +19,8 @@ in
     };
 
     upsd.listen = [
-      { address = "::0"; }
-      { address = "0.0.0.0"; }
+      {address = "::0";}
+      {address = "0.0.0.0";}
     ];
 
     ups."apc1" = {

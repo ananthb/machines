@@ -1,26 +1,22 @@
 {
+  config,
   pkgs,
   lib,
-  outputs,
   ...
-}:
-let
-  # Find which host has victoriametrics enabled
+}: let
   victoriaMetricsHost =
-    let
-      nixosHosts = lib.mapAttrsToList (name: value: {
-        inherit name;
-        inherit (value) config;
-      }) outputs.nixosConfigurations;
-      vmHosts = builtins.filter (host: host.config.services.victoriametrics.enable or false) nixosHosts;
-    in
-    if vmHosts == [ ] then
-      throw "No host with victoriametrics.service enabled found"
-    else
-      (builtins.head vmHosts).name;
-in
-{
+    if config.my-scripts.victoriaMetricsHost != null
+    then config.my-scripts.victoriaMetricsHost
+    else if config.services.victoriametrics.enable or false
+    then config.networking.hostName
+    else null;
+in {
   options.my-scripts = {
+    victoriaMetricsHost = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Host running VictoriaMetrics. Used as the default for VM_URL in helper scripts.";
+    };
     kopia-snapshot-backup = lib.mkOption {
       type = lib.types.package;
       default = null;
@@ -169,14 +165,19 @@ in
         # Sends a metric to VictoriaMetrics in Prometheus text format.
         # Usage: write_metric <metric_name> <labels> <value>
         # <labels> should be a comma-separated string like "job=api,instance=server1"
-        # VM_URL environment variable (default: http://${victoriaMetricsHost}:8428) selects
+        # VM_URL environment variable (default: http://${victoriaMetricsHost}:8428 when set) selects
         # the VictoriaMetrics endpoint to send metrics to.
         write_metric() {
           local metric_name="$1"
           local labels_str="$2"
           local value="$3"
           # Use environment variable for URL or default
-          local vm_url="''${VM_URL:-http://${victoriaMetricsHost}:8428}"
+          local default_vm_url="${
+          if victoriaMetricsHost != null
+          then "http://${victoriaMetricsHost}:8428"
+          else ""
+        }"
+          local vm_url="''${VM_URL:-$default_vm_url}"
 
           if [[ $# -lt 3 ]]; then
             echo 'Usage: write_metric <metric_name> <labels> <value>' >&2
@@ -207,6 +208,11 @@ in
           # Construct the Prometheus text format line
           local line="''${metric_name}''${prom_labels} ''${value} ''${timestamp_ms}"
 
+          if [[ -z "$vm_url" ]]; then
+            printf 'Skipping metric: VictoriaMetrics URL not set\n' >&2
+            return 0
+          fi
+
           # Send the data using curl to the prometheus write endpoint
           printf 'Sending line to %s: %s\n' "$vm_url" "$line" >&2
 
@@ -222,10 +228,10 @@ in
 
     vault-secrets.secrets = {
       gcloud-service-accounts = {
-        services = [ ];
+        services = [];
       };
       kopia-gcs = {
-        services = [ ];
+        services = [];
       };
     };
   };

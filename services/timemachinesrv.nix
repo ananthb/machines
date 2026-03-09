@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   services = {
     # Time Machine server via Samba
     samba = {
@@ -40,7 +39,6 @@
         };
       };
     };
-
   };
 
   my-services.kediTargets.samba-smbd = true;
@@ -51,11 +49,10 @@
     ];
 
     services.samba-smbd = {
-      after = [ "tailscaled.service" ];
-      wants = [ "tailscaled.service" ];
-      partOf = [ "kedi.target" ];
+      after = ["tailscaled.service"];
+      wants = ["tailscaled.service"];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
   };
-
 }

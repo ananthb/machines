@@ -1,8 +1,6 @@
-{ config, ... }:
-let
+{config, ...}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   my-services.rclone-syncs = {
     "ananth-drive" = {
       type = "bisync";
@@ -61,7 +59,7 @@ in
   };
 
   vault-secrets.secrets.rclone-ananth = {
-    services = [ "rclone-sync-ananth-drive" ];
+    services = ["rclone-sync-ananth-drive"];
   };
 
   vault-secrets.secrets.rclone-bhaskar = {

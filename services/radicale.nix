@@ -1,12 +1,14 @@
-{ config, pkgs, ... }:
-let
-  vs = config.vault-secrets.secrets;
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  vs = config.vault-secrets.secrets;
+in {
   services.radicale = {
     enable = true;
     settings = {
-      server.hosts = [ "[::]:5232" ];
+      server.hosts = ["[::]:5232"];
       auth = {
         type = "htpasswd";
         htpasswd_filename = "${vs.radicale}/htpasswd";
@@ -18,7 +20,7 @@ in
   my-services.kediTargets.radicale = true;
 
   systemd.services.radicale = {
-    partOf = [ "kedi.target" ];
+    partOf = ["kedi.target"];
   };
 
   systemd.services."radicale-backup" = {
@@ -33,7 +35,7 @@ in
         rm -rf "$snapshot_target"
       }' EXIT
 
-      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
+      ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
     postStop = "systemctl start radicale.service";
@@ -50,8 +52,7 @@ in
   };
 
   vault-secrets.secrets.radicale = {
-    services = [ "radicale" ];
+    services = ["radicale"];
     group = config.users.groups.radicale.name;
   };
-
 }

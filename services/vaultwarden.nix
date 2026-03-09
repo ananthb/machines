@@ -2,11 +2,9 @@
   config,
   pkgs,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   imports = [
     ./monitoring/postgres.nix
   ];
@@ -38,7 +36,7 @@ in
   my-services.kediTargets.vaultwarden = true;
 
   systemd.services.vaultwarden = {
-    partOf = [ "kedi.target" ];
+    partOf = ["kedi.target"];
   };
 
   systemd.services."vaultwarden-backup" = {
@@ -49,7 +47,7 @@ in
       backup_target="/var/lib/${config.systemd.services.vaultwarden.serviceConfig.StateDirectory}"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
       dump_file="$snapshot_target/db.dump"
-        
+
       trap '{
         rm -f "$dump_file"
         rm -rf "$snapshot_target"
@@ -93,8 +91,7 @@ in
   };
 
   vault-secrets.secrets.vaultwarden = {
-    services = [ "vaultwarden" ];
+    services = ["vaultwarden"];
     group = config.users.groups.vaultwarden.name;
   };
-
 }

@@ -4,11 +4,9 @@
   pkgs,
   inputs,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   imports = [
     inputs.NixVirt.nixosModules.default
 
@@ -16,8 +14,6 @@ in
     ./hardware-configuration.nix
     ./programs.nix
     ./vms.nix
-
-    inputs.mithril.nixosModules.mithril
 
     ../../services/coder.nix
     ../../services/immich-ml.nix
@@ -75,7 +71,7 @@ in
             {
               path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel0";
               input_args = "preset-rtsp-restream";
-              roles = [ "record" ];
+              roles = ["record"];
             }
             {
               path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel1";
@@ -105,16 +101,16 @@ in
       pkiBundle = "/var/lib/sbctl";
     };
 
-    kernelModules = [ "i2c-dev" ];
+    kernelModules = ["i2c-dev"];
 
     # Enable cross-compilation for aarch64-linux
-    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    binfmt.emulatedSystems = ["aarch64-linux"];
   };
 
   # hardware accelerated graphics
   # used by immich and jellyfin
   nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
   };
   hardware.graphics = {
     enable = true;
@@ -167,15 +163,6 @@ in
     allowedUDPPortRanges = allowedTCPPortRanges;
   };
 
-  services.mithril = {
-    enable = false;
-    storage.singleDisk = {
-      enable = true;
-      device = "/dev/nvme0n1";
-      fsType = "f2fs";
-    };
-  };
-
   systemd = {
     tmpfiles.rules = [
       # Set default ACL for group-writable files (umask 002)
@@ -188,7 +175,7 @@ in
     ];
 
     # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
-    services.gnome-remote-desktop.wantedBy = [ "graphical.target" ];
+    services.gnome-remote-desktop.wantedBy = ["graphical.target"];
 
     # Desktop-specific oomd tuning (base config in linux.nix)
     oomd.settings.OOM.DefaultMemoryPressureDurationSec = "5s";
@@ -201,8 +188,7 @@ in
     };
 
     # Mount binfmt_misc at boot for cross-compilation
-    units."proc-sys-fs-binfmt_misc.mount".wantedBy = [ "sysinit.target" ];
-
+    units."proc-sys-fs-binfmt_misc.mount".wantedBy = ["sysinit.target"];
   };
 
   fileSystems = {
@@ -258,7 +244,7 @@ in
   };
 
   vault-secrets.secrets.nut-users = {
-    services = [ "upsmon" ];
+    services = ["upsmon"];
   };
 
   # 32GB swapfile

@@ -3,13 +3,11 @@
   pkgs,
   username,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   imports = [
-    ((import ../../lib/caddy-ddns.nix).mkCaddyDdns { domains = [ "tv" ]; })
+    ((import ../../lib/caddy-ddns.nix).mkCaddyDdns {domains = ["tv"];})
   ];
 
   users.groups.media.members = [
@@ -78,19 +76,19 @@ in
 
   systemd.services = {
     jellyfin = {
-      partOf = [ "kedi.target" ];
-      serviceConfig.SupplementaryGroups = [ "media" ];
+      partOf = ["kedi.target"];
+      serviceConfig.SupplementaryGroups = ["media"];
     };
     caddy = {
-      after = [ "jellyfin.service" ];
-      wants = [ "jellyfin.service" ];
-      partOf = [ "kedi.target" ];
+      after = ["jellyfin.service"];
+      wants = ["jellyfin.service"];
+      partOf = ["kedi.target"];
     };
     tsnsrv-tv = {
-      wants = [ "jellyfin.service" ];
-      after = [ "jellyfin.service" ];
-      partOf = [ "kedi.target" ];
-      serviceConfig.SupplementaryGroups = [ "media" ];
+      wants = ["jellyfin.service"];
+      after = ["jellyfin.service"];
+      partOf = ["kedi.target"];
+      serviceConfig.SupplementaryGroups = ["media"];
     };
   };
 
@@ -100,5 +98,4 @@ in
     ];
     group = "media";
   };
-
 }

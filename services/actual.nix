@@ -1,8 +1,10 @@
-{ config, pkgs, ... }:
-let
-  vs = config.vault-secrets.secrets;
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  vs = config.vault-secrets.secrets;
+in {
   services.actual = {
     enable = true;
     settings.port = 3001;
@@ -17,7 +19,7 @@ in
         ACTUAL_OPENID_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration";
         ACTUAL_OPENID_SERVER_HOSTNAME = "https://actual.kedi.dev";
       };
-      partOf = [ "kedi.target" ];
+      partOf = ["kedi.target"];
     };
 
     "actual-backup" = {
@@ -32,7 +34,7 @@ in
           rm -rf "$snapshot_target"
         }' EXIT
 
-        ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target" 
+        ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
         ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
       '';
       postStop = "systemctl start actual.service";
@@ -50,7 +52,6 @@ in
   };
 
   vault-secrets.secrets.actual = {
-    services = [ "actual" ];
+    services = ["actual"];
   };
-
 }

@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   calibrePort = 8086;
   libraryDir = "/srv/media/Books";
-in
-{
-  users.groups.calibre = { };
+in {
+  users.groups.calibre = {};
 
   systemd.tmpfiles.rules = [
     "d ${libraryDir} 2775 root ${config.users.groups.calibre.name} - -"
@@ -17,9 +19,9 @@ in
     wantedBy = [
       "multi-user.target"
     ];
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    partOf = [ "kedi.target" ];
+    after = ["network-online.target"];
+    wants = ["network-online.target"];
+    partOf = ["kedi.target"];
     unitConfig.ConditionPathIsMountPoint = "/srv";
     serviceConfig = {
       ExecStartPre = "${pkgs.bash}/bin/bash -c 'if [ ! -f ${libraryDir}/metadata.db ]; then ${pkgs.calibre}/bin/calibredb list --with-library ${libraryDir} >/dev/null; fi'";
@@ -29,6 +31,5 @@ in
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ calibrePort ];
-
+  networking.firewall.allowedTCPPorts = [calibrePort];
 }

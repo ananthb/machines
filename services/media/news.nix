@@ -2,11 +2,9 @@
   config,
   containerImages,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   imports = [
     ../monitoring/postgres.nix
   ];
@@ -33,41 +31,39 @@ in
 
   systemd.services = {
     miniflux = {
-      partOf = [ "kedi.target" ];
-      serviceConfig.SupplementaryGroups = [ "news" ];
+      partOf = ["kedi.target"];
+      serviceConfig.SupplementaryGroups = ["news"];
     };
     miniflux-secrets.serviceConfig.UMask = "0027";
     wallabag = {
-      partOf = [ "kedi.target" ];
-      serviceConfig.SupplementaryGroups = [ "news" ];
+      partOf = ["kedi.target"];
+      serviceConfig.SupplementaryGroups = ["news"];
     };
     wallabag-secrets.serviceConfig.UMask = "0027";
   };
 
-  virtualisation.quadlet =
-    let
-      inherit (config.virtualisation.quadlet) volumes;
-    in
-    {
-      autoEscape = true;
-      autoUpdate.enable = true;
+  virtualisation.quadlet = let
+    inherit (config.virtualisation.quadlet) volumes;
+  in {
+    autoEscape = true;
+    autoUpdate.enable = true;
 
-      volumes = {
-        wallabag-data = { };
-        wallabag-images = { };
-      };
-
-      containers.wallabag.containerConfig = {
-        name = "wallabag";
-        image = containerImages.wallabag;
-        volumes = [
-          "${volumes.wallabag-data.ref}:/var/www/wallabag/data"
-          "${volumes.wallabag-images.ref}:/var/www/wallabag/web/assets/images"
-        ];
-        publishPorts = [ "8085:80" ];
-        environmentFiles = [ "${vs.wallabag}/environment" ];
-      };
+    volumes = {
+      wallabag-data = {};
+      wallabag-images = {};
     };
+
+    containers.wallabag.containerConfig = {
+      name = "wallabag";
+      image = containerImages.wallabag;
+      volumes = [
+        "${volumes.wallabag-data.ref}:/var/www/wallabag/data"
+        "${volumes.wallabag-images.ref}:/var/www/wallabag/web/assets/images"
+      ];
+      publishPorts = ["8085:80"];
+      environmentFiles = ["${vs.wallabag}/environment"];
+    };
+  };
 
   networking.firewall = {
     allowedTCPPorts = [
@@ -98,7 +94,7 @@ in
   };
 
   vault-secrets.secrets.miniflux = {
-    services = [ "miniflux" ];
+    services = ["miniflux"];
     secretsKey = null;
     group = "news";
     extraScript = ''
@@ -110,12 +106,11 @@ in
   };
 
   vault-secrets.secrets.wallabag = {
-    services = [ "wallabag" ];
+    services = ["wallabag"];
     group = "news";
   };
 
-  users.groups.news = { };
+  users.groups.news = {};
 
   my-services.kediTargets.wallabag = true;
-
 }

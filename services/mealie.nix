@@ -1,9 +1,11 @@
-{ config, pkgs, ... }:
-let
-  vs = config.vault-secrets.secrets;
-in
 {
-  users.groups.mealie = { };
+  config,
+  pkgs,
+  ...
+}: let
+  vs = config.vault-secrets.secrets;
+in {
+  users.groups.mealie = {};
 
   services.mealie = {
     enable = true;
@@ -14,8 +16,8 @@ in
   my-services.kediTargets.mealie = true;
 
   systemd.services.mealie = {
-    partOf = [ "kedi.target" ];
-    serviceConfig.SupplementaryGroups = [ "mealie" ];
+    partOf = ["kedi.target"];
+    serviceConfig.SupplementaryGroups = ["mealie"];
   };
 
   systemd.services."mealie-backup" = {
@@ -69,5 +71,4 @@ in
     ];
     group = "mealie";
   };
-
 }

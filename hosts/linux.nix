@@ -7,13 +7,10 @@
   system,
   username,
   ...
-}:
-let
+}: let
   tailscaleServeLib = import ../lib/tailscale-serve-config.nix;
   cftunnelLib = import ../lib/cftunnel.nix;
-in
-{
-
+in {
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.vault-secrets.nixosModules.vault-secrets
@@ -29,14 +26,12 @@ in
         useGlobalPkgs = true;
         useUserPackages = true;
         users.${username} = {
-          imports =
-            let
-              hostModule = (import ../lib/home-host-module.nix { inherit lib; }) hostname;
-            in
-            [
-              ../home/common.nix
-              hostModule
-            ];
+          imports = let
+            hostModule = (import ../lib/home-host-module.nix {inherit lib;}) hostname;
+          in [
+            ../home/common.nix
+            hostModule
+          ];
         };
         extraSpecialArgs = {
           inherit hostname system username;
@@ -49,28 +44,32 @@ in
     ./common.nix
     ../lib/scripts.nix
     ../lib/kedi-target.nix
-    (tailscaleServeLib.mkTailscaleServeConfig { inherit hostname; })
+    (tailscaleServeLib.mkTailscaleServeConfig {inherit hostname;})
     cftunnelLib.mkCftunnel
   ];
 
   sops = {
     defaultSopsFile = ../secrets/${hostname}.yaml;
-    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
     useSystemdActivation = true;
   };
 
-  sops.secrets = lib.mapAttrs' (
-    name: value:
-    let
-      user = value.user or "root";
-      group = value.group or "root";
-      mode = if user != "root" || group != "root" then "0440" else "0400";
-    in
-    lib.nameValuePair "approles/${name}" {
-      owner = user;
-      inherit group mode;
-    }
-  ) config.vault-secrets.secrets;
+  sops.secrets =
+    lib.mapAttrs' (
+      name: value: let
+        user = value.user or "root";
+        group = value.group or "root";
+        mode =
+          if user != "root" || group != "root"
+          then "0440"
+          else "0400";
+      in
+        lib.nameValuePair "approles/${name}" {
+          owner = user;
+          inherit group mode;
+        }
+    )
+    config.vault-secrets.secrets;
 
   nix.gc.dates = "weekly";
 
@@ -111,21 +110,23 @@ in
         tailscaled.serviceConfig.ManagedOOMPreference = "none";
       }
       (lib.mapAttrs' (
-        name: _value:
-        lib.nameValuePair "${name}-secrets" {
-          requires = [ "sops-install-secrets.service" ];
-          after = [ "sops-install-secrets.service" ];
-          serviceConfig.EnvironmentFile = lib.mkForce config.sops.secrets."approles/${name}".path;
-        }
-      ) config.vault-secrets.secrets)
+          name: _value:
+            lib.nameValuePair "${name}-secrets" {
+              requires = ["sops-install-secrets.service"];
+              after = ["sops-install-secrets.service"];
+              serviceConfig.EnvironmentFile = lib.mkForce config.sops.secrets."approles/${name}".path;
+            }
+        )
+        config.vault-secrets.secrets)
       (lib.mapAttrs' (
-        name: value:
-        lib.nameValuePair "${name}-secrets" {
-          serviceConfig.UMask = lib.mkIf (value.group != "root" && value.group != "nogroup") (
-            lib.mkForce "0027"
-          );
-        }
-      ) config.vault-secrets.secrets)
+          name: value:
+            lib.nameValuePair "${name}-secrets" {
+              serviceConfig.UMask = lib.mkIf (value.group != "root" && value.group != "nogroup") (
+                lib.mkForce "0027"
+              );
+            }
+        )
+        config.vault-secrets.secrets)
     ];
   };
 
@@ -149,7 +150,7 @@ in
       enable = true;
       allowPing = true;
       # Let Tailscale ACLs govern access on the Tailscale interface.
-      trustedInterfaces = [ config.services.tailscale.interfaceName ];
+      trustedInterfaces = [config.services.tailscale.interfaceName];
     };
   };
 
@@ -188,7 +189,7 @@ in
     };
   };
 
-  environment.shells = [ pkgs.fish ];
+  environment.shells = [pkgs.fish];
 
   programs = {
     fish.enable = true;
@@ -196,15 +197,15 @@ in
     # SSH known hosts for deploy-rs to SSH between servers
     ssh.knownHosts = {
       endeavour = {
-        hostNames = [ "endeavour" ];
+        hostNames = ["endeavour"];
         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAJxgao1yX2VxxPIozAKlL3cbk2SpBPfxjF29q7S/oFf";
       };
       enterprise = {
-        hostNames = [ "enterprise" ];
+        hostNames = ["enterprise"];
         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFQt03m35by3UEWbU2KiEsr+9jnxXoFwRNflQYKCjE6n";
       };
       stargazer = {
-        hostNames = [ "stargazer" ];
+        hostNames = ["stargazer"];
         publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1jqNdM9sPcuX9qkMPvlTMnkzyUQY1CnMGYHv2Epogo";
       };
     };
@@ -224,7 +225,7 @@ in
     };
 
     # Yubikey stuff
-    udev.packages = with pkgs; [ yubikey-personalization ];
+    udev.packages = with pkgs; [yubikey-personalization];
     pcscd.enable = true;
 
     # Enable resolved and avahi
@@ -248,14 +249,15 @@ in
           "tcpstat"
           "wifi"
         ];
-        disabledCollectors = [ "textfile" ];
+        disabledCollectors = ["textfile"];
       };
 
       smartctl.enable = true;
       smartctl.openFirewall = true;
-
     };
   };
+
+  my-scripts.victoriaMetricsHost = "endeavour";
 
   environment.systemPackages = with pkgs; [
     e2fsprogs

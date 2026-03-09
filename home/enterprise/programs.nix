@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     discord
     element-desktop
@@ -25,13 +24,13 @@
     gnome-shell = {
       enable = true;
       extensions = with pkgs.gnomeExtensions; [
-        { package = another-window-session-manager; }
-        { package = appindicator; }
-        { package = gsconnect; }
-        { package = night-theme-switcher; }
-        { package = system-monitor; }
-        { package = tailscale-status; }
-        { package = tiling-shell; }
+        {package = another-window-session-manager;}
+        {package = appindicator;}
+        {package = gsconnect;}
+        {package = night-theme-switcher;}
+        {package = system-monitor;}
+        {package = tailscale-status;}
+        {package = tiling-shell;}
       ];
     };
 

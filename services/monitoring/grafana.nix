@@ -1,8 +1,6 @@
-{ config, ... }:
-let
+{config, ...}: let
   vs = config.vault-secrets.secrets;
-in
-{
+in {
   imports = [
     ./postgres.nix
   ];
@@ -132,17 +130,17 @@ in
                           conditions = [
                             {
                               evaluator = {
-                                params = [ 1 ];
+                                params = [1];
                                 type = "lt";
                               };
                               operator = {
                                 type = "and";
                               };
                               query = {
-                                params = [ "C" ];
+                                params = ["C"];
                               };
                               reducer = {
-                                params = [ ];
+                                params = [];
                                 type = "last";
                               };
                               type = "query";
@@ -171,7 +169,7 @@ in
                     isPaused = false;
                     notification_settings = {
                       receiver = "grafana-default-telegram";
-                      mute_time_intervals = [ "Indian Nights" ];
+                      mute_time_intervals = ["Indian Nights"];
                     };
                   }
                 ];
@@ -216,17 +214,17 @@ in
                           conditions = [
                             {
                               evaluator = {
-                                params = [ 1 ];
+                                params = [1];
                                 type = "lt";
                               };
                               operator = {
                                 type = "and";
                               };
                               query = {
-                                params = [ "C" ];
+                                params = ["C"];
                               };
                               reducer = {
-                                params = [ ];
+                                params = [];
                                 type = "last";
                               };
                               type = "query";
@@ -282,17 +280,17 @@ in
                           conditions = [
                             {
                               evaluator = {
-                                params = [ 200 ];
+                                params = [200];
                                 type = "lt";
                               };
                               operator = {
                                 type = "and";
                               };
                               query = {
-                                params = [ "C" ];
+                                params = ["C"];
                               };
                               reducer = {
-                                params = [ ];
+                                params = [];
                                 type = "last";
                               };
                               type = "query";
@@ -348,17 +346,17 @@ in
                           conditions = [
                             {
                               evaluator = {
-                                params = [ 200000 ];
+                                params = [200000];
                                 type = "lt";
                               };
                               operator = {
                                 type = "and";
                               };
                               query = {
-                                params = [ "C" ];
+                                params = ["C"];
                               };
                               reducer = {
-                                params = [ ];
+                                params = [];
                                 type = "last";
                               };
                               type = "query";
@@ -411,7 +409,7 @@ in
 
     postgresql = {
       enable = true;
-      ensureDatabases = [ "grafana" ];
+      ensureDatabases = ["grafana"];
       ensureUsers = [
         {
           name = "grafana";
@@ -422,11 +420,10 @@ in
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 3000 ];
+  networking.firewall.allowedTCPPorts = [3000];
 
   vault-secrets.secrets.grafana = {
-    services = [ "grafana" ];
+    services = ["grafana"];
     group = config.users.groups.grafana.name;
   };
-
 }

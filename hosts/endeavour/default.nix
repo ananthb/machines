@@ -4,8 +4,7 @@
   pkgs,
   ipv6Token,
   ...
-}:
-{
+}: {
   nixpkgs.overlays = [
     (_final: prev: {
       prometheus-node-exporter = prev.prometheus-node-exporter.overrideAttrs (_old: {
@@ -68,7 +67,7 @@
   # hardware accelerated graphics
   # used by immich and jellyfin
   nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
   };
   hardware.graphics = {
     enable = true;

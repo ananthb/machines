@@ -1,21 +1,21 @@
 /**
-  Seafile deployment using Podman containers managed by nix-quadlet.
+Seafile deployment using Podman containers managed by nix-quadlet.
 
-  Components:
-  - Seafile server
-  - Notification server
-  - Metadata server
-  - Thumbnail server
-  - AI server
-  - Seadoc server
-  - Collabora CODE (can be hosted separately)
+Components:
+- Seafile server
+- Notification server
+- Metadata server
+- Thumbnail server
+- AI server
+- Seadoc server
+- Collabora CODE (can be hosted separately)
 
-  Dependencies:
-  - MySQL (MariaDB)
-  - Redis
-  - Caddy (ingress) - listening on port 4444 on all interfaces
+Dependencies:
+- MySQL (MariaDB)
+- Redis
+- Caddy (ingress) - listening on port 4444 on all interfaces
 
-  Configuration files and secrets are managed using vault-secrets.
+Configuration files and secrets are managed using vault-secrets.
 */
 {
   config,
@@ -23,8 +23,7 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
   seafileHostname = "seafile.kedi.dev";
   seahubSettings = pkgs.writeText "seahub_settings.py" ''
@@ -229,224 +228,220 @@ let
     DB_NAME=sdoc_db
     NON_ROOT=false
   '';
-in
-{
-
+in {
   imports = [
     ./caddy.nix
     ./warp.nix
   ];
 
-  users.groups.seafile = { };
+  users.groups.seafile = {};
 
-  virtualisation.quadlet =
-    let
-      inherit (config.virtualisation.quadlet) networks;
-    in
-    {
-      autoEscape = true;
-      autoUpdate.enable = true;
+  virtualisation.quadlet = let
+    inherit (config.virtualisation.quadlet) networks;
+  in {
+    autoEscape = true;
+    autoUpdate.enable = true;
 
-      networks = {
-        seafile = { };
+    networks = {
+      seafile = {};
+    };
+
+    containers = {
+      seafile = {
+        containerConfig = {
+          name = "seafile";
+          image = containerImages.seafile;
+          autoUpdate = "registry";
+          volumes = [
+            "/srv/seafile/seafile-server:/shared"
+          ];
+          networks = [
+            networks.seafile.ref
+          ];
+          publishPorts = ["4450:80"];
+          environmentFiles = [
+            "${seafileEnv}"
+            "${vs.seafile}/seafile.env"
+          ];
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          ExecStartPre = [
+            "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/cat ${vs.seafile}/seahub_settings.enc.py ${seahubSettings} > /srv/seafile/seafile-server/seafile/conf/seahub_settings.py'"
+            "${pkgs.coreutils}/bin/cp ${seafileConf} /srv/seafile/seafile-server/seafile/conf/seafile.conf"
+          ];
+        };
+        unitConfig = {
+          Before = "caddy.service";
+          ConditionPathIsMountPoint = "/srv";
+          After = lib.concatStringsSep " " [
+            "mysql.service"
+            "redis-seafile.service"
+            "seadoc.service"
+            "seafile-ai.service"
+            "seafile-md-server.service"
+            "seafile-notification-server.service"
+            "seafile-thumbnail-server.service"
+          ];
+          Wants = lib.concatStringsSep " " [
+            "caddy.service"
+            "mysql.service"
+            "redis-seafile.service"
+            "seadoc.service"
+            "seafile-ai.service"
+            "seafile-md-server.service"
+            "seafile-notification-server.service"
+            "seafile-thumbnail-server.service"
+          ];
+        };
       };
 
-      containers = {
-        seafile = {
-          containerConfig = {
-            name = "seafile";
-            image = containerImages.seafile;
-            autoUpdate = "registry";
-            volumes = [
-              "/srv/seafile/seafile-server:/shared"
-            ];
-            networks = [
-              networks.seafile.ref
-            ];
-            publishPorts = [ "4450:80" ];
-            environmentFiles = [
-              "${seafileEnv}"
-              "${vs.seafile}/seafile.env"
-            ];
-          };
-          serviceConfig = {
-            Restart = "on-failure";
-            ExecStartPre = [
-              "${pkgs.bash}/bin/bash -c '${pkgs.coreutils}/bin/cat ${vs.seafile}/seahub_settings.enc.py ${seahubSettings} > /srv/seafile/seafile-server/seafile/conf/seahub_settings.py'"
-              "${pkgs.coreutils}/bin/cp ${seafileConf} /srv/seafile/seafile-server/seafile/conf/seafile.conf"
-            ];
-          };
-          unitConfig = {
-            Before = "caddy.service";
-            ConditionPathIsMountPoint = "/srv";
-            After = lib.concatStringsSep " " [
-              "mysql.service"
-              "redis-seafile.service"
-              "seadoc.service"
-              "seafile-ai.service"
-              "seafile-md-server.service"
-              "seafile-notification-server.service"
-              "seafile-thumbnail-server.service"
-            ];
-            Wants = lib.concatStringsSep " " [
-              "caddy.service"
-              "mysql.service"
-              "redis-seafile.service"
-              "seadoc.service"
-              "seafile-ai.service"
-              "seafile-md-server.service"
-              "seafile-notification-server.service"
-              "seafile-thumbnail-server.service"
-            ];
-          };
+      seafile-notification-server = {
+        containerConfig = {
+          name = "seafile-notification-server";
+          image = containerImages.seafileNotification;
+          autoUpdate = "registry";
+          networks = [
+            networks.seafile.ref
+          ];
+          publishPorts = ["8083:8083"];
+          environmentFiles = [
+            "${notificationServerEnv}"
+            "${vs.seafile}/notification-server.env"
+          ];
         };
+        serviceConfig.Restart = "on-failure";
+        unitConfig = {
+          Before = "caddy.service";
+          ConditionPathIsMountPoint = "/srv";
+          After = "mysql.service";
+          Wants = "mysql.service caddy.service";
+        };
+      };
 
-        seafile-notification-server = {
-          containerConfig = {
-            name = "seafile-notification-server";
-            image = containerImages.seafileNotification;
-            autoUpdate = "registry";
-            networks = [
-              networks.seafile.ref
-            ];
-            publishPorts = [ "8083:8083" ];
-            environmentFiles = [
-              "${notificationServerEnv}"
-              "${vs.seafile}/notification-server.env"
-            ];
-          };
-          serviceConfig.Restart = "on-failure";
-          unitConfig = {
-            Before = "caddy.service";
-            ConditionPathIsMountPoint = "/srv";
-            After = "mysql.service";
-            Wants = "mysql.service caddy.service";
-          };
+      seafile-md-server = {
+        containerConfig = {
+          name = "seafile-md-server";
+          image = containerImages.seafileMd;
+          autoUpdate = "registry";
+          volumes = [
+            "/srv/seafile/seafile-server:/shared"
+          ];
+          networks = [
+            networks.seafile.ref
+          ];
+          publishPorts = ["8084:8084"];
+          environmentFiles = [
+            "${mdServerEnv}"
+            "${vs.seafile}/md-server.env"
+          ];
         };
+        serviceConfig.Restart = "on-failure";
+        unitConfig = {
+          Before = "caddy.service";
+          ConditionPathIsMountPoint = "/srv";
+          After = "mysql.service redis-seafile.service";
+          Wants = "caddy.service mysql.service redis-seafile.service";
+        };
+      };
 
-        seafile-md-server = {
-          containerConfig = {
-            name = "seafile-md-server";
-            image = containerImages.seafileMd;
-            autoUpdate = "registry";
-            volumes = [
-              "/srv/seafile/seafile-server:/shared"
-            ];
-            networks = [
-              networks.seafile.ref
-            ];
-            publishPorts = [ "8084:8084" ];
-            environmentFiles = [
-              "${mdServerEnv}"
-              "${vs.seafile}/md-server.env"
-            ];
-          };
-          serviceConfig.Restart = "on-failure";
-          unitConfig = {
-            Before = "caddy.service";
-            ConditionPathIsMountPoint = "/srv";
-            After = "mysql.service redis-seafile.service";
-            Wants = "caddy.service mysql.service redis-seafile.service";
-          };
+      seafile-thumbnail-server = {
+        containerConfig = {
+          name = "seafile-thumbnail-server";
+          image = containerImages.seafileThumbnail;
+          autoUpdate = "registry";
+          volumes = [
+            "/srv/seafile/seafile-server:/shared"
+          ];
+          networks = [
+            networks.seafile.ref
+          ];
+          publishPorts = ["4453:80"];
+          environmentFiles = [
+            "${thumbnailServerEnv}"
+            "${vs.seafile}/thumbnail-server.env"
+          ];
         };
+        serviceConfig.Restart = "on-failure";
+        unitConfig = {
+          Before = "caddy.service";
+          ConditionPathIsMountPoint = "/srv";
+          After = "mysql.service";
+          Wants = "mysql.service caddy.service";
+        };
+      };
 
-        seafile-thumbnail-server = {
-          containerConfig = {
-            name = "seafile-thumbnail-server";
-            image = containerImages.seafileThumbnail;
-            autoUpdate = "registry";
-            volumes = [
-              "/srv/seafile/seafile-server:/shared"
-            ];
-            networks = [
-              networks.seafile.ref
-            ];
-            publishPorts = [ "4453:80" ];
-            environmentFiles = [
-              "${thumbnailServerEnv}"
-              "${vs.seafile}/thumbnail-server.env"
-            ];
-          };
-          serviceConfig.Restart = "on-failure";
-          unitConfig = {
-            Before = "caddy.service";
-            ConditionPathIsMountPoint = "/srv";
-            After = "mysql.service";
-            Wants = "mysql.service caddy.service";
-          };
+      seafile-ai = {
+        containerConfig = {
+          name = "seafile-ai";
+          image = containerImages.seafileAi;
+          autoUpdate = "registry";
+          volumes = [
+            "/srv/seafile/seafile-server:/shared"
+          ];
+          networks = [
+            networks.seafile.ref
+          ];
+          environmentFiles = [
+            "${aiEnv}"
+            "${vs.seafile}/ai.env"
+          ];
         };
+        serviceConfig.Restart = "on-failure";
+        unitConfig = {
+          ConditionPathIsMountPoint = "/srv";
+          After = "redis-seafile.service";
+          Wants = "redis-seafile.service";
+        };
+      };
 
-        seafile-ai = {
-          containerConfig = {
-            name = "seafile-ai";
-            image = containerImages.seafileAi;
-            autoUpdate = "registry";
-            volumes = [
-              "/srv/seafile/seafile-server:/shared"
-            ];
-            networks = [
-              networks.seafile.ref
-            ];
-            environmentFiles = [
-              "${aiEnv}"
-              "${vs.seafile}/ai.env"
-            ];
-          };
-          serviceConfig.Restart = "on-failure";
-          unitConfig = {
-            ConditionPathIsMountPoint = "/srv";
-            After = "redis-seafile.service";
-            Wants = "redis-seafile.service";
-          };
+      seadoc = {
+        containerConfig = {
+          name = "seadoc";
+          image = containerImages.seadoc;
+          autoUpdate = "registry";
+          volumes = [
+            "/srv/seafile/seadoc:/shared"
+          ];
+          networks = [
+            networks.seafile.ref
+          ];
+          publishPorts = ["4451:80"];
+          environmentFiles = [
+            "${seadocEnv}"
+            "${vs.seafile}/seadoc.env"
+          ];
         };
+        serviceConfig.Restart = "on-failure";
+        unitConfig.ConditionPathIsMountPoint = "/srv";
+      };
 
-        seadoc = {
-          containerConfig = {
-            name = "seadoc";
-            image = containerImages.seadoc;
-            autoUpdate = "registry";
-            volumes = [
-              "/srv/seafile/seadoc:/shared"
-            ];
-            networks = [
-              networks.seafile.ref
-            ];
-            publishPorts = [ "4451:80" ];
-            environmentFiles = [
-              "${seadocEnv}"
-              "${vs.seafile}/seadoc.env"
+      collabora-code = {
+        containerConfig = {
+          name = "collabora-code";
+          image = containerImages.collabora;
+          podmanArgs = ["--privileged"];
+          autoUpdate = "registry";
+          networks = [
+            networks.seafile.ref
+          ];
+          publishPorts = ["9980:9980"];
+          environmentFiles = ["${vs.collabora}/code.env"];
+          environments = {
+            extra_params = lib.concatStringsSep " " [
+              "--o:logging.file[@enable]=false"
+              "--o:admin_console.enable=true"
+              "--o:ssl.enable=false"
+              "--o:ssl.termination=true"
+              "--o:net.service_root=/collabora-code"
             ];
           };
-          serviceConfig.Restart = "on-failure";
-          unitConfig.ConditionPathIsMountPoint = "/srv";
         };
-
-        collabora-code = {
-          containerConfig = {
-            name = "collabora-code";
-            image = containerImages.collabora;
-            podmanArgs = [ "--privileged" ];
-            autoUpdate = "registry";
-            networks = [
-              networks.seafile.ref
-            ];
-            publishPorts = [ "9980:9980" ];
-            environmentFiles = [ "${vs.collabora}/code.env" ];
-            environments = {
-              extra_params = lib.concatStringsSep " " [
-                "--o:logging.file[@enable]=false"
-                "--o:admin_console.enable=true"
-                "--o:ssl.enable=false"
-                "--o:ssl.termination=true"
-                "--o:net.service_root=/collabora-code"
-              ];
-            };
-          };
-          serviceConfig.Restart = "on-failure";
-          unitConfig.ConditionPathIsMountPoint = "/srv";
-        };
+        serviceConfig.Restart = "on-failure";
+        unitConfig.ConditionPathIsMountPoint = "/srv";
       };
     };
+  };
 
   services = {
     caddy = {
@@ -524,7 +519,7 @@ in
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 4000 ];
+  networking.firewall.allowedTCPPorts = [4000];
 
   # Seafile access to services running on the host
   networking.firewall.interfaces.podman1.allowedTCPPorts = [
@@ -534,9 +529,9 @@ in
 
   systemd.services = {
     "redis-seafile" = {
-      after = [ "seafile-network.service" ];
-      wants = [ "seafile-network.service" ];
-      partOf = [ "kedi.target" ];
+      after = ["seafile-network.service"];
+      wants = ["seafile-network.service"];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
     "seafile-mysql-backup" = {
@@ -604,8 +599,7 @@ in
   };
 
   vault-secrets.secrets.collabora = {
-    services = [ "collabora-code" ];
+    services = ["collabora-code"];
     group = config.users.groups.seafile.name;
   };
-
 }

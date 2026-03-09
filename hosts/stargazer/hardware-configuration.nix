@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   boot = {
     initrd.availableKernelModules = [
       "xhci_pci"
@@ -21,15 +20,15 @@
     };
 
     kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
-    kernelParams = [ "psi=1" ];
-    kernelModules = [ "gpio_fan" ];
+    kernelParams = ["psi=1"];
+    kernelModules = ["gpio_fan"];
   };
 
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/NIXOS_SD";
       fsType = "ext4";
-      options = [ "noatime" ];
+      options = ["noatime"];
     };
   };
 

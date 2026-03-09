@@ -4,8 +4,8 @@
   externalUrl = "https://129.kedi.dev";
   internalUrl = "http://voyager.local:8123";
 
-  extraPackages =
-    python3Packages: with python3Packages; [
+  extraPackages = python3Packages:
+    with python3Packages; [
       aionut
       psycopg2
     ];
@@ -21,7 +21,7 @@
   };
 
   extraModules = {
-    imports = [ ../../services/monitoring/postgres.nix ];
+    imports = [../../services/monitoring/postgres.nix];
 
     services = {
       frigate = {
@@ -46,7 +46,7 @@
               {
                 path = "rtsp://192.168.1.142:8000/test1";
                 input_args = "preset-rtsp-restream";
-                roles = [ "record" ];
+                roles = ["record"];
               }
             ];
           };
@@ -64,7 +64,7 @@
 
       postgresql = {
         enable = true;
-        ensureDatabases = [ "hass" ];
+        ensureDatabases = ["hass"];
         ensureUsers = [
           {
             name = "hass";

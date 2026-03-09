@@ -1,5 +1,8 @@
-{ pkgs, username, ... }:
 {
+  pkgs,
+  username,
+  ...
+}: {
   imports = [
     ../../services/logiops.nix
   ];
@@ -136,6 +139,5 @@
     spiceUSBRedirection.enable = true;
   };
 
-  users.users.${username}.extraGroups = [ "libvirtd" ];
-
+  users.users.${username}.extraGroups = ["libvirtd"];
 }

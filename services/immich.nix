@@ -4,12 +4,10 @@
   outputs,
   pkgs,
   ...
-}:
-let
+}: let
   vs = config.vault-secrets.secrets;
   immichHostname = "immich.kedi.dev";
-in
-{
+in {
   imports = [
     ./monitoring/postgres.nix
   ];
@@ -29,7 +27,7 @@ in
         threads = 0;
         preset = "ultrafast";
         targetVideoCodec = "h264";
-        acceptedVideoCodecs = [ "h264" ];
+        acceptedVideoCodecs = ["h264"];
         targetAudioCodec = "aac";
         acceptedAudioCodecs = [
           "aac"
@@ -175,7 +173,7 @@ in
       };
       user.deleteDelay = 7;
     };
-    accelerationDevices = [ "/dev/dri/renderD128" ];
+    accelerationDevices = ["/dev/dri/renderD128"];
   };
 
   users.users.immich.extraGroups = [
@@ -187,7 +185,7 @@ in
 
   systemd.services = {
     immich-server = {
-      partOf = [ "kedi.target" ];
+      partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/var/lib/immich";
     };
 
@@ -218,5 +216,4 @@ in
     ];
     inherit (config.services.immich) group;
   };
-
 }

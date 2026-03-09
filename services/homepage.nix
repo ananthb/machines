@@ -1,12 +1,7 @@
-{
-  config,
-  ...
-}:
-let
+{config, ...}: let
   vs = config.vault-secrets.secrets;
-in
-{
-  users.groups."homepage-secrets" = { };
+in {
+  users.groups."homepage-secrets" = {};
 
   services.homepage-dashboard = {
     enable = true;
@@ -18,7 +13,7 @@ in
       base = "https://kedi.dev";
       target = "_blank";
     };
-    environmentFiles = [ "${vs.homepage}/environment" ];
+    environmentFiles = ["${vs.homepage}/environment"];
     services = [
       {
         "Media" = [
@@ -222,7 +217,6 @@ in
                   description = "Movies";
                   href = "http://endeavour:7878";
                 };
-
               }
               {
                 "Sonarr" = {
@@ -268,17 +262,16 @@ in
   };
 
   vault-secrets.secrets.homepage = {
-    services = [ "homepage-dashboard" ];
+    services = ["homepage-dashboard"];
     group = "homepage-secrets";
   };
 
   my-services.kediTargets.homepage-dashboard = true;
 
   systemd.services.homepage-dashboard = {
-    partOf = [ "kedi.target" ];
-    serviceConfig.SupplementaryGroups = [ "homepage-secrets" ];
+    partOf = ["kedi.target"];
+    serviceConfig.SupplementaryGroups = ["homepage-secrets"];
   };
 
   systemd.services.homepage-secrets.serviceConfig.UMask = "0027";
-
 }

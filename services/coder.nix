@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
-let
-  vs = config.vault-secrets.secrets;
-in
 {
+  config,
+  pkgs,
+  ...
+}: let
+  vs = config.vault-secrets.secrets;
+in {
   imports = [
-    ((import ../lib/caddy-ddns.nix).mkCaddyDdns { domains = [ "*.coder" ]; })
+    ((import ../lib/caddy-ddns.nix).mkCaddyDdns {domains = ["*.coder"];})
   ];
 
   services.coder = {
@@ -42,7 +44,7 @@ in
   ];
 
   systemd.services.coder = {
-    partOf = [ "kedi.target" ];
+    partOf = ["kedi.target"];
     path = with pkgs; [
       firecracker
       iproute2
@@ -52,31 +54,30 @@ in
 
   security.sudo.extraRules = [
     {
-      users = [ "coder" ];
+      users = ["coder"];
       commands = [
         {
           command = "${pkgs.firecracker}/bin/jailer";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
         {
           command = "${pkgs.firecracker}/bin/firecracker";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
         {
           command = "${pkgs.iproute2}/bin/ip";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
         {
           command = "${pkgs.iptables}/bin/iptables";
-          options = [ "NOPASSWD" ];
+          options = ["NOPASSWD"];
         }
       ];
     }
   ];
 
   vault-secrets.secrets.coder = {
-    services = [ "coder" ];
+    services = ["coder"];
     inherit (config.services.coder) group;
   };
-
 }
