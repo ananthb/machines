@@ -453,6 +453,27 @@
         "type": "github"
       }
     },
+    "mithril": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772993434,
+        "narHash": "sha256-hmTvylAWTtrkKoDUbFWxmjP5/4psyWNrvqPGlRUVL7s=",
+        "owner": "ananthb",
+        "repo": "mithril",
+        "rev": "28359bdb623f4d6f5f03d6c33eba538886461402",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ananthb",
+        "ref": "nix",
+        "repo": "mithril",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -685,6 +706,7 @@
         "homebrew-core": "homebrew-core",
         "ht32-panel": "ht32-panel",
         "lanzaboote": "lanzaboote",
+        "mithril": "mithril",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",

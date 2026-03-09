@@ -74,6 +74,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    mithril = {
+      url = "github:ananthb/mithril/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     NixVirt = {
       url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -192,7 +196,7 @@
         };
     in
     rec {
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
       nixosConfigurations = {
         endeavour = mkNixosHost {

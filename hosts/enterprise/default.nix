@@ -17,6 +17,8 @@ in
     ./programs.nix
     ./vms.nix
 
+    inputs.mithril.nixosModules.mithril
+
     ../../services/coder.nix
     ../../services/immich-ml.nix
     ../../services/monitoring/blackbox.nix
@@ -163,6 +165,15 @@ in
       }
     ];
     allowedUDPPortRanges = allowedTCPPortRanges;
+  };
+
+  services.mithril = {
+    enable = false;
+    storage.singleDisk = {
+      enable = true;
+      device = "/dev/nvme0n1";
+      fsType = "f2fs";
+    };
   };
 
   systemd = {
