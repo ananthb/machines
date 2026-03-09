@@ -1,10 +1,12 @@
 {
+  inputs,
   pkgs,
   username,
   ...
 }: {
   imports = [
     ../../services/logiops.nix
+    inputs.mithril.nixosModules.mithril
   ];
 
   networking.networkmanager.enable = true;
@@ -50,6 +52,15 @@
     gvfs = {
       enable = true;
       package = pkgs.gnome.gvfs;
+    };
+
+    mithril = {
+      enable = true;
+      storage.singleDisk = {
+        enable = true;
+        device = "/dev/nvme0n1";
+        fsType = "f2fs";
+      };
     };
 
     ollama = {
