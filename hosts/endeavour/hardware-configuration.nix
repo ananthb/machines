@@ -21,13 +21,11 @@
         "sd_mod"
         "sr_mod"
       ];
-      kernelModules = [ "bcachefs" ];
     };
     kernel.sysctl = {
       "net.ipv4.ip_forward" = 1;
       "net.ipv6.conf.all.forwarding" = 1;
     };
-    kernelModules = [ "bcachefs" ];
 
     initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
   };
