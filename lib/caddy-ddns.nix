@@ -42,7 +42,7 @@
           "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
           "github.com/caddy-dns/cloudflare@v0.2.2"
         ];
-        hash = "sha256-wAjQ+vH1TdSGFibwhSkJ5+Wq4WqEnrNPsUJhNSq8Lnw=";
+        hash = "sha256-D+Qth3hYC7bR8iJCpoHV0dKPPwTAs0FzJtAY7xxBUy8=";
       };
 
       globalConfig = ''

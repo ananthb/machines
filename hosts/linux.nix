@@ -91,10 +91,10 @@ in {
 
   systemd = {
     enableEmergencyMode = false;
-    sleep.extraConfig = ''
-      AllowSuspend=no
-      AllowHibernation=no
-    '';
+    sleep.settings.Sleep = {
+      AllowSuspend = "no";
+      AllowHibernation = "no";
+    };
 
     # Enable systemd-oomd for memory pressure management
     oomd = {

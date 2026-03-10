@@ -161,6 +161,8 @@
             system
             username
             ;
+          # Avoid _module.args recursion for mithril module argument resolution.
+          mithrilIsUser = false;
           outputs = self;
         };
         modules =
