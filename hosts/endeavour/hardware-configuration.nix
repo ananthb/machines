@@ -45,10 +45,10 @@
         "dmask=0077"
       ];
     };
-    "/srv" = {
-      device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
-      fsType = "bcachefs";
-    };
+    #"/srv" = {
+    #  device = "UUID=f87d0bd3-722c-40b5-b298-9ce396f34003";
+    #  fsType = "bcachefs";
+    #};
     "/var/lib/immich" = {
       device = "/srv/immich";
       fsType = "bind";

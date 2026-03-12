@@ -102,7 +102,7 @@
 
   services = {
     fwupd.enable = true;
-    bcachefs.autoScrub.enable = true;
+    #bcachefs.autoScrub.enable = true;
 
     vault.tpmUnseal = {
       enable = true;
