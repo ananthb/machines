@@ -83,11 +83,14 @@
   };
 
   # System packages
-  environment.systemPackages = with pkgs; [
-    tpm2-tss
-    unrar
-    bcachefs-tools
-  ];
+  environment.systemPackages =
+    (with pkgs; [
+      tpm2-tss
+      unrar
+    ])
+    ++ [
+      inputs.bcachefs-tools.packages.${pkgs.system}.default
+    ];
 
   security.tpm2.enable = true;
 
