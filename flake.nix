@@ -7,7 +7,10 @@
       flake = false;
     };
 
-    bcachefs-tools.url = "github:koverstreet/bcachefs-tools";
+    bcachefs-tools = {
+      url = "github:koverstreet/bcachefs-tools";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
