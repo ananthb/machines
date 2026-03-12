@@ -75,7 +75,7 @@
     };
 
     mithril = {
-      url = "github:Overclock-Validator/mithril";
+      url = "github:Overclock-Validator/mithril/fix-cu-simd-0339";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     NixVirt = {
