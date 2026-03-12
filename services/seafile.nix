@@ -273,7 +273,7 @@ in {
         };
         unitConfig = {
           Before = "caddy.service";
-          ConditionPathIsMountPoint = "/srv";
+          RequiresMountsFor = "/srv";
           After = lib.concatStringsSep " " [
             "mysql.service"
             "redis-seafile.service"
@@ -313,7 +313,7 @@ in {
         serviceConfig.Restart = "on-failure";
         unitConfig = {
           Before = "caddy.service";
-          ConditionPathIsMountPoint = "/srv";
+          RequiresMountsFor = "/srv";
           After = "mysql.service";
           Wants = "mysql.service caddy.service";
         };
@@ -339,7 +339,7 @@ in {
         serviceConfig.Restart = "on-failure";
         unitConfig = {
           Before = "caddy.service";
-          ConditionPathIsMountPoint = "/srv";
+          RequiresMountsFor = "/srv";
           After = "mysql.service redis-seafile.service";
           Wants = "caddy.service mysql.service redis-seafile.service";
         };
@@ -365,7 +365,7 @@ in {
         serviceConfig.Restart = "on-failure";
         unitConfig = {
           Before = "caddy.service";
-          ConditionPathIsMountPoint = "/srv";
+          RequiresMountsFor = "/srv";
           After = "mysql.service";
           Wants = "mysql.service caddy.service";
         };
@@ -389,7 +389,7 @@ in {
         };
         serviceConfig.Restart = "on-failure";
         unitConfig = {
-          ConditionPathIsMountPoint = "/srv";
+          RequiresMountsFor = "/srv";
           After = "redis-seafile.service";
           Wants = "redis-seafile.service";
         };
@@ -413,7 +413,7 @@ in {
           ];
         };
         serviceConfig.Restart = "on-failure";
-        unitConfig.ConditionPathIsMountPoint = "/srv";
+        unitConfig.RequiresMountsFor = "/srv";
       };
 
       collabora-code = {
@@ -438,7 +438,7 @@ in {
           };
         };
         serviceConfig.Restart = "on-failure";
-        unitConfig.ConditionPathIsMountPoint = "/srv";
+        unitConfig.RequiresMountsFor = "/srv";
       };
     };
   };
@@ -532,11 +532,11 @@ in {
       after = ["seafile-network.service"];
       wants = ["seafile-network.service"];
       partOf = ["kedi.target"];
-      unitConfig.ConditionPathIsMountPoint = "/srv";
+      unitConfig.RequiresMountsFor = "/srv";
     };
     "seafile-mysql-backup" = {
       startAt = "hourly";
-      unitConfig.ConditionPathIsMountPoint = "/srv";
+      unitConfig.RequiresMountsFor = "/srv";
       script = ''
         if ! ${pkgs.systemd}/bin/systemctl is-active seafile.service; then
           # Exit successfully if seafile is not running
@@ -562,7 +562,7 @@ in {
       # TODO: re-enable after we've trimmed down unnecessary files
       #startAt = "weekly";
       environment.KOPIA_CHECK_FOR_UPDATES = "false";
-      unitConfig.ConditionPathIsMountPoint = "/srv";
+      unitConfig.RequiresMountsFor = "/srv";
       script = ''
         ${pkgs.systemd}/bin/systemctl start seafile-mysql-backup.service
         ${config.my-scripts.kopia-snapshot-backup} /srv/seafile
