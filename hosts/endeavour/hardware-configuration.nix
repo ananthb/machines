@@ -26,6 +26,8 @@
     };
 
     initrd.luks.devices."root".device = "/dev/disk/by-uuid/66969cad-e8ba-4a5f-b5e1-a353d09f2384";
+
+    supportedFilesystems = ["bcachefs"];
   };
 
   fileSystems = {
