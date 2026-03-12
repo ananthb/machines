@@ -62,6 +62,11 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
+    kernelPackages = pkgs.linuxPackages_latest.extend (
+      _lself: _lpprev: {
+        bcachefs = inputs.bcachefs-tools.packages.${pkgs.system}.bcachefs-module-linux-latest;
+      }
+    );
   };
 
   # hardware accelerated graphics
