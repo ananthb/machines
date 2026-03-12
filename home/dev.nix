@@ -5,16 +5,6 @@
   ...
 }: let
   homeDir = config.home.homeDirectory;
-  askpass = pkgs.stdenv.mkDerivation {
-    name = "askpass";
-    src = ../lib/askpass.sh;
-    dontUnpack = true;
-    installPhase = ''
-      mkdir -p $out/bin
-      cp $src $out/bin/askpass.sh
-      chmod +x $out/bin/askpass.sh
-    '';
-  };
 in {
   imports = [
     inputs.nixvim.homeModules.nixvim
@@ -50,26 +40,24 @@ in {
     };
   };
 
-  home.packages = with pkgs;
-    [
-      coder
-      codex
-      delta
-      devenv
-      flyctl
-      fzf
-      gemini-cli
-      gh
-      git
-      gnupg
-      hack-font
-      lazygit
-      mosh
-      nix-output-monitor
-      ripgrep
-      vault
-    ]
-    ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [askpass];
+  home.packages = with pkgs; [
+    coder
+    codex
+    delta
+    devenv
+    flyctl
+    fzf
+    gemini-cli
+    gh
+    git
+    gnupg
+    hack-font
+    lazygit
+    mosh
+    nix-output-monitor
+    ripgrep
+    vault
+  ];
 
   programs = {
     direnv = {

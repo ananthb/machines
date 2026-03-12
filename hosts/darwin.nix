@@ -18,6 +18,7 @@
           "homebrew/homebrew-core" = inputs.homebrew-core;
           "homebrew/homebrew-cask" = inputs.homebrew-cask;
           "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
+          "theseal/homebrew-ssh-askpass" = inputs.askpass-homebrew-tap;
         };
         mutableTaps = false;
         autoMigrate = true;

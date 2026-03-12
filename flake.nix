@@ -2,6 +2,11 @@
   description = "NixOS and Nix-Darwin configurations for Ananth's machines";
 
   inputs = {
+    askpass-homebrew-tap = {
+      url = "github:theseal/homebrew-ssh-askpass";
+      flake = false;
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
