@@ -180,11 +180,19 @@
         matchConfig.Name = "enp1s0";
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
+        networkConfig = {
+          DHCP = "ipv4";
+          IPv6AcceptRA = true;
+        };
       };
       networks."30-enp3s0" = {
         matchConfig.Name = "enp3s0";
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
+        networkConfig = {
+          DHCP = "ipv4";
+          IPv6AcceptRA = true;
+        };
       };
     };
     services = {
