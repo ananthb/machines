@@ -172,43 +172,17 @@
 
   networking = {
     useNetworkd = true;
-    useDHCP = true;
-
-    firewall = {
-      allowedTCPPorts = [
-        111
-        2049
-        4000
-        4001
-        4002
-      ];
-      allowedUDPPorts = [
-        111
-        2049
-        4000
-        4001
-        4002
-      ];
-    };
   };
 
   systemd = {
     network = {
-      networks."20-enp2s0" = {
-        matchConfig.Name = "enp2s0";
-        networkConfig = {
-          DHCP = "ipv4";
-          IPv6AcceptRA = true;
-        };
+      networks."20-enp1s0" = {
+        matchConfig.Name = "enp1s0";
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
-      networks."30-enp4s0" = {
-        matchConfig.Name = "enp4s0";
-        networkConfig = {
-          DHCP = "ipv4";
-          IPv6AcceptRA = true;
-        };
+      networks."30-enp3s0" = {
+        matchConfig.Name = "enp3s0";
         ipv6AcceptRAConfig.Token = ipv6Token;
         linkConfig.RequiredForOnline = "carrier";
       };
