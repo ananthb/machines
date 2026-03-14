@@ -179,6 +179,7 @@
       networks."20-enp1s0" = {
         matchConfig.Name = "enp1s0";
         ipv6AcceptRAConfig.Token = ipv6Token;
+        linkConfig.RequiredForOnline = "no";
         networkConfig = {
           DHCP = "ipv4";
           IPv6AcceptRA = true;
