@@ -551,16 +551,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1773444129,
-        "narHash": "sha256-C8WHQJe8DUpWXqmGlKtSXTBDYKcMcRvsSvsM84t0BTM=",
-        "owner": "sonicfromnewyoke",
+        "lastModified": 1773297081,
+        "narHash": "sha256-n32JaAxyjld7/OdVNfPhbO6H5U8fMKdrNjzknUVp9H8=",
+        "owner": "Overclock-Validator",
         "repo": "mithril",
-        "rev": "555dc0e2a9af1c8e0232ddeea4802090911ea873",
+        "rev": "5b04420cd7bda531bc8dfc45aa2312e3ce63ce08",
         "type": "github"
       },
       "original": {
-        "owner": "sonicfromnewyoke",
-        "ref": "sonic/check-sbpf",
+        "owner": "Overclock-Validator",
         "repo": "mithril",
         "type": "github"
       }
