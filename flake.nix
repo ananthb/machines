@@ -85,7 +85,7 @@
     };
 
     mithril = {
-      url = "github:Overclock-Validator/mithril/fix-cu-simd-0339";
+      url = "github:sonicfromnewyoke/mithril/sonic/check-sbpf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     NixVirt = {

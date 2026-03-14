@@ -551,16 +551,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1773278589,
-        "narHash": "sha256-n32JaAxyjld7/OdVNfPhbO6H5U8fMKdrNjzknUVp9H8=",
-        "owner": "Overclock-Validator",
+        "lastModified": 1773444129,
+        "narHash": "sha256-C8WHQJe8DUpWXqmGlKtSXTBDYKcMcRvsSvsM84t0BTM=",
+        "owner": "sonicfromnewyoke",
         "repo": "mithril",
-        "rev": "d92c484b85b627866507eb8b1f9fe22e99b52b55",
+        "rev": "555dc0e2a9af1c8e0232ddeea4802090911ea873",
         "type": "github"
       },
       "original": {
-        "owner": "Overclock-Validator",
-        "ref": "fix-cu-simd-0339",
+        "owner": "sonicfromnewyoke",
+        "ref": "sonic/check-sbpf",
         "repo": "mithril",
         "type": "github"
       }
