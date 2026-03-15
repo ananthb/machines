@@ -85,8 +85,8 @@
     };
 
     mithril = {
-      #url = "github:sonicfromnewyoke/mithril/sonic/check-sbpf";
-      url = "github:Overclock-Validator/mithril";
+      url = "github:sonicfromnewyoke/mithril/sonic/replay-panic";
+      #url = "github:Overclock-Validator/mithril";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     NixVirt = {
