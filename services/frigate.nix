@@ -12,14 +12,14 @@
     then config.networking.hostName
     else hostname;
 in {
+  systemd.services.frigate.path = [pkgs.go2rtc];
+
   services = {
     frigate = {
       enable = true;
       hostname = hostName;
       inherit settings;
     };
-
-    systemd.services.frigate.path = [pkgs.go2rtc];
 
     nginx.virtualHosts.${hostName} = {
       listen = [
