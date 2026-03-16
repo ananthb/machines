@@ -21,11 +21,11 @@ in {
         go2rtc = {
           streams = {
             # HD streams (ch00_0 is 2304x2592 total)
-            front_door_hd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_0#video=h264#hardware#vf=crop=2304:1296:0:1296#audio=copy";
-            public_terrace_hd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_0#video=h264#hardware#vf=crop=2304:1296:0:0#audio=copy";
+            "front_door.hd" = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_0#video=h264#hardware#vf=crop=2304:1296:0:1296#audio=copy";
+            "public_terrace.hd" = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_0#video=h264#hardware#vf=crop=2304:1296:0:0#audio=copy";
             # SD streams (ch00_1 is 640x720 total)
-            front_door_sd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_1#video=h264#hardware#vf=crop=640:360:0:360#audio=copy";
-            public_terrace_sd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_1#video=h264#hardware#vf=crop=640:360:0:0#audio=copy";
+            "front_door.sd" = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_1#video=h264#hardware#vf=crop=640:360:0:360#audio=copy";
+            "public_terrace.sd" = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_1#video=h264#hardware#vf=crop=640:360:0:0#audio=copy";
           };
         };
 
@@ -33,6 +33,9 @@ in {
           ov = {
             type = "openvino";
             device = "GPU";
+            model = {
+              path = "/etc/frigate/model_cache/ssdlite_mobilenet_v2_coco_fixed_int8.xml";
+            };
           };
         };
 
@@ -74,12 +77,12 @@ in {
           };
           ffmpeg.inputs = [
             {
-              path = "rtsp://127.0.0.1:8554/front_door_hd";
+              path = "rtsp://127.0.0.1:8554/front_door.hd";
               input_args = "preset-rtsp-restream";
               roles = ["record"];
             }
             {
-              path = "rtsp://127.0.0.1:8554/front_door_sd";
+              path = "rtsp://127.0.0.1:8554/front_door.sd";
               input_args = "preset-rtsp-restream";
               roles = [
                 "detect"
@@ -98,12 +101,12 @@ in {
           audio.enabled = true;
           ffmpeg.inputs = [
             {
-              path = "rtsp://127.0.0.1:8554/public_terrace_hd";
+              path = "rtsp://127.0.0.1:8554/public_terrace.hd";
               input_args = "preset-rtsp-restream";
               roles = ["record"];
             }
             {
-              path = "rtsp://127.0.0.1:8554/public_terrace_sd";
+              path = "rtsp://127.0.0.1:8554/public_terrace.sd";
               input_args = "preset-rtsp-restream";
               roles = [
                 "detect"
