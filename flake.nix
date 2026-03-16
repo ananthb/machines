@@ -85,8 +85,7 @@
     };
 
     mithril = {
-      url = "github:sonicfromnewyoke/mithril/sonic/replay-panic";
-      #url = "github:Overclock-Validator/mithril";
+      url = "github:Overclock-Validator/mithril";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     NixVirt = {
@@ -172,8 +171,6 @@
             system
             username
             ;
-          # Avoid _module.args recursion for mithril module argument resolution.
-          mithrilIsUser = false;
           outputs = self;
         };
         modules =
