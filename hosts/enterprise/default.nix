@@ -59,6 +59,8 @@ in {
         cameras."front_door_cam" = {
           detect = {
             enabled = true;
+            width = 640;
+            height = 360;
           };
           audio.enabled = true;
           onvif = {
@@ -67,21 +69,53 @@ in {
             user = "admin";
             password = "";
           };
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://admin:@10.15.17.190:554/live/ch00_1";
-              input_args = "preset-rtsp-restream";
-              roles = ["record"];
-            }
-            {
-              path = "rtsp://admin:@10.15.17.190:554/live/ch00_0";
-              input_args = "preset-rtsp-restream";
-              roles = [
-                "detect"
-                "audio"
-              ];
-            }
-          ];
+          ffmpeg = {
+            inputs = [
+              {
+                path = "rtsp://10.15.17.190:554/live/ch00_0";
+                input_args = "preset-rtsp-restream";
+                roles = ["record"];
+              }
+              {
+                path = "rtsp://10.15.17.190:554/live/ch00_1";
+                input_args = "preset-rtsp-restream";
+                roles = [
+                  "detect"
+                  "audio"
+                ];
+              }
+            ];
+            output_args = {
+              record = "preset-record-generic-audio-aac -vf crop=2304:1296:0:1296";
+              detect = "-vf crop=640:360:0:360";
+            };
+          };
+        };
+
+        cameras."public_terrace_cam" = {
+          detect = {
+            enabled = true;
+            width = 640;
+            height = 360;
+          };
+          ffmpeg = {
+            inputs = [
+              {
+                path = "rtsp://10.15.17.190:554/live/ch00_0";
+                input_args = "preset-rtsp-restream";
+                roles = ["record"];
+              }
+              {
+                path = "rtsp://10.15.17.190:554/live/ch00_1";
+                input_args = "preset-rtsp-restream";
+                roles = ["detect"];
+              }
+            ];
+            output_args = {
+              record = "preset-record-generic-audio-aac -vf crop=2304:1296:0:0";
+              detect = "-vf crop=640:360:0:0";
+            };
+          };
         };
       };
     })
