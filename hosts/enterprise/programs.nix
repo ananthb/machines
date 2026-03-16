@@ -34,7 +34,7 @@ in {
             type = "openvino";
             device = "GPU";
             model = {
-              path = "/etc/frigate/model_cache/ssdlite_mobilenet_v2_coco_fixed_int8.xml";
+              model_type = "ssdlite_mobilenet_v2";
             };
           };
         };

@@ -2,23 +2,22 @@
   hostname ? null,
   port ? 8967,
   settings,
-}: {
-  config,
-  pkgs,
-  ...
-}: let
+}: {config, ...}: let
   hostName =
     if hostname == null
     then config.networking.hostName
     else hostname;
 in {
-  systemd.services.frigate.path = [pkgs.go2rtc];
-
   services = {
     frigate = {
       enable = true;
       hostname = hostName;
       inherit settings;
+    };
+
+    go2rtc = {
+      enable = true;
+      settings = settings.go2rtc or {};
     };
 
     nginx.virtualHosts.${hostName} = {
@@ -33,5 +32,10 @@ in {
         }
       ];
     };
+  };
+
+  systemd.services.frigate = {
+    after = ["go2rtc.service"];
+    wants = ["go2rtc.service"];
   };
 }
