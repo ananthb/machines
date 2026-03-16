@@ -15,6 +15,8 @@ in {
       inherit settings;
     };
 
+    systemd.services.frigate.path = [pkgs.go2rtc];
+
     nginx.virtualHosts.${hostName} = {
       listen = [
         {
