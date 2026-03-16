@@ -2,7 +2,11 @@
   hostname ? null,
   port ? 8967,
   settings,
-}: {config, ...}: let
+}: {
+  config,
+  pkgs,
+  ...
+}: let
   hostName =
     if hostname == null
     then config.networking.hostName
