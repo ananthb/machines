@@ -62,19 +62,19 @@ in {
           };
           audio.enabled = true;
           onvif = {
-            host = "10.15.16.142";
+            host = "10.15.17.190";
             port = 8000;
             user = "admin";
             password = "onvif";
           };
           ffmpeg.inputs = [
             {
-              path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel0";
+              path = "rtsp://admin:onvif@10.15.17.190:554/live/ch00_1";
               input_args = "preset-rtsp-restream";
               roles = ["record"];
             }
             {
-              path = "rtsp://admin:onvif@10.15.16.142:5543/live/channel1";
+              path = "rtsp://admin:onvif@10.15.17.190:554/live/ch00_0";
               input_args = "preset-rtsp-restream";
               roles = [
                 "detect"
