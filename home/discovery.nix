@@ -12,15 +12,6 @@
       SSH_ASKPASS = "/opt/homebrew/bin/ssh-askpass";
       SSH_ASKPASS_REQUIRE = "force";
     };
-
-    file.".claude/settings.json".text = ''
-      {
-        "apiKeyHelper": "echo '-'",
-        "env": {
-          "ANTHROPIC_BASE_URL": "http://ai"
-        }
-      }
-    '';
   };
 
   programs.git.settings = {
