@@ -10,7 +10,6 @@
     casks = [
       "1password"
       "activitywatch"
-      "claude-code"
       "discord"
       "gimp"
       "ghostty"

@@ -41,8 +41,8 @@ in {
   };
 
   home.packages = with pkgs; [
+    claude-code
     coder
-    codex
     delta
     devenv
     flyctl
