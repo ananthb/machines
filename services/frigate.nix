@@ -12,6 +12,21 @@
 
   inherit (config.virtualisation.quadlet) volumes;
 in {
+  # Copy managed config to a writable location so Frigate can migrate it
+  systemd.tmpfiles.rules = [
+    "d /var/lib/frigate 0755 root root - -"
+  ];
+
+  systemd.services.frigate-config = {
+    description = "Copy Frigate config";
+    wantedBy = ["frigate.service"];
+    before = ["frigate.service"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.coreutils}/bin/cp --update=older ${frigateConfig} /var/lib/frigate/config.yml";
+    };
+  };
+
   virtualisation.quadlet = {
     volumes = {
       frigate-db = {};
@@ -25,7 +40,7 @@ in {
           autoUpdate = "registry";
           networks = ["host"];
           volumes = [
-            "${frigateConfig}:/config/config.yml:ro"
+            "/var/lib/frigate/config.yml:/config/config.yml"
             "${volumes.frigate-db.ref}:/db"
             "/srv/frigate/recordings:/media/frigate/recordings"
             "/srv/frigate/clips:/media/frigate/clips"
@@ -39,6 +54,8 @@ in {
         };
         unitConfig = {
           RequiresMountsFor = "/srv";
+          After = ["frigate-config.service"];
+          Requires = ["frigate-config.service"];
         };
         serviceConfig = {
           Restart = "on-failure";

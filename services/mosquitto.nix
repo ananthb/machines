@@ -5,14 +5,16 @@ _: {
       {
         port = 1883;
         address = "0.0.0.0";
-        users = {};
+        omitPasswordAuth = true;
         settings.allow_anonymous = true;
+        acl = ["topic readwrite #"];
       }
       {
         port = 1883;
         address = "::";
-        users = {};
+        omitPasswordAuth = true;
         settings.allow_anonymous = true;
+        acl = ["topic readwrite #"];
       }
     ];
   };

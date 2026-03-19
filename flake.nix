@@ -162,7 +162,6 @@
       extraModules ? [],
     }:
       nixpkgs.lib.nixosSystem {
-        inherit system;
         specialArgs = {
           inherit
             hostname
@@ -192,7 +191,6 @@
       extraModules ? [],
     }:
       nix-darwin.lib.darwinSystem {
-        inherit system;
         specialArgs = {
           inherit
             system
