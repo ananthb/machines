@@ -18,25 +18,20 @@ in {
           host = "endeavour";
         };
 
-        go2rtc = {
-          streams = {
-            # HD streams (ch00_0 is 2304x2592 total)
-            front_door_hd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_0#video=h264#hardware#vf=crop=2304:1296:0:1296#audio=copy";
-            public_terrace_hd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_0#video=h264#hardware#vf=crop=2304:1296:0:0#audio=copy";
-            # SD streams (ch00_1 is 640x720 total)
-            front_door_sd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_1#video=h264#hardware#vf=crop=640:360:0:360#audio=copy";
-            public_terrace_sd = "ffmpeg:rtsp://10.15.17.190:554/live/ch00_1#video=h264#hardware#vf=crop=640:360:0:0#audio=copy";
-          };
-        };
-
         detectors = {
           ov = {
             type = "openvino";
             device = "GPU";
-            model = {
-              model_type = "ssdlite_mobilenet_v2";
-            };
           };
+        };
+
+        model = {
+          path = "/openvino-model/ssdlite_mobilenet_v2.xml";
+          width = 300;
+          height = 300;
+          input_tensor = "nhwc";
+          input_pixel_format = "bgr";
+          labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
         };
 
         detect = {
@@ -44,22 +39,47 @@ in {
         };
 
         auth.enabled = false;
-
-        record = {
-          enabled = true;
-          retain = {
-            days = 2;
-            mode = "all";
-          };
-        };
-
-        audio.enabled = true;
+        tls.enabled = false;
 
         ffmpeg = {
           hwaccel_args = "preset-vaapi";
-          output_args = {
-            record = "preset-record-generic-audio-aac";
+        };
+
+        record.enabled = true;
+
+        go2rtc = {
+          streams = {
+            # Raw stacked streams from camera
+            front_door_raw = "rtsp://10.15.17.190:554/live/ch00_0";
+            front_door_raw_sub = "rtsp://10.15.17.190:554/live/ch00_1";
+            # Top half: public_terrace_cam (stationary) - 2304x1296 from 2304x2592
+            public_terrace_cam = "ffmpeg:front_door_raw#video=h264#raw=-filter:v crop=2304:1296:0:0";
+            public_terrace_cam_sub = "ffmpeg:front_door_raw_sub#video=h264#raw=-filter:v crop=640:360:0:0";
+            # Bottom half: front_door_cam (PTZ) - 2304x1296 from 2304x2592
+            front_door_cam = "ffmpeg:front_door_raw#video=h264#raw=-filter:v crop=2304:1296:0:1296";
+            front_door_cam_sub = "ffmpeg:front_door_raw_sub#video=h264#raw=-filter:v crop=640:360:0:360";
           };
+        };
+
+        cameras."public_terrace_cam" = {
+          detect = {
+            enabled = true;
+            width = 640;
+            height = 360;
+            fps = 5;
+          };
+          ffmpeg.inputs = [
+            {
+              path = "rtsp://127.0.0.1:8554/public_terrace_cam";
+              input_args = "preset-rtsp-restream";
+              roles = ["record"];
+            }
+            {
+              path = "rtsp://127.0.0.1:8554/public_terrace_cam_sub";
+              input_args = "preset-rtsp-restream";
+              roles = ["detect"];
+            }
+          ];
         };
 
         cameras."front_door_cam" = {
@@ -67,8 +87,8 @@ in {
             enabled = true;
             width = 640;
             height = 360;
+            fps = 5;
           };
-          audio.enabled = true;
           onvif = {
             host = "10.15.17.190";
             port = 8899;
@@ -77,41 +97,14 @@ in {
           };
           ffmpeg.inputs = [
             {
-              path = "rtsp://127.0.0.1:8554/front_door_hd";
+              path = "rtsp://127.0.0.1:8554/front_door_cam";
               input_args = "preset-rtsp-restream";
               roles = ["record"];
             }
             {
-              path = "rtsp://127.0.0.1:8554/front_door_sd";
+              path = "rtsp://127.0.0.1:8554/front_door_cam_sub";
               input_args = "preset-rtsp-restream";
-              roles = [
-                "detect"
-                "audio"
-              ];
-            }
-          ];
-        };
-
-        cameras."public_terrace_cam" = {
-          detect = {
-            enabled = true;
-            width = 640;
-            height = 360;
-          };
-          audio.enabled = true;
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://127.0.0.1:8554/public_terrace_hd";
-              input_args = "preset-rtsp-restream";
-              roles = ["record"];
-            }
-            {
-              path = "rtsp://127.0.0.1:8554/public_terrace_sd";
-              input_args = "preset-rtsp-restream";
-              roles = [
-                "detect"
-                "audio"
-              ];
+              roles = ["detect"];
             }
           ];
         };

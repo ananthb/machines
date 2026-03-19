@@ -1,41 +1,49 @@
-{
-  hostname ? null,
-  port ? 8967,
-  settings,
-}: {config, ...}: let
-  hostName =
-    if hostname == null
-    then config.networking.hostName
-    else hostname;
+{settings}: {
+  config,
+  pkgs,
+  ...
+}: let
+  containerImages = import ../lib/container-images.nix;
+
+  frigateConfig = pkgs.writeText "frigate-config.yml" (builtins.toJSON (settings
+    // {
+      database.path = "/db/frigate.db";
+    }));
+
+  inherit (config.virtualisation.quadlet) volumes;
 in {
-  services = {
-    frigate = {
-      enable = true;
-      hostname = hostName;
-      inherit settings;
+  virtualisation.quadlet = {
+    volumes = {
+      frigate-db = {};
     };
 
-    go2rtc = {
-      enable = true;
-      settings = settings.go2rtc or {};
+    containers = {
+      frigate = {
+        containerConfig = {
+          name = "frigate";
+          image = containerImages.frigate;
+          autoUpdate = "registry";
+          networks = ["host"];
+          volumes = [
+            "${frigateConfig}:/config/config.yml:ro"
+            "${volumes.frigate-db.ref}:/db"
+            "/srv/frigate/recordings:/media/frigate/recordings"
+            "/srv/frigate/clips:/media/frigate/clips"
+            "/srv/frigate/exports:/media/frigate/exports"
+          ];
+          environments = {
+            FRIGATE_RTSP_PASSWORD = "";
+          };
+          devices = ["/dev/dri:/dev/dri"];
+          podmanArgs = ["--shm-size=256m" "--privileged"];
+        };
+        unitConfig = {
+          RequiresMountsFor = "/srv";
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+        };
+      };
     };
-
-    nginx.virtualHosts.${hostName} = {
-      listen = [
-        {
-          addr = "0.0.0.0";
-          inherit port;
-        }
-        {
-          addr = "[::]";
-          inherit port;
-        }
-      ];
-    };
-  };
-
-  systemd.services.frigate = {
-    after = ["go2rtc.service"];
-    wants = ["go2rtc.service"];
   };
 }

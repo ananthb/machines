@@ -102,10 +102,10 @@ in {
       # Set default ACL for group-writable files (umask 002)
       "A+ /srv/media - - - - default:group::rwx"
       # Store Frigate recordings on the main RAID (/srv)
-      "d /srv/frigate 0750 frigate frigate - -"
-      "d /srv/frigate/recordings 0750 frigate frigate - -"
-      "d /srv/frigate/clips 0750 frigate frigate - -"
-      "d /srv/frigate/exports 0750 frigate frigate - -"
+      "d /srv/frigate 0755 root root - -"
+      "d /srv/frigate/recordings 0755 root root - -"
+      "d /srv/frigate/clips 0755 root root - -"
+      "d /srv/frigate/exports 0755 root root - -"
     ];
 
     # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119
@@ -124,41 +124,6 @@ in {
     # Mount binfmt_misc at boot for cross-compilation
     units."proc-sys-fs-binfmt_misc.mount".wantedBy = ["sysinit.target"];
   };
-
-  fileSystems = {
-    "/var/lib/frigate/recordings" = {
-      device = "/srv/frigate/recordings";
-      fsType = "none";
-      options = [
-        "bind"
-        "x-systemd.requires-mounts-for=/srv"
-      ];
-    };
-
-    "/var/lib/frigate/clips" = {
-      device = "/srv/frigate/clips";
-      fsType = "none";
-      options = [
-        "bind"
-        "x-systemd.requires-mounts-for=/srv"
-      ];
-    };
-
-    "/var/lib/frigate/exports" = {
-      device = "/srv/frigate/exports";
-      fsType = "none";
-      options = [
-        "bind"
-        "x-systemd.requires-mounts-for=/srv"
-      ];
-    };
-  };
-
-  systemd.services.frigate.unitConfig.RequiresMountsFor = [
-    "/var/lib/frigate/recordings"
-    "/var/lib/frigate/clips"
-    "/var/lib/frigate/exports"
-  ];
 
   power.ups = {
     enable = true;
