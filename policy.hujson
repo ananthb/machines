@@ -98,6 +98,12 @@
 			"dst": ["tag:infrastructure", "tag:server", "tag:tsnsrv"],
 			"ip":  ["*"],
 		},
+		// Infrastructure nodes can access other infrastructure (subnet routes, exit nodes)
+		{
+			"src": ["tag:infrastructure"],
+			"dst": ["tag:infrastructure"],
+			"ip":  ["*"],
+		},
 		// Read-only taildrive access to all members.
 		{
 			"src": ["autogroup:member"],
