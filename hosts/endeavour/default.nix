@@ -48,7 +48,6 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
     };
-    bcachefs.package = inputs.bcachefs-tools.packages.${pkgs.stdenv.hostPlatform.system}.bcachefs-tools;
   };
 
   # hardware accelerated graphics
@@ -76,7 +75,7 @@
       unrar
     ])
     ++ [
-      inputs.bcachefs-tools.packages.${pkgs.system}.default
+      pkgs.bcachefs-tools
     ];
 
   security.tpm2.enable = true;

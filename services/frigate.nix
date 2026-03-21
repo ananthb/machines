@@ -23,7 +23,7 @@ in {
     before = ["frigate.service"];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.coreutils}/bin/cp --update=older ${frigateConfig} /var/lib/frigate/config.yml";
+      ExecStart = "${pkgs.coreutils}/bin/cp ${frigateConfig} /var/lib/frigate/config.yml";
     };
   };
 
