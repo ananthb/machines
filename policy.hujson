@@ -101,7 +101,7 @@
 		// Infrastructure nodes can access other infrastructure (subnet routes, exit nodes)
 		{
 			"src": ["tag:infrastructure"],
-			"dst": ["tag:infrastructure"],
+			"dst": ["tag:infrastructure", "10.15.16.0/24", "10.15.17.0/24", "10.15.20.0/24", "fdc0:6625:5195::/48"],
 			"ip":  ["*"],
 		},
 		// Read-only taildrive access to all members.
