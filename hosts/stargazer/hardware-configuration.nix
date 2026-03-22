@@ -30,6 +30,11 @@
       fsType = "ext4";
       options = ["noatime"];
     };
+    "/srv" = {
+      device = "/dev/sda";
+      fsType = "ext4";
+      options = ["noatime"];
+    };
   };
 
   hardware = {

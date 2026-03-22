@@ -51,6 +51,8 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    openwrt-imagebuilder.url = "github:astro/nix-openwrt-imagebuilder";
+
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-calibre.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
 
@@ -109,6 +111,7 @@
     nixos-hardware,
     nixpkgs,
     nixpkgs-calibre,
+    openwrt-imagebuilder,
     pre-commit-hooks-nix,
     ...
   } @ inputs: let
@@ -122,6 +125,12 @@
     ];
 
     forAllSystems = nixpkgs.lib.genAttrs systems;
+
+    openwrtRouters = {
+      intrepid = "intrepid.tail42937.ts.net";
+      ds9 = "ds9.tail42937.ts.net";
+      atlantis = "atlantis.tail42937.ts.net";
+    };
 
     pkgsCalibreFor = system: import nixpkgs-calibre {inherit system;};
 
@@ -329,6 +338,47 @@
           '';
         }
     );
+
+    packages = let
+      openwrtPackages = let
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        openwrt = import ./openwrt {inherit openwrt-imagebuilder pkgs;};
+      in {
+        openwrt-intrepid = openwrt.intrepid;
+        openwrt-ds9 = openwrt.ds9;
+        openwrt-atlantis = openwrt.atlantis;
+      };
+    in
+      forAllSystems (system:
+        if system == "x86_64-linux"
+        then openwrtPackages
+        else {});
+
+    apps.x86_64-linux = nixpkgs.lib.mapAttrs' (name: host: let
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in
+      nixpkgs.lib.nameValuePair "deploy-openwrt-${name}" {
+        type = "app";
+        program = nixpkgs.lib.getExe (pkgs.writeShellApplication {
+          name = "deploy-openwrt-${name}";
+          runtimeInputs = [pkgs.openssh pkgs.findutils];
+          text = ''
+            echo "Building OpenWrt image for ${name}..."
+            RESULT=$(nix build ".#openwrt-${name}" --no-link --print-out-paths)
+            IMAGE=$(find "$RESULT" -name '*-sysupgrade*' -not -name '*.manifest' | head -1)
+            if [ -z "$IMAGE" ]; then
+              echo "No sysupgrade image found in $RESULT"
+              exit 1
+            fi
+            echo "Image: $IMAGE"
+            echo "Copying to root@${host}..."
+            scp "$IMAGE" "root@${host}:/tmp/sysupgrade.bin"
+            echo ""
+            echo "Flash with: ssh root@${host} sysupgrade -v /tmp/sysupgrade.bin"
+          '';
+        });
+      })
+    openwrtRouters;
 
     devShells = forAllSystems (
       system: let

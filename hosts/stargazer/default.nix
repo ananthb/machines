@@ -5,9 +5,13 @@
 
     ./t1.nix
     ../../services/mealie.nix
+    ../../services/timemachinesrv.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/probes.nix
   ];
+
+  # Open Samba ports for LAN access (Time Machine)
+  services.samba.openFirewall = true;
 
   # System packages
   environment.systemPackages = [];
