@@ -1,10 +1,14 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   services = {
     # Time Machine server via Samba
     samba = {
       enable = true;
       nmbd.enable = false;
-      openFirewall = false;
+      openFirewall = lib.mkDefault false;
       settings = {
         global = {
           "server string" = "Time Machine";
