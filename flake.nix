@@ -80,7 +80,7 @@
     };
 
     mithril = {
-      url = "github:Overclock-Validator/mithril";
+      url = "github:ananthb/mithril/nix-logging";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     NixVirt = {

@@ -171,6 +171,7 @@ in {
         networkCluster = "mainnet-beta";
         networkRpc = ["https://api.mainnet-beta.solana.com"];
         blockSource = "rpc";
+        logTarget = "journald";
       };
       config.settings = {
         network.rpc = [
