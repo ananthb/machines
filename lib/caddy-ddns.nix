@@ -36,14 +36,18 @@
 
     services.caddy = {
       enable = true;
-      package = pkgs.caddy.withPlugins {
-        plugins = [
-          "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
-          "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
-          "github.com/caddy-dns/cloudflare@v0.2.2"
-        ];
-        hash = "sha256-D+Qth3hYC7bR8iJCpoHV0dKPPwTAs0FzJtAY7xxBUy8=";
-      };
+      package = let
+        caddy' = pkgs.caddy.override {buildGo125Module = pkgs.buildGo126Module;};
+        withPlugins = pkgs.callPackage (pkgs.path + "/pkgs/by-name/ca/caddy/plugins.nix") {caddy = caddy';};
+      in
+        withPlugins {
+          plugins = [
+            "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
+            "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
+            "github.com/caddy-dns/cloudflare@v0.2.2"
+          ];
+          hash = "sha256-LDhCVKlOAbmdoVnNUmJQPB3eqTolKsGB3PfSZusd3M8=";
+        };
 
       globalConfig = ''
         email srv.acme@kedi.dev
