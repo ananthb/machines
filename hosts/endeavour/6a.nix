@@ -84,7 +84,7 @@
             platform = "state";
             entity_id = [
               "person.ananth"
-              "person.arul"
+              "person.arul_priya"
             ];
             to = "not_home";
           }
@@ -100,7 +100,7 @@
           }
           {
             condition = "state";
-            entity_id = "person.arul";
+            entity_id = "person.arul_priya";
             state = "not_home";
           }
           {
