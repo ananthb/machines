@@ -320,42 +320,210 @@
       openwrtPackages = let
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         openwrt = import ./openwrt {inherit openwrt-imagebuilder pkgs;};
-      in {
-        openwrt-intrepid = openwrt.intrepid;
-        openwrt-ds9 = openwrt.ds9;
-        openwrt-atlantis = openwrt.atlantis;
-      };
+      in
+        nixpkgs.lib.mapAttrs' (name: _:
+          nixpkgs.lib.nameValuePair "openwrt-${name}" openwrt.images.${name})
+        openwrtRouters;
     in
       forAllSystems (system:
         if system == "x86_64-linux"
         then openwrtPackages
         else {});
 
-    apps.x86_64-linux = nixpkgs.lib.mapAttrs' (name: host: let
+    apps.x86_64-linux = let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
+
+      vaultAddr = "http://endeavour:8200";
+
+      # Config files to back up from each router
+      configFiles = [
+        "dhcp"
+        "dropbear"
+        "firewall"
+        "network"
+        "system"
+        "wireless"
+        "tailscale"
+        "sqm"
+        "dawn"
+        "nginx"
+        "uhttpd"
+        "adblock-fast"
+        "adguardhome"
+        "https-dns-proxy"
+        "prometheus-node-exporter-lua"
+        "luci"
+        "rpcd"
+        "umdns"
+        "mdns_repeater"
+        "mwan3"
+      ];
+
+      # Extra non-UCI files to back up
+      extraFiles = {
+        atlantis = [
+          "/etc/adguardhome/adguardhome.yaml"
+          "/etc/nginx/nginx.conf"
+          "/etc/nginx/conf.d/adguardhome.locations"
+        ];
+        intrepid = [];
+        ds9 = [];
+      };
+
+      mkBackupApp = name: host:
+        nixpkgs.lib.nameValuePair "openwrt-backup-${name}" {
+          type = "app";
+          program = nixpkgs.lib.getExe (pkgs.writeShellApplication {
+            name = "openwrt-backup-${name}";
+            runtimeInputs = [pkgs.openssh pkgs.vault pkgs.jq];
+            text = ''
+              : "''${VAULT_ADDR:=${vaultAddr}}"
+              export VAULT_ADDR
+              echo "Backing up ${name} configs to Vault..."
+
+              declare -A configs
+              for f in ${builtins.concatStringsSep " " configFiles}; do
+                content=$(ssh "root@${host}" "cat /etc/config/$f 2>/dev/null" || true)
+                if [ -n "$content" ]; then
+                  configs["config_$f"]="$content"
+                fi
+              done
+
+              ${builtins.concatStringsSep "\n" (map (f: ''
+                content=$(ssh "root@${host}" "cat ${f} 2>/dev/null" || true)
+                if [ -n "$content" ]; then
+                  key=$(echo "${f}" | tr '/' '_' | sed 's/^_//')
+                  configs["$key"]="$content"
+                fi
+              '') (extraFiles.${name} or []))}
+
+              # Build vault kv put command
+              args=()
+              for key in "''${!configs[@]}"; do
+                args+=("$key=''${configs[$key]}")
+              done
+
+              vault kv put "kv/services/openwrt-${name}" "''${args[@]}"
+              echo "Backed up ''${#configs[@]} config files to kv/services/openwrt-${name}"
+            '';
+          });
+        };
+
+      mkDeployApp = name: host:
+        nixpkgs.lib.nameValuePair "deploy-openwrt-${name}" {
+          type = "app";
+          program = nixpkgs.lib.getExe (pkgs.writeShellApplication {
+            name = "deploy-openwrt-${name}";
+            runtimeInputs = [pkgs.openssh pkgs.vault pkgs.jq pkgs.findutils pkgs.nix];
+            text = ''
+              : "''${VAULT_ADDR:=${vaultAddr}}"
+              export VAULT_ADDR
+
+              WORK=$(mktemp -d)
+              trap 'rm -rf "$WORK"' EXIT
+
+              echo "Fetching ${name} configs from Vault..."
+              vault kv get -format=json "kv/services/openwrt-${name}" \
+                | jq -r '.data.data | to_entries[] | "\(.key)\t\(.value)"' \
+                | while IFS=$'\t' read -r key value; do
+                    # config_foo → etc/config/foo
+                    # etc_nginx_nginx.conf → etc/nginx/nginx.conf
+                    if [[ "$key" == config_* ]]; then
+                      path="etc/config/''${key#config_}"
+                    else
+                      path=$(echo "$key" | tr '_' '/')
+                    fi
+                    mkdir -p "$WORK/$(dirname "$path")"
+                    printf '%s' "$value" > "$WORK/$path"
+                  done
+
+              echo "Building OpenWrt image for ${name} with configs..."
+              RESULT=$(nix build --impure --no-link --print-out-paths \
+                --expr "(let openwrt = import ./openwrt {
+                  openwrt-imagebuilder = builtins.getFlake \"github:astro/nix-openwrt-imagebuilder\";
+                  pkgs = import (builtins.getFlake \"${nixpkgs.sourceInfo.url or "github:NixOS/nixpkgs/nixos-unstable"}\") { system = \"x86_64-linux\"; };
+                }; in openwrt.buildWithFiles.${name} (builtins.path { path = \"$WORK\"; }))")
+
+              IMAGE=$(find "$RESULT" -name '*-sysupgrade*' -not -name '*.manifest' | head -1)
+              if [ -z "$IMAGE" ]; then
+                echo "No sysupgrade image found in $RESULT"
+                exit 1
+              fi
+
+              echo "Image: $IMAGE"
+              echo "Copying to root@${host}..."
+              scp "$IMAGE" "root@${host}:/tmp/sysupgrade.bin"
+              echo ""
+              echo "Flash with: ssh root@${host} sysupgrade -v /tmp/sysupgrade.bin"
+            '';
+          });
+        };
+
+      mkSetupVaultApp = name: _host:
+        nixpkgs.lib.nameValuePair "openwrt-vault-setup-${name}" {
+          type = "app";
+          program = nixpkgs.lib.getExe (pkgs.writeShellApplication {
+            name = "openwrt-vault-setup-${name}";
+            runtimeInputs = [pkgs.vault];
+            text = ''
+              : "''${VAULT_ADDR:=${vaultAddr}}"
+              export VAULT_ADDR
+
+              echo "Creating Vault policy openwrt-${name}..."
+              vault policy write "openwrt-${name}" - <<'POLICY'
+              path "kv/metadata/services/openwrt-${name}" {
+                capabilities = ["list"]
+              }
+              path "kv/metadata/services/openwrt-${name}/*" {
+                capabilities = ["list"]
+              }
+              path "kv/data/services/openwrt-${name}" {
+                capabilities = ["read"]
+              }
+              path "kv/data/services/openwrt-${name}/*" {
+                capabilities = ["read"]
+              }
+              POLICY
+
+              echo "Creating AppRole vault-secrets-endeavour-openwrt-${name}..."
+              vault write "auth/approle/role/vault-secrets-endeavour-openwrt-${name}" \
+                token_policies="vault-secrets-endeavour-openwrt-${name}" \
+                token_ttl=1h \
+                token_max_ttl=4h
+
+              echo "Creating AppRole policy vault-secrets-endeavour-openwrt-${name}..."
+              vault policy write "vault-secrets-endeavour-openwrt-${name}" - <<POLICY
+              path "kv/metadata/services/openwrt-${name}" {
+                capabilities = ["list"]
+              }
+              path "kv/metadata/services/openwrt-${name}/*" {
+                capabilities = ["list"]
+              }
+              path "kv/data/services/openwrt-${name}" {
+                capabilities = ["read"]
+              }
+              path "kv/data/services/openwrt-${name}/*" {
+                capabilities = ["read"]
+              }
+              POLICY
+
+              ROLE_ID=$(vault read -field=role_id "auth/approle/role/vault-secrets-endeavour-openwrt-${name}/role-id")
+              SECRET_ID=$(vault write -field=secret_id -f "auth/approle/role/vault-secrets-endeavour-openwrt-${name}/secret-id")
+
+              echo ""
+              echo "AppRole created. Add to secrets/endeavour.yaml under approles:"
+              echo "    openwrt-${name}: VAULT_ADDR=${vaultAddr} VAULT_ROLE_ID=$ROLE_ID VAULT_SECRET_ID=$SECRET_ID"
+              echo ""
+              echo "Then run: sops secrets/endeavour.yaml  (to encrypt)"
+            '';
+          });
+        };
     in
-      nixpkgs.lib.nameValuePair "deploy-openwrt-${name}" {
-        type = "app";
-        program = nixpkgs.lib.getExe (pkgs.writeShellApplication {
-          name = "deploy-openwrt-${name}";
-          runtimeInputs = [pkgs.openssh pkgs.findutils];
-          text = ''
-            echo "Building OpenWrt image for ${name}..."
-            RESULT=$(nix build ".#openwrt-${name}" --no-link --print-out-paths)
-            IMAGE=$(find "$RESULT" -name '*-sysupgrade*' -not -name '*.manifest' | head -1)
-            if [ -z "$IMAGE" ]; then
-              echo "No sysupgrade image found in $RESULT"
-              exit 1
-            fi
-            echo "Image: $IMAGE"
-            echo "Copying to root@${host}..."
-            scp "$IMAGE" "root@${host}:/tmp/sysupgrade.bin"
-            echo ""
-            echo "Flash with: ssh root@${host} sysupgrade -v /tmp/sysupgrade.bin"
-          '';
-        });
-      })
-    openwrtRouters;
+      nixpkgs.lib.listToAttrs (
+        (nixpkgs.lib.mapAttrsToList mkBackupApp openwrtRouters)
+        ++ (nixpkgs.lib.mapAttrsToList mkDeployApp openwrtRouters)
+        ++ (nixpkgs.lib.mapAttrsToList mkSetupVaultApp openwrtRouters)
+      );
 
     devShells = forAllSystems (
       system: let

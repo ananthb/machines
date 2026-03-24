@@ -52,6 +52,65 @@
           }
         ];
       }
+      {
+        alias = "Turn off ACs running for more than 4 hours";
+        mode = "single";
+        trigger = [
+          {
+            platform = "time_pattern";
+            minutes = "/5";
+          }
+        ];
+        condition = [
+          {
+            condition = "template";
+            value_template = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=4)) | list | count > 0 }}";
+          }
+        ];
+        action = [
+          {
+            service = "climate.turn_off";
+            target = {
+              entity_id = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=4)) | map(attribute='entity_id') | list }}";
+            };
+          }
+        ];
+      }
+      {
+        alias = "Turn off ACs when nobody is home";
+        mode = "restart";
+        trigger = [
+          {
+            platform = "state";
+            entity_id = [
+              "person.ananth"
+              "person.arul"
+            ];
+            to = "not_home";
+          }
+        ];
+        action = [
+          {
+            delay = "00:15:00";
+          }
+          {
+            condition = "state";
+            entity_id = "person.ananth";
+            state = "not_home";
+          }
+          {
+            condition = "state";
+            entity_id = "person.arul";
+            state = "not_home";
+          }
+          {
+            service = "climate.turn_off";
+            target = {
+              entity_id = "{{ states.climate | map(attribute='entity_id') | list }}";
+            };
+          }
+        ];
+      }
     ];
 
     fan = [

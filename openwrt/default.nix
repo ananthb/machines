@@ -4,7 +4,6 @@
 }: let
   profiles = openwrt-imagebuilder.lib.profiles {inherit pkgs;};
 
-  # Common packages shared across all routers
   commonPackages = [
     "luci"
     "luci-ssl"
@@ -14,12 +13,10 @@
     "tailscale"
   ];
 
-  # Packages for routers using nginx (instead of uhttpd) for LuCI
   nginxPackages = [
     "luci-nginx"
   ];
 
-  # Prometheus monitoring stack
   prometheusPackages = [
     "prometheus-node-exporter-lua"
     "prometheus-node-exporter-lua-dawn"
@@ -33,7 +30,6 @@
     "prometheus-node-exporter-lua-wifi"
   ];
 
-  # DAWN 802.11k/r/v roaming
   dawnPackages = [
     "dawn"
     "luci-app-dawn"
@@ -41,22 +37,17 @@
     "-wpad-basic-mbedtls"
   ];
 
-  # SQM (Smart Queue Management) for bufferbloat
   sqmPackages = [
     "luci-app-sqm"
     "sqm-scripts"
   ];
 
-  mkImage = config:
-    openwrt-imagebuilder.lib.build config;
-in {
-  # intrepid: GL-MT3000, AP mode mesh node
-  intrepid = mkImage (profiles.identifyProfile "glinet_gl-mt3000"
-    // {
+  routers = {
+    intrepid = {
+      profile = "glinet_gl-mt3000";
       release = "25.12.1";
       packages =
         commonPackages
-        ++ nginxPackages
         ++ prometheusPackages
         ++ dawnPackages
         ++ [
@@ -67,11 +58,12 @@ in {
           "tcpdump"
           "shadow-useradd"
         ];
-    });
+      # Config files stored in Vault, not baked in at eval time
+      extraFiles = [];
+    };
 
-  # ds9: GL-MT3000, travel router
-  ds9 = mkImage (profiles.identifyProfile "glinet_gl-mt3000"
-    // {
+    ds9 = {
+      profile = "glinet_gl-mt3000";
       release = "25.12.1";
       packages =
         commonPackages
@@ -81,13 +73,19 @@ in {
           "luci-app-adblock-fast"
           "https-dns-proxy"
           "luci-app-https-dns-proxy"
+          "travelmate"
+          "luci-app-travelmate"
+          "wifischedule"
+          "luci-app-wifischedule"
+          "watchcat"
+          "luci-app-watchcat"
           "curl"
         ];
-    });
+      extraFiles = [];
+    };
 
-  # atlantis: GL-MT6000, main home router
-  atlantis = mkImage (profiles.identifyProfile "glinet_gl-mt6000"
-    // {
+    atlantis = {
+      profile = "glinet_gl-mt6000";
       release = "25.12.0";
       packages =
         commonPackages
@@ -109,5 +107,33 @@ in {
           "tcpdump"
           "prometheus-node-exporter-lua-ethtool"
         ];
-    });
+      extraFiles = [];
+    };
+  };
+
+  # Build an image without config (packages only).
+  # Used by nix build .#openwrt-{name}
+  mkImage = _name: cfg:
+    openwrt-imagebuilder.lib.build (profiles.identifyProfile cfg.profile
+      // {
+        inherit (cfg) release packages;
+      });
+
+  # Build an image with config files baked in.
+  # filesDir is a path to a directory with the filesystem overlay (etc/config/*, etc.)
+  mkImageWithFiles = _name: cfg: filesDir:
+    openwrt-imagebuilder.lib.build (profiles.identifyProfile cfg.profile
+      // {
+        inherit (cfg) release packages;
+        files = filesDir;
+      });
+in {
+  # Package-only images (pure, no secrets needed)
+  images = builtins.mapAttrs mkImage routers;
+
+  # Function to build images with config baked in (called by deploy app)
+  buildWithFiles = builtins.mapAttrs mkImageWithFiles routers;
+
+  # Export router metadata for use by apps
+  inherit routers;
 }
