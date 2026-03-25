@@ -63,7 +63,7 @@ lib.recursiveUpdate (
       customComponents = with pkgs.home-assistant-custom-components;
         [
           ecoflow_cloud
-          frigate
+          (frigate.overridePythonAttrs {doCheck = false;})
           miraie
           prometheus_sensor
           smartir
