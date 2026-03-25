@@ -157,22 +157,41 @@
 
   systemd = {
     network = {
-      networks."20-enp1s0" = {
-        matchConfig.Name = "enp1s0";
-        ipv6AcceptRAConfig.Token = ipv6Token;
-        linkConfig.RequiredForOnline = "no";
-        networkConfig = {
-          DHCP = "ipv4";
-          IPv6AcceptRA = true;
+      netdevs."10-bond0" = {
+        netdevConfig = {
+          Name = "bond0";
+          Kind = "bond";
+        };
+        bondConfig = {
+          Mode = "balance-alb";
+          MIIMonitorSec = "1s";
         };
       };
-      networks."30-enp3s0" = {
-        matchConfig.Name = "enp3s0";
-        ipv6AcceptRAConfig.Token = ipv6Token;
-        linkConfig.RequiredForOnline = "carrier";
-        networkConfig = {
-          DHCP = "ipv4";
-          IPv6AcceptRA = true;
+      networks = {
+        "20-enp2s0" = {
+          matchConfig.Name = "enp2s0";
+          networkConfig.Bond = "bond0";
+        };
+        "20-enp4s0" = {
+          matchConfig.Name = "enp4s0";
+          networkConfig.Bond = "bond0";
+        };
+        "25-ethernet" = {
+          matchConfig.Name = "en*";
+          linkConfig.RequiredForOnline = "no";
+          networkConfig = {
+            DHCP = "ipv4";
+            IPv6AcceptRA = true;
+          };
+        };
+        "30-bond0" = {
+          matchConfig.Name = "bond0";
+          ipv6AcceptRAConfig.Token = ipv6Token;
+          linkConfig.RequiredForOnline = "carrier";
+          networkConfig = {
+            DHCP = "ipv4";
+            IPv6AcceptRA = true;
+          };
         };
       };
     };
