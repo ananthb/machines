@@ -41,10 +41,8 @@ lib.recursiveUpdate (
           "dhcp"
           "google_translate"
           "met"
-          "radio_browser"
+          # "radio_browser" # disabled: radios 0.3.2 requires pycountry<25, nixpkgs has 26.x
           "shopping_list"
-          # "radio_browser"
-          # "shopping_list"
           # Recommended for fast zlib compression
           # https://www.home-assistant.io/integrations/isal
           "isal"
