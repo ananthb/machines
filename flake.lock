@@ -476,11 +476,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774473905,
-        "narHash": "sha256-agVnYoCLrEGJK6nTU8bAv8dHf/FCof2X6zpQ1KbH7oo=",
+        "lastModified": 1774527634,
+        "narHash": "sha256-yxjDwyyf1WNaFs/cmplN7vMGhtbnY2EE2aqCqzy2wgU=",
         "owner": "ananthb",
         "repo": "mithril",
-        "rev": "0d51c199096db25d835aa05d282b14978f200492",
+        "rev": "63a909ec3a6128403a7bc1b17a8f7445e0555f8d",
         "type": "github"
       },
       "original": {
