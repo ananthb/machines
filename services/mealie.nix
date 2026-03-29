@@ -20,56 +20,63 @@ in {
 
   my-services.kediTargets.mealie = true;
 
-  systemd.services.mealie = {
-    partOf = ["kedi.target"];
-    serviceConfig = {
-      DynamicUser = lib.mkForce false;
-      SupplementaryGroups = ["mealie"];
+  # Fix ownership of state directory after switching from DynamicUser to static user.
+  systemd = {
+    tmpfiles.rules = [
+      "Z /var/lib/mealie - mealie mealie - -"
+    ];
+
+    services.mealie = {
+      partOf = ["kedi.target"];
+      serviceConfig = {
+        DynamicUser = lib.mkForce false;
+        SupplementaryGroups = ["mealie"];
+      };
     };
-  };
 
-  systemd.services."mealie-backup" = {
-    startAt = "weekly";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    script = ''
-      set -uo pipefail
+    services."mealie-backup" = {
+      startAt = "weekly";
+      environment.KOPIA_CHECK_FOR_UPDATES = "false";
+      script = ''
+        set -uo pipefail
 
-      backup_api_url="http://localhost:9000/api/admin/backups"
+        backup_api_url="http://localhost:9000/api/admin/backups"
 
-      http() {
-        ${pkgs.httpie}/bin/http -A bearer -a "$MEALIE_BACKUP_API_KEY" \
-          --check-status \
-          --ignore-stdin \
-          --timeout=10 \
-          "$@"
-      }
-
-      # Delete all backups
-       http GET "$backup_api_url" \
-        | ${pkgs.jq}/bin/jq -r '.imports[].name' \
-        | ${pkgs.findutils}/bin/xargs -I{} \
+        http() {
           ${pkgs.httpie}/bin/http -A bearer -a "$MEALIE_BACKUP_API_KEY" \
             --check-status \
             --ignore-stdin \
             --timeout=10 \
-            DELETE "$backup_api_url/"{}
+            "$@"
+        }
 
-      # Create new backup
-      http POST "$backup_api_url"
+        # Delete all backups
+         http GET "$backup_api_url" \
+          | ${pkgs.jq}/bin/jq -r '.imports[].name' \
+          | ${pkgs.findutils}/bin/xargs -I{} \
+            ${pkgs.httpie}/bin/http -A bearer -a "$MEALIE_BACKUP_API_KEY" \
+              --check-status \
+              --ignore-stdin \
+              --timeout=10 \
+              DELETE "$backup_api_url/"{}
 
-      # Upload new backup
-      ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
-    '';
-    serviceConfig = {
-      User = "root";
-      Type = "oneshot";
-      EnvironmentFile = "${vs.mealie}/environment";
+        # Create new backup
+        http POST "$backup_api_url"
+
+        # Upload new backup
+        ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
+      '';
+      serviceConfig = {
+        User = "root";
+        Type = "oneshot";
+        EnvironmentFile = "${vs.mealie}/environment";
+      };
+      path = [
+        pkgs.coreutils
+        pkgs.curl
+        pkgs.kopia
+      ];
     };
-    path = [
-      pkgs.coreutils
-      pkgs.curl
-      pkgs.kopia
-    ];
   };
 
   vault-secrets.secrets.mealie = {

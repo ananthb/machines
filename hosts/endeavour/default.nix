@@ -87,6 +87,10 @@
   i18n.defaultLocale = "en_IN";
 
   services = {
+    # Only publish mDNS on the bond interface to avoid macOS seeing
+    # duplicate responses and renaming us to endeavour-2.
+    avahi.allowInterfaces = ["bond0"];
+
     samba.openFirewall = true;
     fwupd.enable = true;
     bcachefs.autoScrub.enable = true;
@@ -152,9 +156,7 @@
     }
   ];
 
-  networking = {
-    useNetworkd = true;
-  };
+  networking.useNetworkd = true;
 
   systemd = {
     network = {
