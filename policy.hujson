@@ -32,7 +32,7 @@
 		{
 			"src":    ["tag:server"],
 			"dst":    ["tag:server", "tag:infrastructure"],
-			"users":  ["autogroup:nonroot"],
+			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
 		// Allow deploy tag (CI) to SSH to servers and workstations for deployment
@@ -131,6 +131,12 @@
 			"src":    "tag:deploy",
 			"dst":    ["tag:server", "tag:workstation"],
 			"accept": ["autogroup:nonroot"],
+		},
+		// servers should have access to servers and infrastructure
+		{
+			"src":    "tag:server",
+			"dst":    ["tag:server", "tag:infrastructure"],
+			"accept": ["autogroup:nonroot", "root"],
 		},
 		// workstations should have access to everything
 		{
