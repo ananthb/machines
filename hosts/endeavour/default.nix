@@ -87,6 +87,7 @@
   i18n.defaultLocale = "en_IN";
 
   services = {
+    samba.openFirewall = true;
     fwupd.enable = true;
     bcachefs.autoScrub.enable = true;
 
