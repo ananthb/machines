@@ -1,10 +1,15 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
   vs = config.vault-secrets.secrets;
 in {
+  users.users.mealie = {
+    isSystemUser = true;
+    group = "mealie";
+  };
   users.groups.mealie = {};
 
   services.mealie = {
@@ -17,7 +22,10 @@ in {
 
   systemd.services.mealie = {
     partOf = ["kedi.target"];
-    serviceConfig.SupplementaryGroups = ["mealie"];
+    serviceConfig = {
+      DynamicUser = lib.mkForce false;
+      SupplementaryGroups = ["mealie"];
+    };
   };
 
   systemd.services."mealie-backup" = {
