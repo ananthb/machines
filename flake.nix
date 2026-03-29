@@ -80,7 +80,7 @@
     };
 
     mithril = {
-      url = "github:ananthb/mithril/nix-logging";
+      url = "github:ananthb/mithril/fix/vote-nil-root-and-slot-log";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     NixVirt = {
