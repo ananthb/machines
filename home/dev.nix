@@ -42,7 +42,6 @@ in {
 
   home.packages = with pkgs; [
     claude-code
-    coder
     delta
     devenv
     flyctl

@@ -54,7 +54,7 @@ in {
       }' EXIT
 
       # Dump database
-      ${pkgs.sudo-rs}/bin/sudo -u vaultwarden \
+      ${pkgs.systemd}/bin/run0 -u vaultwarden \
         ${pkgs.postgresql_16}/bin/pg_dump \
           -Fc -U vaultwarden vaultwarden > "$dump_file"
       printf 'Dumped database to %s' "$dump_file"

@@ -15,7 +15,6 @@ in {
     ./programs.nix
     ./vms.nix
 
-    ../../services/coder.nix
     ../../services/immich-ml.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
@@ -69,9 +68,7 @@ in {
     {
       tunnelId = "cc636509-3456-4589-ae08-d4be710305a5";
       tunnelName = "kedi-compute-1";
-      ingress = {
-        "coder.kedi.dev" = "http://localhost:3030";
-      };
+      ingress = {};
     }
   ];
 

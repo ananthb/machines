@@ -167,24 +167,26 @@ in {
   };
 
   security = {
-    sudo.wheelNeedsPassword = false;
+    sudo.enable = false;
+
+    polkit = {
+      enable = true;
+      extraConfig = ''
+        // Allow wheel members to escalate without authentication (replaces sudo NOPASSWD).
+        polkit.addRule(function(action, subject) {
+          if (subject.isInGroup("wheel")) {
+            return polkit.Result.YES;
+          }
+        });
+      '';
+    };
 
     pam = {
       u2f.enable = true;
 
       services = {
         login.u2fAuth = true;
-        sudo.u2fAuth = true;
         sshd.u2fAuth = true;
-        sudo.rssh = true;
-        sshd.rssh = true;
-      };
-
-      rssh = {
-        enable = true;
-        settings = {
-          auth_key_file = "/etc/ssh/authorized_keys.d/ananth";
-        };
       };
     };
   };
@@ -263,7 +265,6 @@ in {
     e2fsprogs
     ghostty.terminfo
     nixfmt
-    pam_rssh
   ];
 
   zramSwap.enable = true;
