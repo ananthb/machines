@@ -15,6 +15,17 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";
 
+  networking.useNetworkd = true;
+
+  systemd.network.networks."20-ethernet" = {
+    matchConfig.Name = "en*";
+    linkConfig.RequiredForOnline = "routable";
+    networkConfig = {
+      DHCP = "ipv4";
+      IPv6AcceptRA = true;
+    };
+  };
+
   #services.bcachefs.autoScrub.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
