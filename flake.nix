@@ -99,11 +99,17 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    garnix-lib = {
+      url = "github:garnix-io/garnix-lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
     deploy-rs,
+    garnix-lib,
     lanzaboote,
     nix-darwin,
     nixos-hardware,
@@ -210,6 +216,18 @@
         hostname = "voyager";
         system = "aarch64-linux";
         extraModules = [nixos-hardware.nixosModules.raspberry-pi-4];
+      };
+
+      kedi-cloud = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = {
+          inherit
+            garnix-lib
+            containerImages
+            inputs
+            ;
+        };
+        modules = [./hosts/kedi-cloud.nix];
       };
     };
 

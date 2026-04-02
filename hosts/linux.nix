@@ -1,3 +1,7 @@
+# Configuration for local (non-garnix) NixOS hosts.
+# Imports nixos-common.nix for shared concerns and adds:
+# home-manager, tailscale, cftunnel, scripts, user accounts,
+# security, boot, SSH, monitoring exporters, etc.
 {
   config,
   hostname,
@@ -12,9 +16,6 @@
   cftunnelLib = import ../lib/cftunnel.nix;
 in {
   imports = [
-    inputs.sops-nix.nixosModules.sops
-    inputs.vault-secrets.nixosModules.vault-secrets
-    inputs.quadlet-nix.nixosModules.quadlet
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager = {
@@ -41,9 +42,8 @@ in {
       };
     }
 
-    ./common.nix
+    ./nixos-common.nix
     ../lib/scripts.nix
-    ../lib/kedi-target.nix
     (tailscaleServeLib.mkTailscaleServeConfig {inherit hostname;})
     cftunnelLib.mkCftunnel
   ];
@@ -51,30 +51,10 @@ in {
   sops = {
     defaultSopsFile = ../secrets/${hostname}.yaml;
     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
-    useSystemdActivation = true;
   };
 
-  sops.secrets =
-    lib.mapAttrs' (
-      name: value: let
-        user = value.user or "root";
-        group = value.group or "root";
-        mode =
-          if user != "root" || group != "root"
-          then "0440"
-          else "0400";
-      in
-        lib.nameValuePair "approles/${name}" {
-          owner = user;
-          inherit group mode;
-        }
-    )
-    config.vault-secrets.secrets;
-
+  nix.settings.trusted-users = ["root" username];
   nix.gc.dates = "weekly";
-
-  # Disable NixOS documentation generation on servers.
-  documentation.nixos.enable = lib.mkDefault false;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
@@ -90,51 +70,16 @@ in {
   };
 
   systemd = {
-    enableEmergencyMode = false;
     sleep.settings.Sleep = {
       AllowSuspend = "no";
       AllowHibernation = "no";
     };
 
-    # Enable systemd-oomd for memory pressure management
-    oomd = {
-      enable = true;
-      enableRootSlice = true;
-      enableUserSlices = true;
-      enableSystemSlice = true;
+    services = {
+      # Protect critical services from oomd
+      tailscaled.serviceConfig.ManagedOOMPreference = "none";
     };
-
-    services = lib.mkMerge [
-      {
-        # Protect critical services from oomd
-        tailscaled.serviceConfig.ManagedOOMPreference = "none";
-      }
-      (lib.mapAttrs' (
-          name: _value:
-            lib.nameValuePair "${name}-secrets" {
-              requires = ["sops-install-secrets.service"];
-              after = ["sops-install-secrets.service"];
-              serviceConfig.EnvironmentFile = lib.mkForce config.sops.secrets."approles/${name}".path;
-            }
-        )
-        config.vault-secrets.secrets)
-      (lib.mapAttrs' (
-          name: value:
-            lib.nameValuePair "${name}-secrets" {
-              serviceConfig.UMask = lib.mkIf (value.group != "root" && value.group != "nogroup") (
-                lib.mkForce "0027"
-              );
-            }
-        )
-        config.vault-secrets.secrets)
-    ];
   };
-
-  # Journald size limits
-  services.journald.extraConfig = ''
-    SystemMaxUse=500M
-    RuntimeMaxUse=100M
-  '';
 
   boot.kernel.sysctl = {
     # Auto-reboot on kernel panic after 10 seconds
@@ -147,8 +92,6 @@ in {
   networking = {
     hostName = hostname;
     firewall = {
-      enable = true;
-      allowPing = true;
       # Let Tailscale ACLs govern access on the Tailscale interface.
       trustedInterfaces = [config.services.tailscale.interfaceName];
     };
@@ -159,10 +102,15 @@ in {
   users.users.${username} = {
     home = "/home/" + username;
     isNormalUser = true;
+    shell = pkgs.fish;
     extraGroups = [
       "wheel"
       "libvirtd"
       "systemd-journal"
+    ];
+    openssh.authorizedKeys.keys = [
+      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINu7u4V6khhhUvepvptel86DN3XMCwZVdQe/7P6WW1KmAAAAFXNzaDphbmFudGhzLXNzaC1rZXktMQ== ananth@yubikey-5c"
+      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano"
     ];
   };
 
@@ -269,9 +217,5 @@ in {
 
   zramSwap.enable = true;
 
-  vault-secrets = {
-    vaultAddress = "http://endeavour:8200";
-    # Keep secrets path host-independent so services can move across hosts.
-    vaultPrefix = lib.mkDefault "kv/services";
-  };
+  vault-secrets.vaultAddress = "http://endeavour:8200";
 }

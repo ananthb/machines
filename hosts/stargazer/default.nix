@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
 
     ./t1.nix
-    ../../services/mealie.nix
     ../../services/timemachinesrv.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/probes.nix
@@ -33,7 +32,6 @@
       tunnelName = "kedi-ext-1";
       ingress = {
         "t1.kedi.dev" = "http://localhost:8123";
-        "mealie.kedi.dev" = "http://localhost:9000";
       };
     }
   ];

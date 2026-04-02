@@ -11,6 +11,7 @@ keys:
   - &host_stargazer_user_ananth age1y8zedseruffw5hgczc5fna4y6t5ul8u93kct5ztt2rlajezd9drskam9pk
   - &host_voyager age13hhdcqa4dcn49w5uy03vfxd2lgurhep53tufawc3gyvc3q9lwf5qs4uu09
   - &host_voyager_user_ananth age1ecj27gptwns0tlm9t9kphhcf7ngkhgzwa8pg7nc5559v96lxzf9qxr6v5q
+  - &host_kedi_cloud age1zwr7ge72xueuquyvnvghu7yrfcuejxfdfkgedvflnrmxc4l0ls8qcupmpy
 creation_rules:
   - path_regex: secrets/global.yaml$
     key_groups:
@@ -75,3 +76,10 @@ creation_rules:
         age:
           - *host_voyager
           - *host_voyager_user_ananth
+
+  - path_regex: secrets/kedi-cloud.yaml$
+    key_groups:
+      - pgp:
+          - *admin_ananth
+        age:
+          - *host_kedi_cloud

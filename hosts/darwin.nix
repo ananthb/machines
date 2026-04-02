@@ -56,8 +56,10 @@
       };
     }
 
-    ./common.nix
+    ./nix-settings.nix
   ];
+
+  nix.settings.trusted-users = ["root" username];
 
   nix.gc.interval = {
     Hour = 3;
@@ -85,8 +87,16 @@
   ids.gids.nixbld = 350;
 
   users.users.${username} = {
+    name = username;
     home = "/Users/" + username;
+    shell = pkgs.fish;
+    openssh.authorizedKeys.keys = [
+      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINu7u4V6khhhUvepvptel86DN3XMCwZVdQe/7P6WW1KmAAAAFXNzaDphbmFudGhzLXNzaC1rZXktMQ== ananth@yubikey-5c"
+      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano"
+    ];
   };
+
+  programs.fish.enable = true;
 
   programs.ssh.extraConfig = ''
     Host *

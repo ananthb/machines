@@ -1,9 +1,5 @@
-{
-  lib,
-  pkgs,
-  username,
-  ...
-}: {
+# Shared nix/nixpkgs settings for all platforms (NixOS, Darwin, Garnix).
+{lib, ...}: {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "b43-firmware"
@@ -28,7 +24,6 @@
       "xow_dongle-firmware"
     ];
 
-  # Necessary for using flakes on this system.
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
@@ -39,26 +34,9 @@
       extra-trusted-public-keys = [
         "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       ];
-
-      trusted-users = [
-        "root"
-        username
-      ];
     };
 
-    # Optimise space
     gc.automatic = true;
     optimise.automatic = true;
   };
-
-  users.users.${username} = {
-    name = username;
-    shell = pkgs.fish;
-    openssh.authorizedKeys.keys = [
-      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINu7u4V6khhhUvepvptel86DN3XMCwZVdQe/7P6WW1KmAAAAFXNzaDphbmFudGhzLXNzaC1rZXktMQ== ananth@yubikey-5c"
-      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano"
-    ];
-  };
-
-  programs.fish.enable = true;
 }
