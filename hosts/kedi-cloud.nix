@@ -79,38 +79,39 @@ in {
         config.vault-secrets.secrets)
       {
         # Local caddy instance that injects CF Access headers for Vault.
-        vault-cf-proxy = {
+        vault-cf-proxy = let
+          caddyfileTemplate = pkgs.writeText "vault-cf-proxy-caddyfile" ''
+            {
+              admin off
+            }
+            :8200 {
+              reverse_proxy https://vault.kedi.dev {
+                header_up CF-Access-Client-Id {{CF_ID}}
+                header_up CF-Access-Client-Secret {{CF_SECRET}}
+              }
+            }
+          '';
+        in {
           description = "CF Access proxy for Vault";
           wantedBy = ["multi-user.target"];
           wants = ["network-online.target"];
           after = ["network-online.target" "sops-install-secrets.service"];
           requires = ["sops-install-secrets.service"];
           serviceConfig = {
-            ExecStart = let
-              caddyfile = "/run/vault-cf-proxy/Caddyfile";
-            in
-              toString [
-                "${config.services.caddy.package}/bin/caddy"
-                "run"
-                "--config"
-                caddyfile
-              ];
+            ExecStart = toString [
+              "${config.services.caddy.package}/bin/caddy"
+              "run"
+              "--config"
+              "/run/vault-cf-proxy/Caddyfile"
+            ];
             ExecStartPre = let
               script = pkgs.writeShellScript "vault-cf-proxy-config" ''
-                mkdir -p /run/vault-cf-proxy
                 CF_ID=$(cat ${config.sops.secrets."cf-access-client-id".path})
                 CF_SECRET=$(cat ${config.sops.secrets."cf-access-client-secret".path})
-                cat > /run/vault-cf-proxy/Caddyfile <<CADDYEOF
-                {
-                  admin off
-                }
-                :8200 {
-                  reverse_proxy https://vault.kedi.dev {
-                    header_up CF-Access-Client-Id "$CF_ID"
-                    header_up CF-Access-Client-Secret "$CF_SECRET"
-                  }
-                }
-                CADDYEOF
+                ${pkgs.gnused}/bin/sed \
+                  -e "s|{{CF_ID}}|$CF_ID|" \
+                  -e "s|{{CF_SECRET}}|$CF_SECRET|" \
+                  ${caddyfileTemplate} > /run/vault-cf-proxy/Caddyfile
               '';
             in "!${script}";
             Restart = "on-failure";
