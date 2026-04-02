@@ -37,8 +37,7 @@
     services.caddy = {
       enable = true;
       package = let
-        caddy' = pkgs.caddy.override {buildGo125Module = pkgs.buildGo126Module;};
-        withPlugins = pkgs.callPackage (pkgs.path + "/pkgs/by-name/ca/caddy/plugins.nix") {caddy = caddy';};
+        withPlugins = pkgs.callPackage (pkgs.path + "/pkgs/by-name/ca/caddy/plugins.nix") {inherit (pkgs) caddy;};
       in
         withPlugins {
           plugins = [
