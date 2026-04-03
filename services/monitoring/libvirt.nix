@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   ...
@@ -8,6 +7,10 @@
     enable = true;
     openFirewall = true;
   };
+
+  # The exporter user needs the libvirtd group in its user definition
+  # (not just SupplementaryGroups) so polkit recognizes it.
+  users.users.prometheus-libvirt-exporter.extraGroups = ["libvirtd"];
 
   systemd.services.prometheus-libvirt-exporter.serviceConfig = {
     ExecStart = lib.mkForce ''
@@ -19,6 +22,5 @@
       "AF_INET6"
       "AF_UNIX"
     ];
-    SupplementaryGroups = [config.users.groups.libvirtd.name];
   };
 }
