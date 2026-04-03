@@ -159,7 +159,7 @@
 		// Admins and workstations can reach everything
 		{
 			"src":    "tag:workstation",
-			"accept": ["tag:server:*", "tag:workstation:*", "tag:infrastructure:*", "tag:media:8096"],
+			"accept": ["tag:server:22", "tag:workstation:22", "tag:infrastructure:22", "tag:media:8096"],
 		},
 		// Deploy can reach servers and workstations
 		{
@@ -170,13 +170,13 @@
 		// Servers can reach infrastructure, other servers, and tsnsrv
 		{
 			"src":    "tag:server",
-			"accept": ["tag:infrastructure:*", "tag:server:*", "tag:tsnsrv:*"],
+			"accept": ["tag:infrastructure:22", "tag:server:22", "tag:tsnsrv:443"],
 			"deny":   ["tag:workstation:22"],
 		},
 		// Infrastructure can reach other infrastructure and subnets
 		{
 			"src":    "tag:infrastructure",
-			"accept": ["tag:infrastructure:*", "10.15.16.1:80"],
+			"accept": ["tag:infrastructure:22", "10.15.16.1:80"],
 			"deny":   ["tag:server:22"],
 		},
 		// Media devices can only reach specific ports on servers

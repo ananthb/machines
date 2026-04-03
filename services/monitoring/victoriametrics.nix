@@ -469,6 +469,8 @@
     )
     indexed;
 in {
+  environment.systemPackages = [config.services.victoriametrics.package];
+
   services.victoriametrics = {
     enable = true;
     retentionPeriod = "1y";
