@@ -1,7 +1,6 @@
-# Garnix-hosted NixOS server running cloud-friendly services.
+# kedi-cloud-garnix1: Garnix-hosted NixOS server running cloud-friendly services.
 {
   config,
-  garnix-lib,
   lib,
   pkgs,
   containerImages,
@@ -10,9 +9,7 @@
   vs = config.vault-secrets.secrets;
 in {
   imports = [
-    garnix-lib.nixosModules.garnix
-    ./nixos-common.nix
-    ../lib/scripts.nix
+    ./shared/garnix.nix
     ../services/monitoring/blackbox.nix
     ../services/monitoring/grafana.nix
     ../services/monitoring/victoriametrics.nix
@@ -21,30 +18,21 @@ in {
   networking = {
     hostName = "kedi-cloud-garnix1";
     firewall = {
-      trustedInterfaces = [config.services.tailscale.interfaceName];
-      allowedTCPPorts = [80 22];
+      allowedTCPPorts = [80];
       interfaces.podman0.allowedTCPPorts = [5432];
     };
   };
 
-  garnix.server = {
+  garnix.server.persistence = {
     enable = true;
-    persistence = {
-      enable = true;
-      name = "kedi-cloud";
-    };
+    name = "kedi-cloud-garnix1";
   };
 
   environment.systemPackages = with pkgs; [
     ghostty.terminfo
   ];
 
-  sops = {
-    defaultSopsFile = ../secrets/kedi-cloud.yaml;
-    age.keyFile = "/var/garnix/keys/repo-key";
-  };
-
-  vault-secrets.vaultAddress = "http://endeavour:8200";
+  sops.defaultSopsFile = ../secrets/kedi-cloud.yaml;
 
   vault-secrets.secrets = {
     actual.services = ["actual"];
@@ -270,14 +258,6 @@ in {
   };
 
   services = {
-    tailscale.enable = true;
-
-    openssh = {
-      enable = true;
-      settings.PermitRootLogin = "prohibit-password";
-      settings.PasswordAuthentication = false;
-    };
-
     # Caddy reverse proxy — each subdomain gets its own virtual host on port 80
     caddy = {
       enable = true;
@@ -614,11 +594,6 @@ in {
       environmentFiles = ["${vs.wallabag}/environment"];
     };
   };
-
-  users.users.root.openssh.authorizedKeys.keys = [
-    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINu7u4V6khhhUvepvptel86DN3XMCwZVdQe/7P6WW1KmAAAAFXNzaDphbmFudGhzLXNzaC1rZXktMQ== ananth@yubikey-5c"
-    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano"
-  ];
 
   system.stateVersion = "25.05";
 }

@@ -1,5 +1,5 @@
 servers:
-  - configuration: kedi-cloud
+  - configuration: kedi-cloud-garnix1
     deployment:
       type: on-branch
       branch: main

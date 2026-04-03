@@ -218,7 +218,7 @@
         extraModules = [nixos-hardware.nixosModules.raspberry-pi-4];
       };
 
-      kedi-cloud = nixpkgs.lib.nixosSystem {
+      kedi-cloud-garnix1 = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
           inherit
@@ -228,7 +228,7 @@
             ;
           outputs = self;
         };
-        modules = [./hosts/kedi-cloud.nix];
+        modules = [./hosts/kedi-cloud-garnix1.nix];
       };
     };
 
