@@ -18,6 +18,15 @@ in {
     ../services/monitoring/victoriametrics.nix
   ];
 
+  networking = {
+    hostName = "kedi-cloud-garnix1";
+    firewall = {
+      trustedInterfaces = [config.services.tailscale.interfaceName];
+      allowedTCPPorts = [80 22];
+      interfaces.podman0.allowedTCPPorts = [5432];
+    };
+  };
+
   garnix.server = {
     enable = true;
     persistence = {
@@ -26,8 +35,6 @@ in {
     };
   };
 
-  networking.firewall.trustedInterfaces = [config.services.tailscale.interfaceName];
-
   environment.systemPackages = with pkgs; [
     ghostty.terminfo
   ];
@@ -35,15 +42,9 @@ in {
   sops = {
     defaultSopsFile = ../secrets/kedi-cloud.yaml;
     age.keyFile = "/var/garnix/keys/repo-key";
-    # CF Access service token for reaching vault.kedi.dev through Cloudflare Access.
-    # Decrypted by sops at boot; used by the local vault proxy below.
-    secrets."cf-access-client-id" = {};
-    secrets."cf-access-client-secret" = {};
   };
 
-  # Local reverse proxy that injects CF Access headers when talking to Vault.
-  # vault-secrets services connect to this instead of vault.kedi.dev directly.
-  vault-secrets.vaultAddress = "http://localhost:8200";
+  vault-secrets.vaultAddress = "http://endeavour:8200";
 
   vault-secrets.secrets = {
     actual.services = ["actual"];
@@ -78,59 +79,7 @@ in {
 
   systemd = {
     services = lib.mkMerge [
-      # Make all vault-secrets services wait for the CF Access proxy
-      (lib.mapAttrs' (
-          name: _value:
-            lib.nameValuePair "${name}-secrets" {
-              requires = ["vault-cf-proxy.service"];
-              after = ["vault-cf-proxy.service"];
-            }
-        )
-        config.vault-secrets.secrets)
       {
-        # Local caddy instance that injects CF Access headers for Vault.
-        vault-cf-proxy = let
-          caddyfileTemplate = pkgs.writeText "vault-cf-proxy-caddyfile" ''
-            {
-              admin off
-            }
-            :8200 {
-              reverse_proxy https://vault.kedi.dev {
-                header_up Host vault.kedi.dev
-                header_up CF-Access-Client-Id {{CF_ID}}
-                header_up CF-Access-Client-Secret {{CF_SECRET}}
-              }
-            }
-          '';
-        in {
-          description = "CF Access proxy for Vault";
-          wantedBy = ["multi-user.target"];
-          wants = ["network-online.target"];
-          after = ["network-online.target" "sops-install-secrets.service"];
-          requires = ["sops-install-secrets.service"];
-          serviceConfig = {
-            ExecStart = toString [
-              "${config.services.caddy.package}/bin/caddy"
-              "run"
-              "--config"
-              "/run/vault-cf-proxy/Caddyfile"
-            ];
-            ExecStartPre = let
-              script = pkgs.writeShellScript "vault-cf-proxy-config" ''
-                CF_ID=$(cat ${config.sops.secrets."cf-access-client-id".path})
-                CF_SECRET=$(cat ${config.sops.secrets."cf-access-client-secret".path})
-                ${pkgs.gnused}/bin/sed \
-                  -e "s|{{CF_ID}}|$CF_ID|" \
-                  -e "s|{{CF_SECRET}}|$CF_SECRET|" \
-                  ${caddyfileTemplate} > /run/vault-cf-proxy/Caddyfile
-              '';
-            in "!${script}";
-            Restart = "on-failure";
-            DynamicUser = true;
-            RuntimeDirectory = "vault-cf-proxy";
-          };
-        };
-
         actual = {
           serviceConfig.EnvironmentFile = "${vs.actual}/environment";
           environment = {
@@ -670,11 +619,6 @@ in {
     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINu7u4V6khhhUvepvptel86DN3XMCwZVdQe/7P6WW1KmAAAAFXNzaDphbmFudGhzLXNzaC1rZXktMQ== ananth@yubikey-5c"
     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano"
   ];
-
-  networking.firewall = {
-    allowedTCPPorts = [80 22];
-    interfaces.podman0.allowedTCPPorts = [5432];
-  };
 
   system.stateVersion = "25.05";
 }
