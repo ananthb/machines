@@ -20,6 +20,7 @@
   hasExporter = c: name:
     hasAttr "exporters" c.services.prometheus
     && c.services.prometheus.exporters.${name}.enable or false;
+  exporterPort = c: name: toString c.services.prometheus.exporters.${name}.port;
   hasQuadletContainer = c: name:
     hasAttr "virtualisation" c
     && hasAttr "quadlet" c.virtualisation
@@ -55,17 +56,19 @@
 
   # --- Target Generation Logic ---
 
+  # Helper: build target list for a prometheus exporter across all NixOS hosts.
+  mkExporterTargets = name:
+    concatMap (
+      host:
+        if hasExporter host.config name
+        then ["${host.name}:${exporterPort host.config name}"]
+        else []
+    )
+    nixosHosts;
+
   # 1. Node Exporter (Machine metrics)
-  # Target: hostname:9100
   nodeTargets = let
-    linux =
-      concatMap (
-        host:
-          if hasExporter host.config "node"
-          then ["${host.name}:9100"]
-          else []
-      )
-      nixosHosts;
+    linux = mkExporterTargets "node";
     mac =
       concatMap (
         host:
@@ -74,7 +77,6 @@
           else []
       )
       darwinHosts;
-    # Static Tailscale targets for machines outside Nix host lists.
     static = [
       "framework.tail030950.ts.net:9100"
     ];
@@ -82,24 +84,14 @@
     linux ++ mac ++ static;
 
   # 2. Blackbox Exporter (The prober itself)
-  # Target: hostname:9115
   blackboxExporterTargets =
     if hasExporter config "blackbox"
-    then ["${config.networking.hostName}:9115"]
+    then ["${config.networking.hostName}:${exporterPort config "blackbox"}"]
     else [];
 
   # 3. Libvirt Exporter
-  # Target: hostname:9177
   libvirtTargets = let
-    dynamic =
-      concatMap (
-        host:
-          if hasExporter host.config "libvirt"
-          then ["${host.name}:9177"]
-          else []
-      )
-      nixosHosts;
-    # Static Tailscale targets for machines outside Nix host lists.
+    dynamic = mkExporterTargets "libvirt";
     static = [
       "framework.tail030950.ts.net:9177"
     ];
@@ -107,71 +99,47 @@
     dynamic ++ static;
 
   # 4. SmartCTL Exporter
-  # Target: hostname:9633
-  smartctlTargets =
-    concatMap (
-      host:
-        if hasExporter host.config "smartctl"
-        then ["${host.name}:9633"]
-        else []
-    )
-    nixosHosts;
+  smartctlTargets = mkExporterTargets "smartctl";
 
-  # 4b. Speedtest.net Exporter
-  # Target: hostname:9798
-  speedtestTargets =
-    concatMap (
-      host:
-        if hasExporter host.config "speedtest"
-        then ["${host.name}:9798"]
-        else []
-    )
-    nixosHosts;
+  # 5. Speedtest Exporter
+  speedtestTargets = mkExporterTargets "speedtest";
 
-  # 5. UPS (NUT) Exporter
-  # Target: hostname:9199
-  # Using services.power.ups.enable check
+  # 6. UPS (NUT) Exporter
   nutTargets =
     concatMap (
       host:
         if hasAttr "ups" host.config.power && host.config.power.ups.enable
-        then ["${host.name}:9199"]
+        then ["${host.name}:${exporterPort host.config "nut"}"]
         else []
     )
     nixosHosts;
 
-  # 6. Miniflux
-  # Target: hostname:8088 (METRICS_COLLECTOR=1)
+  # 7. Miniflux (METRICS_COLLECTOR=1, port from LISTEN_ADDR)
   minifluxTargets =
     concatMap (
       host:
         if hasService host.config "miniflux"
-        then ["${host.name}:8088"]
+        then let
+          listenAddr = host.config.services.miniflux.config.LISTEN_ADDR or "[::]:8088";
+          port = lib.last (lib.splitString ":" listenAddr);
+        in ["${host.name}:${port}"]
         else []
     )
     nixosHosts;
 
-  # 7. EcoFlow Exporter
-  # Target: hostname:2112
-  ecoflowTargets =
-    concatMap (
-      host:
-        if hasExporter host.config "ecoflow"
-        then ["${host.name}:2112"]
-        else []
-    )
-    nixosHosts;
+  # 8. EcoFlow Exporter
+  ecoflowTargets = mkExporterTargets "ecoflow";
 
-  # 7. App Exporters (Radarr, Sonarr, Prowlarr, Postgres)
+  # 9. App Exporters (Radarr, Sonarr, Prowlarr, Postgres)
   appTargets = let
     getAppTargets = host: let
       c = host.config;
     in
       flatten [
-        (optionals (hasExporter c "exportarr-radarr") ["${host.name}:9708"]) # Radarr
-        (optionals (hasExporter c "exportarr-sonarr") ["${host.name}:9709"]) # Sonarr
-        (optionals (hasExporter c "exportarr-prowlarr") ["${host.name}:9710"]) # Prowlarr
-        (optionals (hasExporter c "postgres") ["${host.name}:9187"]) # Postgres
+        (optionals (hasExporter c "exportarr-radarr") ["${host.name}:${exporterPort c "exportarr-radarr"}"])
+        (optionals (hasExporter c "exportarr-sonarr") ["${host.name}:${exporterPort c "exportarr-sonarr"}"])
+        (optionals (hasExporter c "exportarr-prowlarr") ["${host.name}:${exporterPort c "exportarr-prowlarr"}"])
+        (optionals (hasExporter c "postgres") ["${host.name}:${exporterPort c "postgres"}"])
       ];
   in
     concatMap getAppTargets nixosHosts;
