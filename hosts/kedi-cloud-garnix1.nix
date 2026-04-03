@@ -254,6 +254,7 @@ in {
 
     tmpfiles.rules = [
       "Z /var/lib/mealie - mealie mealie - -"
+      "d /var/lib/calibre 2775 calibre-server calibre-server - -"
     ];
   };
 
@@ -282,6 +283,9 @@ in {
         };
         "metrics.kedi.dev:80" = {
           extraConfig = "reverse_proxy localhost:3000";
+        };
+        "calibre.kedi.dev:80" = {
+          extraConfig = "reverse_proxy localhost:8086";
         };
       };
     };
@@ -338,6 +342,12 @@ in {
       listenAddress = "127.0.0.1";
       credentialsFile = "${vs.mealie}/environment";
       database.createLocally = true;
+    };
+
+    calibre-server = {
+      enable = true;
+      port = 8086;
+      libraries = ["/var/lib/calibre"];
     };
 
     homepage-dashboard = {

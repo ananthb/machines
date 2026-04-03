@@ -20,7 +20,6 @@
     ../../services/mosquitto.nix
     ../../services/immich.nix
     ../../services/media/arr.nix
-    ../../services/media/calibre.nix
     ../../services/media/jellyfin.nix
     ../../services/monitoring/ecoflow.nix
     ../../services/monitoring/postgres.nix
@@ -135,7 +134,6 @@
       tunnelName = "kedi-apps-1";
       ingress = {
         "6a.kedi.dev" = "http://localhost:8123";
-        "calibre.kedi.dev" = "http://localhost:8086";
         "immich.kedi.dev" = "http://localhost:2283";
         "seafile.kedi.dev" = "http://localhost:4444";
         "seerr.kedi.dev" = "http://localhost:5055";
