@@ -10,6 +10,7 @@
 		"tag:server":         ["autogroup:owner"],
 		"tag:infrastructure": ["autogroup:owner"],
 		"tag:workstation":    ["autogroup:owner"],
+		"tag:media":          ["autogroup:owner"],
 	},
 
 	// Define users and devices that can use Tailscale SSH.
@@ -117,6 +118,12 @@
 					},
 				],
 			},
+		},
+		// Media devices (Chromecasts, TVs) can reach Home Assistant and Jellyfin on servers
+		{
+			"src": ["tag:media"],
+			"dst": ["tag:server"],
+			"ip":  ["*:8096", "*:8920", "*:8123"],
 		},
 		{
 			"src": ["autogroup:shared"],
