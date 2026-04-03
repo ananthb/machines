@@ -12,6 +12,7 @@ in {
     ./shared/garnix.nix
     ../services/monitoring/blackbox.nix
     ../services/monitoring/grafana.nix
+    ../services/monitoring/probes.nix
     ../services/monitoring/victoriametrics.nix
   ];
 
@@ -259,6 +260,11 @@ in {
   };
 
   services = {
+    prometheus.exporters.node = {
+      enable = true;
+      openFirewall = true;
+    };
+
     # Caddy reverse proxy — each subdomain gets its own virtual host on port 80
     caddy = {
       enable = true;
