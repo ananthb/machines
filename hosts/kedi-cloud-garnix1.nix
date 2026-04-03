@@ -64,6 +64,11 @@ in {
       services = ["homepage-dashboard"];
       group = "homepage-secrets";
     };
+
+    vaultwarden = {
+      services = ["vaultwarden"];
+      group = config.users.groups.vaultwarden.name;
+    };
   };
 
   systemd = {
@@ -224,6 +229,40 @@ in {
           ];
         };
 
+        "vaultwarden-backup" = {
+          startAt = "daily";
+          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          preStart = "systemctl -q is-active vaultwarden.service && systemctl stop vaultwarden.service";
+          script = ''
+            backup_target="/var/lib/${config.systemd.services.vaultwarden.serviceConfig.StateDirectory}"
+            snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+            dump_file="$snapshot_target/db.dump"
+
+            trap '{
+              rm -rf "$snapshot_target"
+            }' EXIT
+
+            ${pkgs.sudo}/bin/sudo -u vaultwarden \
+              ${config.services.postgresql.package}/bin/pg_dump \
+                -Fc -U vaultwarden vaultwarden > "$dump_file"
+
+            ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
+
+            ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
+          '';
+          postStop = "systemctl start vaultwarden.service";
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.kopia
+            pkgs.systemd
+          ];
+        };
+
         "postgresql-backup" = {
           startAt = "daily";
           environment.KOPIA_CHECK_FOR_UPDATES = "false";
@@ -289,6 +328,9 @@ in {
         "metrics.kedi.dev:80" = {
           extraConfig = "reverse_proxy localhost:3000";
         };
+        "vaultwarden.kedi.dev:80" = {
+          extraConfig = "reverse_proxy localhost:8222";
+        };
       };
     };
 
@@ -329,14 +371,39 @@ in {
       authentication = ''
         host wallabag wallabag 10.0.0.0/8 md5
       '';
-      ensureDatabases = ["wallabag"];
+      ensureDatabases = ["wallabag" "vaultwarden"];
       ensureUsers = [
         {
           name = "wallabag";
           ensureDBOwnership = true;
           ensureClauses.login = true;
         }
+        {
+          name = "vaultwarden";
+          ensureDBOwnership = true;
+          ensureClauses.login = true;
+        }
       ];
+    };
+
+    vaultwarden = {
+      enable = true;
+      dbBackend = "postgresql";
+      config = {
+        DATABASE_URL = "postgresql://vaultwarden@/vaultwarden?host=/run/postgresql";
+        ROCKET_ADDRESS = "::";
+        ROCKET_PORT = 8222;
+        ROCKET_LOG = "critical";
+        INVITATIONS_ALLOWED = true;
+        SIGNUPS_ALLOWED = false;
+        DOMAIN = "https://vaultwarden.kedi.dev";
+        PUSH_ENABLED = true;
+        PUSH_IDENTITY_URI = "https://identity.bitwarden.eu";
+        PUSH_RELAY_URI = "https://api.bitwarden.eu";
+        SMTP_FROM = "vault@kedi.dev";
+        SMTP_FROM_NAME = "KEDI Vaultwarden";
+      };
+      environmentFile = "${vs.vaultwarden}/environment";
     };
 
     mealie = {

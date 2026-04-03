@@ -27,7 +27,6 @@
     ../../services/seafile.nix
     ../../services/timemachinesrv.nix
     ../../services/vault.nix
-    ../../services/vaultwarden.nix
   ];
 
   # systemd-boot
@@ -138,7 +137,6 @@
         "seafile.kedi.dev" = "http://localhost:4444";
         "seerr.kedi.dev" = "http://localhost:5055";
         "vault.kedi.dev" = "http://localhost:8200";
-        "vaultwarden.kedi.dev" = "http://localhost:8222";
       };
     }
   ];
