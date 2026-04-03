@@ -245,7 +245,7 @@ in {
                   (mkAlert {
                     uid = "hex2mem0n6dcg";
                     title = "High Memory Pressure";
-                    expr = ''node_memory_AvailableBytes / node_memory_MemTotal_bytes * 100'';
+                    expr = ''node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100'';
                     threshold = 10;
                     duration = "5m";
                     muteAtNight = true;
