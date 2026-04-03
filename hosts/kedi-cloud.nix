@@ -22,6 +22,10 @@ in {
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    ghostty.terminfo
+  ];
+
   sops = {
     defaultSopsFile = ../secrets/kedi-cloud.yaml;
     age.keyFile = "/var/garnix/keys/repo-key";
@@ -86,6 +90,7 @@ in {
             }
             :8200 {
               reverse_proxy https://vault.kedi.dev {
+                header_up Host vault.kedi.dev
                 header_up CF-Access-Client-Id {{CF_ID}}
                 header_up CF-Access-Client-Secret {{CF_SECRET}}
               }
