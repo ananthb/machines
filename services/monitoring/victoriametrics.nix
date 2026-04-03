@@ -140,7 +140,18 @@
     )
     nixosHosts;
 
-  # 6. EcoFlow Exporter
+  # 6. Miniflux
+  # Target: hostname:8088 (METRICS_COLLECTOR=1)
+  minifluxTargets =
+    concatMap (
+      host:
+        if hasService host.config "miniflux"
+        then ["${host.name}:8088"]
+        else []
+    )
+    nixosHosts;
+
+  # 7. EcoFlow Exporter
   # Target: hostname:2112
   ecoflowTargets =
     concatMap (
@@ -632,6 +643,16 @@ in {
                 targets = libvirtTargets;
                 labels.type = "exporter";
                 labels.role = "hypervisor";
+              }
+            ];
+          }
+          {
+            job_name = "miniflux";
+            static_configs = [
+              {
+                targets = minifluxTargets;
+                labels.type = "app";
+                labels.app = "miniflux";
               }
             ];
           }
