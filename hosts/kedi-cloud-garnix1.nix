@@ -456,7 +456,7 @@ in {
                 icon = "wallabag";
                 description = "Read-it-later";
                 href = "https://wallabag.kedi.dev";
-                siteMonitor = "https://wallabag.kedi.dev";
+                siteMonitor = "http://localhost:8085";
               };
             }
             {
@@ -464,7 +464,7 @@ in {
                 icon = "miniflux";
                 description = "RSS Feed Reader";
                 href = "https://miniflux.kedi.dev";
-                siteMonitor = "https://miniflux.kedi.dev";
+                siteMonitor = "http://localhost:8088";
                 widget = {
                   type = "miniflux";
                   url = "http://localhost:8088";
@@ -497,7 +497,7 @@ in {
                 icon = "actual-budget";
                 description = "Personal Budget Tracker";
                 href = "https://actual.kedi.dev";
-                siteMonitor = "https://actual.kedi.dev";
+                siteMonitor = "http://localhost:3002";
               };
             }
             {
@@ -505,10 +505,10 @@ in {
                 icon = "mealie";
                 description = "Recipes & Meal Planner";
                 href = "https://mealie.kedi.dev";
-                siteMonitor = "https://mealie.kedi.dev";
+                siteMonitor = "http://localhost:9000";
                 widget = {
                   type = "mealie";
-                  url = "https://mealie.kedi.dev";
+                  url = "http://localhost:9000";
                   key = "{{HOMEPAGE_VAR_MEALIE_API_KEY}}";
                 };
               };
@@ -518,7 +518,7 @@ in {
                 icon = "vaultwarden";
                 description = "Password Manager";
                 href = "https://vaultwarden.kedi.dev";
-                siteMonitor = "https://vaultwarden.kedi.dev";
+                siteMonitor = "http://localhost:8222";
               };
             }
           ];
@@ -571,7 +571,7 @@ in {
                   "VictoriaMetrics" = {
                     icon = "victoriametrics";
                     description = "Metrics";
-                    href = "http://endeavour:8428";
+                    href = "http://localhost:8428";
                   };
                 }
                 {
