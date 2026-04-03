@@ -317,9 +317,6 @@ in {
     caddy = {
       enable = true;
       virtualHosts = {
-        "uptime.kedi.dev:80" = {
-          extraConfig = "reverse_proxy localhost:3001";
-        };
         "actual.kedi.dev:80" = {
           extraConfig = "reverse_proxy localhost:3002";
         };
@@ -341,14 +338,6 @@ in {
         "vaultwarden.kedi.dev:80" = {
           extraConfig = "reverse_proxy localhost:8222";
         };
-      };
-    };
-
-    uptime-kuma = {
-      enable = true;
-      settings = {
-        HOST = "127.0.0.1";
-        PORT = "3001";
       };
     };
 
@@ -583,13 +572,6 @@ in {
                     icon = "victoriametrics";
                     description = "Metrics";
                     href = "http://localhost:8428";
-                  };
-                }
-                {
-                  "Uptime Kuma" = {
-                    icon = "uptime-kuma";
-                    description = "Uptime Monitor";
-                    href = "https://uptime.kedi.dev";
                   };
                 }
               ];
