@@ -10,7 +10,12 @@
 
   # The exporter user needs the libvirtd group in its user definition
   # (not just SupplementaryGroups) so polkit recognizes it.
-  users.users.prometheus-libvirt-exporter.extraGroups = ["libvirtd"];
+  users.users.prometheus-libvirt-exporter = {
+    isSystemUser = true;
+    group = "prometheus-libvirt-exporter";
+    extraGroups = ["libvirtd"];
+  };
+  users.groups.prometheus-libvirt-exporter = {};
 
   systemd.services.prometheus-libvirt-exporter.serviceConfig = {
     ExecStart = lib.mkForce ''
