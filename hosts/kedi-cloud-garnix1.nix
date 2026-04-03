@@ -518,6 +518,7 @@ in {
                 siteMonitor = "http://localhost:9000";
                 widget = {
                   type = "mealie";
+                  version = 2;
                   url = "http://localhost:9000";
                   key = "{{HOMEPAGE_VAR_MEALIE_API_KEY}}";
                 };
