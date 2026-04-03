@@ -40,7 +40,7 @@
 		{
 			"src":    ["tag:deploy"],
 			"dst":    ["tag:server", "tag:workstation"],
-			"users":  ["autogroup:nonroot"],
+			"users":  ["autogroup:nonroot", "root"],
 			"action": "accept",
 		},
 		// Allow user to ssh into workstations
@@ -137,7 +137,7 @@
 		{
 			"src":    "tag:deploy",
 			"dst":    ["tag:server", "tag:workstation"],
-			"accept": ["autogroup:nonroot"],
+			"accept": ["autogroup:nonroot", "root"],
 		},
 		// servers should have access to servers and infrastructure
 		{
@@ -155,13 +155,36 @@
 
 	"autoApprovers": {"services": {"tag:tsnsrv": ["tag:server"]}},
 
-	// Test access rules every time they're saved.
-	// "tests": [
-	//   {
-	//       "src": "alice@example.com",
-	//       "accept": ["tag:example"],
-	//       "deny": ["100.101.102.103:443"],
-	//   },
-	// ],
+	"tests": [
+		// Admins and workstations can reach everything
+		{
+			"src":    "tag:workstation",
+			"accept": ["tag:server:*", "tag:workstation:*", "tag:infrastructure:*", "tag:media:8096"],
+		},
+		// Deploy can reach servers and workstations
+		{
+			"src":  "tag:deploy",
+			"accept": ["tag:server:22", "tag:workstation:22"],
+			"deny":   ["tag:infrastructure:22"],
+		},
+		// Servers can reach infrastructure, other servers, and tsnsrv
+		{
+			"src":    "tag:server",
+			"accept": ["tag:infrastructure:*", "tag:server:*", "tag:tsnsrv:*"],
+			"deny":   ["tag:workstation:22"],
+		},
+		// Infrastructure can reach other infrastructure and subnets
+		{
+			"src":    "tag:infrastructure",
+			"accept": ["tag:infrastructure:*", "10.15.16.1:80"],
+			"deny":   ["tag:server:22"],
+		},
+		// Media devices can only reach specific ports on servers
+		{
+			"src":    "tag:media",
+			"accept": ["tag:server:8096", "tag:server:8920", "tag:server:8123"],
+			"deny":   ["tag:server:22", "tag:server:80", "tag:workstation:22"],
+		},
+	],
 }
 
