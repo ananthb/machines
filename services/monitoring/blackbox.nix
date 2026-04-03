@@ -18,13 +18,6 @@
               method: GET
               no_follow_redirects: false
               fail_if_not_ssl: true
-          https_2xx_via_warp:
-            prober: http
-            http:
-              proxy_url: socks5://localhost:8888
-              method: GET
-              no_follow_redirects: false
-              fail_if_not_ssl: true
       '';
     };
   };

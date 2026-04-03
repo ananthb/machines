@@ -465,69 +465,6 @@
             ]
             ++ privateHttpsConfigs;
         }
-        {
-          job_name = "blackbox_https_2xx_via_warp${suffix}";
-          metrics_path = "/probe";
-          params.module = ["https_2xx_via_warp"];
-          relabel_configs = [
-            {
-              source_labels = ["__address__"];
-              target_label = "__param_target";
-            }
-            {
-              source_labels = ["__param_target"];
-              target_label = "instance";
-            }
-            {
-              source_labels = ["type"];
-              regex = "^$";
-              target_label = "type";
-              replacement = "app";
-              action = "replace";
-            }
-            {
-              source_labels = ["role"];
-              regex = "^$";
-              target_label = "role";
-              replacement = "server";
-              action = "replace";
-            }
-            {
-              target_label = "__address__";
-              replacement = exporter;
-            }
-            {
-              source_labels = ["__address__"];
-              regex = ".*";
-              replacement = "warp";
-              target_label = "via";
-              action = "replace";
-            }
-          ];
-          static_configs =
-            [
-              {
-                targets = [
-                  "https://bhaskararaman.com"
-                  "https://calculon.tech"
-                  "https://coredump.blog"
-                  "https://lilaartscentre.com"
-                  "https://shakthipalace.com"
-                ];
-                labels.type = "internet-host";
-                labels.role = "server";
-              }
-              {
-                targets = [
-                  "https://www.google.com"
-                  "https://www.cloudflare.com"
-                ];
-                labels.type = "internet-host";
-                labels.role = "canary";
-              }
-            ]
-            ++ privateHttpsConfigs;
-        }
       ]
     )
     indexed;

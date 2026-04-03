@@ -165,7 +165,7 @@ in {
         # Sends a metric to VictoriaMetrics in Prometheus text format.
         # Usage: write_metric <metric_name> <labels> <value>
         # <labels> should be a comma-separated string like "job=api,instance=server1"
-        # VM_URL environment variable (default: http://${victoriaMetricsHost}:8428 when set) selects
+        # VM_URL environment variable (default: http://<victoriaMetricsHost>:8428 when set) selects
         # the VictoriaMetrics endpoint to send metrics to.
         write_metric() {
           local metric_name="$1"

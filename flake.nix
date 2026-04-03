@@ -226,6 +226,7 @@
             containerImages
             inputs
             ;
+          outputs = self;
         };
         modules = [./hosts/kedi-cloud.nix];
       };

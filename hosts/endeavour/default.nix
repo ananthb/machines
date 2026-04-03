@@ -22,12 +22,9 @@
     ../../services/media/arr.nix
     ../../services/media/calibre.nix
     ../../services/media/jellyfin.nix
-    ../../services/monitoring/blackbox.nix
     ../../services/monitoring/ecoflow.nix
-    ../../services/monitoring/grafana.nix
     ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
-    ../../services/monitoring/victoriametrics.nix
     ../../services/seafile.nix
     ../../services/timemachinesrv.nix
     ../../services/vault.nix
@@ -140,7 +137,6 @@
         "6a.kedi.dev" = "http://localhost:8123";
         "calibre.kedi.dev" = "http://localhost:8086";
         "immich.kedi.dev" = "http://localhost:2283";
-        "metrics.kedi.dev" = "http://localhost:3000";
         "seafile.kedi.dev" = "http://localhost:4444";
         "seerr.kedi.dev" = "http://localhost:5055";
         "vault.kedi.dev" = "http://localhost:8200";

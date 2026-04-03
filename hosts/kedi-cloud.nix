@@ -12,6 +12,10 @@ in {
   imports = [
     garnix-lib.nixosModules.garnix
     ./nixos-common.nix
+    ../lib/scripts.nix
+    ../services/monitoring/blackbox.nix
+    ../services/monitoring/grafana.nix
+    ../services/monitoring/victoriametrics.nix
   ];
 
   garnix.server = {
@@ -21,6 +25,8 @@ in {
       name = "kedi-cloud";
     };
   };
+
+  networking.firewall.trustedInterfaces = [config.services.tailscale.interfaceName];
 
   environment.systemPackages = with pkgs; [
     ghostty.terminfo
@@ -60,7 +66,7 @@ in {
     };
 
     mealie = {
-      services = ["mealie"];
+      services = ["mealie" "mealie-backup"];
       group = "mealie";
     };
 
@@ -143,6 +149,169 @@ in {
         };
 
         homepage-dashboard.serviceConfig.SupplementaryGroups = ["homepage-secrets"];
+
+        # --- Backup services ---
+
+        "actual-backup" = {
+          startAt = "daily";
+          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          preStart = "systemctl -q is-active actual.service && systemctl stop actual.service";
+          script = ''
+            backup_target="/var/lib/actual"
+            snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+
+            trap '{
+              rm -rf "$snapshot_target"
+            }' EXIT
+
+            ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
+            ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
+          '';
+          postStop = "systemctl start actual.service";
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.kopia
+            pkgs.systemd
+          ];
+        };
+
+        "mealie-backup" = {
+          startAt = "weekly";
+          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          script = ''
+            set -uo pipefail
+
+            backup_api_url="http://localhost:9000/api/admin/backups"
+
+            http() {
+              ${pkgs.httpie}/bin/http -A bearer -a "$MEALIE_BACKUP_API_KEY" \
+                --check-status \
+                --ignore-stdin \
+                --timeout=10 \
+                "$@"
+            }
+
+            # Delete all backups
+            http GET "$backup_api_url" \
+              | ${pkgs.jq}/bin/jq -r '.imports[].name' \
+              | ${pkgs.findutils}/bin/xargs -I{} \
+                ${pkgs.httpie}/bin/http -A bearer -a "$MEALIE_BACKUP_API_KEY" \
+                  --check-status \
+                  --ignore-stdin \
+                  --timeout=10 \
+                  DELETE "$backup_api_url/"{}
+
+            # Create new backup
+            http POST "$backup_api_url"
+
+            # Upload new backup
+            ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
+          '';
+          serviceConfig = {
+            User = "root";
+            Type = "oneshot";
+            EnvironmentFile = "${vs.mealie}/environment";
+          };
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.kopia
+          ];
+        };
+
+        "miniflux-backup" = {
+          startAt = "daily";
+          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          script = ''
+            snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+            dump_file="$snapshot_target/miniflux.dump"
+
+            trap '{
+              rm -rf "$snapshot_target"
+            }' EXIT
+
+            ${pkgs.sudo}/bin/sudo -u postgres \
+              ${config.services.postgresql.package}/bin/pg_dump \
+                -Fc miniflux > "$dump_file"
+
+            ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/miniflux"
+          '';
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.kopia
+          ];
+        };
+
+        "wallabag-backup" = {
+          startAt = "daily";
+          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          script = ''
+            snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+
+            trap '{
+              rm -rf "$snapshot_target"
+            }' EXIT
+
+            # Dump wallabag database
+            ${pkgs.sudo}/bin/sudo -u postgres \
+              ${config.services.postgresql.package}/bin/pg_dump \
+                -Fc wallabag > "$snapshot_target/wallabag.dump"
+
+            # Export podman volumes
+            ${pkgs.podman}/bin/podman volume export wallabag-data \
+              > "$snapshot_target/wallabag-data.tar"
+            ${pkgs.podman}/bin/podman volume export wallabag-images \
+              > "$snapshot_target/wallabag-images.tar"
+
+            ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/wallabag"
+          '';
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.kopia
+          ];
+        };
+
+        "postgresql-backup" = {
+          startAt = "daily";
+          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          script = ''
+            snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
+
+            trap '{
+              rm -rf "$snapshot_target"
+            }' EXIT
+
+            ${pkgs.sudo}/bin/sudo -u postgres \
+              ${config.services.postgresql.package}/bin/pg_dumpall \
+                > "$snapshot_target/all-databases.sql"
+
+            ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/postgresql"
+          '';
+          serviceConfig = {
+            Type = "oneshot";
+            User = "root";
+          };
+          path = [
+            pkgs.coreutils
+            pkgs.curl
+            pkgs.kopia
+          ];
+        };
       }
     ];
 
@@ -152,6 +321,14 @@ in {
   };
 
   services = {
+    tailscale.enable = true;
+
+    openssh = {
+      enable = true;
+      settings.PermitRootLogin = "prohibit-password";
+      settings.PasswordAuthentication = false;
+    };
+
     # Caddy reverse proxy — each subdomain gets its own virtual host on port 80
     caddy = {
       enable = true;
@@ -173,6 +350,9 @@ in {
         };
         "kedi.dev:80" = {
           extraConfig = "reverse_proxy localhost:8802";
+        };
+        "metrics.kedi.dev:80" = {
+          extraConfig = "reverse_proxy localhost:3000";
         };
       };
     };
@@ -228,6 +408,7 @@ in {
       enable = true;
       listenAddress = "127.0.0.1";
       credentialsFile = "${vs.mealie}/environment";
+      database.createLocally = true;
     };
 
     homepage-dashboard = {
@@ -453,6 +634,7 @@ in {
     groups = {
       news = {};
       mealie = {};
+      hass = {};
       "homepage-secrets" = {};
     };
     users.mealie = {
@@ -482,12 +664,6 @@ in {
       publishPorts = ["8085:80"];
       environmentFiles = ["${vs.wallabag}/environment"];
     };
-  };
-
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "prohibit-password";
-    settings.PasswordAuthentication = false;
   };
 
   users.users.root.openssh.authorizedKeys.keys = [
