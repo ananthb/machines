@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ./darwin.nix
+    ./shared/darwin.nix
   ];
 
   homebrew = {

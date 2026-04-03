@@ -12,7 +12,7 @@
     inputs.vault-secrets.nixosModules.vault-secrets
     inputs.quadlet-nix.nixosModules.quadlet
     ./nix-settings.nix
-    ../lib/kedi-target.nix
+    ../../lib/kedi-target.nix
   ];
 
   sops.useSystemdActivation = true;

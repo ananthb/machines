@@ -37,9 +37,9 @@
         useUserPackages = true;
         users.${username} = {
           imports = let
-            hostModule = (import ../lib/home-host-module.nix {inherit lib;}) hostname;
+            hostModule = (import ../../lib/home-host-module.nix {inherit lib;}) hostname;
           in [
-            ../home/common.nix
+            ../../home/common.nix
             hostModule
           ];
         };

@@ -12,8 +12,8 @@
   username,
   ...
 }: let
-  tailscaleServeLib = import ../lib/tailscale-serve-config.nix;
-  cftunnelLib = import ../lib/cftunnel.nix;
+  tailscaleServeLib = import ../../lib/tailscale-serve-config.nix;
+  cftunnelLib = import ../../lib/cftunnel.nix;
 in {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -28,9 +28,9 @@ in {
         useUserPackages = true;
         users.${username} = {
           imports = let
-            hostModule = (import ../lib/home-host-module.nix {inherit lib;}) hostname;
+            hostModule = (import ../../lib/home-host-module.nix {inherit lib;}) hostname;
           in [
-            ../home/common.nix
+            ../../home/common.nix
             hostModule
           ];
         };
@@ -43,7 +43,7 @@ in {
     }
 
     ./nixos-common.nix
-    ../lib/scripts.nix
+    ../../lib/scripts.nix
     (tailscaleServeLib.mkTailscaleServeConfig {inherit hostname;})
     cftunnelLib.mkCftunnel
   ];

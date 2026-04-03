@@ -10,7 +10,7 @@ in {
   imports = [
     inputs.NixVirt.nixosModules.default
 
-    ../linux.nix
+    ../shared/linux.nix
     ./hardware-configuration.nix
     ./programs.nix
     ./vms.nix

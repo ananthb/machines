@@ -7,7 +7,7 @@
 }: {
   imports = [
     garnix-lib.nixosModules.garnix
-    ../nixos-common.nix
+    ./nixos-common.nix
     ../../lib/scripts.nix
   ];
 

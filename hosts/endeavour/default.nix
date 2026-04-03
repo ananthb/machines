@@ -9,7 +9,7 @@
     inputs.ht32-panel.nixosModules.default
     inputs.tsnsrv.nixosModules.default
 
-    ../linux.nix
+    ../shared/linux.nix
     ./hardware-configuration.nix
 
     ./6a.nix

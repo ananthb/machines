@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ../linux.nix
+    ../shared/linux.nix
     ./hardware-configuration.nix
 
     ../../services/monitoring/probes.nix

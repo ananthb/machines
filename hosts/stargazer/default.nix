@@ -1,6 +1,6 @@
 {...}: {
   imports = [
-    ../linux.nix
+    ../shared/linux.nix
     ./hardware-configuration.nix
 
     ./t1.nix
