@@ -31,7 +31,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
       "id": 1,
       "options": {
         "colorMode": "background",
@@ -46,7 +46,7 @@
         {
           "datasource": { "type": "prometheus" },
           "expr": "radarr_movie_total",
-          "legendFormat": "Movies",
+          "legendFormat": "Total",
           "refId": "A"
         }
       ]
@@ -64,7 +64,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
       "id": 2,
       "options": {
         "colorMode": "background",
@@ -79,7 +79,7 @@
         {
           "datasource": { "type": "prometheus" },
           "expr": "sonarr_series_total",
-          "legendFormat": "Series",
+          "legendFormat": "Total",
           "refId": "A"
         }
       ]
@@ -97,7 +97,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
       "id": 3,
       "options": {
         "colorMode": "background",
@@ -106,13 +106,13 @@
         "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
         "textMode": "auto"
       },
-      "title": "Prowlarr Indexers",
+      "title": "Prowlarr Indexers Enabled",
       "type": "stat",
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "prowlarr_indexer_total",
-          "legendFormat": "Indexers",
+          "expr": "prowlarr_indexer_enabled_total",
+          "legendFormat": "Enabled",
           "refId": "A"
         }
       ]
@@ -131,29 +131,92 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 4 },
       "id": 4,
       "options": {
         "colorMode": "background",
         "graphMode": "none",
         "justifyMode": "auto",
         "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
-        "textMode": "value_and_name"
+        "textMode": "auto"
       },
-      "title": "Missing",
+      "title": "Radarr Missing",
       "type": "stat",
       "targets": [
         {
           "datasource": { "type": "prometheus" },
           "expr": "radarr_movie_missing_total",
-          "legendFormat": "Movies",
+          "legendFormat": "Missing Movies",
           "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "orange", "value": null },
+              { "color": "red", "value": 10 }
+            ]
+          }
         },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 4 },
+      "id": 5,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "title": "Sonarr Episodes Missing",
+      "type": "stat",
+      "targets": [
         {
           "datasource": { "type": "prometheus" },
           "expr": "sonarr_episode_missing_total",
-          "legendFormat": "Episodes",
-          "refId": "B"
+          "legendFormat": "Missing Episodes",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 3 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 4 },
+      "id": 6,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "title": "Health Issues",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sum(radarr_system_health_issues or vector(0)) + sum(sonarr_system_health_issues or vector(0)) + sum(prowlarr_system_health_issues or vector(0))",
+          "legendFormat": "Issues",
+          "refId": "A"
         }
       ]
     },
@@ -178,70 +241,121 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
-      "id": 5,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 7,
       "options": {
         "legend": { "calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom" },
         "tooltip": { "mode": "multi", "sort": "desc" }
       },
-      "title": "Queue Sizes",
+      "title": "Radarr Movies",
       "type": "timeseries",
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "radarr_queue_total",
-          "legendFormat": "Radarr Queue",
+          "expr": "radarr_movie_total",
+          "legendFormat": "Total",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sonarr_queue_total",
-          "legendFormat": "Sonarr Queue",
+          "expr": "radarr_movie_downloaded_total",
+          "legendFormat": "Downloaded",
           "refId": "B"
-        }
-      ]
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": {
-            "axisBorderShow": false,
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": { "group": "A", "mode": "none" }
-          }
         },
-        "overrides": []
-      },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
-      "id": 6,
-      "options": {
-        "legend": { "calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "desc" }
-      },
-      "title": "Missing Movies / Episodes",
-      "type": "timeseries",
-      "targets": [
         {
           "datasource": { "type": "prometheus" },
           "expr": "radarr_movie_missing_total",
-          "legendFormat": "Radarr Missing",
+          "legendFormat": "Missing",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 8,
+      "options": {
+        "legend": { "calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "title": "Sonarr Episodes",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sonarr_episode_total",
+          "legendFormat": "Total",
           "refId": "A"
         },
         {
           "datasource": { "type": "prometheus" },
-          "expr": "sonarr_episode_missing_total",
-          "legendFormat": "Sonarr Missing",
+          "expr": "sonarr_episode_downloaded_total",
+          "legendFormat": "Downloaded",
           "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "sonarr_episode_missing_total",
+          "legendFormat": "Missing",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisBorderShow": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" }
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+      "id": 9,
+      "options": {
+        "legend": { "calcs": ["mean", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "title": "Prowlarr Query Rate",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus" },
+          "expr": "rate(prowlarr_indexer_queries_total[5m])",
+          "legendFormat": "Queries/s",
+          "refId": "A"
         }
       ]
     }

@@ -22,6 +22,7 @@
       "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
+          "noValue": "No data",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -57,6 +58,7 @@
       "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
+          "noValue": "No backups yet",
           "custom": {
             "align": "auto",
             "cellOptions": { "type": "auto" },
@@ -64,27 +66,6 @@
           }
         },
         "overrides": [
-          {
-            "matcher": { "id": "byName", "options": "Time Since" },
-            "properties": [
-              { "id": "unit", "value": "s" },
-              {
-                "id": "thresholds",
-                "value": {
-                  "mode": "absolute",
-                  "steps": [
-                    { "color": "green", "value": null },
-                    { "color": "orange", "value": 90000 },
-                    { "color": "red", "value": 172800 }
-                  ]
-                }
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": { "mode": "basic", "type": "color-background" }
-              }
-            ]
-          },
           {
             "matcher": { "id": "byName", "options": "Last Backup" },
             "properties": [
@@ -97,9 +78,9 @@
       "id": 2,
       "options": {
         "showHeader": true,
-        "sortBy": [{ "desc": true, "displayName": "Time Since" }]
+        "sortBy": [{ "desc": true, "displayName": "Last Backup" }]
       },
-      "title": "Last Backup Per Path",
+      "title": "Last Backup Per Instance",
       "type": "table",
       "targets": [
         {
@@ -115,16 +96,8 @@
         {
           "id": "organize",
           "options": {
-            "excludeByName": { "__name__": true, "job": true },
-            "renameByName": { "instance": "Path", "Value": "Last Backup" }
-          }
-        },
-        {
-          "id": "calculateField",
-          "options": {
-            "alias": "Time Since",
-            "mode": "reduceRow",
-            "reduce": { "reducer": "lastNotNull" }
+            "excludeByName": { "Time": true, "__name__": true, "job": true },
+            "renameByName": { "instance": "Instance", "Value": "Last Backup" }
           }
         }
       ]
@@ -133,6 +106,7 @@
       "datasource": { "type": "prometheus" },
       "fieldConfig": {
         "defaults": {
+          "noValue": "No backup activity",
           "color": { "mode": "palette-classic" },
           "custom": {
             "axisBorderShow": false,
@@ -163,45 +137,6 @@
           "datasource": { "type": "prometheus" },
           "expr": "kopia_backups_count{job=\"hathi-backups\"}",
           "legendFormat": "{{instance}} ({{stage}})",
-          "refId": "A"
-        }
-      ]
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": {
-            "axisBorderShow": false,
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "drawStyle": "points",
-            "fillOpacity": 0,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 8,
-            "showPoints": "always",
-            "spanNulls": false,
-            "stacking": { "group": "A", "mode": "none" }
-          },
-          "unit": "dateTimeAsIso"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
-      "id": 4,
-      "options": {
-        "legend": { "calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "desc" }
-      },
-      "title": "Last Backup Timestamps",
-      "type": "timeseries",
-      "targets": [
-        {
-          "datasource": { "type": "prometheus" },
-          "expr": "kopia_backups_total{job=\"hathi-backups\"} * 1000",
-          "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ]

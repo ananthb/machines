@@ -296,7 +296,7 @@
     }
   ],
   "schemaVersion": 39,
-  "tags": ["blackbox", "uptime"],
+  "tags": ["uptime"],
   "templating": {
     "list": [
       {
@@ -315,7 +315,7 @@
   "time": { "from": "now-24h", "to": "now" },
   "timepicker": {},
   "timezone": "",
-  "title": "Blackbox / Uptime Overview",
+  "title": "Uptime",
   "uid": "blackbox-uptime",
   "version": 1
 }

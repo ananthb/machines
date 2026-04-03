@@ -39,7 +39,7 @@
         },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "Value" },
+            "matcher": { "id": "byName", "options": "Status" },
             "properties": [
               {
                 "id": "custom.cellOptions",
@@ -53,14 +53,14 @@
       "id": 1,
       "options": {
         "showHeader": true,
-        "sortBy": [{ "desc": false, "displayName": "name" }]
+        "sortBy": [{ "desc": false, "displayName": "Service" }]
       },
       "title": "Container Service States",
       "type": "table",
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "node_systemd_unit_state{name=~\"podman-.*\\.service|wallabag.*|globalping.*|ripe-atlas.*\", state=\"active\"}",
+          "expr": "node_systemd_unit_state{name=~\"wallabag.*|globalping.*|ripe-atlas.*\", state=\"active\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "",
@@ -114,60 +114,15 @@
       "targets": [
         {
           "datasource": { "type": "prometheus" },
-          "expr": "node_systemd_unit_state{name=~\"podman-.*\\.service|wallabag.*|globalping.*|ripe-atlas.*\", state=\"active\"}",
+          "expr": "node_systemd_unit_state{name=~\"wallabag.*|globalping.*|ripe-atlas.*\", state=\"active\"}",
           "legendFormat": "{{name}}",
           "refId": "A"
-        }
-      ]
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": {
-            "axisBorderShow": false,
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "drawStyle": "line",
-            "fillOpacity": 20,
-            "lineInterpolation": "smooth",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": { "group": "A", "mode": "none" }
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
-      "id": 3,
-      "options": {
-        "legend": { "calcs": ["mean", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
-        "tooltip": { "mode": "multi", "sort": "desc" }
-      },
-      "title": "System Memory Usage",
-      "type": "timeseries",
-      "targets": [
-        {
-          "datasource": { "type": "prometheus" },
-          "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
-          "legendFormat": "Used",
-          "refId": "A"
-        },
-        {
-          "datasource": { "type": "prometheus" },
-          "expr": "node_memory_MemAvailable_bytes",
-          "legendFormat": "Available",
-          "refId": "B"
         }
       ]
     }
   ],
   "schemaVersion": 39,
-  "tags": ["containers", "podman", "systemd"],
+  "tags": ["containers", "systemd"],
   "templating": { "list": [] },
   "time": { "from": "now-24h", "to": "now" },
   "timepicker": {},
