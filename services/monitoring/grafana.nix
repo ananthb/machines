@@ -163,8 +163,8 @@ in {
                     for = "1m";
                     keepFiringFor = "1m";
                     annotations = {
-                      summary = "Application down: {{ if $labels.app }}{{ $labels.app }}{{ else }}{{ $labels.instance }}{{ end }}";
-                      description = "instance={{ $labels.instance }} job={{ $labels.job }} type={{ $labels.type }}";
+                      summary = "{{ if $labels.app }}{{ $labels.app }}{{ else }}{{ $labels.instance }}{{ end }} is down (seen from {{ reReplaceAll `blackbox_.*-` `` $labels.job }})";
+                      description = "{{ $labels.instance }}";
                     };
                     isPaused = false;
                     notification_settings = {
