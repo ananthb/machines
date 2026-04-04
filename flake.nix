@@ -59,8 +59,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    pre-commit-hooks-nix = {
-      url = "github:cachix/pre-commit-hooks.nix";
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -115,7 +115,7 @@
     nixos-hardware,
     nixpkgs,
     nixpkgs-calibre,
-    pre-commit-hooks-nix,
+    git-hooks,
     ...
   } @ inputs: let
     username = "ananth";
@@ -299,7 +299,7 @@
             nodes = nixpkgs.lib.filterAttrs (_: node: node.system == system) self.deploy.nodes;
           }
         );
-        preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
+        preCommitCheck = git-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
             alejandra.enable = true;
@@ -330,7 +330,7 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
         formatterPkg = self.formatter.${system};
-        preCommitCheck = pre-commit-hooks-nix.lib.${system}.run {
+        preCommitCheck = git-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
             alejandra.enable = true;

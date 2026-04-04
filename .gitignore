@@ -1,12 +1,3 @@
-.devenv/
-.devenv.flake.nix
-.direnv/
-
-# Devenv
-.devenv*
-devenv.local.nix
-devenv.local.yaml
-
 # direnv
 .direnv
 
