@@ -110,7 +110,7 @@ in {
         "sonarr-log"
         "prowlarr-main"
         "prowlarr-log"
-        "jellyseerr"
+        "seerr"
       ];
       ensureUsers = [
         {
@@ -126,7 +126,7 @@ in {
           ensureClauses.login = true;
         }
         {
-          name = "jellyseerr";
+          name = "seerr";
           ensureDBOwnership = true;
           ensureClauses.login = true;
         }
@@ -212,8 +212,8 @@ in {
       environment = {
         DB_TYPE = "postgres";
         DB_SOCKET_PATH = "/var/run/postgresql";
-        DB_USER = "jellyseerr";
-        DB_NAME = "jellyseerr";
+        DB_USER = "seerr";
+        DB_NAME = "seerr";
       };
       after = ["postgresql.service"];
       wants = ["postgresql.service"];
