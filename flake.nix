@@ -64,6 +64,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    starla = {
+      url = "github:ananthb/starla";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

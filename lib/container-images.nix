@@ -2,7 +2,6 @@
   immichMl = "ghcr.io/immich-app/immich-machine-learning:release";
   wallabag = "docker.io/wallabag/wallabag:latest";
   globalpingProbe = "docker.io/globalping/globalping-probe:latest";
-  ripeAtlasProbe = "ghcr.io/jamesits/ripe-atlas:latest-probe";
   seafile = "docker.io/seafileltd/seafile-mc:13.0-latest";
   seafileNotification = "docker.io/seafileltd/notification-server:13.0-latest";
   seafileMd = "docker.io/seafileltd/seafile-md-server:13.0-latest";

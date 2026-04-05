@@ -1,21 +1,24 @@
 {
   config,
   containerImages,
+  inputs,
   ...
 }: let
   vs = config.vault-secrets.secrets;
 in {
+  imports = [
+    inputs.starla.nixosModules.default
+  ];
+
   users.groups."globalping-probe" = {};
 
-  virtualisation.quadlet = let
-    inherit (config.virtualisation.quadlet) volumes;
-  in {
-    volumes = {
-      ripe-atlas-etc = {};
-      ripe-atlas-run = {};
-      ripe-atlas-var-spool = {};
-    };
+  # Starla RIPE Atlas probe (replaces ripe-atlas-probe container)
+  services.starla = {
+    enable = true;
+    reportInterfaceStats = true;
+  };
 
+  virtualisation.quadlet = {
     containers = {
       globalping-probe.containerConfig = {
         name = "globalping-probe";
@@ -24,30 +27,6 @@ in {
         addCapabilities = ["NET_RAW"];
         environmentFiles = [
           "${vs.globalping}/environment"
-        ];
-      };
-
-      ripe-atlas-probe.containerConfig = {
-        name = "ripe-atlas-probe";
-        image = containerImages.ripeAtlasProbe;
-        networks = ["host"];
-        dropCapabilities = ["all"];
-        addCapabilities = [
-          "NET_RAW"
-          "KILL"
-          "SETUID"
-          "SETGID"
-          "FOWNER"
-          "CHOWN"
-          "DAC_OVERRIDE"
-        ];
-        environments = {
-          RXTXRPT = "yes";
-        };
-        volumes = [
-          "${volumes.ripe-atlas-etc.ref}:/etc/ripe-atlas"
-          "${volumes.ripe-atlas-run.ref}:/run/ripe-atlas"
-          "${volumes.ripe-atlas-var-spool.ref}:/var/spool/ripe-atlas"
         ];
       };
     };
