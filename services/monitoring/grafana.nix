@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   vs = config.vault-secrets.secrets;
   datasourceUid = "P3D437DB70E32EE8A";
 
@@ -174,6 +178,17 @@ in {
             editable = true;
             options = {
               path = "${./grafana/dashboards/Infrastructure}";
+            };
+          }
+          {
+            name = "starla";
+            orgId = 1;
+            folder = "Applications";
+            type = "file";
+            disableDeletion = false;
+            editable = true;
+            options = {
+              path = "${inputs.starla}/grafana";
             };
           }
         ];

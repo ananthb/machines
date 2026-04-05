@@ -144,7 +144,20 @@
   in
     concatMap getAppTargets nixosHosts;
 
-  # 8. Blackbox Ping Targets (Hosts to ping)
+  # 8. Starla RIPE Atlas Probe metrics
+  starlaTargets =
+    concatMap (
+      host:
+        if hasService host.config "starla" && (host.config.services.starla.metrics.enable or true)
+        then let
+          listenAddr = host.config.services.starla.metrics.listenAddr or "127.0.0.1:9695";
+          port = lib.last (lib.splitString ":" listenAddr);
+        in ["${host.name}:${port}"]
+        else []
+    )
+    nixosHosts;
+
+  # 9. Blackbox Ping Targets (Hosts to ping)
   # All NixOS + Darwin hosts
   pingTargets = let
     linux = map (h: h.name) nixosHosts;
@@ -611,6 +624,16 @@ in {
                 targets = libvirtTargets;
                 labels.type = "exporter";
                 labels.role = "hypervisor";
+              }
+            ];
+          }
+          {
+            job_name = "starla";
+            static_configs = [
+              {
+                targets = starlaTargets;
+                labels.type = "app";
+                labels.app = "starla";
               }
             ];
           }
