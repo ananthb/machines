@@ -995,11 +995,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1775415168,
-        "narHash": "sha256-ynfH27Hnf7pAvKmK1c9teWA2ZWd1ecyt84AX13RCOHQ=",
+        "lastModified": 1775418032,
+        "narHash": "sha256-JL6su4Ocu14tIw359oBeqg7nnwdOZKy/Co1AKqjsPG8=",
         "owner": "ananthb",
         "repo": "starla",
-        "rev": "09cc7b82f6cb2cf43b792256a4cfde3f9d71bf57",
+        "rev": "06c9ff6abda7e7c3eb014c4d685f88e96747b67b",
         "type": "github"
       },
       "original": {
