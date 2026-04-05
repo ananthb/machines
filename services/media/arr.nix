@@ -85,7 +85,7 @@ in {
       openFirewall = true;
     };
 
-    jellyseerr.enable = true;
+    seerr.enable = true;
 
     cross-seed = {
       enable = true;
@@ -162,7 +162,7 @@ in {
     radarr = true;
     sonarr = true;
     prowlarr = true;
-    jellyseerr = true;
+    seerr = true;
     cross-seed = true;
   };
 
@@ -208,13 +208,15 @@ in {
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
-    jellyseerr = {
+    seerr = {
       environment = {
         DB_TYPE = "postgres";
         DB_SOCKET_PATH = "/var/run/postgresql";
         DB_USER = "jellyseerr";
         DB_NAME = "jellyseerr";
       };
+      after = ["postgresql.service"];
+      wants = ["postgresql.service"];
       partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };

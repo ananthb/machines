@@ -187,7 +187,7 @@
       immich-backup.unitConfig.RequiresMountsFor = "/srv";
       immich-server.unitConfig.RequiresMountsFor = "/srv";
       jellyfin.unitConfig.RequiresMountsFor = "/srv";
-      jellyseerr.unitConfig.RequiresMountsFor = "/srv";
+      seerr.unitConfig.RequiresMountsFor = "/srv";
       prowlarr.unitConfig.RequiresMountsFor = "/srv";
       qbittorrent.unitConfig.RequiresMountsFor = "/srv";
       radarr.unitConfig.RequiresMountsFor = "/srv";

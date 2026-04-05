@@ -176,7 +176,7 @@
         (mkHttpTarget host "prowlarr" "prowlarr" "http://${host.name}:9696")
         (mkHttpTarget host "immich" "immich" "http://${host.name}:2283/auth/login")
         (mkHttpTarget host "jellyfin" "jellyfin" "http://${host.name}:8096/web/")
-        (mkHttpTarget host "jellyseerr" "jellyseerr" "http://${host.name}:5055")
+        (mkHttpTarget host "seerr" "seerr" "http://${host.name}:5055")
         (mkHttpTarget host "home-assistant" "home-assistant" "http://${host.name}:8123")
         (optionals (hasQuadletContainer host.config "seafile") [
           {

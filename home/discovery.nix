@@ -40,6 +40,9 @@
             IdentitiesOnly = "yes";
           };
         };
+        "enterprise" = {
+          forwardAgent = true;
+        };
         "*" = {
           identityFile = "~/.ssh/yubikey_5c_nano";
         };
