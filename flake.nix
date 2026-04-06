@@ -274,15 +274,15 @@
         };
       };
 
-      stargazer = {
-        system = "aarch64-linux";
-        hostname = "stargazer";
-        profiles.system = {
-          sshUser = "root";
-          user = "root";
-          path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
-        };
-      };
+      #stargazer = {
+      #  system = "aarch64-linux";
+      #  hostname = "stargazer";
+      #  profiles.system = {
+      #    sshUser = "root";
+      #    user = "root";
+      #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
+      #  };
+      #};
 
       #voyager = {
       #  hostname = "voyager";
