@@ -32,7 +32,99 @@
       url = "http://enterprise:8967";
     };
 
+    input_boolean = {
+      roomba_ran_today = {
+        name = "Roomba ran today";
+        icon = "mdi:robot-vacuum";
+      };
+    };
+
     automation = [
+      {
+        alias = "Run Roomba at 3am and 3pm";
+        mode = "single";
+        trigger = [
+          {
+            platform = "time";
+            at = "03:00:00";
+          }
+          {
+            platform = "time";
+            at = "15:00:00";
+          }
+        ];
+        action = [
+          {
+            service = "vacuum.start";
+            target = {
+              entity_id = "{{ states.vacuum | map(attribute='entity_id') | list }}";
+            };
+          }
+          {
+            service = "input_boolean.turn_on";
+            target.entity_id = "input_boolean.roomba_ran_today";
+          }
+        ];
+      }
+      {
+        alias = "Run Roomba when everyone leaves home";
+        mode = "single";
+        trigger = [
+          {
+            platform = "state";
+            entity_id = [
+              "person.ananth"
+              "person.arul_priya"
+            ];
+            to = "not_home";
+          }
+        ];
+        condition = [
+          {
+            condition = "state";
+            entity_id = "person.ananth";
+            state = "not_home";
+          }
+          {
+            condition = "state";
+            entity_id = "person.arul_priya";
+            state = "not_home";
+          }
+          {
+            condition = "state";
+            entity_id = "input_boolean.roomba_ran_today";
+            state = "off";
+          }
+        ];
+        action = [
+          {
+            service = "vacuum.start";
+            target = {
+              entity_id = "{{ states.vacuum | map(attribute='entity_id') | list }}";
+            };
+          }
+          {
+            service = "input_boolean.turn_on";
+            target.entity_id = "input_boolean.roomba_ran_today";
+          }
+        ];
+      }
+      {
+        alias = "Reset Roomba ran today flag at midnight";
+        mode = "single";
+        trigger = [
+          {
+            platform = "time";
+            at = "00:00:00";
+          }
+        ];
+        action = [
+          {
+            service = "input_boolean.turn_off";
+            target.entity_id = "input_boolean.roomba_ran_today";
+          }
+        ];
+      }
       {
         alias = "Frigate - Front Door Person Detected";
         mode = "single";
