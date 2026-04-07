@@ -58,6 +58,7 @@ lib.recursiveUpdate (
           "cast"
           "ecovacs"
           "esphome"
+          "mqtt"
         ]
         ++ extraComponents;
       customComponents = with pkgs.home-assistant-custom-components;

@@ -28,6 +28,11 @@
       db_url = "postgresql://@/hass";
     };
 
+    mqtt = {
+      broker = "localhost";
+      port = 1883;
+    };
+
     frigate = {
       url = "http://enterprise:8967";
     };
