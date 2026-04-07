@@ -106,10 +106,15 @@
         mode = "single";
         trigger = [
           {
-            platform = "state";
-            entity_id = "{{ states.vacuum | map(attribute='entity_id') | list }}";
-            from = "cleaning";
-            to = "docked";
+            platform = "template";
+            value_template = "{{ states.vacuum | selectattr('state', 'eq', 'docked') | list | count == states.vacuum | list | count and states.vacuum | list | count > 0 }}";
+          }
+        ];
+        condition = [
+          {
+            condition = "state";
+            entity_id = "input_boolean.roomba_ran_today";
+            state = "off";
           }
         ];
         action = [
@@ -279,9 +284,14 @@
         mode = "single";
         trigger = [
           {
-            platform = "numeric_state";
-            entity_id = "{{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | map(attribute='entity_id') | list }}";
-            below = 20;
+            platform = "time_pattern";
+            hours = "/1";
+          }
+        ];
+        condition = [
+          {
+            condition = "template";
+            value_template = "{{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'lt', '20') | rejectattr('state', 'in', ['unavailable', 'unknown']) | list | count > 0 }}";
           }
         ];
         action = [
@@ -289,7 +299,7 @@
             service = "notify.notify";
             data = {
               title = "Low Battery";
-              message = "{{ trigger.to_state.attributes.friendly_name | default(trigger.entity_id) }} battery is at {{ trigger.to_state.state }}%.";
+              message = "{{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'lt', '20') | rejectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='name') | list | join(', ') }} battery is low.";
             };
           }
         ];
