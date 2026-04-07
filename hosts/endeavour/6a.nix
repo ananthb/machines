@@ -41,16 +41,16 @@
 
     automation = [
       {
-        alias = "Run Roomba at 3am and 3pm";
+        alias = "Run Roomba at 8am and 8pm";
         mode = "single";
         trigger = [
           {
             platform = "time";
-            at = "03:00:00";
+            at = "08:00:00";
           }
           {
             platform = "time";
-            at = "15:00:00";
+            at = "20:00:00";
           }
         ];
         action = [
@@ -59,10 +59,6 @@
             target = {
               entity_id = "{{ states.vacuum | map(attribute='entity_id') | list }}";
             };
-          }
-          {
-            service = "input_boolean.turn_on";
-            target.entity_id = "input_boolean.roomba_ran_today";
           }
         ];
       }
@@ -103,9 +99,47 @@
               entity_id = "{{ states.vacuum | map(attribute='entity_id') | list }}";
             };
           }
+        ];
+      }
+      {
+        alias = "Record Roomba run when docked after cleaning";
+        mode = "single";
+        trigger = [
+          {
+            platform = "state";
+            entity_id = "{{ states.vacuum | map(attribute='entity_id') | list }}";
+            from = "cleaning";
+            to = "docked";
+          }
+        ];
+        action = [
           {
             service = "input_boolean.turn_on";
             target.entity_id = "input_boolean.roomba_ran_today";
+          }
+        ];
+      }
+      {
+        alias = "Return Roomba to dock if idle";
+        mode = "single";
+        trigger = [
+          {
+            platform = "time_pattern";
+            minutes = "/15";
+          }
+        ];
+        condition = [
+          {
+            condition = "template";
+            value_template = "{{ states.vacuum | rejectattr('state', 'in', ['cleaning', 'docked', 'unavailable', 'unknown']) | list | count > 0 }}";
+          }
+        ];
+        action = [
+          {
+            service = "vacuum.return_to_base";
+            target = {
+              entity_id = "{{ states.vacuum | rejectattr('state', 'in', ['cleaning', 'docked', 'unavailable', 'unknown']) | map(attribute='entity_id') | list }}";
+            };
           }
         ];
       }
