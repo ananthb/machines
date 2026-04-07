@@ -173,7 +173,153 @@
           {
             service = "notify.notify";
             data = {
+              title = "Person at Front Door";
               message = "Person detected at front door cam.";
+              data = {
+                image = "/api/frigate/notifications/front_door_cam/person/snapshot.jpg";
+              };
+            };
+          }
+        ];
+      }
+      {
+        alias = "Frigate - Package Delivery Detected";
+        mode = "single";
+        trigger = [
+          {
+            platform = "state";
+            entity_id = "binary_sensor.front_door_cam_person";
+            to = "on";
+          }
+        ];
+        condition = [
+          {
+            condition = "template";
+            value_template = "{{ trigger.to_state.attributes.get('objects', []) | select('eq', 'package') | list | count > 0 }}";
+          }
+        ];
+        action = [
+          {
+            service = "notify.notify";
+            data = {
+              title = "Package Delivered";
+              message = "A package was detected at the front door.";
+              data = {
+                image = "/api/frigate/notifications/front_door_cam/person/snapshot.jpg";
+              };
+            };
+          }
+        ];
+      }
+      {
+        alias = "Turn off fans when nobody is home";
+        mode = "restart";
+        trigger = [
+          {
+            platform = "state";
+            entity_id = [
+              "person.ananth"
+              "person.arul_priya"
+            ];
+            to = "not_home";
+          }
+        ];
+        action = [
+          {
+            delay = "00:05:00";
+          }
+          {
+            condition = "state";
+            entity_id = "person.ananth";
+            state = "not_home";
+          }
+          {
+            condition = "state";
+            entity_id = "person.arul_priya";
+            state = "not_home";
+          }
+          {
+            service = "fan.turn_off";
+            target = {
+              entity_id = "{{ states.fan | map(attribute='entity_id') | list }}";
+            };
+          }
+        ];
+      }
+      {
+        alias = "Alert on new network device";
+        mode = "single";
+        trigger = [
+          {
+            platform = "event";
+            event_type = "entity_registry_updated";
+            event_data = {
+              action = "create";
+            };
+          }
+        ];
+        condition = [
+          {
+            condition = "template";
+            value_template = "{{ trigger.event.data.entity_id.startswith('device_tracker.') }}";
+          }
+        ];
+        action = [
+          {
+            service = "notify.notify";
+            data = {
+              title = "New Device on Network";
+              message = "New device detected: {{ state_attr(trigger.event.data.entity_id, 'friendly_name') | default(trigger.event.data.entity_id) }}";
+            };
+          }
+        ];
+      }
+      {
+        alias = "Low battery alert";
+        mode = "single";
+        trigger = [
+          {
+            platform = "numeric_state";
+            entity_id = "{{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | map(attribute='entity_id') | list }}";
+            below = 20;
+          }
+        ];
+        action = [
+          {
+            service = "notify.notify";
+            data = {
+              title = "Low Battery";
+              message = "{{ trigger.to_state.attributes.friendly_name | default(trigger.entity_id) }} battery is at {{ trigger.to_state.state }}%.";
+            };
+          }
+        ];
+      }
+      {
+        alias = "Weekly home summary";
+        mode = "single";
+        trigger = [
+          {
+            platform = "time";
+            at = "09:00:00";
+          }
+        ];
+        condition = [
+          {
+            condition = "time";
+            weekday = ["sun"];
+          }
+        ];
+        action = [
+          {
+            service = "notify.notify";
+            data = {
+              title = "Weekly Home Summary";
+              message = ''
+                Devices online: {{ states.device_tracker | selectattr('state', 'eq', 'home') | list | count }}
+                Vacuums: {{ states.vacuum | map(attribute='state') | list | join(', ') }}
+                Climate: {{ states.climate | selectattr('state', 'ne', 'off') | list | count }} running
+                Low battery: {{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'lt', '20') | list | count }} devices
+              '';
             };
           }
         ];
