@@ -18,10 +18,8 @@ in {
     enable = true;
     host = "::";
     port = 8090;
-    environmentFile = "${vs.open-webui}/environment";
   };
 
-  # Non-secret env vars set directly on the service
   systemd.services.open-webui = {
     partOf = ["kedi.target"];
     environment = {
@@ -63,6 +61,13 @@ in {
       # RAG
       PDF_EXTRACT_IMAGES = "True";
     };
+    # Google OAuth credentials from shared gcloud-oauth vault secret
+    serviceConfig = {
+      ExecStartPre = [
+        "+${pkgs.bash}/bin/bash -c 'printf \"GOOGLE_CLIENT_ID=%%s\\nGOOGLE_CLIENT_SECRET=%%s\\n\" \"$(cat ${vs.gcloud-oauth}/client_id)\" \"$(cat ${vs.gcloud-oauth}/client_secret)\" > /run/open-webui-oauth.env'"
+      ];
+      EnvironmentFile = ["/run/open-webui-oauth.env"];
+    };
   };
 
   services.postgresql = {
@@ -75,18 +80,6 @@ in {
         ensureClauses.login = true;
       }
     ];
-  };
-
-  # Google OAuth credentials come from shared gcloud-oauth secret.
-  vault-secrets.secrets.open-webui = {
-    services = ["open-webui"];
-  };
-
-  systemd.services.open-webui.serviceConfig = {
-    ExecStartPre = [
-      "+${pkgs.bash}/bin/bash -c 'printf \"GOOGLE_CLIENT_ID=%%s\\nGOOGLE_CLIENT_SECRET=%%s\\n\" \"$(cat ${vs.gcloud-oauth}/client_id)\" \"$(cat ${vs.gcloud-oauth}/client_secret)\" > /run/open-webui-oauth.env'"
-    ];
-    EnvironmentFile = ["/run/open-webui-oauth.env"];
   };
 
   my-services.kediTargets.open-webui = true;
