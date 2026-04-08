@@ -22,7 +22,7 @@
     ../../services/media/jellyfin.nix
     ../../services/monitoring/ecoflow.nix
     ../../services/monitoring/postgres.nix
-    ../../services/monitoring/journal-remote.nix
+    ../../services/monitoring/victorialogs.nix
     ../../services/monitoring/probes.nix
     ../../services/seafile
     ../../services/timemachinesrv.nix

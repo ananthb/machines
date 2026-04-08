@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: let
   vs = config.vault-secrets.secrets;
@@ -104,6 +105,9 @@ in {
   services = {
     grafana = {
       enable = true;
+      declarativePlugins = with pkgs.grafanaPlugins; [
+        victoriametrics-logs-datasource
+      ];
       settings = {
         database = {
           type = "postgres";
@@ -157,6 +161,11 @@ in {
               httpMethod = "POST";
               manageAlerts = true;
             };
+          }
+          {
+            url = "http://endeavour:9428";
+            name = "VictoriaLogs";
+            type = "victoriametrics-logs-datasource";
           }
         ];
         dashboards.settings.providers = [
