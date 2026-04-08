@@ -705,6 +705,8 @@ in {
     "home-assistant-t1-vm-secrets".serviceConfig.UMask = "0027";
   };
 
+  users.groups.hass = {};
+
   vault-secrets = {
     secrets = {
       home-assistant-6a-vm = {
