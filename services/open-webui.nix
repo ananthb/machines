@@ -55,10 +55,10 @@ in {
       # See http://github.com/open-webui/open-webui/discussions/10571
       HF_ENDPOINT = "https://hf-mirror.com/";
 
-      # web search
+      # web search via local SearXNG
       ENABLE_WEB_SEARCH = "True";
-      WEB_SEARCH_TRUST_ENV = "True";
-      WEB_SEARCH_ENGINE = "google_pse";
+      WEB_SEARCH_ENGINE = "searxng";
+      SEARXNG_QUERY_URL = "http://localhost:8890/search?q=<query>";
 
       # RAG
       PDF_EXTRACT_IMAGES = "True";
@@ -77,7 +77,6 @@ in {
     ];
   };
 
-  # Vault env: GOOGLE_PSE_ENGINE_ID, GOOGLE_PSE_API_KEY
   # Google OAuth credentials come from shared gcloud-oauth secret.
   vault-secrets.secrets.open-webui = {
     services = ["open-webui"];

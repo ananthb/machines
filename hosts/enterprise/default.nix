@@ -15,6 +15,7 @@ in {
 
     ../../services/immich-ml.nix
     ../../services/open-webui.nix
+    ../../services/searxng.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
 
