@@ -33,7 +33,7 @@ in {
   systemd.services = {
     miniflux = {
       partOf = ["kedi.target"];
-      serviceConfig.SupplementaryGroups = ["news"];
+      serviceConfig.SupplementaryGroups = ["news" "gcloud-oauth"];
     };
     miniflux-secrets.serviceConfig.UMask = "0027";
     wallabag = {

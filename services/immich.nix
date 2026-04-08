@@ -184,6 +184,8 @@ in {
 
   my-services.kediTargets.immich-server = true;
 
+  systemd.services.immich-server.serviceConfig.SupplementaryGroups = ["gcloud-oauth"];
+
   systemd.services.immich-backup = {
     # TODO: re-enable after we've trimmed down unnecessary files
     # startAt = "weekly";
