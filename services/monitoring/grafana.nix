@@ -4,6 +4,7 @@
   ...
 }: let
   vs = config.vault-secrets.secrets;
+  # UID of the provisioned VictoriaMetrics datasource (must match definition below).
   datasourceUid = "P3D437DB70E32EE8A";
 
   # Helper to build a Grafana alert rule with less boilerplate.
@@ -149,8 +150,9 @@ in {
         datasources.settings.datasources = [
           {
             url = "http://localhost:8428";
-            name = "VictoraMetrics";
+            name = "VictoriaMetrics";
             type = "prometheus";
+            uid = datasourceUid;
             jsonData = {
               httpMethod = "POST";
               manageAlerts = true;

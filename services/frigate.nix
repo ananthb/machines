@@ -3,12 +3,12 @@
 # camera-specific Frigate YAML config.
 {
   config,
+  containerImages,
   lib,
   pkgs,
   ...
 }: let
   cfg = config.my-services.frigate;
-  containerImages = import ../lib/container-images.nix;
 
   frigateConfig = pkgs.writeText "frigate-config.yml" (builtins.toJSON (cfg.settings
     // {

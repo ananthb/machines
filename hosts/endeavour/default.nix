@@ -1,6 +1,5 @@
 {
   inputs,
-  lib,
   pkgs,
   ipv6Token,
   ...
@@ -23,42 +22,15 @@
     ../../services/media/jellyfin.nix
     ../../services/monitoring/ecoflow.nix
     ../../services/monitoring/postgres.nix
+    ../../services/monitoring/journal-remote.nix
     ../../services/monitoring/probes.nix
     ../../services/seafile
     ../../services/timemachinesrv.nix
     ../../services/vault.nix
+
+    ../shared/lanzaboote.nix
+    ../shared/intel-graphics.nix
   ];
-
-  # systemd-boot
-  boot = {
-    loader = {
-      systemd-boot.enable = lib.mkForce false;
-      efi.canTouchEfiVariables = true;
-    };
-    initrd.systemd.enable = true;
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-    };
-  };
-
-  # hardware accelerated graphics
-  # used by immich and jellyfin
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-  };
-  hardware.graphics = {
-    enable = true;
-    extraPackages = [
-      pkgs.intel-media-driver
-      pkgs.intel-vaapi-driver # previously vaapiIntel
-      pkgs.intel-ocl
-      pkgs.libva-vdpau-driver
-      pkgs.libvdpau-va-gl
-      pkgs.intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
-      pkgs.vpl-gpu-rt # QSV on 11th gen or newer
-    ];
-  };
 
   # System packages
   environment.systemPackages = [

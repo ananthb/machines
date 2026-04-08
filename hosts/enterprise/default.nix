@@ -1,7 +1,5 @@
 {
   config,
-  lib,
-  pkgs,
   inputs,
   ...
 }: let
@@ -16,53 +14,29 @@ in {
     ./vms.nix
 
     ../../services/immich-ml.nix
+    ../../services/open-webui.nix
     ../../services/monitoring/blackbox.nix
     ../../services/monitoring/libvirt.nix
+
+    ../shared/lanzaboote.nix
+    ../shared/intel-graphics.nix
   ];
 
   documentation.nixos.enable = true;
 
-  # systemd-boot
   boot = {
-    loader = {
-      systemd-boot.enable = lib.mkForce false;
-      efi.canTouchEfiVariables = true;
-    };
-    initrd.systemd.enable = true;
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/var/lib/sbctl";
-    };
-
     kernelModules = ["i2c-dev"];
-
     # Enable cross-compilation for aarch64-linux
     binfmt.emulatedSystems = ["aarch64-linux"];
-  };
-
-  # hardware accelerated graphics
-  # used by immich and jellyfin
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-  };
-  hardware.graphics = {
-    enable = true;
-    extraPackages = [
-      pkgs.intel-media-driver
-      pkgs.intel-vaapi-driver # previously vaapiIntel
-      pkgs.intel-ocl
-      pkgs.libva-vdpau-driver
-      pkgs.libvdpau-va-gl
-      pkgs.intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
-      pkgs.vpl-gpu-rt # QSV on 11th gen or newer
-    ];
   };
 
   my-services.cftunnelConfig = [
     {
       tunnelId = "cc636509-3456-4589-ae08-d4be710305a5";
       tunnelName = "kedi-compute-1";
-      ingress = {};
+      ingress = {
+        "open-webui.kedi.dev" = "http://localhost:8090";
+      };
     }
   ];
 

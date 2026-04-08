@@ -73,11 +73,17 @@
     };
   };
 
-  # Journald size limits
-  services.journald.extraConfig = ''
-    SystemMaxUse=500M
-    RuntimeMaxUse=100M
-  '';
+  # Journald: size limits + forward to central log server via Tailscale
+  services.journald = {
+    extraConfig = ''
+      SystemMaxUse=500M
+      RuntimeMaxUse=100M
+    '';
+    upload = {
+      enable = true;
+      settings.Upload.URL = "http://endeavour:19532";
+    };
+  };
 
   networking.firewall = {
     enable = true;

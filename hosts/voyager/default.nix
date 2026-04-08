@@ -2,6 +2,7 @@
   imports = [
     ../shared/linux.nix
     ./hardware-configuration.nix
+    ./129.nix
 
     ../../services/monitoring/probes.nix
   ];
@@ -20,7 +21,8 @@
     };
   };
 
-  #services.bcachefs.autoScrub.enable = true;
+  # TODO: enable once /srv is mounted as bcachefs
+  # services.bcachefs.autoScrub.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
