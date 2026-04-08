@@ -44,10 +44,14 @@
         host = "endeavour";
       };
 
+      detectors.coral = {
+        type = "edgetpu";
+        device = "usb";
+      };
+
       detect.enabled = true;
       auth.enabled = false;
       tls.enabled = false;
-      ffmpeg.hwaccel_args = "preset-vaapi";
 
       record = {
         enabled = true;
@@ -57,18 +61,42 @@
         };
       };
 
-      cameras."frontdoor" = {
-        detect = {
-          enabled = true;
-          width = 640;
-          height = 360;
-          fps = 5;
-        };
-        ffmpeg.inputs = [
+      # TODO: update RTSP URLs when cameras are installed
+      cameras = {
+        "vigi_1".ffmpeg.inputs = [
           {
-            path = "rtsp://192.168.1.142:8000/test1";
-            input_args = "preset-rtsp-restream";
-            roles = ["record" "detect"];
+            path = "rtsp://VIGI_1_IP:554/stream1";
+            roles = ["record"];
+          }
+        ];
+        "vigi_2".ffmpeg.inputs = [
+          {
+            path = "rtsp://VIGI_2_IP:554/stream1";
+            roles = ["record"];
+          }
+        ];
+        "vigi_3".ffmpeg.inputs = [
+          {
+            path = "rtsp://VIGI_3_IP:554/stream1";
+            roles = ["record"];
+          }
+        ];
+        "vigi_4".ffmpeg.inputs = [
+          {
+            path = "rtsp://VIGI_4_IP:554/stream1";
+            roles = ["record"];
+          }
+        ];
+        "vigi_5".ffmpeg.inputs = [
+          {
+            path = "rtsp://VIGI_5_IP:554/stream1";
+            roles = ["record"];
+          }
+        ];
+        "vigi_6".ffmpeg.inputs = [
+          {
+            path = "rtsp://VIGI_6_IP:554/stream1";
+            roles = ["record"];
           }
         ];
       };
