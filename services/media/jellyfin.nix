@@ -14,9 +14,9 @@ in {
     username
   ];
 
-  environment.systemPackages = with pkgs; [
-    jellyfin-web
-    jellyfin-ffmpeg
+  environment.systemPackages = [
+    pkgs.jellyfin-web
+    pkgs.jellyfin-ffmpeg
   ];
 
   nixpkgs.overlays = [

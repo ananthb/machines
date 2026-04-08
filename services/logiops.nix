@@ -15,9 +15,7 @@
     })
   ];
 
-  environment.systemPackages = with pkgs; [
-    logiops
-  ];
+  environment.systemPackages = [pkgs.logiops];
 
   # Create systemd service
   # https://github.com/PixlOne/logiops/blob/5547f52cadd2322261b9fbdf445e954b49dfbe21/src/logid/logid.service.in

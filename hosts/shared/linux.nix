@@ -175,7 +175,7 @@ in {
     };
 
     # Yubikey stuff
-    udev.packages = with pkgs; [yubikey-personalization];
+    udev.packages = [pkgs.yubikey-personalization];
     pcscd.enable = true;
 
     # Enable resolved and avahi
@@ -209,10 +209,10 @@ in {
 
   my-scripts.victoriaMetricsHost = "endeavour";
 
-  environment.systemPackages = with pkgs; [
-    e2fsprogs
-    ghostty.terminfo
-    nixfmt
+  environment.systemPackages = [
+    pkgs.e2fsprogs
+    pkgs.ghostty.terminfo
+    pkgs.nixfmt
   ];
 
   zramSwap.enable = true;

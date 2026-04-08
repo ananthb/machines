@@ -117,18 +117,18 @@ in {
   hardware.usb-modeswitch.enable = true;
 
   # System packages
-  environment.systemPackages = with pkgs; [
-    ddcutil
-    gnome-tweaks
-    libmbim
-    libqmi
-    logitech-udev-rules
-    modemmanager
-    modem-manager-gui
-    ppp
-    rnnoise-plugin
-    tpm2-tss
-    usb-modeswitch
+  environment.systemPackages = [
+    pkgs.ddcutil
+    pkgs.gnome-tweaks
+    pkgs.libmbim
+    pkgs.libqmi
+    pkgs.logitech-udev-rules
+    pkgs.modemmanager
+    pkgs.modem-manager-gui
+    pkgs.ppp
+    pkgs.rnnoise-plugin
+    pkgs.tpm2-tss
+    pkgs.usb-modeswitch
   ];
 
   programs = {

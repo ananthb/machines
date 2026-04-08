@@ -47,14 +47,14 @@ in {
   };
   hardware.graphics = {
     enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver # previously vaapiIntel
-      intel-ocl
-      libva-vdpau-driver
-      libvdpau-va-gl
-      intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
-      vpl-gpu-rt # QSV on 11th gen or newer
+    extraPackages = [
+      pkgs.intel-media-driver
+      pkgs.intel-vaapi-driver # previously vaapiIntel
+      pkgs.intel-ocl
+      pkgs.libva-vdpau-driver
+      pkgs.libvdpau-va-gl
+      pkgs.intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
+      pkgs.vpl-gpu-rt # QSV on 11th gen or newer
     ];
   };
 

@@ -12,7 +12,7 @@
   # --- Configuration files ---
 
   seahubSettings = pkgs.writeText "seahub_settings.py" ''
-    TIME_ZONE = "Asia/Kolkata"
+    TIME_ZONE = "${config.time.timeZone}"
 
     CSRF_TRUSTED_ORIGINS = ["https://seafile.kedi.dev", "http://endeavour.local:4000"]
     USE_X_FORWARDED_HOST = True
@@ -98,7 +98,7 @@
     SEAFILE_LOG_TO_STDOUT=true
     SEAFILE_SERVER_HOSTNAME=${seafileHostname}
     SEAFILE_SERVER_PROTOCOL=https
-    TIME_ZONE=Asia/Kolkata
+    TIME_ZONE=${config.time.timeZone}
     NON_ROOT=false
 
     # database
@@ -154,7 +154,7 @@
   '';
 
   thumbnailServerEnv = pkgs.writeText "seafile-thumbnail-server.env" ''
-    TIME_ZONE=Asia/Kolkata
+    TIME_ZONE=${config.time.timeZone}
     ${mysqlEnv}
     SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
     SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
@@ -177,7 +177,7 @@
   seadocEnv = pkgs.writeText "seadoc.env" ''
     SEAFILE_SERVER_HOSTNAME=${seafileHostname}
     SEAFILE_SERVER_PROTOCOL=https
-    TIME_ZONE=Asia/Kolkata
+    TIME_ZONE=${config.time.timeZone}
     SEAHUB_SERVICE_URL=http://seafile
     DB_HOST=host.containers.internal
     DB_USER=seafile
