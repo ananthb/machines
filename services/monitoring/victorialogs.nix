@@ -1,7 +1,7 @@
 # Centralized log aggregation pipeline:
 #   systemd-journal-upload (all hosts, configured in nixos-common.nix)
 #   → systemd-journal-remote (receives and stores per-host journals)
-#   → Promtail (reads journals, pushes to VictoriaLogs)
+#   → fluent-bit (reads journals, pushes to VictoriaLogs)
 #   → VictoriaLogs (stores and indexes, Grafana-queryable)
 {
   config,
@@ -41,73 +41,63 @@
 
   my-services.kediTargets.victorialogs = true;
 
-  # --- Promtail: reads journals, pushes to VictoriaLogs via Loki API ---
-  services.promtail = {
+  # --- fluent-bit: reads journals, pushes to VictoriaLogs via Loki API ---
+  services.fluent-bit = {
     enable = true;
-    configuration = {
-      server = {
-        http_listen_port = 9080;
-        grpc_listen_port = 0;
-      };
-
-      positions.filename = "/var/lib/promtail/positions.yaml";
-
-      clients = [
-        {
-          # VictoriaLogs accepts Loki-compatible push API
-          url = "http://localhost:9428/insert/loki/api/v1/push?_stream_fields=host,unit,job";
-        }
-      ];
-
-      scrape_configs = [
-        {
-          # Local journal (this host)
-          job_name = "journal-local";
-          journal = {
-            max_age = "12h";
-            labels = {
-              host = config.networking.hostName;
-              job = "systemd-journal";
-            };
-          };
-          relabel_configs = [
-            {
-              source_labels = ["__journal__systemd_unit"];
-              target_label = "unit";
-            }
-            {
-              source_labels = ["__journal_priority_keyword"];
-              target_label = "priority";
-            }
-          ];
-        }
-        {
-          # Remote journals from other hosts (received via journal-remote)
-          job_name = "journal-remote";
-          journal = {
-            max_age = "12h";
+    settings = {
+      pipeline = {
+        inputs = [
+          {
+            name = "systemd";
+            tag = "journal.local";
+            read_from_tail = "on";
+            db = "/var/lib/fluent-bit/journal-local.db";
+          }
+          {
+            name = "systemd";
+            tag = "journal.remote";
             path = "/var/log/journal/remote";
-            labels.job = "systemd-journal";
-          };
-          relabel_configs = [
-            {
-              source_labels = ["__journal__hostname"];
-              target_label = "host";
-            }
-            {
-              source_labels = ["__journal__systemd_unit"];
-              target_label = "unit";
-            }
-            {
-              source_labels = ["__journal_priority_keyword"];
-              target_label = "priority";
-            }
-          ];
-        }
-      ];
+            read_from_tail = "on";
+            db = "/var/lib/fluent-bit/journal-remote.db";
+          }
+        ];
+        filters = [
+          {
+            name = "modify";
+            match = "journal.local";
+            set = "host ${config.networking.hostName}";
+          }
+          {
+            name = "modify";
+            match = "journal.remote";
+            rename = "_HOSTNAME host";
+          }
+          {
+            name = "modify";
+            match = "*";
+            rename = "_SYSTEMD_UNIT unit";
+          }
+          {
+            name = "modify";
+            match = "*";
+            rename = "PRIORITY priority";
+          }
+        ];
+        outputs = [
+          {
+            name = "loki";
+            match = "*";
+            host = "localhost";
+            port = 9428;
+            uri = "/insert/loki/api/v1/push?_stream_fields=host,unit,job";
+            labels = "job=systemd-journal";
+            label_keys = "$host,$unit,$priority";
+            auto_kubernetes_labels = "off";
+          }
+        ];
+      };
     };
   };
 
-  # Promtail needs to read journal-remote's output
-  systemd.services.promtail.serviceConfig.SupplementaryGroups = ["systemd-journal"];
+  systemd.services.fluent-bit.serviceConfig.StateDirectory = "fluent-bit";
 }
