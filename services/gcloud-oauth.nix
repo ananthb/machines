@@ -7,7 +7,7 @@
 # and ${config.vault-secrets.secrets.gcloud-oauth}/client_secret.
 _: {
   vault-secrets.secrets.gcloud-oauth = {
-    services = ["miniflux" "immich" "open-webui"];
+    services = ["miniflux" "immich-server" "open-webui"];
     group = "gcloud-oauth";
   };
 
