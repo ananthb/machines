@@ -280,31 +280,6 @@
         ];
       }
       {
-        alias = "Low battery alert";
-        mode = "single";
-        trigger = [
-          {
-            platform = "time_pattern";
-            hours = "/1";
-          }
-        ];
-        condition = [
-          {
-            condition = "template";
-            value_template = "{{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'lt', '20') | rejectattr('state', 'in', ['unavailable', 'unknown']) | list | count > 0 }}";
-          }
-        ];
-        action = [
-          {
-            service = "notify.notify";
-            data = {
-              title = "Low Battery";
-              message = "{{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'lt', '20') | rejectattr('state', 'in', ['unavailable', 'unknown']) | map(attribute='name') | list | join(', ') }} battery is low.";
-            };
-          }
-        ];
-      }
-      {
         alias = "Weekly home summary";
         mode = "single";
         trigger = [
