@@ -9,6 +9,7 @@
   immichHostname = "immich.kedi.dev";
 in {
   imports = [
+    ./gcloud-oauth.nix
     ./monitoring/postgres.nix
   ];
 
@@ -108,8 +109,8 @@ in {
         autoLaunch = false;
         autoRegister = true;
         buttonText = "Sign in with Google";
-        clientId = "440460221224-g3svtu0qp12akglandrv2epskqdmcqhc.apps.googleusercontent.com";
-        clientSecret._secret = "${vs.immich}/oauth_client_secret";
+        clientId._secret = "${vs.gcloud-oauth}/client_id";
+        clientSecret._secret = "${vs.gcloud-oauth}/client_secret";
         defaultStorageQuota = null;
         enabled = true;
         issuerUrl = "https://accounts.google.com/.well-known/openid-configuration";

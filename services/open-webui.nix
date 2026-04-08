@@ -1,9 +1,14 @@
 # Open WebUI — LLM inference frontend with Google OAuth.
 # Connects to local Ollama instance.
-{config, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   vs = config.vault-secrets.secrets;
 in {
   imports = [
+    ./gcloud-oauth.nix
     ./warp.nix
     ./monitoring/postgres.nix
   ];
@@ -71,10 +76,17 @@ in {
     ];
   };
 
-  # Vault env: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (shared OAuth client),
-  # GOOGLE_PSE_ENGINE_ID, GOOGLE_PSE_API_KEY
+  # Vault env: GOOGLE_PSE_ENGINE_ID, GOOGLE_PSE_API_KEY
+  # Google OAuth credentials come from shared gcloud-oauth secret.
   vault-secrets.secrets.open-webui = {
     services = ["open-webui"];
+  };
+
+  systemd.services.open-webui.serviceConfig = {
+    ExecStartPre = [
+      "+${pkgs.bash}/bin/bash -c 'printf \"GOOGLE_CLIENT_ID=%%s\\nGOOGLE_CLIENT_SECRET=%%s\\n\" \"$(cat ${vs.gcloud-oauth}/client_id)\" \"$(cat ${vs.gcloud-oauth}/client_secret)\" > /run/open-webui-oauth.env'"
+    ];
+    EnvironmentFile = ["/run/open-webui-oauth.env"];
   };
 
   my-services.kediTargets.open-webui = true;
