@@ -27,6 +27,11 @@ in {
       BYPASS_MODEL_ACCESS_CONTROL = "True";
       USER_AGENT = "KEDI Open WebUI";
 
+      # proxy (warp runs on localhost:8888)
+      http_proxy = "http://localhost:8888";
+      https_proxy = "http://localhost:8888";
+      no_proxy = "localhost,.local,.lan";
+
       # ollama
       OLLAMA_BASE_URLS = "http://localhost:11434";
       ENABLE_OPENAI_API = "False";
@@ -40,6 +45,9 @@ in {
       OAUTH_UPDATE_PICTURE_ON_LOGIN = "True";
       GOOGLE_REDIRECT_URI = "https://open-webui.kedi.dev/oauth/google/callback";
       OPENID_PROVIDER_URL = "https://accounts.google.com/.well-known/openid-configuration";
+
+      # See http://github.com/open-webui/open-webui/discussions/10571
+      HF_ENDPOINT = "https://hf-mirror.com/";
 
       # web search
       ENABLE_WEB_SEARCH = "True";
@@ -63,8 +71,8 @@ in {
     ];
   };
 
-  # Secrets from Vault: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
-  # GOOGLE_PSE_ENGINE_ID, GOOGLE_PSE_API_KEY, http_proxy, https_proxy, no_proxy
+  # Vault env: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (shared OAuth client),
+  # GOOGLE_PSE_ENGINE_ID, GOOGLE_PSE_API_KEY
   vault-secrets.secrets.open-webui = {
     services = ["open-webui"];
   };
