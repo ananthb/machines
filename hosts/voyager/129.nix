@@ -1,6 +1,7 @@
 {...}: {
   imports = [
     ../../services/hass.nix
+    ../../services/frigate.nix
     ../../services/monitoring/postgres.nix
   ];
 
@@ -18,54 +19,9 @@
       extraComponents = ["luci"];
       config = {
         recorder.db_url = "postgresql://@/hass";
-        frigate.url = "http://voyager.local:8967";
+        frigate.url = "http://localhost:5000";
       };
     };
-
-    frigate = {
-      enable = true;
-      hostname = "voyager.local";
-      settings = {
-        mqtt = {
-          enabled = true;
-          host = "endeavour";
-        };
-
-        detect.enabled = true;
-        record = {
-          enabled = true;
-          retain = {
-            days = 2;
-            mode = "all";
-          };
-        };
-
-        ffmpeg.hwaccel_args = "preset-vaapi";
-
-        cameras."frontdoor" = {
-          detect = {
-            enabled = true;
-            width = 640;
-            height = 360;
-            fps = 5;
-          };
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://192.168.1.142:8000/test1";
-              input_args = "preset-rtsp-restream";
-              roles = ["record" "detect"];
-            }
-          ];
-        };
-      };
-    };
-
-    nginx.virtualHosts."voyager.local".listen = [
-      {
-        addr = "[::]";
-        port = 8967;
-      }
-    ];
 
     postgresql = {
       enable = true;
@@ -77,6 +33,45 @@
           ensureClauses.login = true;
         }
       ];
+    };
+  };
+
+  my-services.frigate = {
+    enable = true;
+    settings = {
+      mqtt = {
+        enabled = true;
+        host = "endeavour";
+      };
+
+      detect.enabled = true;
+      auth.enabled = false;
+      tls.enabled = false;
+      ffmpeg.hwaccel_args = "preset-vaapi";
+
+      record = {
+        enabled = true;
+        retain = {
+          days = 2;
+          mode = "all";
+        };
+      };
+
+      cameras."frontdoor" = {
+        detect = {
+          enabled = true;
+          width = 640;
+          height = 360;
+          fps = 5;
+        };
+        ffmpeg.inputs = [
+          {
+            path = "rtsp://192.168.1.142:8000/test1";
+            input_args = "preset-rtsp-restream";
+            roles = ["record" "detect"];
+          }
+        ];
+      };
     };
   };
 }
