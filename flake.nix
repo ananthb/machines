@@ -286,23 +286,32 @@
             nodes = nixpkgs.lib.filterAttrs (_: node: node.system == system) self.deploy.nodes;
           }
         );
+
+        # Hosts deployed by Garnix must not appear in deploy-rs nodes,
+        # otherwise both systems race to activate the same machine.
+        garnixDeployedHosts = ["kedi-cloud-garnix1"];
+        deployRsHosts = builtins.attrNames self.deploy.nodes;
+        conflicts = builtins.filter (h: builtins.elem h deployRsHosts) garnixDeployedHosts;
       in
-        deployChecks
-        // {
-          pre-commit = self.devShells.${system}.default.passthru.preCommitCheck;
-          formatting = pkgs.runCommand "check-formatting" {buildInputs = [formatterPkg];} ''
-            ${pkgs.lib.getExe formatterPkg} --check ${self}
-            touch $out
-          '';
-          statix = pkgs.runCommand "check-statix" {buildInputs = [pkgs.statix];} ''
-            statix check ${self}
-            touch $out
-          '';
-          deadnix = pkgs.runCommand "check-deadnix" {buildInputs = [pkgs.deadnix];} ''
-            deadnix --fail ${self}
-            touch $out
-          '';
-        }
+        assert conflicts
+        == []
+        || throw "These hosts are deployed by both Garnix and deploy-rs: ${builtins.concatStringsSep ", " conflicts}. Remove them from deploy.nodes in flake.nix.";
+          deployChecks
+          // {
+            pre-commit = self.devShells.${system}.default.passthru.preCommitCheck;
+            formatting = pkgs.runCommand "check-formatting" {buildInputs = [formatterPkg];} ''
+              ${pkgs.lib.getExe formatterPkg} --check ${self}
+              touch $out
+            '';
+            statix = pkgs.runCommand "check-statix" {buildInputs = [pkgs.statix];} ''
+              statix check ${self}
+              touch $out
+            '';
+            deadnix = pkgs.runCommand "check-deadnix" {buildInputs = [pkgs.deadnix];} ''
+              deadnix --fail ${self}
+              touch $out
+            '';
+          }
     );
 
     devShells = forAllSystems (
