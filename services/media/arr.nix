@@ -92,6 +92,7 @@ in {
       group = "media";
       settings = {
         torrentClients = ["qbittorrent:http://localhost:18080"];
+        dataDirs = ["/srv/media/Downloads"];
         linkType = "hardlink";
         linkDirs = ["/srv/media/Downloads/cross-seed"];
         matchMode = "partial";
@@ -276,7 +277,6 @@ in {
         "sonarr": ["http://localhost:8989/?apikey=''${SONARR_API_KEY}"],
         "torznab": [
           "http://localhost:9696/1/api?apikey=''${PROWLARR_API_KEY}",
-          "http://localhost:9696/2/api?apikey=''${PROWLARR_API_KEY}",
           "http://localhost:9696/3/api?apikey=''${PROWLARR_API_KEY}",
           "http://localhost:9696/4/api?apikey=''${PROWLARR_API_KEY}"
         ]
