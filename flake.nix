@@ -158,7 +158,6 @@
       hostname,
       system,
       extraModules ? [],
-      hostPath ? ./hosts/${hostname},
     }:
       nixpkgs.lib.nixosSystem {
         specialArgs = {
@@ -175,7 +174,7 @@
           extraModules
           ++ [
             {nixpkgs.hostPlatform = nixpkgs.lib.mkDefault system;}
-            hostPath
+            ./hosts/${hostname}
           ];
       };
 
@@ -236,7 +235,6 @@
       kedi-cloud-garnix1 = mkNixosHost {
         hostname = "kedi-cloud-garnix1";
         system = "x86_64-linux";
-        hostPath = ./hosts/kedi-cloud-garnix1.nix;
       };
     };
 

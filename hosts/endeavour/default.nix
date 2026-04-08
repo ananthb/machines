@@ -24,7 +24,7 @@
     ../../services/monitoring/ecoflow.nix
     ../../services/monitoring/postgres.nix
     ../../services/monitoring/probes.nix
-    ../../services/seafile.nix
+    ../../services/seafile
     ../../services/timemachinesrv.nix
     ../../services/vault.nix
   ];

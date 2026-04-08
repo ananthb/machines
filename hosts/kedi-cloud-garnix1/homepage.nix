@@ -1,3 +1,4 @@
+# Homepage dashboard configuration for kedi-cloud-garnix1.
 {config, ...}: let
   vs = config.vault-secrets.secrets;
 in {
@@ -23,14 +24,6 @@ in {
               description = "Media Server";
               href = "https://tv.kedi.dev";
               siteMonitor = "https://tv.kedi.dev";
-              widget = {
-                type = "jellyfin";
-                url = "http://localhost:8096";
-                key = "{{HOMEPAGE_VAR_JELLYFIN_API_KEY}}";
-                enableBlocks = true;
-                enableNowPlaying = true;
-                enableMediaControl = false;
-              };
             };
           }
           {
@@ -47,11 +40,6 @@ in {
               description = "Watch requests";
               href = "https://seerr.kedi.dev";
               siteMonitor = "https://seerr.kedi.dev";
-              widget = {
-                type = "jellyseerr";
-                url = "http://localhost:5055";
-                key = "{{HOMEPAGE_VAR_JELLYSEERR_API_KEY}}";
-              };
             };
           }
           {
@@ -59,7 +47,7 @@ in {
               icon = "wallabag";
               description = "Read-it-later";
               href = "https://wallabag.kedi.dev";
-              siteMonitor = "https://wallabag.kedi.dev";
+              siteMonitor = "http://localhost:8085";
             };
           }
           {
@@ -67,7 +55,7 @@ in {
               icon = "miniflux";
               description = "RSS Feed Reader";
               href = "https://miniflux.kedi.dev";
-              siteMonitor = "https://miniflux.kedi.dev";
+              siteMonitor = "http://localhost:8088";
               widget = {
                 type = "miniflux";
                 url = "http://localhost:8088";
@@ -93,12 +81,6 @@ in {
               description = "Photo & Video Library";
               href = "https://immich.kedi.dev";
               siteMonitor = "https://immich.kedi.dev";
-              widget = {
-                type = "immich";
-                url = "http://localhost:2283";
-                key = "{{HOMEPAGE_VAR_IMMICH_API_KEY}}";
-                version = 2;
-              };
             };
           }
           {
@@ -106,7 +88,7 @@ in {
               icon = "actual-budget";
               description = "Personal Budget Tracker";
               href = "https://actual.kedi.dev";
-              siteMonitor = "https://actual.kedi.dev";
+              siteMonitor = "http://localhost:3002";
             };
           }
           {
@@ -114,12 +96,12 @@ in {
               icon = "mealie";
               description = "Recipes & Meal Planner";
               href = "https://mealie.kedi.dev";
-              siteMonitor = "https://mealie.kedi.dev";
+              siteMonitor = "http://localhost:9000";
               widget = {
                 type = "mealie";
-                url = "https://mealie.kedi.dev";
-                key = "{{HOMEPAGE_VAR_MEALIE_API_KEY}}";
                 version = 2;
+                url = "http://localhost:9000";
+                key = "{{HOMEPAGE_VAR_MEALIE_API_KEY}}";
               };
             };
           }
@@ -128,7 +110,7 @@ in {
               icon = "vaultwarden";
               description = "Password Manager";
               href = "https://vaultwarden.kedi.dev";
-              siteMonitor = "https://vaultwarden.kedi.dev";
+              siteMonitor = "http://localhost:8222";
             };
           }
         ];
@@ -142,11 +124,6 @@ in {
                   icon = "home-assistant";
                   description = "Home Automation";
                   href = "https://6a.kedi.dev";
-                  widget = {
-                    type = "homeassistant";
-                    url = "http://localhost:8123";
-                    key = "{{HOMEPAGE_VAR_HA_6A_TOKEN}}";
-                  };
                 };
               }
               {
@@ -154,12 +131,6 @@ in {
                   icon = "adguard-home";
                   description = "Network-wide Ad Blocker";
                   href = "https://atlantis.tail42937.ts.net/adguard-home";
-                  widget = {
-                    type = "adguard";
-                    url = "http://atlantis.local:8080";
-                    username = "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}";
-                    password = "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}";
-                  };
                 };
               }
             ];
@@ -171,11 +142,6 @@ in {
                   icon = "home-assistant";
                   description = "Home Automation";
                   href = "https://t1.kedi.dev";
-                  widget = {
-                    type = "homeassistant";
-                    url = "http://stargazer:8123";
-                    key = "{{HOMEPAGE_VAR_HA_T1_TOKEN}}";
-                  };
                 };
               }
             ];
@@ -197,14 +163,7 @@ in {
                 "VictoriaMetrics" = {
                   icon = "victoriametrics";
                   description = "Metrics";
-                  href = "http://endeavour:8428";
-                };
-              }
-              {
-                "Upptime" = {
-                  icon = "mdi-arrow-up-circle";
-                  description = "Uptime Status Website";
-                  href = "https://uptime.kedi.dev";
+                  href = "http://localhost:8428";
                 };
               }
             ];
@@ -237,10 +196,6 @@ in {
                   icon = "qbittorrent";
                   description = "Torrent downloader";
                   href = "http://endeavour:18080";
-                  widget = {
-                    type = "qbittorrent";
-                    url = "http://localhost:18080";
-                  };
                 };
               }
             ];
