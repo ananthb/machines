@@ -2,6 +2,7 @@
 # Connects to local Ollama instance.
 {
   config,
+  lib,
   pkgs,
   ...
 }: let
@@ -25,7 +26,7 @@ in {
     partOf = ["kedi.target"];
     environment = {
       ENV = "prod";
-      WEBUI_URL = "https://open-webui.kedi.dev";
+      WEBUI_URL = lib.mkForce "https://open-webui.kedi.dev";
       CORS_ALLOW_ORIGIN = "https://open-webui.kedi.dev";
       DATABASE_URL = "postgresql://open-webui@/open-webui?host=/run/postgresql";
       ENABLE_PERSISTENT_CONFIG = "False";
