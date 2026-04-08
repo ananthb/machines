@@ -245,17 +245,6 @@ in {
               }
             ];
           }
-          {
-            "Books" = [
-              {
-                "Calibre" = {
-                  icon = "mdi-book-open-page-variant";
-                  description = "Ebook Library";
-                  href = "https://calibre.kedi.dev";
-                };
-              }
-            ];
-          }
         ];
       }
     ];

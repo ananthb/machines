@@ -34,9 +34,9 @@ in {
       };
     };
 
-    services."mealie-backup" = {
+    services."mealie-backup" = config.my-services.mkBackupService {
       startAt = "weekly";
-      environment.KOPIA_CHECK_FOR_UPDATES = "false";
+      extraServiceConfig.EnvironmentFile = "${vs.mealie}/environment";
       script = ''
         set -uo pipefail
 
@@ -51,7 +51,7 @@ in {
         }
 
         # Delete all backups
-         http GET "$backup_api_url" \
+        http GET "$backup_api_url" \
           | ${pkgs.jq}/bin/jq -r '.imports[].name' \
           | ${pkgs.findutils}/bin/xargs -I{} \
             ${pkgs.httpie}/bin/http -A bearer -a "$MEALIE_BACKUP_API_KEY" \
@@ -66,16 +66,6 @@ in {
         # Upload new backup
         ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
       '';
-      serviceConfig = {
-        User = "root";
-        Type = "oneshot";
-        EnvironmentFile = "${vs.mealie}/environment";
-      };
-      path = [
-        pkgs.coreutils
-        pkgs.curl
-        pkgs.kopia
-      ];
     };
   };
 

@@ -56,6 +56,9 @@ in {
   nix.settings.trusted-users = ["root" username];
   nix.gc.dates = "weekly";
 
+  time.timeZone = "Asia/Kolkata";
+  i18n.defaultLocale = "en_IN";
+
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
 
@@ -108,10 +111,7 @@ in {
       "libvirtd"
       "systemd-journal"
     ];
-    openssh.authorizedKeys.keys = [
-      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAINu7u4V6khhhUvepvptel86DN3XMCwZVdQe/7P6WW1KmAAAAFXNzaDphbmFudGhzLXNzaC1rZXktMQ== ananth@yubikey-5c"
-      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIFCVZPWg3DVxjuORNKJnjaRSPoZ4nYnzM070q0fIeM32AAAAG3NzaDphbmFudGhzLXNzaC1rZXktNWMtbmFubw== ananth@yubikey-5c-nano"
-    ];
+    openssh.authorizedKeys.keys = import ../../lib/ssh-keys.nix;
   };
 
   security = {

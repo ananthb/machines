@@ -23,32 +23,16 @@ in {
     partOf = ["kedi.target"];
   };
 
-  systemd.services."radicale-backup" = {
-    startAt = "daily";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    preStart = "systemctl -q is-active radicale.service && systemctl stop radicale.service";
+  systemd.services."radicale-backup" = config.my-services.mkBackupService {
+    stopService = "radicale";
+    extraPath = [pkgs.systemd];
     script = ''
       backup_target="/var/lib/radicale"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-      trap '{
-        rm -rf "$snapshot_target"
-      }' EXIT
-
+      trap '{ rm -rf "$snapshot_target"; }' EXIT
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
-    postStop = "systemctl start radicale.service";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
-    path = [
-      pkgs.coreutils
-      pkgs.curl
-      pkgs.kopia
-      pkgs.systemd
-    ];
   };
 
   vault-secrets.secrets.radicale = {

@@ -22,32 +22,16 @@ in {
       partOf = ["kedi.target"];
     };
 
-    "actual-backup" = {
-      startAt = "daily";
-      environment.KOPIA_CHECK_FOR_UPDATES = "false";
-      preStart = "systemctl -q is-active actual.service && systemctl stop actual.service";
+    "actual-backup" = config.my-services.mkBackupService {
+      stopService = "actual";
+      extraPath = [pkgs.systemd];
       script = ''
         backup_target="/var/lib/actual"
         snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-        trap '{
-          rm -rf "$snapshot_target"
-        }' EXIT
-
+        trap '{ rm -rf "$snapshot_target"; }' EXIT
         ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
         ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
       '';
-      postStop = "systemctl start actual.service";
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";
-      };
-      path = [
-        pkgs.coreutils
-        pkgs.curl
-        pkgs.kopia
-        pkgs.systemd
-      ];
     };
   };
 

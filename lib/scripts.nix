@@ -11,6 +11,12 @@
     then config.networking.hostName
     else null;
 in {
+  options.my-services.mkBackupService = lib.mkOption {
+    type = lib.types.functionTo lib.types.attrs;
+    description = "Helper to create a kopia backup systemd service with common boilerplate.";
+    readOnly = true;
+  };
+
   options.my-scripts = {
     victoriaMetricsHost = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
@@ -40,6 +46,30 @@ in {
   };
 
   config = {
+    my-services.mkBackupService = {
+      startAt ? "daily",
+      script,
+      stopService ? null,
+      extraPath ? [],
+      extraServiceConfig ? {},
+    }: {
+      inherit startAt script;
+      environment.KOPIA_CHECK_FOR_UPDATES = "false";
+      preStart =
+        lib.optionalString (stopService != null)
+        "systemctl -q is-active ${stopService}.service && systemctl stop ${stopService}.service";
+      postStop =
+        lib.optionalString (stopService != null)
+        "systemctl start ${stopService}.service";
+      serviceConfig =
+        {
+          Type = "oneshot";
+          User = "root";
+        }
+        // extraServiceConfig;
+      path = [pkgs.coreutils pkgs.curl pkgs.kopia] ++ extraPath;
+    };
+
     my-scripts = rec {
       kopia-snapshot-backup = pkgs.writeShellScript "kopia-snapshot-backup" ''
         # Snapshot backs up a bcachefs/btrfs subvolume to the kopia hathi-backups GCS remote repository.

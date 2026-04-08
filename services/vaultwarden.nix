@@ -39,41 +39,19 @@ in {
     partOf = ["kedi.target"];
   };
 
-  systemd.services."vaultwarden-backup" = {
-    startAt = "daily";
-    environment.KOPIA_CHECK_FOR_UPDATES = "false";
-    preStart = "systemctl -q is-active vaultwarden.service && systemctl stop vaultwarden.service";
+  systemd.services."vaultwarden-backup" = config.my-services.mkBackupService {
+    stopService = "vaultwarden";
+    extraPath = [pkgs.systemd];
     script = ''
       backup_target="/var/lib/${config.systemd.services.vaultwarden.serviceConfig.StateDirectory}"
       snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-      dump_file="$snapshot_target/db.dump"
-
-      trap '{
-        rm -f "$dump_file"
-        rm -rf "$snapshot_target"
-      }' EXIT
-
-      # Dump database
+      trap '{ rm -rf "$snapshot_target"; }' EXIT
       ${pkgs.systemd}/bin/run0 -u vaultwarden \
         ${pkgs.postgresql_16}/bin/pg_dump \
-          -Fc -U vaultwarden vaultwarden > "$dump_file"
-      printf 'Dumped database to %s' "$dump_file"
-
+          -Fc -U vaultwarden vaultwarden > "$snapshot_target/db.dump"
       ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
-
       ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
     '';
-    postStop = "systemctl start vaultwarden.service";
-    serviceConfig = {
-      Type = "oneshot";
-      User = "root";
-    };
-    path = [
-      pkgs.coreutils
-      pkgs.curl
-      pkgs.kopia
-      pkgs.systemd
-    ];
   };
 
   services.postgresql = {

@@ -72,12 +72,6 @@
 
   security.tpm2.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Asia/Kolkata";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_IN";
-
   services = {
     # Only publish mDNS on the bond interface to avoid macOS seeing
     # duplicate responses and renaming us to endeavour-2.

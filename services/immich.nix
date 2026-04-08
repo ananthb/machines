@@ -183,24 +183,16 @@ in {
 
   my-services.kediTargets.immich-server = true;
 
-  systemd.services = {
-    immich-backup = {
-      # TODO: re-enable after we've trimmed down unnecessary files
-      # startAt = "weekly";
-      environment.KOPIA_CHECK_FOR_UPDATES = "false";
-      serviceConfig = {
-        Type = "oneshot";
-        User = "root";
-        ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
-      };
-      path = with pkgs; [
-        bcachefs-tools
-        btrfs-progs
-        coreutils
-        curl
-        kopia
-      ];
+  systemd.services.immich-backup = {
+    # TODO: re-enable after we've trimmed down unnecessary files
+    # startAt = "weekly";
+    environment.KOPIA_CHECK_FOR_UPDATES = "false";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+      ExecStart = "${config.my-scripts.kopia-snapshot-backup} /srv/immich";
     };
+    path = [pkgs.bcachefs-tools pkgs.btrfs-progs pkgs.coreutils pkgs.curl pkgs.kopia];
   };
 
   vault-secrets.secrets.immich = {

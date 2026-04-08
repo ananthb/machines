@@ -12,20 +12,6 @@
   # Open Samba ports for LAN access (Time Machine)
   services.samba.openFirewall = true;
 
-  # System packages
-  environment.systemPackages = [];
-
-  # Set your time zone.
-  time.timeZone = "Asia/Kolkata";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_IN";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
-
   my-services.cftunnelConfig = [
     {
       tunnelId = "b6a4a4a7-3f48-4b10-a39f-fc2ef1f7b0c7";

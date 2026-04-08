@@ -9,12 +9,6 @@
   # System packages
   environment.systemPackages = [pkgs.bcachefs-tools];
 
-  # Set your time zone.
-  time.timeZone = "Asia/Kolkata";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_IN";
-
   networking.useNetworkd = true;
 
   systemd.network.networks."20-ethernet" = {

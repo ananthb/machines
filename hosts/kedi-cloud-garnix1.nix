@@ -105,37 +105,21 @@ in {
 
         # --- Backup services ---
 
-        "actual-backup" = {
-          startAt = "daily";
-          environment.KOPIA_CHECK_FOR_UPDATES = "false";
-          preStart = "systemctl -q is-active actual.service && systemctl stop actual.service";
+        "actual-backup" = config.my-services.mkBackupService {
+          stopService = "actual";
+          extraPath = [pkgs.systemd];
           script = ''
             backup_target="/var/lib/actual"
             snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-            trap '{
-              rm -rf "$snapshot_target"
-            }' EXIT
-
+            trap '{ rm -rf "$snapshot_target"; }' EXIT
             ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
             ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
           '';
-          postStop = "systemctl start actual.service";
-          serviceConfig = {
-            Type = "oneshot";
-            User = "root";
-          };
-          path = [
-            pkgs.coreutils
-            pkgs.curl
-            pkgs.kopia
-            pkgs.systemd
-          ];
         };
 
-        "mealie-backup" = {
+        "mealie-backup" = config.my-services.mkBackupService {
           startAt = "weekly";
-          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+          extraServiceConfig.EnvironmentFile = "${vs.mealie}/environment";
           script = ''
             set -uo pipefail
 
@@ -165,139 +149,58 @@ in {
             # Upload new backup
             ${config.my-scripts.kopia-backup} /var/lib/mealie/backups
           '';
-          serviceConfig = {
-            User = "root";
-            Type = "oneshot";
-            EnvironmentFile = "${vs.mealie}/environment";
-          };
-          path = [
-            pkgs.coreutils
-            pkgs.curl
-            pkgs.kopia
-          ];
         };
 
-        "miniflux-backup" = {
-          startAt = "daily";
-          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+        "miniflux-backup" = config.my-services.mkBackupService {
           script = ''
             snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-            dump_file="$snapshot_target/miniflux.dump"
-
-            trap '{
-              rm -rf "$snapshot_target"
-            }' EXIT
-
+            trap '{ rm -rf "$snapshot_target"; }' EXIT
             ${pkgs.sudo}/bin/sudo -u postgres \
               ${config.services.postgresql.package}/bin/pg_dump \
-                -Fc miniflux > "$dump_file"
-
+                -Fc miniflux > "$snapshot_target/miniflux.dump"
             ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/miniflux"
           '';
-          serviceConfig = {
-            Type = "oneshot";
-            User = "root";
-          };
-          path = [
-            pkgs.coreutils
-            pkgs.curl
-            pkgs.kopia
-          ];
         };
 
-        "wallabag-backup" = {
-          startAt = "daily";
-          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+        "wallabag-backup" = config.my-services.mkBackupService {
           script = ''
             snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-            trap '{
-              rm -rf "$snapshot_target"
-            }' EXIT
-
-            # Dump wallabag database
+            trap '{ rm -rf "$snapshot_target"; }' EXIT
             ${pkgs.sudo}/bin/sudo -u postgres \
               ${config.services.postgresql.package}/bin/pg_dump \
                 -Fc wallabag > "$snapshot_target/wallabag.dump"
-
-            # Export podman volumes
             ${pkgs.podman}/bin/podman volume export wallabag-data \
               > "$snapshot_target/wallabag-data.tar"
             ${pkgs.podman}/bin/podman volume export wallabag-images \
               > "$snapshot_target/wallabag-images.tar"
-
             ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/wallabag"
           '';
-          serviceConfig = {
-            Type = "oneshot";
-            User = "root";
-          };
-          path = [
-            pkgs.coreutils
-            pkgs.curl
-            pkgs.kopia
-          ];
         };
 
-        "vaultwarden-backup" = {
-          startAt = "daily";
-          environment.KOPIA_CHECK_FOR_UPDATES = "false";
-          preStart = "systemctl -q is-active vaultwarden.service && systemctl stop vaultwarden.service";
+        "vaultwarden-backup" = config.my-services.mkBackupService {
+          stopService = "vaultwarden";
+          extraPath = [pkgs.systemd];
           script = ''
             backup_target="/var/lib/${config.systemd.services.vaultwarden.serviceConfig.StateDirectory}"
             snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-            dump_file="$snapshot_target/db.dump"
-
-            trap '{
-              rm -rf "$snapshot_target"
-            }' EXIT
-
+            trap '{ rm -rf "$snapshot_target"; }' EXIT
             ${pkgs.sudo}/bin/sudo -u vaultwarden \
               ${config.services.postgresql.package}/bin/pg_dump \
-                -Fc -U vaultwarden vaultwarden > "$dump_file"
-
+                -Fc -U vaultwarden vaultwarden > "$snapshot_target/db.dump"
             ${pkgs.rsync}/bin/rsync -avz "$backup_target/" "$snapshot_target"
-
             ${config.my-scripts.kopia-backup} "$snapshot_target" "$backup_target"
           '';
-          postStop = "systemctl start vaultwarden.service";
-          serviceConfig = {
-            Type = "oneshot";
-            User = "root";
-          };
-          path = [
-            pkgs.coreutils
-            pkgs.curl
-            pkgs.kopia
-            pkgs.systemd
-          ];
         };
 
-        "postgresql-backup" = {
-          startAt = "daily";
-          environment.KOPIA_CHECK_FOR_UPDATES = "false";
+        "postgresql-backup" = config.my-services.mkBackupService {
           script = ''
             snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-
-            trap '{
-              rm -rf "$snapshot_target"
-            }' EXIT
-
+            trap '{ rm -rf "$snapshot_target"; }' EXIT
             ${pkgs.sudo}/bin/sudo -u postgres \
               ${config.services.postgresql.package}/bin/pg_dumpall \
                 > "$snapshot_target/all-databases.sql"
-
             ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/postgresql"
           '';
-          serviceConfig = {
-            Type = "oneshot";
-            User = "root";
-          };
-          path = [
-            pkgs.coreutils
-            pkgs.curl
-            pkgs.kopia
-          ];
         };
       }
     ];

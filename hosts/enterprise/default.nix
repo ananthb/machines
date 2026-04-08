@@ -58,12 +58,6 @@ in {
     ];
   };
 
-  # Set your time zone.
-  time.timeZone = "Asia/Kolkata";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_IN";
-
   my-services.cftunnelConfig = [
     {
       tunnelId = "cc636509-3456-4589-ae08-d4be710305a5";

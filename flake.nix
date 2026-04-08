@@ -29,12 +29,20 @@
 
     ht32-panel = {
       url = "github:ananthb/ht32-panel";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        git-hooks.follows = "git-hooks";
+        rust-overlay.follows = "lanzaboote/rust-overlay";
+      };
     };
 
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.3";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "nixvim/flake-parts";
+        pre-commit-hooks-nix.follows = "git-hooks";
+      };
     };
 
     nix-darwin = {
@@ -52,11 +60,13 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-calibre.url = "github:NixOS/nixpkgs/0182a361324364ae3f436a63005877674cf45efb";
 
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "ht32-panel/flake-utils/systems";
+      };
     };
 
     git-hooks = {
@@ -66,7 +76,12 @@
 
     starla = {
       url = "github:ananthb/starla";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        git-hooks.follows = "git-hooks";
+        flake-utils.follows = "ht32-panel/flake-utils";
+        rust-overlay.follows = "lanzaboote/rust-overlay";
+      };
     };
 
     sops-nix = {
@@ -76,12 +91,17 @@
 
     switchyard = {
       url = "github:alyraffauf/switchyard";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        git-hooks-nix.follows = "git-hooks";
+        flake-parts.follows = "nixvim/flake-parts";
+      };
     };
 
     vault-secrets = {
       url = "github:serokell/vault-secrets";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-compat.follows = "deploy-rs/flake-compat";
     };
 
     mithril = {
@@ -98,11 +118,13 @@
     tsnsrv = {
       url = "github:boinkor-net/tsnsrv";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "nixvim/flake-parts";
     };
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "ht32-panel/flake-utils";
     };
 
     garnix-lib = {
@@ -114,12 +136,10 @@
   outputs = {
     self,
     deploy-rs,
-    garnix-lib,
     lanzaboote,
     nix-darwin,
     nixos-hardware,
     nixpkgs,
-    nixpkgs-calibre,
     git-hooks,
     ...
   } @ inputs: let
@@ -134,16 +154,11 @@
 
     forAllSystems = nixpkgs.lib.genAttrs systems;
 
-    pkgsCalibreFor = system: import nixpkgs-calibre {inherit system;};
-
-    calibreOverlay = final: _: {
-      inherit ((pkgsCalibreFor final.stdenv.hostPlatform.system)) calibre;
-    };
-
     mkNixosHost = {
       hostname,
       system,
       extraModules ? [],
+      hostPath ? ./hosts/${hostname},
     }:
       nixpkgs.lib.nixosSystem {
         specialArgs = {
@@ -159,12 +174,8 @@
         modules =
           extraModules
           ++ [
-            {
-              nixpkgs.overlays = [
-                calibreOverlay
-              ];
-            }
-            ./hosts/${hostname}
+            {nixpkgs.hostPlatform = nixpkgs.lib.mkDefault system;}
+            hostPath
           ];
       };
 
@@ -185,11 +196,10 @@
         modules =
           extraModules
           ++ [
-            {nixpkgs.overlays = [calibreOverlay];}
             ./hosts/${hostname}.nix
           ];
       };
-  in rec {
+  in {
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
     nixosConfigurations = {
@@ -223,23 +233,16 @@
         extraModules = [nixos-hardware.nixosModules.raspberry-pi-4];
       };
 
-      kedi-cloud-garnix1 = nixpkgs.lib.nixosSystem {
+      kedi-cloud-garnix1 = mkNixosHost {
+        hostname = "kedi-cloud-garnix1";
         system = "x86_64-linux";
-        specialArgs = {
-          inherit
-            garnix-lib
-            containerImages
-            inputs
-            ;
-          outputs = self;
-        };
-        modules = [./hosts/kedi-cloud-garnix1.nix];
+        hostPath = ./hosts/kedi-cloud-garnix1.nix;
       };
     };
 
     lib = {
       immichMlHosts = import ./lib/immich-ml-hosts.nix {
-        inherit nixosConfigurations;
+        inherit (self) nixosConfigurations;
         inherit (nixpkgs) lib;
         immichMlImage = containerImages.immichMl;
       };
@@ -273,25 +276,6 @@
           path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.enterprise;
         };
       };
-
-      #stargazer = {
-      #  system = "aarch64-linux";
-      #  hostname = "stargazer";
-      #  profiles.system = {
-      #    sshUser = "root";
-      #    user = "root";
-      #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
-      #  };
-      #};
-
-      #voyager = {
-      #  hostname = "voyager";
-      #  profiles.system = {
-      #    sshUser = username;
-      #    user = "root";
-      #    path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.voyager;
-      #  };
-      #};
     };
 
     checks = forAllSystems (
@@ -304,18 +288,10 @@
             nodes = nixpkgs.lib.filterAttrs (_: node: node.system == system) self.deploy.nodes;
           }
         );
-        preCommitCheck = git-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            alejandra.enable = true;
-            statix.enable = true;
-            deadnix.enable = true;
-          };
-        };
       in
         deployChecks
         // {
-          pre-commit = preCommitCheck;
+          pre-commit = self.devShells.${system}.default.passthru.preCommitCheck;
           formatting = pkgs.runCommand "check-formatting" {buildInputs = [formatterPkg];} ''
             ${pkgs.lib.getExe formatterPkg} --check ${self}
             touch $out
@@ -346,6 +322,7 @@
       in {
         default = pkgs.mkShell {
           inherit (preCommitCheck) shellHook;
+          passthru = {inherit preCommitCheck;};
           packages =
             preCommitCheck.enabledPackages
             ++ [
