@@ -11,106 +11,98 @@ in {
     ../../services/logiops.nix
     inputs.mithril.nixosModules.mithril
 
-    (import ../../services/frigate.nix {
-      settings = {
-        mqtt = {
-          enabled = true;
-          host = "endeavour";
-        };
+    ../../services/frigate.nix
+  ];
 
-        detectors = {
-          ov = {
-            type = "openvino";
-            device = "GPU";
-          };
-        };
+  my-services.frigate = {
+    enable = true;
+    settings = {
+      mqtt = {
+        enabled = true;
+        host = "endeavour";
+      };
 
-        model = {
-          path = "/openvino-model/ssdlite_mobilenet_v2.xml";
-          width = 300;
-          height = 300;
-          input_tensor = "nhwc";
-          input_pixel_format = "bgr";
-          labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
-        };
+      detectors.ov = {
+        type = "openvino";
+        device = "GPU";
+      };
 
+      model = {
+        path = "/openvino-model/ssdlite_mobilenet_v2.xml";
+        width = 300;
+        height = 300;
+        input_tensor = "nhwc";
+        input_pixel_format = "bgr";
+        labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
+      };
+
+      detect.enabled = true;
+      auth.enabled = false;
+      tls.enabled = false;
+      ffmpeg.hwaccel_args = "preset-vaapi";
+      record.enabled = true;
+
+      go2rtc.streams = {
+        # Raw stacked streams from camera
+        front_door_raw = "rtsp://10.15.17.190:554/live/ch00_0";
+        front_door_raw_sub = "rtsp://10.15.17.190:554/live/ch00_1";
+        # Top half: public_terrace_cam (stationary) - 2304x1296 from 2304x2592
+        public_terrace_cam = "ffmpeg:front_door_raw#video=h264#raw=-filter:v crop=2304:1296:0:0";
+        public_terrace_cam_sub = "ffmpeg:front_door_raw_sub#video=h264#raw=-filter:v crop=640:360:0:0";
+        # Bottom half: front_door_cam (PTZ) - 2304x1296 from 2304x2592
+        front_door_cam = "ffmpeg:front_door_raw#video=h264#raw=-filter:v crop=2304:1296:0:1296";
+        front_door_cam_sub = "ffmpeg:front_door_raw_sub#video=h264#raw=-filter:v crop=640:360:0:360";
+      };
+
+      cameras."public_terrace_cam" = {
         detect = {
           enabled = true;
+          width = 640;
+          height = 360;
+          fps = 5;
         };
-
-        auth.enabled = false;
-        tls.enabled = false;
-
-        ffmpeg = {
-          hwaccel_args = "preset-vaapi";
-        };
-
-        record.enabled = true;
-
-        go2rtc = {
-          streams = {
-            # Raw stacked streams from camera
-            front_door_raw = "rtsp://10.15.17.190:554/live/ch00_0";
-            front_door_raw_sub = "rtsp://10.15.17.190:554/live/ch00_1";
-            # Top half: public_terrace_cam (stationary) - 2304x1296 from 2304x2592
-            public_terrace_cam = "ffmpeg:front_door_raw#video=h264#raw=-filter:v crop=2304:1296:0:0";
-            public_terrace_cam_sub = "ffmpeg:front_door_raw_sub#video=h264#raw=-filter:v crop=640:360:0:0";
-            # Bottom half: front_door_cam (PTZ) - 2304x1296 from 2304x2592
-            front_door_cam = "ffmpeg:front_door_raw#video=h264#raw=-filter:v crop=2304:1296:0:1296";
-            front_door_cam_sub = "ffmpeg:front_door_raw_sub#video=h264#raw=-filter:v crop=640:360:0:360";
-          };
-        };
-
-        cameras."public_terrace_cam" = {
-          detect = {
-            enabled = true;
-            width = 640;
-            height = 360;
-            fps = 5;
-          };
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://127.0.0.1:8554/public_terrace_cam";
-              input_args = "preset-rtsp-restream";
-              roles = ["record"];
-            }
-            {
-              path = "rtsp://127.0.0.1:8554/public_terrace_cam_sub";
-              input_args = "preset-rtsp-restream";
-              roles = ["detect"];
-            }
-          ];
-        };
-
-        cameras."front_door_cam" = {
-          detect = {
-            enabled = true;
-            width = 640;
-            height = 360;
-            fps = 5;
-          };
-          onvif = {
-            host = "10.15.17.190";
-            port = 8899;
-            user = "admin";
-            password = "";
-          };
-          ffmpeg.inputs = [
-            {
-              path = "rtsp://127.0.0.1:8554/front_door_cam";
-              input_args = "preset-rtsp-restream";
-              roles = ["record"];
-            }
-            {
-              path = "rtsp://127.0.0.1:8554/front_door_cam_sub";
-              input_args = "preset-rtsp-restream";
-              roles = ["detect"];
-            }
-          ];
-        };
+        ffmpeg.inputs = [
+          {
+            path = "rtsp://127.0.0.1:8554/public_terrace_cam";
+            input_args = "preset-rtsp-restream";
+            roles = ["record"];
+          }
+          {
+            path = "rtsp://127.0.0.1:8554/public_terrace_cam_sub";
+            input_args = "preset-rtsp-restream";
+            roles = ["detect"];
+          }
+        ];
       };
-    })
-  ];
+
+      cameras."front_door_cam" = {
+        detect = {
+          enabled = true;
+          width = 640;
+          height = 360;
+          fps = 5;
+        };
+        onvif = {
+          host = "10.15.17.190";
+          port = 8899;
+          user = "admin";
+          password = "";
+        };
+        ffmpeg.inputs = [
+          {
+            path = "rtsp://127.0.0.1:8554/front_door_cam";
+            input_args = "preset-rtsp-restream";
+            roles = ["record"];
+          }
+          {
+            path = "rtsp://127.0.0.1:8554/front_door_cam_sub";
+            input_args = "preset-rtsp-restream";
+            roles = ["detect"];
+          }
+        ];
+      };
+    };
+  };
 
   networking.networkmanager.enable = true;
   networking.modemmanager.enable = true;

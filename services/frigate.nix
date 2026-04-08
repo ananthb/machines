@@ -1,39 +1,51 @@
-{settings}: {
+# Frigate NVR as a Podman container managed by quadlet.
+# Hosts import this and set my-services.frigate.settings with their
+# camera-specific Frigate YAML config.
+{
   config,
+  lib,
   pkgs,
   ...
 }: let
+  cfg = config.my-services.frigate;
   containerImages = import ../lib/container-images.nix;
 
-  frigateConfig = pkgs.writeText "frigate-config.yml" (builtins.toJSON (settings
+  frigateConfig = pkgs.writeText "frigate-config.yml" (builtins.toJSON (cfg.settings
     // {
       database.path = "/db/frigate.db";
     }));
 
   inherit (config.virtualisation.quadlet) volumes;
 in {
-  # Copy managed config to a writable location so Frigate can migrate it
-  systemd.tmpfiles.rules = [
-    "d /var/lib/frigate 0755 root root - -"
-  ];
+  options.my-services.frigate = {
+    enable = lib.mkEnableOption "Frigate NVR (Podman container)";
 
-  systemd.services.frigate-config = {
-    description = "Copy Frigate config";
-    wantedBy = ["frigate.service"];
-    before = ["frigate.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.coreutils}/bin/cp ${frigateConfig} /var/lib/frigate/config.yml";
+    settings = lib.mkOption {
+      type = lib.types.attrs;
+      default = {};
+      description = "Frigate configuration (converted to YAML config.yml).";
     };
   };
 
-  virtualisation.quadlet = {
-    volumes = {
-      frigate-db = {};
+  config = lib.mkIf cfg.enable {
+    systemd.tmpfiles.rules = [
+      "d /var/lib/frigate 0755 root root - -"
+    ];
+
+    systemd.services.frigate-config = {
+      description = "Copy Frigate config";
+      wantedBy = ["frigate.service"];
+      before = ["frigate.service"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.coreutils}/bin/cp ${frigateConfig} /var/lib/frigate/config.yml";
+      };
     };
 
-    containers = {
-      frigate = {
+    virtualisation.quadlet = {
+      volumes.frigate-db = {};
+
+      containers.frigate = {
         containerConfig = {
           name = "frigate";
           image = containerImages.frigate;
@@ -46,9 +58,7 @@ in {
             "/srv/frigate/clips:/media/frigate/clips"
             "/srv/frigate/exports:/media/frigate/exports"
           ];
-          environments = {
-            FRIGATE_RTSP_PASSWORD = "";
-          };
+          environments.FRIGATE_RTSP_PASSWORD = "";
           devices = ["/dev/dri:/dev/dri"];
           podmanArgs = ["--shm-size=256m" "--privileged"];
         };
@@ -57,9 +67,7 @@ in {
           After = ["frigate-config.service"];
           Requires = ["frigate-config.service"];
         };
-        serviceConfig = {
-          Restart = "on-failure";
-        };
+        serviceConfig.Restart = "on-failure";
       };
     };
   };

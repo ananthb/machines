@@ -16,15 +16,22 @@
     home-assistant = {
       extraPackages = ps: [ps.aionut ps.psycopg2];
       extraComponents = ["luci"];
-      config.recorder.db_url = "postgresql://@/hass";
+      config = {
+        recorder.db_url = "postgresql://@/hass";
+        frigate.url = "http://voyager.local:8967";
+      };
     };
 
     frigate = {
       enable = true;
       hostname = "voyager.local";
       settings = {
-        mqtt.enabled = false;
+        mqtt = {
+          enabled = true;
+          host = "endeavour";
+        };
 
+        detect.enabled = true;
         record = {
           enabled = true;
           retain = {
@@ -35,13 +42,21 @@
 
         ffmpeg.hwaccel_args = "preset-vaapi";
 
-        cameras."frontdoor".ffmpeg.inputs = [
-          {
-            path = "rtsp://192.168.1.142:8000/test1";
-            input_args = "preset-rtsp-restream";
-            roles = ["record"];
-          }
-        ];
+        cameras."frontdoor" = {
+          detect = {
+            enabled = true;
+            width = 640;
+            height = 360;
+            fps = 5;
+          };
+          ffmpeg.inputs = [
+            {
+              path = "rtsp://192.168.1.142:8000/test1";
+              input_args = "preset-rtsp-restream";
+              roles = ["record" "detect"];
+            }
+          ];
+        };
       };
     };
 
