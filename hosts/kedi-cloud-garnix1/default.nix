@@ -18,6 +18,7 @@ in {
     ../../services/monitoring/grafana.nix
     ../../services/monitoring/probes.nix
     ../../services/monitoring/victoriametrics.nix
+    ../../services/monitoring/victorialogs.nix
   ];
 
   networking = {

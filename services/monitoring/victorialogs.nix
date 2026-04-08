@@ -32,7 +32,7 @@
         ${pkgs.victorialogs}/bin/victoria-logs \
           -storageDataPath=/var/lib/victorialogs \
           -httpListenAddr=:9428 \
-          -retentionPeriod=90d
+          -retentionPeriod=30d
       '';
       Restart = "on-failure";
       RestartSec = 5;

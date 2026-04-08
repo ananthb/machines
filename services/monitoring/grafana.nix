@@ -163,7 +163,7 @@ in {
             };
           }
           {
-            url = "http://endeavour:9428";
+            url = "http://localhost:9428";
             name = "VictoriaLogs";
             type = "victoriametrics-logs-datasource";
           }

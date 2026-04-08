@@ -465,7 +465,7 @@ in {
 
   services.victoriametrics = {
     enable = true;
-    retentionPeriod = "1y";
+    retentionPeriod = "30d";
     extraOptions = [
       "-enableTCP6"
     ];

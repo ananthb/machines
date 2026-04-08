@@ -81,7 +81,7 @@
     '';
     upload = {
       enable = true;
-      settings.Upload.URL = "http://endeavour:19532";
+      settings.Upload.URL = "http://kedi-cloud-garnix1:19532";
     };
   };
 
