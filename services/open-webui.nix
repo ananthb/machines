@@ -61,13 +61,16 @@ in {
       # RAG
       PDF_EXTRACT_IMAGES = "True";
     };
-    # Google OAuth credentials from shared gcloud-oauth vault secret
-    serviceConfig = {
-      ExecStartPre = [
-        "+${pkgs.bash}/bin/bash -c 'printf \"GOOGLE_CLIENT_ID=%%s\\nGOOGLE_CLIENT_SECRET=%%s\\n\" \"$(cat ${vs.gcloud-oauth}/client_id)\" \"$(cat ${vs.gcloud-oauth}/client_secret)\" > /run/open-webui-oauth.env'"
-      ];
-      EnvironmentFile = ["/run/open-webui-oauth.env"];
-    };
+    # Google OAuth credentials from shared gcloud-oauth vault secret.
+    # Use ExecStart wrapper instead of EnvironmentFile to avoid race
+    # where systemd evaluates EnvironmentFile before ExecStartPre runs.
+    serviceConfig.ExecStart = lib.mkForce (
+      pkgs.writeShellScript "open-webui-start" ''
+        export GOOGLE_CLIENT_ID="$(cat ${vs.gcloud-oauth}/client_id)"
+        export GOOGLE_CLIENT_SECRET="$(cat ${vs.gcloud-oauth}/client_secret)"
+        exec ${config.services.open-webui.package}/bin/open-webui serve --host "::" --port 8090
+      ''
+    );
   };
 
   services.postgresql = {
