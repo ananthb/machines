@@ -311,6 +311,7 @@ in {
           };
           policies.settings = {
             apiVersion = 1;
+            resetPolicies = [1];
             policies = [
               {
                 orgId = 1;
