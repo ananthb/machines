@@ -274,6 +274,16 @@
           path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.enterprise;
         };
       };
+
+      stargazer = {
+        system = "aarch64-linux";
+        hostname = "stargazer";
+        profiles.system = {
+          sshUser = "root";
+          user = "root";
+          path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.stargazer;
+        };
+      };
     };
 
     checks = forAllSystems (

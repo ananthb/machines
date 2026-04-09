@@ -16,6 +16,7 @@ in {
   services.starla = {
     enable = true;
     reportInterfaceStats = true;
+    metrics.listenAddr = "[::]:9695";
   };
 
   virtualisation.quadlet = {
