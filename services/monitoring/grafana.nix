@@ -263,7 +263,7 @@ in {
                   (mkAlert {
                     uid = "gex1disk0n6dcf";
                     title = "Disk Space Critical";
-                    expr = ''node_filesystem_avail_bytes{mountpoint=~"/|/srv|/var/garnix/persist"} / node_filesystem_size_bytes * 100'';
+                    expr = ''node_filesystem_avail_bytes{mountpoint=~"/|/srv"} / node_filesystem_size_bytes * 100'';
                     threshold = 10;
                     duration = "5m";
                     summary = "{{ $labels.instance }} {{ $labels.mountpoint }} has {{ $value | printf \"%.0f\" }}% free";
