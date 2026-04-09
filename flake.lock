@@ -609,11 +609,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775681244,
-        "narHash": "sha256-jso5WNOnoe/qDrnCP0sjIFbSzBliaPQxO/KonHhk6Cg=",
+        "lastModified": 1775764033,
+        "narHash": "sha256-cxtSw6PG66M9zmgVDmA/GzhzaMGhUf1sU3W5t2D2Ctg=",
         "owner": "ananthb",
         "repo": "starla",
-        "rev": "69b870c2911a8e819d80a128e682b9c713c597fb",
+        "rev": "5b022feb0296a9186357c322f9c8258709a43b09",
         "type": "github"
       },
       "original": {
