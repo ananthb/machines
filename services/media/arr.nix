@@ -98,6 +98,7 @@ in {
         matchMode = "partial";
         action = "inject";
         duplicateCategories = true;
+        searchCadence = "1d";
       };
       settingsFile = "${vs.arr}/cross-seed/config.json";
     };
