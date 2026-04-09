@@ -18,6 +18,9 @@ in {
     enable = true;
     host = "::";
     port = 8090;
+    package = pkgs.open-webui.overrideAttrs (old: {
+      dependencies = (old.dependencies or []) ++ [pkgs.python313Packages.psycopg2];
+    });
   };
 
   systemd.services.open-webui = {
@@ -62,15 +65,27 @@ in {
       PDF_EXTRACT_IMAGES = "True";
     };
     # Google OAuth credentials from shared gcloud-oauth vault secret.
-    # Use ExecStart wrapper instead of EnvironmentFile to avoid race
-    # where systemd evaluates EnvironmentFile before ExecStartPre runs.
-    serviceConfig.ExecStart = lib.mkForce (
-      pkgs.writeShellScript "open-webui-start" ''
-        export GOOGLE_CLIENT_ID="$(cat ${vs.gcloud-oauth}/client_id)"
-        export GOOGLE_CLIENT_SECRET="$(cat ${vs.gcloud-oauth}/client_secret)"
-        exec ${config.services.open-webui.package}/bin/open-webui serve --host "::" --port 8090
-      ''
-    );
+    # ExecStartPre+ runs as root to read vault secrets and write an env
+    # file, then ExecStart sources it. We can't use EnvironmentFile=
+    # because systemd evaluates it before ExecStartPre runs.
+    serviceConfig = {
+      ExecStartPre = [
+        "+${pkgs.writeShellScript "open-webui-write-oauth-env" ''
+          printf "GOOGLE_CLIENT_ID=%s\nGOOGLE_CLIENT_SECRET=%s\n" \
+            "$(cat ${vs.gcloud-oauth}/client_id)" \
+            "$(cat ${vs.gcloud-oauth}/client_secret)" \
+            > /run/open-webui-oauth.env
+        ''}"
+      ];
+      ExecStart = lib.mkForce (
+        pkgs.writeShellScript "open-webui-start" ''
+          set -a
+          . /run/open-webui-oauth.env
+          set +a
+          exec ${config.services.open-webui.package}/bin/open-webui serve --host "::" --port 8090
+        ''
+      );
+    };
   };
 
   services.postgresql = {
