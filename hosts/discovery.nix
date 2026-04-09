@@ -1,7 +1,10 @@
-{...}: {
+{inputs, ...}: {
   imports = [
     ./shared/darwin.nix
+    inputs.starla.darwinModules.default
   ];
+
+  services.starla.enable = true;
 
   homebrew = {
     brews = [
