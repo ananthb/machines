@@ -32,7 +32,7 @@
     config = {
       recorder.db_url = "postgresql://@/hass";
 
-      frigate.url = "http://enterprise:8967";
+      frigate.url = "http://enterprise:5000";
 
       input_boolean.roomba_ran_today = {
         name = "Roomba ran today";
