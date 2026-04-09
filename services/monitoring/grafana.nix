@@ -84,7 +84,7 @@
       };
       notification_settings =
         {
-          receiver = "grafana-default-telegram";
+          receiver = "grafana-default-discord";
         }
         // (
           if muteAtNight
@@ -314,7 +314,7 @@ in {
             policies = [
               {
                 orgId = 1;
-                receiver = "grafana-default-telegram";
+                receiver = "grafana-default-discord";
                 group_by = [
                   "grafana_folder"
                   "alertname"
