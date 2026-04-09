@@ -99,5 +99,8 @@
     };
   };
 
-  systemd.services.fluent-bit.serviceConfig.StateDirectory = "fluent-bit";
+  systemd.services.fluent-bit.serviceConfig = {
+    StateDirectory = "fluent-bit";
+    SupplementaryGroups = ["systemd-journal-remote"];
+  };
 }
