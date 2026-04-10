@@ -140,7 +140,12 @@ in {
 
     codespace-zed = {
       enable = true;
-      targets = {};
+      targets = {
+        triton = {
+          repository = "rpcpool/rpcpool";
+          branch = "main";
+        };
+      };
     };
 
     nix-index-database.comma.enable = true;
