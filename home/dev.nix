@@ -140,6 +140,7 @@ in {
 
     codespace-zed = {
       enable = true;
+      defaultTarget = "triton";
       targets = {
         triton = {
           repository = "rpcpool/rpcpool";
