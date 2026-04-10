@@ -71,6 +71,16 @@
       enableUserSlices = true;
       enableSystemSlice = true;
     };
+
+    # Prevent journal-upload failures from marking the system as degraded,
+    # which would cause deploy-rs to roll back on transient network blips.
+    services.systemd-journal-upload = {
+      unitConfig.StartLimitIntervalSec = 0;
+      serviceConfig = {
+        Restart = "always";
+        RestartSec = 5;
+      };
+    };
   };
 
   # Journald: size limits + forward to central log server via Tailscale
