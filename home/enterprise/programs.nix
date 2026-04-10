@@ -17,7 +17,6 @@
     vscode
     wireshark
     wl-clipboard
-    zed-editor
   ];
 
   programs = {

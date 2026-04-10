@@ -98,6 +98,14 @@
       };
     };
 
+    zed-spaces-launcher = {
+      url = "github:ananthb/zed-spaces-launcher";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "ht32-panel/flake-utils";
+      };
+    };
+
     vault-secrets = {
       url = "github:serokell/vault-secrets";
       inputs.nixpkgs.follows = "nixpkgs";

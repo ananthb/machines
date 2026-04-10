@@ -547,7 +547,8 @@
         "starla": "starla",
         "switchyard": "switchyard",
         "tsnsrv": "tsnsrv",
-        "vault-secrets": "vault-secrets"
+        "vault-secrets": "vault-secrets",
+        "zed-spaces-launcher": "zed-spaces-launcher"
       }
     },
     "rust-overlay": {
@@ -731,6 +732,30 @@
       "original": {
         "owner": "serokell",
         "repo": "vault-secrets",
+        "type": "github"
+      }
+    },
+    "zed-spaces-launcher": {
+      "inputs": {
+        "flake-utils": [
+          "ht32-panel",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775822964,
+        "narHash": "sha256-eYZ5fBDy7qqtQ51CacCPa6CvLUouv41nnGdrDg2TTNU=",
+        "owner": "ananthb",
+        "repo": "zed-spaces-launcher",
+        "rev": "87436b95e23858f3cc25ac5b0d522555307e9152",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ananthb",
+        "repo": "zed-spaces-launcher",
         "type": "github"
       }
     }

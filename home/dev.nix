@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   ...
 }: let
@@ -8,6 +9,7 @@
 in {
   imports = [
     inputs.nixvim.homeModules.nixvim
+    inputs.zed-spaces-launcher.homeManagerModules.default
   ];
 
   sops = {
@@ -40,23 +42,27 @@ in {
     };
   };
 
-  home.packages = with pkgs; [
-    claude-code
-    delta
-    devenv
-    flyctl
-    fzf
-    gemini-cli
-    gh
-    git
-    gnupg
-    hack-font
-    lazygit
-    mosh
-    nix-output-monitor
-    ripgrep
-    vault
-  ];
+  home.packages = with pkgs;
+    [
+      claude-code
+      delta
+      devenv
+      flyctl
+      fzf
+      gemini-cli
+      gh
+      git
+      gnupg
+      hack-font
+      lazygit
+      mosh
+      nix-output-monitor
+      ripgrep
+      vault
+    ]
+    ++ lib.optionals stdenv.isLinux [
+      zed-editor
+    ];
 
   programs = {
     direnv = {
@@ -130,6 +136,11 @@ in {
 
         receive.fsckObjects = "true";
       };
+    };
+
+    codespace-zed = {
+      enable = true;
+      targets = {};
     };
 
     nix-index-database.comma.enable = true;
