@@ -15,9 +15,9 @@ jobs:
   tailscale-acl:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ./version-cache.json
           key: version-cache.json-${{ github.run_id }}
@@ -25,7 +25,7 @@ jobs:
 
       - name: Test ACL
         if: github.event_name == 'pull_request'
-        uses: tailscale/gitops-acl-action@v1
+        uses: tailscale/gitops-acl-action@4105afd651aa659e0eec9031a10360c39fbc0804 # v1
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -34,7 +34,7 @@ jobs:
 
       - name: Apply ACL
         if: github.event_name == 'push'
-        uses: tailscale/gitops-acl-action@v1
+        uses: tailscale/gitops-acl-action@4105afd651aa659e0eec9031a10360c39fbc0804 # v1
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
@@ -83,11 +83,11 @@ jobs:
     needs: [tailscale-acl, wait-for-garnix]
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/nix-installer-action@b66b36319cc6fde4ea85edd583b088c65d6b8710 # main
 
-      - uses: tailscale/github-action@v3
+      - uses: tailscale/github-action@6cae46e2d796f265265cfcf628b72a32b4d7cade # v3
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
