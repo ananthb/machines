@@ -294,7 +294,7 @@
           ];
         }
         {
-          alias = "Turn off ACs running for more than 4 hours";
+          alias = "Turn off ACs running for more than 2 hours";
           mode = "single";
           trigger = [
             {
@@ -305,13 +305,40 @@
           condition = [
             {
               condition = "template";
-              value_template = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=4)) | list | count > 0 }}";
+              value_template = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | list | count > 0 }}";
             }
           ];
           action = [
             {
               service = "climate.turn_off";
-              target.entity_id = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=4)) | map(attribute='entity_id') | list }}";
+              target.entity_id = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | map(attribute='entity_id') | list }}";
+            }
+          ];
+        }
+        {
+          alias = "Notify when AC running for more than 30 minutes";
+          mode = "single";
+          trigger = [
+            {
+              platform = "time_pattern";
+              minutes = "/30";
+            }
+          ];
+          condition = [
+            {
+              condition = "template";
+              value_template = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | list | count > 0 }}";
+            }
+          ];
+          action = [
+            {
+              service = "notify.notify";
+              data = {
+                title = "AC Still Running";
+                message = ''
+                  {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | map(attribute='name') | list | join(', ') }} has been running for more than 30 minutes.
+                '';
+              };
             }
           ];
         }
