@@ -105,9 +105,7 @@ in {
   services = {
     grafana = {
       enable = true;
-      declarativePlugins = with pkgs.grafanaPlugins; [
-        victoriametrics-logs-datasource
-      ];
+      declarativePlugins = with pkgs.grafanaPlugins; [];
       settings = {
         database = {
           type = "postgres";
@@ -161,11 +159,6 @@ in {
               httpMethod = "POST";
               manageAlerts = true;
             };
-          }
-          {
-            url = "http://localhost:9428";
-            name = "VictoriaLogs";
-            type = "victoriametrics-logs-datasource";
           }
         ];
         dashboards.settings.providers = [

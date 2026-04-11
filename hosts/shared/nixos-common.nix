@@ -56,17 +56,6 @@
           }
       )
       config.vault-secrets.secrets)
-    # Prevent journal-upload failures from marking the system as degraded,
-    # which would cause deploy-rs to roll back on transient network blips.
-    {
-      systemd-journal-upload = {
-        unitConfig.StartLimitIntervalSec = 0;
-        serviceConfig = {
-          Restart = lib.mkForce "always";
-          RestartSec = lib.mkForce 5;
-        };
-      };
-    }
   ];
 
   # Disable NixOS documentation generation on servers.
@@ -84,17 +73,10 @@
     };
   };
 
-  # Journald: size limits + forward to central log server via Tailscale
-  services.journald = {
-    extraConfig = ''
-      SystemMaxUse=500M
-      RuntimeMaxUse=100M
-    '';
-    upload = {
-      enable = true;
-      settings.Upload.URL = "http://kedi-cloud-garnix1:19532";
-    };
-  };
+  services.journald.extraConfig = ''
+    SystemMaxUse=500M
+    RuntimeMaxUse=100M
+  '';
 
   networking.firewall = {
     enable = true;
