@@ -44,7 +44,7 @@ in {
     };
 
     # SCGI proxy for Radarr/Sonarr/Prowlarr to reach rTorrent
-    caddy.virtualHosts."rtorrent-scgi:8000" = {
+    caddy.virtualHosts."http://localhost:8000" = {
       extraConfig = ''
         reverse_proxy unix//run/rtorrent/rpc.sock {
           transport scgi
