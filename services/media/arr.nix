@@ -96,8 +96,8 @@ in {
         action = "inject";
         duplicateCategories = true;
         searchCadence = "1d";
-        excludeRecentSearch = "90d";
-        excludeOlder = "365d";
+        excludeRecentSearch = "45d";
+        excludeOlder = "180d";
       };
       settingsFile = "${vs.arr}/cross-seed/config.json";
     };
