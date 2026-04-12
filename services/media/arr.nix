@@ -203,7 +203,7 @@ in {
     };
 
     flood = {
-      serviceConfig.SupplementaryGroups = ["media" "rtorrent"];
+      serviceConfig.SupplementaryGroups = ["media"];
       after = ["rtorrent.service"];
       requires = ["rtorrent.service"];
       partOf = ["kedi.target"];
