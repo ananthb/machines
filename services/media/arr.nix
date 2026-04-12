@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   username,
   ...
 }: let
@@ -19,79 +18,102 @@ in {
 
   # Services
   services = {
-    qbittorrent = {
+    rtorrent = {
       enable = true;
       group = "media";
-      openFirewall = true;
-      webuiPort = 18080;
-      serverConfig = {
-        LegalNotice.Accepted = true;
-        BitTorrent = {
-          MergeTrackersEnabled = true;
-          Session = {
-            AddTorrentStopped = false;
-            DefaultSavePath = "/srv/media/Downloads";
-            MaxActiveTorrents = -1;
-            MaxActiveUploads = -1;
-            MaxConnections = -1;
-            MaxConnectionsPerTorrent = -1;
-            MaxUploads = -1;
-            MaxUploadsPerTorrent = -1;
-            ProxyPeerConnections = false;
-            QueueingSystemEnabled = true;
-          };
-        };
-        Preferences = {
-          WebUI = {
-            Port = 18080;
-            LocalHostAuth = false;
-            AuthSubnetWhitelist = "0.0.0.0/0,::/0";
-            AuthSubnetWhitelistEnabled = true;
-            AlternativeUIEnabled = true;
-            RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
-          };
-        };
-        Network = {
-          Proxy = {
-            AuthEnabled = false;
-            HostnameLookupEnabled = true;
-            IP = "127.0.0.1";
-            Port = 8888;
-            Type = "SOCKS5";
-            Profiles = {
-              BitTorrent = true;
-              Misc = true;
-              RSS = true;
-            };
-          };
-        };
-      };
+
+      downloadDir = "/srv/media/Downloads";
+      configText = lib.mkForce ''
+        # Network & connection settings
+        network.port_range.set = 50000-50000
+        network.port_random.set = no
+
+        # SOCKS5 proxy via Cloudflare WARP
+        network.proxy_address.set = 127.0.0.1:8888
+
+        # Directory structure
+        directory.default.set = /srv/media/Downloads
+        session.path.set = /var/lib/rtorrent/.session
+
+        # Performance tuning
+        throttle.max_uploads.set = 100
+        throttle.max_uploads.global.set = 250
+        throttle.min_peers.normal.set = 20
+        throttle.max_peers.normal.set = 60
+        throttle.min_peers.seed.set = 30
+        throttle.max_peers.seed.set = 80
+        pieces.memory.max.set = 2048M
+        network.max_open_files.set = 600
+        network.max_open_sockets.set = 300
+
+        # Encoding
+        encoding.add = utf8
+
+        # Disable DHT/PEX for private trackers
+        dht.mode.set = disable
+        protocol.pex.set = no
+        trackers.use_udp.set = no
+
+        # SCGI socket for flood
+        network.scgi.open_local = /run/rtorrent/rpc.sock
+        schedule2 = scgi_permission, 0, 0, "execute.nothrow = chmod, 0660, /run/rtorrent/rpc.sock"
+
+        # Define throttle groups
+        # "slow" throttle: 10 MiB/s upload for seeded torrents
+        throttle.up = slow, 10240
+
+        # Ratio handling: seed to 2.0 ratio or 10 days (14400 min), then throttle
+        # group2.seeding.ratio: ratio in 100ths (200 = 2.0x)
+        group2.seeding.ratio.min.set = 200
+        group2.seeding.ratio.max.set = 300
+        group2.seeding.ratio.upload.set = 1M
+
+        # When ratio is met, move to slow throttle instead of closing
+        method.set = group.seeding.ratio.command, "d.throttle_name.set=slow"
+
+        # Logging
+        log.open_file = "rtorrent", /var/lib/rtorrent/rtorrent.log
+        log.add_output = "info", "rtorrent"
+      '';
+    };
+
+    flood = {
+      enable = true;
+      port = 18080;
+      host = "127.0.0.1";
+      extraArgs = [
+        "--rtsocket"
+        "/run/rtorrent/rpc.sock"
+        "--noauth"
+      ];
     };
 
     radarr = {
       enable = true;
       group = "media";
-      openFirewall = true;
     };
 
     sonarr = {
       enable = true;
       group = "media";
-      openFirewall = true;
     };
 
     prowlarr = {
       enable = true;
-      openFirewall = true;
     };
 
     seerr.enable = true;
+
+    bazarr = {
+      enable = true;
+      group = "media";
+    };
 
     cross-seed = {
       enable = true;
       group = "media";
       settings = {
-        torrentClients = ["qbittorrent:http://localhost:18080"];
+        torrentClients = ["rtorrent:unix:///run/rtorrent/rpc.sock"];
         dataDirs = ["/srv/media/Downloads"];
         linkType = "hardlink";
         linkDirs = ["/srv/media/cross-seed"];
@@ -100,7 +122,7 @@ in {
         duplicateCategories = true;
         searchCadence = "1d";
         excludeRecentSearch = "3d";
-        excludeOlder = "9d";
+        excludeOlder = "365d";
       };
       settingsFile = "${vs.arr}/cross-seed/config.json";
     };
@@ -162,27 +184,36 @@ in {
   };
 
   my-services.kediTargets = {
-    qbittorrent = true;
+    rtorrent = true;
+    flood = true;
     radarr = true;
     sonarr = true;
     prowlarr = true;
+    bazarr = true;
     seerr = true;
     cross-seed = true;
   };
 
   systemd.services = {
-    qbittorrent = {
+    rtorrent = {
       serviceConfig.UMask = "0002";
       serviceConfig.SupplementaryGroups = ["media"];
       partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
+    flood = {
+      serviceConfig.SupplementaryGroups = ["media" "rtorrent"];
+      after = ["rtorrent.service"];
+      requires = ["rtorrent.service"];
+      partOf = ["kedi.target"];
+    };
+
     radarr = {
       serviceConfig.UMask = lib.mkForce "0002";
       serviceConfig.SupplementaryGroups = ["media"];
       after = ["postgresql.service"];
-      wants = ["qbittorrent.service"];
+      wants = ["rtorrent.service"];
       partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
@@ -212,6 +243,15 @@ in {
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
+    bazarr = {
+      serviceConfig.UMask = lib.mkForce "0002";
+      serviceConfig.SupplementaryGroups = ["media"];
+      after = ["radarr.service" "sonarr.service"];
+      wants = ["radarr.service" "sonarr.service"];
+      partOf = ["kedi.target"];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
+    };
+
     seerr = {
       environment = {
         DB_TYPE = "postgres";
@@ -227,11 +267,11 @@ in {
 
     cross-seed = {
       after = [
-        "qbittorrent.service"
+        "rtorrent.service"
         "prowlarr.service"
       ];
       wants = [
-        "qbittorrent.service"
+        "rtorrent.service"
         "prowlarr.service"
       ];
       serviceConfig.UMask = "0002";

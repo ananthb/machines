@@ -21,7 +21,6 @@
       ps.jellyfin-apiclient-python
       ps.psycopg2
       ps.pywizlight
-      ps.qbittorrent-api
     ];
 
     extraComponents = [

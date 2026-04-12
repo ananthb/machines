@@ -179,8 +179,8 @@
               };
             }
             {
-              "qBittorrent" = {
-                icon = "qbittorrent";
+              "Flood" = {
+                icon = "flood";
                 description = "Torrent downloader";
                 href = "http://endeavour:18080";
               };
