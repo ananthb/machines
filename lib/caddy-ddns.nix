@@ -44,8 +44,9 @@
             "github.com/mholt/caddy-dynamicdns@v0.0.0-20251020155855-d8f490a28db6"
             "github.com/mietzen/caddy-dynamicdns-cmd-source@v0.2.0"
             "github.com/caddy-dns/cloudflare@v0.2.2"
+            "github.com/Elegant996/scgi-transport@v1.1.9"
           ];
-          hash = "sha256-LDhCVKlOAbmdoVnNUmJQPB3eqTolKsGB3PfSZusd3M8=";
+          hash = "sha256-N+kyJjwQSiWzxZG5PAN5eY7ztvWHzT63BvALwGXtoAk=";
         };
 
       globalConfig = ''
