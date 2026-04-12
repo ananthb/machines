@@ -46,7 +46,7 @@ in {
     flood = {
       enable = true;
       port = 18080;
-      host = "127.0.0.1";
+      host = "::";
       extraArgs = [
         "--rtsocket"
         "/run/rtorrent/rpc.sock"
