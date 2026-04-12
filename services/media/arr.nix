@@ -23,57 +23,23 @@ in {
       group = "media";
 
       downloadDir = "/srv/media/Downloads";
-      configText = lib.mkForce ''
-        # Network & connection settings
-        network.port_range.set = 50000-50000
-        network.port_random.set = no
-
+      configText = ''
         # SOCKS5 proxy via Cloudflare WARP
         network.proxy_address.set = 127.0.0.1:8888
 
-        # Directory structure
-        directory.default.set = /srv/media/Downloads
-        session.path.set = /var/lib/rtorrent/.session
-
         # Performance tuning
-        throttle.max_uploads.set = 100
-        throttle.max_uploads.global.set = 250
-        throttle.min_peers.normal.set = 20
-        throttle.max_peers.normal.set = 60
-        throttle.min_peers.seed.set = 30
-        throttle.max_peers.seed.set = 80
         pieces.memory.max.set = 2048M
         network.max_open_files.set = 600
         network.max_open_sockets.set = 300
 
-        # Encoding
-        encoding.add = utf8
-
-        # Disable DHT/PEX for private trackers
-        dht.mode.set = disable
-        protocol.pex.set = no
-        trackers.use_udp.set = no
-
-        # SCGI socket for flood
-        network.scgi.open_local = /run/rtorrent/rpc.sock
-        schedule2 = scgi_permission, 0, 0, "execute.nothrow = chmod, 0660, /run/rtorrent/rpc.sock"
-
-        # Define throttle groups
         # "slow" throttle: 10 MiB/s upload for seeded torrents
         throttle.up = slow, 10240
 
-        # Ratio handling: seed to 2.0 ratio or 10 days (14400 min), then throttle
-        # group2.seeding.ratio: ratio in 100ths (200 = 2.0x)
+        # Ratio handling: seed to 2.0 then throttle (never stop)
         group2.seeding.ratio.min.set = 200
         group2.seeding.ratio.max.set = 300
         group2.seeding.ratio.upload.set = 1M
-
-        # When ratio is met, move to slow throttle instead of closing
         method.set = group.seeding.ratio.command, "d.throttle_name.set=slow"
-
-        # Logging
-        log.open_file = "rtorrent", /var/lib/rtorrent/rtorrent.log
-        log.add_output = "info", "rtorrent"
       '';
     };
 
