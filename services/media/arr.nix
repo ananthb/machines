@@ -89,7 +89,7 @@ in {
       enable = true;
       group = "media";
       settings = {
-        torrentClients = ["rtorrent:unix:///run/rtorrent/rpc.sock"];
+        torrentClients = ["rtorrent:http://localhost:8000/RPC2"];
         dataDirs = ["/srv/media/Downloads"];
         linkType = "hardlink";
         linkDirs = ["/srv/media/cross-seed"];
