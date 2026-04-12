@@ -14,6 +14,7 @@ in {
   # Media group membership
   users.groups.media.members = [
     username
+    "caddy"
   ];
 
   # Services
