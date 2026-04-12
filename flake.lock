@@ -746,11 +746,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775983362,
-        "narHash": "sha256-+Y9OdVOeRMof3t0wXxPDkYV9fOvBuR6NWczPK4lmPio=",
+        "lastModified": 1775985542,
+        "narHash": "sha256-A+Yi3Ta53eyhdObxXrBR0RgRkiD8tYXm9pWrxgTiptU=",
         "owner": "ananthb",
         "repo": "zed-spaces-launcher",
-        "rev": "be5a5c90d9fa0fc8151df64580fb202255f14491",
+        "rev": "dbef0a7360b94c32f052766b7d72022cf2dbb67e",
         "type": "github"
       },
       "original": {

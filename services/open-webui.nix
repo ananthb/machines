@@ -24,6 +24,8 @@ in {
   };
 
   systemd.services.open-webui = {
+    after = ["postgresql.service"];
+    requires = ["postgresql.service"];
     partOf = ["kedi.target"];
     environment = {
       ENV = "prod";
