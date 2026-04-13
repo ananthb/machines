@@ -325,7 +325,7 @@ in {
           environments = {
             USERNAME = "admin";
             PASSWORD = "stacks";
-            SOLVERR_URL = "flaresolverr:8191";
+            SOLVERR_URL = "http://flaresolverr:8191";
             TZ = config.time.timeZone;
           };
         };
