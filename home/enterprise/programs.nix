@@ -33,11 +33,13 @@
       ];
     };
 
-    git.settings = {
-      gpg.format = "ssh";
-      user.signingkey = "~/.ssh/yubikey_5c_nano";
-      commit.gpgsign = "true";
-      credential = {
+    git = {
+      signing = {
+        format = "ssh";
+        key = "~/.ssh/yubikey_5c_nano";
+        signByDefault = true;
+      };
+      settings.credential = {
         helper = "!/etc/profiles/per-user/ananth/bin/gh auth git-credential";
         "https://github.com".username = "ananthb";
       };

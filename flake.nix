@@ -7,9 +7,30 @@
       flake = false;
     };
 
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "ht32-panel/flake-utils";
+    };
+
+    garnix-lib = {
+      url = "github:garnix-io/garnix-lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
     };
 
     homebrew-cask = {
@@ -19,11 +40,6 @@
 
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
 
@@ -45,6 +61,11 @@
       };
     };
 
+    mithril = {
+      url = "github:ananthb/mithril/fix/vote-nil-root-and-slot-log";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -54,6 +75,11 @@
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    NixVirt = {
+      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -69,8 +95,10 @@
       };
     };
 
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
+    quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -84,11 +112,6 @@
       };
     };
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     switchyard = {
       url = "github:alyraffauf/switchyard";
       inputs = {
@@ -98,12 +121,10 @@
       };
     };
 
-    zed-spaces-launcher = {
-      url = "github:ananthb/zed-spaces-launcher";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "ht32-panel/flake-utils";
-      };
+    tsnsrv = {
+      url = "github:boinkor-net/tsnsrv";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "nixvim/flake-parts";
     };
 
     vault-secrets = {
@@ -112,32 +133,12 @@
       inputs.flake-compat.follows = "deploy-rs/flake-compat";
     };
 
-    mithril = {
-      url = "github:ananthb/mithril/fix/vote-nil-root-and-slot-log";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    NixVirt = {
-      url = "https://flakehub.com/f/AshleyYakeley/NixVirt/*.tar.gz";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
-
-    tsnsrv = {
-      url = "github:boinkor-net/tsnsrv";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "nixvim/flake-parts";
-    };
-
-    deploy-rs = {
-      url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "ht32-panel/flake-utils";
-    };
-
-    garnix-lib = {
-      url = "github:garnix-io/garnix-lib";
-      inputs.nixpkgs.follows = "nixpkgs";
+    zed-spaces-launcher = {
+      url = "github:ananthb/zed-spaces-launcher";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "ht32-panel/flake-utils";
+      };
     };
   };
 

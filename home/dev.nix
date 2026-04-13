@@ -92,6 +92,7 @@ in {
 
     git = {
       enable = true;
+      signing.format = lib.mkDefault null;
 
       settings = {
         user = {

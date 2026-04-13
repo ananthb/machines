@@ -15,7 +15,7 @@ _: {
       };
       outgoing.request_timeout = 10;
     };
-    runInUwsgi = true;
+    configureUwsgi = true;
     uwsgiConfig = {
       http = "[::]:8890";
       disable-logging = true;
