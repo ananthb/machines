@@ -265,7 +265,7 @@
     deploy.nodes = {
       endeavour = {
         system = "x86_64-linux";
-        hostname = "endeavour";
+        hostname = "endeavour.tail42937.ts.net";
         profiles.system = {
           sshUser = "root";
           user = "root";

@@ -100,6 +100,13 @@
       AddKeysToAgent yes
   '';
 
+  environment.systemPackages = with pkgs; [
+    mas
+    yubioath-flutter
+  ];
+
+  services.prometheus.exporters.node.enable = true;
+
   fonts.packages = [pkgs.hack-font];
 
   homebrew = {
@@ -112,19 +119,13 @@
     taps = builtins.attrNames config.nix-homebrew.taps;
 
     brews = [
-      "mas"
       "openssh" # needed for yubikey ssh keys
-      {
-        name = "node_exporter";
-        start_service = true;
-      }
     ];
     casks = [
       "ddpm"
       "logi-options+"
       "rectangle-pro"
       "scroll-reverser"
-      "yubico-authenticator"
     ];
     masApps = {
       "Tailscale" = 1475387142;

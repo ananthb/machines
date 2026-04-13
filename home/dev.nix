@@ -1,7 +1,6 @@
 {
   config,
   inputs,
-  lib,
   pkgs,
   ...
 }: let
@@ -42,27 +41,31 @@ in {
     };
   };
 
-  home.packages = with pkgs;
-    [
-      claude-code
-      delta
-      devenv
-      flyctl
-      fzf
-      gemini-cli
-      gh
-      git
-      gnupg
-      hack-font
-      lazygit
-      mosh
-      nix-output-monitor
-      ripgrep
-      vault
-    ]
-    ++ lib.optionals stdenv.isLinux [
-      zed-editor
-    ];
+  home.packages = with pkgs; [
+    activitywatch
+    claude-code
+    delta
+    devenv
+    flyctl
+    fzf
+    gemini-cli
+    gh
+    ghostty
+    gimp
+    git
+    gnupg
+    hack-font
+    jellyfin-media-player
+    lazygit
+    mosh
+    nix-output-monitor
+    ripgrep
+    rpi-imager
+    vault
+    vlc
+    vscode
+    zed-editor
+  ];
 
   programs = {
     direnv = {
