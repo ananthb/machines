@@ -1,5 +1,6 @@
 {
   config,
+  containerImages,
   lib,
   pkgs,
   username,
@@ -169,6 +170,8 @@ in {
     bazarr = true;
     seerr = true;
     cross-seed = true;
+    flaresolverr = true;
+    stacks = true;
   };
 
   systemd.services = {
@@ -260,6 +263,13 @@ in {
       unitConfig.ConditionPathIsMountPoint = "/srv";
     };
 
+    flaresolverr.partOf = ["kedi.target"];
+
+    stacks = {
+      partOf = ["kedi.target"];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
+    };
+
     prometheus-exportarr-radarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-sonarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
     prometheus-exportarr-prowlarr-exporter.unitConfig.ConditionPathIsMountPoint = "/srv";
@@ -268,11 +278,73 @@ in {
     prometheus-exportarr-prowlarr-exporter.serviceConfig.SupplementaryGroups = ["media"];
   };
 
+  # Stacks (Anna's Archive download manager) + FlareSolverr
+  virtualisation.quadlet = {
+    autoEscape = true;
+    autoUpdate.enable = true;
+
+    networks.stacks = {};
+
+    volumes = {
+      stacks-config = {};
+      stacks-logs = {};
+      stacks-incomplete = {};
+    };
+
+    containers = let
+      stacksNetwork = config.virtualisation.quadlet.networks.stacks.ref;
+      inherit (config.virtualisation.quadlet) volumes;
+    in {
+      flaresolverr = {
+        containerConfig = {
+          name = "flaresolverr";
+          image = containerImages.flaresolverr;
+          autoUpdate = "registry";
+          networks = [stacksNetwork];
+          environments = {
+            LOG_LEVEL = "info";
+            TZ = config.time.timeZone;
+          };
+        };
+        serviceConfig.Restart = "on-failure";
+      };
+
+      stacks = {
+        containerConfig = {
+          name = "stacks";
+          image = containerImages.stacks;
+          autoUpdate = "registry";
+          networks = [stacksNetwork];
+          publishPorts = ["7788:7788"];
+          volumes = [
+            "${volumes.stacks-config.ref}:/opt/stacks/config"
+            "/srv/media/Books:/opt/stacks/download"
+            "${volumes.stacks-logs.ref}:/opt/stacks/logs"
+            "${volumes.stacks-incomplete.ref}:/opt/stacks/incomplete"
+          ];
+          environments = {
+            USERNAME = "admin";
+            PASSWORD = "stacks";
+            SOLVERR_URL = "flaresolverr:8191";
+            TZ = config.time.timeZone;
+          };
+        };
+        serviceConfig.Restart = "on-failure";
+        unitConfig = {
+          RequiresMountsFor = "/srv";
+          After = "flaresolverr.service";
+          Wants = "flaresolverr.service";
+        };
+      };
+    };
+  };
+
   systemd.tmpfiles.rules = [
     "d /srv/media 0775 root media -"
     "d /srv/media/Downloads 0775 root media -"
     "d /srv/media/Movies 0775 root media -"
     "d /srv/media/Shows 0775 root media -"
+    "d /srv/media/Books 0775 root media -"
   ];
 
   vault-secrets.secrets.arr = {

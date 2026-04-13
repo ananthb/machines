@@ -9,5 +9,7 @@
   seafileAi = "docker.io/seafileltd/seafile-ai:13.0-latest";
   seadoc = "docker.io/seafileltd/sdoc-server:2.0-latest";
   collabora = "docker.io/collabora/code:latest";
+  flaresolverr = "ghcr.io/flaresolverr/flaresolverr:latest";
   frigate = "ghcr.io/blakeblackshear/frigate:stable";
+  stacks = "docker.io/zelest/stacks:latest";
 }
