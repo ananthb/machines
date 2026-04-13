@@ -162,26 +162,95 @@
 
     forAllSystems = nixpkgs.lib.genAttrs systems;
 
+    # Pre-instantiate nixpkgs per system so same-arch hosts share one
+    # evaluation instead of each creating their own (~1-2 GB heap each).
+    pkgsFor = system:
+      import nixpkgs {
+        inherit system;
+        config = {
+          allowUnfreePredicate = pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [
+              "b43-firmware"
+              "broadcom-bt-firmware"
+              "claude-code"
+              "cloudflare-warp"
+              "codex"
+              "copilot.vim"
+              "crush"
+              "discord"
+              "google-chrome"
+              "intel-ocl"
+              "open-webui"
+              "slack"
+              "steam"
+              "steam-unwrapped"
+              "vault"
+              "terraform"
+              "unrar"
+              "vault-bin"
+              "vscode"
+              "xone-dongle-firmware"
+              "xow_dongle-firmware"
+            ];
+          packageOverrides = pkgs: {
+            vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+          };
+        };
+        overlays = [
+          # Modify jellyfin-web index.html for the intro-skipper plugin.
+          (_final: prev: {
+            jellyfin-web = prev.jellyfin-web.overrideAttrs (
+              _finalAttrs: _previousAttrs: {
+                installPhase = ''
+                  runHook preInstall
+                  sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
+                  mkdir -p $out/share
+                  cp -a dist $out/share/jellyfin-web
+                  runHook postInstall
+                '';
+              }
+            );
+          })
+          # logiops patch: https://github.com/NixOS/nixpkgs/issues/226575#issuecomment-2813539847
+          (_: prev: {
+            logiops = prev.logiops.overrideAttrs (old: {
+              patches =
+                (old.patches or [])
+                ++ [
+                  (prev.fetchpatch {
+                    url = "https://github.com/PixlOne/logiops/commit/91aa0c12175f33a4184ccaf41181b0a799f7cc55.patch";
+                    hash = "sha256-A+StDD+Dp7lPWVpuYR9JR5RuvwPU/5h50B0lY8Qu7nY=";
+                  })
+                ];
+            });
+          })
+        ];
+      };
+
     mkNixosHost = {
       hostname,
       system,
       extraModules ? [],
+      passOutputs ? false,
     }:
       nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit
-            hostname
-            containerImages
-            inputs
-            system
-            username
-            ;
-          outputs = self;
-        };
+        specialArgs =
+          {
+            inherit
+              hostname
+              containerImages
+              inputs
+              system
+              username
+              ;
+          }
+          // nixpkgs.lib.optionalAttrs passOutputs {
+            outputs = self;
+          };
         modules =
           extraModules
           ++ [
-            {nixpkgs.hostPlatform = nixpkgs.lib.mkDefault system;}
+            {nixpkgs.pkgs = pkgsFor system;}
             ./hosts/${hostname}
           ];
       };
@@ -203,6 +272,7 @@
         modules =
           extraModules
           ++ [
+            {nixpkgs.pkgs = pkgsFor system;}
             ./hosts/${hostname}.nix
           ];
       };
@@ -213,6 +283,7 @@
       endeavour = mkNixosHost {
         hostname = "endeavour";
         system = "x86_64-linux";
+        passOutputs = true; # services/immich.nix uses outputs.lib.immichMlHosts
         extraModules = [
           lanzaboote.nixosModules.lanzaboote
           {_module.args.ipv6Token = "::e4de:a704";}
@@ -243,6 +314,7 @@
       kedi-cloud-garnix1 = mkNixosHost {
         hostname = "kedi-cloud-garnix1";
         system = "x86_64-linux";
+        passOutputs = true; # services/monitoring/victoriametrics.nix uses outputs.nixosConfigurations
       };
     };
 

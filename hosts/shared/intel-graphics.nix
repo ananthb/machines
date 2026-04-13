@@ -1,9 +1,7 @@
 # Intel GPU hardware acceleration (VAAPI/QSV).
 # Used by Immich, Jellyfin, and Frigate for hardware transcoding.
+# vaapiIntel hybrid codec override is in flake.nix pkgsFor.
 {pkgs, ...}: {
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-  };
   hardware.graphics = {
     enable = true;
     extraPackages = [

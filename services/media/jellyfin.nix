@@ -19,27 +19,7 @@ in {
     pkgs.jellyfin-ffmpeg
   ];
 
-  nixpkgs.overlays = [
-    # Modify jellyfin-web index.html for the intro-skipper plugin to work.
-    # intro skipper plugin has to be installed from the UI.
-    (_final: prev: {
-      jellyfin-web = prev.jellyfin-web.overrideAttrs (
-        _finalAttrs: _previousAttrs: {
-          installPhase = ''
-            runHook preInstall
-
-            # this is the important line
-            sed -i "s#</head>#<script src=\"configurationpage?name=skip-intro-button.js\"></script></head>#" dist/index.html
-
-            mkdir -p $out/share
-            cp -a dist $out/share/jellyfin-web
-
-            runHook postInstall
-          '';
-        }
-      );
-    })
-  ];
+  # jellyfin-web intro-skipper overlay is in flake.nix pkgsFor.
 
   services = {
     jellyfin = {

@@ -59,9 +59,6 @@ in {
   time.timeZone = "Asia/Kolkata";
   i18n.defaultLocale = "en_IN";
 
-  # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = system;
-
   system.autoUpgrade = {
     enable = true;
     flake = inputs.self.outPath;

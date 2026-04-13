@@ -77,9 +77,6 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-  # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = system;
-
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
   security.pam.services.sudo_local.reattach = true;
