@@ -45,12 +45,12 @@ in {
   home.packages = with pkgs;
     [
       claude-code
-      delta
       devenv
       flyctl
       fzf
       gemini-cli
       gh
+      git-absorb
       git
       gnupg
       hack-font
@@ -104,6 +104,16 @@ in {
         core.pager = "delta";
         init.defaultBranch = "main";
 
+        interactive.diffFilter = "delta --color-only";
+
+        delta = {
+          navigate = true;
+          side-by-side = true;
+          line-numbers = true;
+          syntax-theme = "base16-256";
+          dark = true;
+        };
+
         alias = {
           a = "add";
           b = "branch";
@@ -114,6 +124,7 @@ in {
           sw = "switch";
           co = "checkout";
           cp = "cherry-pick";
+          absorb = "absorb";
         };
 
         color = {
@@ -138,6 +149,7 @@ in {
         branch.sort = "-committerdate";
         merge.conflictStyle = "zdiff3";
         diff.algorithm = "histogram";
+        diff.colorMoved = "default";
         transfer.fsckObjects = "true";
         fetch.fsckObjects = "true";
 
@@ -162,7 +174,13 @@ in {
 
       opts = {
         number = true;
+        relativenumber = true;
         updatetime = 300;
+        signcolumn = "yes";
+        undofile = true;
+        scrolloff = 8;
+        splitright = true;
+        splitbelow = true;
       };
 
       globals.mapleader = " ";
@@ -193,7 +211,6 @@ in {
         aw-watcher.enable = true;
         barbecue.enable = true;
         bufferline.enable = true;
-        copilot-vim.enable = true;
 
         cmp = {
           enable = true;
@@ -206,12 +223,52 @@ in {
         };
         cmp-nvim-lsp.enable = true;
 
+        # Copilot through cmp instead of ghost text
+        copilot-lua = {
+          enable = true;
+          settings = {
+            suggestion.enabled = false;
+            panel.enabled = false;
+          };
+        };
+        copilot-cmp.enable = true;
+
+        # File explorer
+        oil = {
+          enable = true;
+          settings = {
+            view_options.show_hidden = true;
+            keymaps = {
+              "q" = "actions.close";
+              "<C-s>" = "actions.select_vsplit";
+            };
+          };
+        };
+
         fugitive.enable = true;
         gitblame.enable = true;
         gitsigns.enable = true;
         glow.enable = true;
         illuminate.enable = true;
-        leap.enable = true;
+
+        # Flash instead of leap
+        flash = {
+          enable = true;
+          settings.modes.search.enabled = false;
+        };
+
+        # Surround
+        nvim-surround.enable = true;
+
+        # Harpoon for quick file switching
+        harpoon.enable = true;
+
+        # Undotree
+        undotree = {
+          enable = true;
+          settings.FocusOnToggle = true;
+        };
+
         numbertoggle.enable = true;
 
         # Language server
@@ -295,7 +352,28 @@ in {
           };
         };
 
-        lsp-format.enable = true;
+        # Conform for formatting (replaces lsp-format + none-ls formatting)
+        conform-nvim = {
+          enable = true;
+          settings = {
+            format_on_save = {
+              timeout_ms = 2000;
+              lsp_format = "fallback";
+            };
+            formatters_by_ft = {
+              go = ["gofmt" "goimports"];
+              python = ["isort" "black"];
+              terraform = ["terraform_fmt"];
+              hcl = ["hclfmt"];
+              nomad = ["hclfmt"];
+              yaml = ["yamlfix"];
+              nix = ["alejandra"];
+              lua = ["stylua"];
+              "_" = ["trim_whitespace"];
+            };
+          };
+        };
+
         lsp-signature.enable = true;
         lualine.enable = true;
         navic.enable = true;
@@ -313,22 +391,71 @@ in {
               tfsec.enable = true;
               yamllint.enable = true;
             };
-            formatting = {
-              black.enable = true;
-              gofmt.enable = true;
-              goimports.enable = true;
-              hclfmt = {
-                enable = true;
-                settings.extra_filetypes = ["nomad"];
-              };
-              isort.enable = true;
-              terraform_fmt.enable = true;
-              yamlfix.enable = true;
-            };
           };
         };
         nvim-autopairs.enable = true;
         sleuth.enable = true;
+
+        # Treesitter with textobjects
+        treesitter = {
+          enable = true;
+          settings.highlight.enable = true;
+        };
+        treesitter-textobjects = {
+          enable = true;
+          settings = {
+            select = {
+              enable = true;
+              lookahead = true;
+              keymaps = {
+                "af" = {query = "@function.outer";};
+                "if" = {query = "@function.inner";};
+                "ac" = {query = "@class.outer";};
+                "ic" = {query = "@class.inner";};
+                "aa" = {query = "@parameter.outer";};
+                "ia" = {query = "@parameter.inner";};
+                "ai" = {query = "@conditional.outer";};
+                "ii" = {query = "@conditional.inner";};
+                "al" = {query = "@loop.outer";};
+                "il" = {query = "@loop.inner";};
+              };
+            };
+            move = {
+              enable = true;
+              set_jumps = true;
+              goto_next_start = {
+                "]f" = "@function.outer";
+                "]c" = "@class.outer";
+                "]a" = "@parameter.inner";
+              };
+              goto_next_end = {
+                "]F" = "@function.outer";
+                "]C" = "@class.outer";
+              };
+              goto_previous_start = {
+                "[f" = "@function.outer";
+                "[c" = "@class.outer";
+                "[a" = "@parameter.inner";
+              };
+              goto_previous_end = {
+                "[F" = "@function.outer";
+                "[C" = "@class.outer";
+              };
+            };
+            swap = {
+              enable = true;
+              swap_next = {
+                "<leader>sa" = "@parameter.inner";
+              };
+              swap_previous = {
+                "<leader>sA" = "@parameter.inner";
+              };
+            };
+          };
+        };
+
+        # Vim-tmux-navigator
+        tmux-navigator.enable = true;
 
         # Good old Telescope
         telescope = {
@@ -481,11 +608,62 @@ in {
         dap-virtual-text.enable = true;
 
         trouble.enable = true;
-        treesitter.enable = true;
         web-devicons.enable = true;
         which-key.enable = true;
         zig.enable = true;
       };
+
+      keymaps = [
+        # Oil file explorer
+        {
+          key = "-";
+          action = "<cmd>Oil<cr>";
+          options.desc = "Open parent directory";
+        }
+        # Undotree
+        {
+          key = "<leader>u";
+          action = "<cmd>UndotreeToggle<cr>";
+          options.desc = "Toggle undotree";
+        }
+        # Live grep
+        {
+          key = "<leader>fl";
+          action = "<cmd>Telescope live_grep<cr>";
+          options.desc = "Live grep";
+        }
+        # Harpoon
+        {
+          key = "<leader>ha";
+          action.__raw = "function() require'harpoon':list():add() end";
+          options.desc = "Harpoon add file";
+        }
+        {
+          key = "<leader>hh";
+          action.__raw = "function() local harpoon = require'harpoon'; harpoon.ui:toggle_quick_menu(harpoon:list()) end";
+          options.desc = "Harpoon menu";
+        }
+        {
+          key = "<leader>h1";
+          action.__raw = "function() require'harpoon':list():select(1) end";
+          options.desc = "Harpoon file 1";
+        }
+        {
+          key = "<leader>h2";
+          action.__raw = "function() require'harpoon':list():select(2) end";
+          options.desc = "Harpoon file 2";
+        }
+        {
+          key = "<leader>h3";
+          action.__raw = "function() require'harpoon':list():select(3) end";
+          options.desc = "Harpoon file 3";
+        }
+        {
+          key = "<leader>h4";
+          action.__raw = "function() require'harpoon':list():select(4) end";
+          options.desc = "Harpoon file 4";
+        }
+      ];
     };
   };
 }
