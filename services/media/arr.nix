@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   username,
   ...
 }: let
@@ -180,6 +181,7 @@ in {
 
     flood = {
       serviceConfig.SupplementaryGroups = ["media"];
+      path = [pkgs.mediainfo];
       after = ["rtorrent.service"];
       requires = ["rtorrent.service"];
       partOf = ["kedi.target"];
@@ -234,6 +236,8 @@ in {
         DB_SOCKET_PATH = "/var/run/postgresql";
         DB_USER = "seerr";
         DB_NAME = "seerr";
+        HTTP_PROXY = "socks5h://127.0.0.1:8888";
+        HTTPS_PROXY = "socks5h://127.0.0.1:8888";
       };
       after = ["postgresql.service"];
       wants = ["postgresql.service"];

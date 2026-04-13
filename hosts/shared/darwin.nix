@@ -82,6 +82,7 @@
 
   # Add ability to used TouchID for sudo authentication
   security.pam.services.sudo_local.touchIdAuth = true;
+  security.pam.services.sudo_local.reattach = true;
 
   # Manually set nixbld gid because this changed to 30000 by default.
   ids.gids.nixbld = 350;
@@ -102,7 +103,6 @@
 
   environment.systemPackages = with pkgs; [
     mas
-    yubioath-flutter
   ];
 
   services.prometheus.exporters.node.enable = true;
@@ -123,9 +123,14 @@
     ];
     casks = [
       "ddpm"
+      "ghostty"
+      "gimp"
       "logi-options+"
+      "raspberry-pi-imager"
       "rectangle-pro"
       "scroll-reverser"
+      "vlc"
+      "yubico-authenticator"
     ];
     masApps = {
       "Tailscale" = 1475387142;

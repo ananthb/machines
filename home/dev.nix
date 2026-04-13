@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  lib,
   pkgs,
   ...
 }: let
@@ -41,31 +42,34 @@ in {
     };
   };
 
-  home.packages = with pkgs; [
-    activitywatch
-    claude-code
-    delta
-    devenv
-    flyctl
-    fzf
-    gemini-cli
-    gh
-    ghostty
-    gimp
-    git
-    gnupg
-    hack-font
-    jellyfin-media-player
-    lazygit
-    mosh
-    nix-output-monitor
-    ripgrep
-    rpi-imager
-    vault
-    vlc
-    vscode
-    zed-editor
-  ];
+  home.packages = with pkgs;
+    [
+      claude-code
+      delta
+      devenv
+      flyctl
+      fzf
+      gemini-cli
+      gh
+      git
+      gnupg
+      hack-font
+      jellyfin-media-player
+      lazygit
+      mosh
+      nix-output-monitor
+      ripgrep
+      vault
+      vscode
+      zed-editor
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+      activitywatch
+      ghostty
+      gimp
+      rpi-imager
+      vlc
+    ];
 
   programs = {
     direnv = {
@@ -143,12 +147,9 @@ in {
 
     codespace-zed = {
       enable = true;
-      defaultTarget = "triton";
-      targets = {
-        triton = {
-          repository = "rpcpool/rpcpool";
-          branch = "main";
-        };
+      defaultTarget = "rpcpool";
+      targets.rpcpool = {
+        repository = "rpcpool/rpcpool";
       };
     };
 
