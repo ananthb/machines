@@ -288,7 +288,7 @@ in {
     autoEscape = true;
     autoUpdate.enable = true;
 
-    networks.stacks = {};
+    networks.stacks.networkConfig.interfaceName = "podman-stacks";
 
     volumes = {
       stacks-config = {};

@@ -101,7 +101,7 @@ Configuration files and secrets are managed using vault-secrets.
   networking.firewall.allowedTCPPorts = [4000];
 
   # Seafile access to services running on the host
-  networking.firewall.interfaces.podman1.allowedTCPPorts = [
+  networking.firewall.interfaces.podman-seafile.allowedTCPPorts = [
     3306 # mysql
     6400 # redis-seafile
   ];

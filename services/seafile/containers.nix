@@ -206,7 +206,7 @@ in {
     autoEscape = true;
     autoUpdate.enable = true;
 
-    networks.seafile = {};
+    networks.seafile.networkConfig.interfaceName = "podman-seafile";
 
     containers = {
       seafile = {
