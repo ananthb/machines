@@ -9,7 +9,6 @@
   vs = config.vault-secrets.secrets;
 in {
   imports = [
-    ../warp.nix
     ../monitoring/postgres.nix
   ];
 
