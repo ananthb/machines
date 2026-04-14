@@ -27,9 +27,6 @@ in {
 
       downloadDir = "/srv/media/Downloads";
       configText = ''
-        # SOCKS5 proxy via Cloudflare WARP
-        network.proxy_address.set = 127.0.0.1:8888
-
         # Performance tuning
         pieces.memory.max.set = 2048M
         network.max_open_files.set = 600
@@ -239,8 +236,6 @@ in {
         DB_SOCKET_PATH = "/var/run/postgresql";
         DB_USER = "seerr";
         DB_NAME = "seerr";
-        HTTP_PROXY = "socks5h://127.0.0.1:8888";
-        HTTPS_PROXY = "socks5h://127.0.0.1:8888";
       };
       after = ["postgresql.service"];
       wants = ["postgresql.service"];
