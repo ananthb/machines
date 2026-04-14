@@ -26,6 +26,9 @@ in {
 
       downloadDir = "/srv/media/Downloads";
       configText = ''
+        # Encryption: prefer RC4, retry with encryption if connection fails
+        protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+
         # Performance tuning
         pieces.memory.max.set = 2048M
         network.max_open_files.set = 600
