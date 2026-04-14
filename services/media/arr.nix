@@ -42,6 +42,9 @@ in {
         group2.seeding.ratio.max.set = 300
         group2.seeding.ratio.upload.set = 1M
         method.set = group.seeding.ratio.command, "d.throttle_name.set=slow"
+
+        # Watch directory for loading .torrent files
+        schedule2 = watch_directory, 5, 5, "load.start=/var/lib/rtorrent/watch/*.torrent,d.directory.set=/srv/media/Downloads"
       '';
     };
 
@@ -342,6 +345,7 @@ in {
     "d /srv/media/Movies 0775 root media -"
     "d /srv/media/Shows 0775 root media -"
     "d /srv/media/Books 0775 root media -"
+    "d /var/lib/rtorrent/watch 0775 rtorrent media -"
   ];
 
   vault-secrets.secrets.arr = {
