@@ -4,8 +4,11 @@
   config,
   inputs,
   ...
-}: {
+}: let
+  cfg = config.machines;
+in {
   imports = [
+    ../../modules/options.nix
     inputs.garnix-lib.nixosModules.garnix
     ./nixos-common.nix
     ../../lib/scripts.nix
@@ -15,7 +18,7 @@
 
   sops.age.keyFile = "/var/garnix/keys/repo-key";
 
-  vault-secrets.vaultAddress = "http://endeavour:8200";
+  vault-secrets.vaultAddress = cfg.vault.address;
 
   services = {
     tailscale.enable = true;
@@ -36,5 +39,5 @@
     config.services.tailscale.package
   ];
 
-  users.users.root.openssh.authorizedKeys.keys = import ../../lib/ssh-keys.nix;
+  users.users.root.openssh.authorizedKeys.keys = cfg.sshKeys;
 }

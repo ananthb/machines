@@ -1,24 +1,25 @@
 {
   config,
   pkgs,
-  username,
   ...
 }: let
+  cfg = config.machines;
   homeDir =
     (
       if pkgs.stdenv.isLinux
       then "/home/"
       else "/Users/"
     )
-    + username;
+    + cfg.username;
 in {
   imports = [
+    ../modules/home-options.nix
     ./shell.nix
   ];
 
   home = {
     homeDirectory = homeDir;
-    inherit username;
+    inherit (cfg) username;
     sessionVariables.EDITOR = "nvim";
   };
 

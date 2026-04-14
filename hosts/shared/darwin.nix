@@ -5,14 +5,17 @@
   lib,
   pkgs,
   system,
-  username,
   ...
-}: {
+}: let
+  cfg = config.machines;
+in {
   imports = [
+    ../../modules/options.nix
+
     inputs.nix-homebrew.darwinModules.nix-homebrew
     {
       nix-homebrew = {
-        user = username;
+        user = cfg.username;
         enable = true;
         taps = {
           "homebrew/homebrew-core" = inputs.homebrew-core;
@@ -35,7 +38,7 @@
         ];
         useGlobalPkgs = true;
         useUserPackages = true;
-        users.${username} = {
+        users.${cfg.username} = {
           imports = let
             hostModule = (import ../../lib/home-host-module.nix {inherit lib;}) hostname;
           in [
@@ -44,14 +47,8 @@
           ];
         };
         extraSpecialArgs = {
-          inherit
-            hostname
-            pkgs
-            system
-            username
-            ;
-
-          inherit inputs;
+          inherit hostname pkgs system inputs;
+          inherit (cfg) username;
         };
       };
     }
@@ -59,7 +56,7 @@
     ./nix-settings.nix
   ];
 
-  nix.settings.trusted-users = ["root" username];
+  nix.settings.trusted-users = ["root" cfg.username];
 
   nix.gc.interval = {
     Hour = 3;
@@ -69,7 +66,7 @@
 
   # Set primary user because of the whole
   # 'run-services-as-root-for-better-multiuser-support' thing.
-  system.primaryUser = username;
+  system.primaryUser = cfg.username;
 
   services.karabiner-elements.enable = false;
 
@@ -84,11 +81,11 @@
   # Manually set nixbld gid because this changed to 30000 by default.
   ids.gids.nixbld = 350;
 
-  users.users.${username} = {
-    name = username;
-    home = "/Users/" + username;
+  users.users.${cfg.username} = {
+    name = cfg.username;
+    home = "/Users/" + cfg.username;
     shell = pkgs.fish;
-    openssh.authorizedKeys.keys = import ../../lib/ssh-keys.nix;
+    openssh.authorizedKeys.keys = cfg.sshKeys;
   };
 
   programs.fish.enable = true;

@@ -9,13 +9,15 @@
   lib,
   pkgs,
   system,
-  username,
   ...
 }: let
+  cfg = config.machines;
   tailscaleServeLib = import ../../lib/tailscale-serve-config.nix;
   cftunnelLib = import ../../lib/cftunnel.nix;
 in {
   imports = [
+    ../../modules/options.nix
+
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager = {
@@ -26,7 +28,7 @@ in {
         ];
         useGlobalPkgs = true;
         useUserPackages = true;
-        users.${username} = {
+        users.${cfg.username} = {
           imports = let
             hostModule = (import ../../lib/home-host-module.nix {inherit lib;}) hostname;
           in [
@@ -35,9 +37,8 @@ in {
           ];
         };
         extraSpecialArgs = {
-          inherit hostname system username;
-
-          inherit inputs;
+          inherit hostname system inputs;
+          inherit (cfg) username;
         };
       };
     }
@@ -53,11 +54,11 @@ in {
     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
   };
 
-  nix.settings.trusted-users = ["root" username];
+  nix.settings.trusted-users = ["root" cfg.username];
   nix.gc.dates = "weekly";
 
-  time.timeZone = "Asia/Kolkata";
-  i18n.defaultLocale = "en_IN";
+  time.timeZone = cfg.timeZone;
+  i18n.defaultLocale = cfg.locale;
 
   system.autoUpgrade = {
     enable = true;
@@ -99,8 +100,8 @@ in {
 
   users.groups.media.gid = 985;
 
-  users.users.${username} = {
-    home = "/home/" + username;
+  users.users.${cfg.username} = {
+    home = "/home/" + cfg.username;
     isNormalUser = true;
     shell = pkgs.fish;
     extraGroups = [
@@ -108,7 +109,7 @@ in {
       "libvirtd"
       "systemd-journal"
     ];
-    openssh.authorizedKeys.keys = import ../../lib/ssh-keys.nix;
+    openssh.authorizedKeys.keys = cfg.sshKeys;
   };
 
   security = {
@@ -204,7 +205,7 @@ in {
     };
   };
 
-  my-scripts.victoriaMetricsHost = "endeavour";
+  my-scripts.victoriaMetricsHost = lib.mkDefault cfg.monitoring.vmHost;
 
   environment.systemPackages = [
     pkgs.e2fsprogs
@@ -214,5 +215,5 @@ in {
 
   zramSwap.enable = true;
 
-  vault-secrets.vaultAddress = "http://endeavour:8200";
+  vault-secrets.vaultAddress = cfg.vault.address;
 }

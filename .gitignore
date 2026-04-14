@@ -7,3 +7,6 @@
 # terraform
 .terraform/
 .migration/
+
+# mdbook build output
+docs/book/

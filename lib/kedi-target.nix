@@ -5,6 +5,8 @@
 }: let
   inherit (lib) mkOption types;
 
+  targetName = config.machines.serviceTarget.name;
+
   stripServiceSuffix = name:
     if lib.hasSuffix ".service" name
     then lib.removeSuffix ".service" name
@@ -28,25 +30,25 @@ in {
     kediTargets = mkOption {
       type = types.attrsOf types.bool;
       default = {};
-      description = "Attrset of systemd service names to include in kedi.target when set to true.";
+      description = "Attrset of systemd service names to include in ${targetName}.target when set to true.";
     };
 
     restartUnits = mkOption {
       type = types.listOf types.str;
       default = [];
-      description = "Extra systemd service units to include in kedi.target (names without .service).";
+      description = "Extra systemd service units to include in ${targetName}.target (names without .service).";
     };
 
     restartUnitsExclude = mkOption {
       type = types.listOf types.str;
       default = [];
-      description = "Systemd service units to exclude from kedi.target (names without .service).";
+      description = "Systemd service units to exclude from ${targetName}.target (names without .service).";
     };
   };
 
   config = {
-    systemd.targets.kedi = {
-      description = "Kedi services";
+    systemd.targets.${targetName} = {
+      description = "${targetName} services";
       wants = unitNames;
     };
   };

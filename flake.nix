@@ -325,6 +325,25 @@
         inherit (nixpkgs) lib;
         immichMlImage = containerImages.immichMl;
       };
+      mkCaddyReverseProxies = import ./lib/caddy-helpers.nix;
+    };
+
+    nixosModules = {
+      default = ./modules/nixos;
+      options = ./modules/options.nix;
+      scripts = ./modules/nixos/scripts.nix;
+      cftunnel = ./modules/nixos/cftunnel.nix;
+      tailscale-serve = ./modules/nixos/tailscale-serve.nix;
+      service-target = ./modules/nixos/service-target.nix;
+      rclone-sync = ./modules/nixos/rclone-sync.nix;
+      nix-settings = ./modules/nixos/nix-settings.nix;
+    };
+
+    homeManagerModules = {
+      default = ./modules/home;
+      options = ./modules/home-options.nix;
+      shell = ./modules/home/shell.nix;
+      dev = ./modules/home/dev.nix;
     };
 
     darwinConfigurations = {
@@ -366,6 +385,40 @@
         };
       };
     };
+
+    packages = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        docs = pkgs.stdenv.mkDerivation {
+          name = "machines-docs";
+          src = ./docs;
+          nativeBuildInputs = [pkgs.mdbook];
+          buildPhase = "mdbook build";
+          installPhase = "cp -r book $out";
+        };
+      }
+    );
+
+    apps = forAllSystems (
+      system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        docs-serve = {
+          type = "app";
+          program = let
+            serve = pkgs.writeShellApplication {
+              name = "docs-serve";
+              runtimeInputs = [pkgs.mdbook];
+              text = ''
+                cd ${./docs}
+                mdbook serve --open
+              '';
+            };
+          in "${serve}/bin/docs-serve";
+        };
+      }
+    );
 
     checks = forAllSystems (
       system: let
@@ -428,6 +481,7 @@
               pkgs.statix
               pkgs.deadnix
               pkgs.gh
+              pkgs.mdbook
               deploy-rs.packages.${system}.default
             ];
         };
