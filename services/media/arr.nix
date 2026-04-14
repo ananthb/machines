@@ -345,7 +345,6 @@ in {
     "d /srv/media/Movies 0775 root media -"
     "d /srv/media/Shows 0775 root media -"
     "d /srv/media/Books 0775 root media -"
-    "d /var/lib/rtorrent/watch 0775 rtorrent media -"
   ];
 
   vault-secrets.secrets.arr = {
