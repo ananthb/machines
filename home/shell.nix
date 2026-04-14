@@ -72,7 +72,7 @@
       enableFishIntegration = true;
       settings = {
         add_newline = false;
-        format = "$directory$git_branch$git_status$nix_shell$kubernetes$cmd_duration$line_break$character";
+        format = "$hostname$directory$git_branch$git_status$nix_shell$kubernetes$cmd_duration$line_break$character";
         directory = {
           truncation_length = 3;
           truncate_to_repo = true;
@@ -86,6 +86,11 @@
         kubernetes = {
           disabled = false;
           format = "[$context(/$namespace)]($style) ";
+        };
+        hostname = {
+          ssh_only = true;
+          format = "[$ssh_symbol$hostname]($style) ";
+          ssh_symbol = "ssh:";
         };
         cmd_duration = {
           min_time = 2000;
