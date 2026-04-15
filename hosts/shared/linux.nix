@@ -82,13 +82,15 @@ in {
     };
   };
 
-  boot.kernel.sysctl = {
-    # Auto-reboot on kernel panic after 10 seconds
-    "kernel.panic" = 10;
-    "kernel.panic_on_oops" = 1;
+  boot.kernel = {
+    kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
+    kernelParams = ["delayacct"];
+    sysctl = {
+      # Auto-reboot on kernel panic after 10 seconds
+      "kernel.panic" = 10;
+      "kernel.panic_on_oops" = 1;
+    };
   };
-
-  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   networking = {
     hostName = hostname;
