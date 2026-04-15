@@ -62,7 +62,7 @@
     };
 
     mithril = {
-      url = "github:ananthb/mithril/fix/vote-nil-root-and-slot-log";
+      url = "github:Overclock-Validator/mithril";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

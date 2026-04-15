@@ -281,11 +281,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1776197973,
-        "narHash": "sha256-6a/iPzdowdY7ekJ1rvQaWvKUBAgLyDIiycWAc7VK1ck=",
+        "lastModified": 1776280921,
+        "narHash": "sha256-EewrgofH5oKgRmM2f216OCDYU69zBMiJJMLRCnn5YZE=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "a098fe473e4c00951a70ee7f3d107670394f3925",
+        "rev": "a466409e060914aaf408cd6591b0ffd834f0271a",
         "type": "github"
       },
       "original": {
@@ -297,11 +297,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1776195808,
-        "narHash": "sha256-A9Na8NYFl+FY/egAXIcJQ0l9wG8JcSdY7rPunac7+Es=",
+        "lastModified": 1776278499,
+        "narHash": "sha256-D++Ev4WcVTpeBh3Lrs9DooQMQBWMVmef6046w0MkInY=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "e035ae2bedcb980f3b3a82d99a8e10505e73176f",
+        "rev": "16a1ce9a8f8a91149f3f799bf919b98dbafdb047",
         "type": "github"
       },
       "original": {
@@ -376,16 +376,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1775945658,
-        "narHash": "sha256-WMVOET44Ze8feid182kHkZDw5N267wHoSjPKiXvt9+U=",
-        "owner": "ananthb",
+        "lastModified": 1776278276,
+        "narHash": "sha256-fiadCgKNbSRxyVQWJS4dn/mVcPAeZPekjK+f68Pk9M4=",
+        "owner": "Overclock-Validator",
         "repo": "mithril",
-        "rev": "b7b6bd87f4c141ba613d227031076cf41fd17234",
+        "rev": "fb98f609d11d8264bb03ca6c3f7a8313070e777e",
         "type": "github"
       },
       "original": {
-        "owner": "ananthb",
-        "ref": "fix/vote-nil-root-and-slot-log",
+        "owner": "Overclock-Validator",
         "repo": "mithril",
         "type": "github"
       }
@@ -467,11 +466,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1775710090,
-        "narHash": "sha256-ar3rofg+awPB8QXDaFJhJ2jJhu+KqN/PRCXeyuXR76E=",
+        "lastModified": 1776169885,
+        "narHash": "sha256-l/iNYDZ4bGOAFQY2q8y5OAfBBtrDAaPuRQqWaFHVRXM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4c1018dae018162ec878d42fec712642d214fdfa",
+        "rev": "4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9",
         "type": "github"
       },
       "original": {
