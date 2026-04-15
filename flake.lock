@@ -281,11 +281,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1776280921,
-        "narHash": "sha256-EewrgofH5oKgRmM2f216OCDYU69zBMiJJMLRCnn5YZE=",
+        "lastModified": 1776281449,
+        "narHash": "sha256-eHUAio97DCCc8jQk9wltGIod9ESgvVyptuHf3gw9GSY=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "a466409e060914aaf408cd6591b0ffd834f0271a",
+        "rev": "da7def6ce99183c8a6e590b3d64ad003a45b0407",
         "type": "github"
       },
       "original": {
@@ -376,11 +376,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776278276,
-        "narHash": "sha256-fiadCgKNbSRxyVQWJS4dn/mVcPAeZPekjK+f68Pk9M4=",
+        "lastModified": 1776282642,
+        "narHash": "sha256-PdjdVGNj30GhoPJUgfFqqy/gtriHUlw/CL3CNYdwDaQ=",
         "owner": "Overclock-Validator",
         "repo": "mithril",
-        "rev": "fb98f609d11d8264bb03ca6c3f7a8313070e777e",
+        "rev": "da1ac46ac6eda2dad710a00b2804706c23b7bf50",
         "type": "github"
       },
       "original": {
