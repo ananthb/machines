@@ -26,11 +26,14 @@ in {
 
       downloadDir = "/srv/media/Downloads";
       configText = ''
-        # SOCKS5 proxy via Cloudflare WARP
-        network.proxy_address.set = 127.0.0.1:8888
-
         # Encryption: prefer RC4, retry with encryption if connection fails
         protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+
+        # Save session every 5 minutes (default 20min) to reduce hash re-checks after crashes
+        schedule2 = session_save, 240, 300, ((session.save))
+
+        # Skip hash check for completed torrents on load (trust session data)
+        pieces.hash.on_completion.set = no
 
         # Performance tuning
         pieces.memory.max.set = 2048M

@@ -24,7 +24,6 @@ Configuration files and secrets are managed using vault-secrets.
 }: {
   imports = [
     ../caddy.nix
-    ../warp.nix
     ./containers.nix
   ];
 
