@@ -47,6 +47,7 @@ in {
   home.packages = with pkgs;
     [
       claude-code
+      delta
       devenv
       flyctl
       fzf
