@@ -63,6 +63,7 @@
 
     mithril = {
       url = "github:Overclock-Validator/mithril";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-darwin = {

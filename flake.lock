@@ -371,14 +371,16 @@
     },
     "mithril": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1776282642,
-        "narHash": "sha256-PdjdVGNj30GhoPJUgfFqqy/gtriHUlw/CL3CNYdwDaQ=",
+        "lastModified": 1776278276,
+        "narHash": "sha256-fiadCgKNbSRxyVQWJS4dn/mVcPAeZPekjK+f68Pk9M4=",
         "owner": "Overclock-Validator",
         "repo": "mithril",
-        "rev": "da1ac46ac6eda2dad710a00b2804706c23b7bf50",
+        "rev": "fb98f609d11d8264bb03ca6c3f7a8313070e777e",
         "type": "github"
       },
       "original": {
