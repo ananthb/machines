@@ -148,11 +148,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772408722,
-        "narHash": "sha256-rHuJtdcOjK7rAHpHphUb1iCvgkU3GpfvicLMwwnfMT0=",
+        "lastModified": 1775087534,
+        "narHash": "sha256-91qqW8lhL7TLwgQWijoGBbiD4t7/q75KTi8NxjVmSmA=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "f20dc5d9b8027381c474144ecabc9034d6a839a3",
+        "rev": "3107b77cd68437b9a76194f0f7f9c55f2329ca5b",
         "type": "github"
       },
       "original": {
@@ -249,11 +249,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776184304,
-        "narHash": "sha256-No6QGBmIv5ChiwKCcbkxjdEQ/RO2ZS1gD7SFy6EZ7rc=",
+        "lastModified": 1776562531,
+        "narHash": "sha256-Lh5Ns9DI67E+lSMOCGK0S+mFPy0mz0yOGiJTUXiR9JI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "3c7524c68348ef79ce48308e0978611a050089b2",
+        "rev": "5b56ad02dc643808b8af6d5f3ff179e2ce9593f4",
         "type": "github"
       },
       "original": {
@@ -281,11 +281,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1776281449,
-        "narHash": "sha256-eHUAio97DCCc8jQk9wltGIod9ESgvVyptuHf3gw9GSY=",
+        "lastModified": 1776603680,
+        "narHash": "sha256-wLEdbLplMBRO1EwWXHuNtpBVe0419A41OMxG02XMlGA=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "da7def6ce99183c8a6e590b3d64ad003a45b0407",
+        "rev": "32a9d69c3c1171ff3e374768d9a6baa554ab6a4a",
         "type": "github"
       },
       "original": {
@@ -297,11 +297,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1776278499,
-        "narHash": "sha256-D++Ev4WcVTpeBh3Lrs9DooQMQBWMVmef6046w0MkInY=",
+        "lastModified": 1776603110,
+        "narHash": "sha256-9Gxcd4Wzec6vVg8gnzbAVTEfIhwskG2T82csaq8DpTU=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "16a1ce9a8f8a91149f3f799bf919b98dbafdb047",
+        "rev": "1f0057bcfdc1c7d59d001b235bd6ec2456567ddd",
         "type": "github"
       },
       "original": {
@@ -433,11 +433,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775970782,
-        "narHash": "sha256-7jt9Vpm48Yy5yAWigYpde+HxtYEpEuyzIQJF4VYehhk=",
+        "lastModified": 1776575850,
+        "narHash": "sha256-28Gqz0GDpGsBv8GtAn2dywEQRr+CtTDsD5J7VD6icBE=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "bedba5989b04614fc598af9633033b95a937933f",
+        "rev": "3b9653a107c736222b5ae0d4036dd3b885219065",
         "type": "github"
       },
       "original": {
@@ -507,11 +507,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776128025,
-        "narHash": "sha256-spZM5zll0cBPHHSZPioZREArzCsllurKQsJME08nnXY=",
+        "lastModified": 1776452249,
+        "narHash": "sha256-tpCsY9kIEfcitiV3JwUqYTmxwewwZKQlZSNUBqb9kF0=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "0a12693297d23f1b3af04ba6112b5936e2eba41b",
+        "rev": "698d17490e19e2e360a6ce49b1af9134d1c6eacd",
         "type": "github"
       },
       "original": {
@@ -651,11 +651,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1773842145,
-        "narHash": "sha256-ZJi0WxY3RLheYAuc6KwzR3HvCzeglrWbJWwZ20mH3e4=",
+        "lastModified": 1776601978,
+        "narHash": "sha256-d1a8KOJW7TfOzo3Fajssy24BoKIuYvK6llVUoVdzHAE=",
         "owner": "alyraffauf",
         "repo": "switchyard",
-        "rev": "482be798c8e64867d7b93aa8ae276a5ea6f9b1ad",
+        "rev": "3424da91a5ec7ffdfea4cbc5e6e3b25b723534bc",
         "type": "github"
       },
       "original": {
@@ -759,11 +759,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776151395,
-        "narHash": "sha256-xcJllrN4z20EDPk7PYuGZz3V+K/vMC+9ksQULjo/L9E=",
+        "lastModified": 1776415466,
+        "narHash": "sha256-lE+TEQEltEl4mJMYBzVVnIlJ/8xqicWZLIAUkJZkVTM=",
         "owner": "linuskendall",
         "repo": "zed-spaces-launcher",
-        "rev": "28c73fac598b5d4321e203fe0784f43d10d556e2",
+        "rev": "eb65df55e56509b4fd636e76bd1aa2be0a8e4d0d",
         "type": "github"
       },
       "original": {
