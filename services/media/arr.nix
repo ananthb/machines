@@ -350,7 +350,7 @@ in {
     "d /srv/media/Downloads 0775 root media -"
     "d /srv/media/Movies 0775 root media -"
     "d /srv/media/Shows 0775 root media -"
-    "d /srv/media/Books 0775 root media -"
+    "d /srv/media/Books 2775 root media -"
   ];
 
   vault-secrets.secrets.arr = {
