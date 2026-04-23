@@ -31,6 +31,13 @@
       enable = true;
       interactiveShellInit = ''
         set fish_greeting ""
+
+        # Auto-fetch git repos in the background on directory change
+        function __auto_git_fetch --on-variable PWD
+          if test -d .git
+            command git fetch --all --quiet &disown 2>/dev/null
+          end
+        end
       '';
       shellAbbrs = {
         g = "git";

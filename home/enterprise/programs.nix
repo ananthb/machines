@@ -29,7 +29,7 @@
         {package = night-theme-switcher;}
         {package = system-monitor;}
         {package = tailscale-status;}
-        {package = tiling-shell;}
+        {package = forge;}
       ];
     };
 
