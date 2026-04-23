@@ -14,6 +14,7 @@
       "1password"
       "discord"
       "google-chrome"
+      "jellyfin-media-player"
       "ledger-wallet"
       "openmtp"
       "signal"
