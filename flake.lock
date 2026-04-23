@@ -400,15 +400,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1776622226,
-        "narHash": "sha256-e6VIHqHiovhNHOKdXegRpnBMKh4XQF7OaT/QIa8C+h0=",
-        "owner": "Overclock-Validator",
+        "lastModified": 1775945658,
+        "narHash": "sha256-WMVOET44Ze8feid182kHkZDw5N267wHoSjPKiXvt9+U=",
+        "owner": "ananthb",
         "repo": "mithril",
-        "rev": "a79e054e16161046edb9c13cda4e14779dc40583",
+        "rev": "b7b6bd87f4c141ba613d227031076cf41fd17234",
         "type": "github"
       },
       "original": {
-        "owner": "Overclock-Validator",
+        "owner": "ananthb",
+        "ref": "fix/vote-nil-root-and-slot-log",
         "repo": "mithril",
         "type": "github"
       }
