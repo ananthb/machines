@@ -62,7 +62,10 @@ in {
 
   system.autoUpgrade = {
     enable = true;
-    flake = inputs.self.outPath;
+    # Fetch latest main from GitHub each run. Using inputs.self.outPath pins the
+    # rebuild to an immutable store snapshot taken at build time, so new commits
+    # would never land via the timer.
+    flake = "github:ananthb/machines";
     flags = [
       "-L" # print build logs
     ];
