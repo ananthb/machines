@@ -210,6 +210,19 @@
               }
             );
           })
+          # Bypass the vimPlugins.nvim-treesitter-legacy deprecation warning
+          # that fires on every neovim build via vim-utils.nix's assert
+          # (which forces the warnOnInstantiate-wrapped drv). We don't use
+          # any plugin that needs the legacy package.
+          (_: prev: {
+            vimPlugins = prev.vimPlugins.extend (
+              _: vprev: {
+                nvim-treesitter-legacy = vprev.nvim-treesitter.overrideAttrs (_: {
+                  pname = "nvim-treesitter-legacy-shim";
+                });
+              }
+            );
+          })
           # logiops patch: https://github.com/NixOS/nixpkgs/issues/226575#issuecomment-2813539847
           (_: prev: {
             logiops = prev.logiops.overrideAttrs (old: {

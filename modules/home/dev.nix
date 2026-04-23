@@ -312,60 +312,9 @@
 
         treesitter = {
           enable = true;
-          settings.highlight.enable = true;
+          highlight.enable = true;
         };
-        treesitter-textobjects = {
-          enable = true;
-          settings = {
-            select = {
-              enable = true;
-              lookahead = true;
-              keymaps = {
-                "af" = {query = "@function.outer";};
-                "if" = {query = "@function.inner";};
-                "ac" = {query = "@class.outer";};
-                "ic" = {query = "@class.inner";};
-                "aa" = {query = "@parameter.outer";};
-                "ia" = {query = "@parameter.inner";};
-                "ai" = {query = "@conditional.outer";};
-                "ii" = {query = "@conditional.inner";};
-                "al" = {query = "@loop.outer";};
-                "il" = {query = "@loop.inner";};
-              };
-            };
-            move = {
-              enable = true;
-              set_jumps = true;
-              goto_next_start = {
-                "]f" = "@function.outer";
-                "]c" = "@class.outer";
-                "]a" = "@parameter.inner";
-              };
-              goto_next_end = {
-                "]F" = "@function.outer";
-                "]C" = "@class.outer";
-              };
-              goto_previous_start = {
-                "[f" = "@function.outer";
-                "[c" = "@class.outer";
-                "[a" = "@parameter.inner";
-              };
-              goto_previous_end = {
-                "[F" = "@function.outer";
-                "[C" = "@class.outer";
-              };
-            };
-            swap = {
-              enable = true;
-              swap_next = {
-                "<leader>sa" = "@parameter.inner";
-              };
-              swap_previous = {
-                "<leader>sA" = "@parameter.inner";
-              };
-            };
-          };
-        };
+        treesitter-textobjects.enable = true;
 
         tmux-navigator.enable = true;
 
@@ -568,6 +517,132 @@
           key = "<leader>h4";
           action.__raw = "function() require'harpoon':list():select(4) end";
           options.desc = "Harpoon file 4";
+        }
+
+        # treesitter-textobjects: select
+        {
+          mode = ["o" "x"];
+          key = "af";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@function.outer', 'textobjects') end";
+          options.desc = "around function";
+        }
+        {
+          mode = ["o" "x"];
+          key = "if";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@function.inner', 'textobjects') end";
+          options.desc = "inner function";
+        }
+        {
+          mode = ["o" "x"];
+          key = "ac";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@class.outer', 'textobjects') end";
+          options.desc = "around class";
+        }
+        {
+          mode = ["o" "x"];
+          key = "ic";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@class.inner', 'textobjects') end";
+          options.desc = "inner class";
+        }
+        {
+          mode = ["o" "x"];
+          key = "aa";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@parameter.outer', 'textobjects') end";
+          options.desc = "around parameter";
+        }
+        {
+          mode = ["o" "x"];
+          key = "ia";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@parameter.inner', 'textobjects') end";
+          options.desc = "inner parameter";
+        }
+        {
+          mode = ["o" "x"];
+          key = "ai";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@conditional.outer', 'textobjects') end";
+          options.desc = "around conditional";
+        }
+        {
+          mode = ["o" "x"];
+          key = "ii";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@conditional.inner', 'textobjects') end";
+          options.desc = "inner conditional";
+        }
+        {
+          mode = ["o" "x"];
+          key = "al";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@loop.outer', 'textobjects') end";
+          options.desc = "around loop";
+        }
+        {
+          mode = ["o" "x"];
+          key = "il";
+          action.__raw = "function() require('nvim-treesitter-textobjects.select').select_textobject('@loop.inner', 'textobjects') end";
+          options.desc = "inner loop";
+        }
+
+        # treesitter-textobjects: move
+        {
+          key = "]f";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_next_start('@function.outer', 'textobjects') end";
+          options.desc = "next function start";
+        }
+        {
+          key = "]c";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_next_start('@class.outer', 'textobjects') end";
+          options.desc = "next class start";
+        }
+        {
+          key = "]a";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_next_start('@parameter.inner', 'textobjects') end";
+          options.desc = "next parameter";
+        }
+        {
+          key = "]F";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_next_end('@function.outer', 'textobjects') end";
+          options.desc = "next function end";
+        }
+        {
+          key = "]C";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_next_end('@class.outer', 'textobjects') end";
+          options.desc = "next class end";
+        }
+        {
+          key = "[f";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_previous_start('@function.outer', 'textobjects') end";
+          options.desc = "previous function start";
+        }
+        {
+          key = "[c";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_previous_start('@class.outer', 'textobjects') end";
+          options.desc = "previous class start";
+        }
+        {
+          key = "[a";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_previous_start('@parameter.inner', 'textobjects') end";
+          options.desc = "previous parameter";
+        }
+        {
+          key = "[F";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_previous_end('@function.outer', 'textobjects') end";
+          options.desc = "previous function end";
+        }
+        {
+          key = "[C";
+          action.__raw = "function() require('nvim-treesitter-textobjects.move').goto_previous_end('@class.outer', 'textobjects') end";
+          options.desc = "previous class end";
+        }
+
+        # treesitter-textobjects: swap
+        {
+          key = "<leader>sa";
+          action.__raw = "function() require('nvim-treesitter-textobjects.swap').swap_next('@parameter.inner') end";
+          options.desc = "swap next parameter";
+        }
+        {
+          key = "<leader>sA";
+          action.__raw = "function() require('nvim-treesitter-textobjects.swap').swap_previous('@parameter.inner') end";
+          options.desc = "swap previous parameter";
         }
       ];
     };
