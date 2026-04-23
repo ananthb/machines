@@ -7,6 +7,14 @@
       flake = false;
     };
 
+    cosmonaut = {
+      url = "github:ananthb/zed-spaces-launcher";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "ht32-panel/flake-utils";
+      };
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -131,14 +139,6 @@
       url = "github:serokell/vault-secrets";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-compat.follows = "deploy-rs/flake-compat";
-    };
-
-    zed-spaces-launcher = {
-      url = "github:linuskendall/zed-spaces-launcher";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "ht32-panel/flake-utils";
-      };
     };
   };
 

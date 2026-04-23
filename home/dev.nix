@@ -11,7 +11,7 @@
 in {
   imports = [
     ../modules/home/dev.nix
-    inputs.zed-spaces-launcher.homeManagerModules.default
+    inputs.cosmonaut.homeManagerModules.default
   ];
 
   sops = {
@@ -81,7 +81,7 @@ in {
       useConfigOnly = "true";
     };
 
-    codespace-zed = {
+    cosmonaut = {
       enable = true;
       defaultTarget = "rpcpool";
       targets.rpcpool = {
