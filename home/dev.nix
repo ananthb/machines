@@ -57,7 +57,6 @@ in {
       git
       gnupg
       hack-font
-      jellyfin-media-player
       lazygit
       mosh
       nix-output-monitor
@@ -70,6 +69,7 @@ in {
       activitywatch
       ghostty
       gimp
+      jellyfin-media-player
       rpi-imager
       vlc
     ];
