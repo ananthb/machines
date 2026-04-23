@@ -153,7 +153,7 @@ in {
       enable = true;
       storage.singleDisk = {
         enable = true;
-        device = "/dev/nvme0n1";
+        device = "/dev/nvme1n1";
         fsType = "f2fs";
         format.enable = true;
         format.force = true;
