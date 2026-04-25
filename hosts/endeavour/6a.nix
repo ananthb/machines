@@ -185,33 +185,6 @@
           ];
         }
         {
-          alias = "Frigate - Package Delivery Detected";
-          mode = "single";
-          trigger = [
-            {
-              platform = "state";
-              entity_id = "binary_sensor.front_door_cam_person";
-              to = "on";
-            }
-          ];
-          condition = [
-            {
-              condition = "template";
-              value_template = "{{ trigger.to_state.attributes.get('objects', []) | select('eq', 'package') | list | count > 0 }}";
-            }
-          ];
-          action = [
-            {
-              service = "notify.notify";
-              data = {
-                title = "Package Delivered";
-                message = "A package was detected at the front door.";
-                data.image = "/api/frigate/notifications/front_door_cam/person/snapshot.jpg";
-              };
-            }
-          ];
-        }
-        {
           alias = "Turn off fans when nobody is home";
           mode = "restart";
           trigger = [
@@ -264,36 +237,6 @@
               data = {
                 title = "New Device on Network";
                 message = "New device detected: {{ state_attr(trigger.event.data.entity_id, 'friendly_name') | default(trigger.event.data.entity_id) }}";
-              };
-            }
-          ];
-        }
-        {
-          alias = "Weekly home summary";
-          mode = "single";
-          trigger = [
-            {
-              platform = "time";
-              at = "09:00:00";
-            }
-          ];
-          condition = [
-            {
-              condition = "time";
-              weekday = ["sun"];
-            }
-          ];
-          action = [
-            {
-              service = "notify.notify";
-              data = {
-                title = "Weekly Home Summary";
-                message = ''
-                  Devices online: {{ states.device_tracker | selectattr('state', 'eq', 'home') | list | count }}
-                  Vacuums: {{ states.vacuum | map(attribute='state') | list | join(', ') }}
-                  Climate: {{ states.climate | selectattr('state', 'ne', 'off') | list | count }} running
-                  Low battery: {{ states.sensor | selectattr('attributes.device_class', 'defined') | selectattr('attributes.device_class', 'eq', 'battery') | selectattr('state', 'lt', '20') | list | count }} devices
-                '';
               };
             }
           ];
