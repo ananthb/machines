@@ -38,6 +38,12 @@
         icon = "mdi:robot-vacuum";
       };
 
+      counter.ac_notify_tick = {
+        initial = 0;
+        step = 1;
+        name = "AC notify tick";
+      };
+
       automation = [
         {
           alias = "Run Roomba at 8am and 8pm";
@@ -293,7 +299,7 @@
           ];
         }
         {
-          alias = "Turn off ACs running for more than 2 hours";
+          alias = "Turn off ACs running too long";
           mode = "single";
           trigger = [
             {
@@ -304,18 +310,24 @@
           condition = [
             {
               condition = "template";
-              value_template = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | list | count > 0 }}";
+              value_template = ''
+                {% set hours = 4 if (states('person.ananth') == 'home' or states('person.arul_priya') == 'home') else 2 %}
+                {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=hours)) | list | count > 0 }}
+              '';
             }
           ];
           action = [
             {
               service = "climate.turn_off";
-              target.entity_id = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | map(attribute='entity_id') | list }}";
+              target.entity_id = ''
+                {% set hours = 4 if (states('person.ananth') == 'home' or states('person.arul_priya') == 'home') else 2 %}
+                {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=hours)) | map(attribute='entity_id') | list }}
+              '';
             }
           ];
         }
         {
-          alias = "Notify when AC running for more than 30 minutes";
+          alias = "Notify when AC running too long";
           mode = "single";
           trigger = [
             {
@@ -323,19 +335,30 @@
               minutes = "/30";
             }
           ];
-          condition = [
+          action = [
+            {
+              service = "counter.increment";
+              target.entity_id = "counter.ac_notify_tick";
+            }
             {
               condition = "template";
-              value_template = "{{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | list | count > 0 }}";
+              value_template = ''
+                {% set anyone_home = states('person.ananth') == 'home' or states('person.arul_priya') == 'home' %}
+                {% if anyone_home %}
+                  {{ states('counter.ac_notify_tick') | int % 4 == 0 and (states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | list | count > 0) }}
+                {% else %}
+                  {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | list | count > 0 }}
+                {% endif %}
+              '';
             }
-          ];
-          action = [
             {
               service = "notify.notify";
               data = {
                 title = "AC Still Running";
                 message = ''
-                  {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | map(attribute='name') | list | join(', ') }} has been running for more than 30 minutes.
+                  {% set anyone_home = states('person.ananth') == 'home' or states('person.arul_priya') == 'home' %}
+                  {% set threshold = timedelta(hours=2) if anyone_home else timedelta(minutes=30) %}
+                  {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - threshold) | map(attribute='name') | list | join(', ') }} has been running too long.
                 '';
               };
             }
