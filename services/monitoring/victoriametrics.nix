@@ -114,20 +114,7 @@
     )
     nixosHosts;
 
-  # 7. Miniflux (METRICS_COLLECTOR=1, port from LISTEN_ADDR)
-  minifluxTargets =
-    concatMap (
-      host:
-        if hasService host.config "miniflux"
-        then let
-          listenAddr = host.config.services.miniflux.config.LISTEN_ADDR or "[::]:8088";
-          port = lib.last (lib.splitString ":" listenAddr);
-        in ["${host.name}:${port}"]
-        else []
-    )
-    nixosHosts;
-
-  # 8. EcoFlow Exporter
+  # 7. EcoFlow Exporter
   ecoflowTargets = mkExporterTargets "ecoflow";
 
   # 9. App Exporters (Radarr, Sonarr, Prowlarr, Postgres)
@@ -233,7 +220,6 @@
           {
             targets = [
               "https://wallabag.kedi.dev"
-              "https://miniflux.kedi.dev"
             ];
             labels = {
               type = "app";
@@ -634,16 +620,6 @@ in {
                 targets = starlaTargets;
                 labels.type = "app";
                 labels.app = "starla";
-              }
-            ];
-          }
-          {
-            job_name = "miniflux";
-            static_configs = [
-              {
-                targets = minifluxTargets;
-                labels.type = "app";
-                labels.app = "miniflux";
               }
             ];
           }

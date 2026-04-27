@@ -18,7 +18,6 @@ Long-term metrics storage with 180-day retention. Scrapes Prometheus exporters e
 | Libvirt | Virtual machine resource usage |
 | Postgres | Database connection and query metrics |
 | Exportarr | Sonarr, Radarr, Prowlarr media app metrics |
-| Miniflux | RSS reader built-in metrics |
 | Speedtest | Internet speed measurements |
 
 Custom metrics from backup jobs and rclone syncs are pushed directly via the VictoriaMetrics import API.

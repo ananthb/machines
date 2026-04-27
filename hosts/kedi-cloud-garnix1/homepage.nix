@@ -37,19 +37,6 @@
             siteMonitor = "http://localhost:8085";
           };
         }
-        {
-          "Miniflux" = {
-            icon = "miniflux";
-            description = "RSS Feed Reader";
-            href = "https://miniflux.kedi.dev";
-            siteMonitor = "http://localhost:8088";
-            widget = {
-              type = "miniflux";
-              url = "http://localhost:8088";
-              key = "{{HOMEPAGE_VAR_MINIFLUX_API_KEY}}";
-            };
-          };
-        }
       ];
     }
     {

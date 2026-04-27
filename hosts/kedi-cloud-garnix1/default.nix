@@ -58,7 +58,6 @@ in {
       enable = true;
       virtualHosts = mkCaddyReverseProxies {
         "actual.kedi.dev" = 3002;
-        "miniflux.kedi.dev" = 8088;
         "wallabag.kedi.dev" = 8085;
         "mealie.kedi.dev" = 9000;
         "kedi.dev" = 8802;
@@ -76,17 +75,6 @@ in {
   # --- Backup services not covered by service modules ---
 
   systemd.services = {
-    "miniflux-backup" = config.my-services.mkBackupService {
-      script = ''
-        snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
-        trap '{ rm -rf "$snapshot_target"; }' EXIT
-        ${pkgs.sudo}/bin/sudo -u postgres \
-          ${config.services.postgresql.package}/bin/pg_dump \
-            -Fc miniflux > "$snapshot_target/miniflux.dump"
-        ${config.my-scripts.kopia-backup} "$snapshot_target" "/var/lib/miniflux"
-      '';
-    };
-
     "wallabag-backup" = config.my-services.mkBackupService {
       script = ''
         snapshot_target="$(${pkgs.mktemp}/bin/mktemp -d)"
