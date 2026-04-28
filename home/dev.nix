@@ -86,6 +86,7 @@ in {
       defaultTarget = "rpcpool";
       targets.rpcpool = {
         repository = "rpcpool/rpcpool";
+        workspacePath = "/workspaces";
       };
     };
   };
