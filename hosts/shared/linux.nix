@@ -177,6 +177,10 @@ in {
       enable = true;
       settings.PermitRootLogin = "no";
       settings.PasswordAuthentication = false;
+      # Honour client-supplied LANG/LC_* so tmux/mosh see a UTF-8 locale.
+      extraConfig = ''
+        AcceptEnv LANG LC_*
+      '';
     };
 
     # Yubikey stuff

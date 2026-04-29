@@ -25,7 +25,7 @@ in {
 
     locale = mkOption {
       type = types.str;
-      default = "en_IN";
+      default = "en_IN.UTF-8";
       description = "System default locale.";
     };
 
