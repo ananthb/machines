@@ -64,16 +64,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1777315206,
-        "narHash": "sha256-amvSmjBSVGuzXYb6tBOS0CCUrd0dvmqjRZJqwDDUAgw=",
+        "lastModified": 1777531295,
+        "narHash": "sha256-f/tQdH7sSKnlqJsokDPAHITPcVm8CWRd21lXBPvXlKY=",
         "owner": "ananthb",
-        "repo": "zed-spaces-launcher",
-        "rev": "fecd0dc9703068e5d06f7b8b1426e01b258062c5",
+        "repo": "cosmonaut",
+        "rev": "2351b379af0a414f613823b34389593573686c0f",
         "type": "github"
       },
       "original": {
         "owner": "ananthb",
-        "repo": "zed-spaces-launcher",
+        "repo": "cosmonaut",
         "type": "github"
       }
     },
