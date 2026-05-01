@@ -624,6 +624,21 @@ in {
             ];
           }
           {
+            job_name = "wan_billing";
+            metrics_path = "/metrics-wan-billing";
+            scheme = "https";
+            static_configs = [
+              {
+                targets = ["atlantis.tail42937.ts.net"];
+                labels = {
+                  type = "exporter";
+                  role = "router";
+                  os = "openwrt";
+                };
+              }
+            ];
+          }
+          {
             job_name = "home_assistant_6a";
             metrics_path = "/api/prometheus";
             scheme = "https";

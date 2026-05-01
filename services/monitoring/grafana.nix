@@ -298,6 +298,56 @@ in {
                     duration = "2m";
                     summary = "Internet down (seen from {{ reReplaceAll `blackbox_.*-` `` $labels.job }})";
                   })
+                  (mkAlert {
+                    uid = "lex6wan50pct0n6dci";
+                    title = "WAN Monthly Usage 50%";
+                    expr = ''wan_billing_month_rx_bytes / 1e12'';
+                    threshold = 2.5;
+                    thresholdType = "gt";
+                    duration = "10m";
+                    muteAtNight = true;
+                    summary = "WAN download at {{ $value | printf \"%.2f\" }} TB this month (>50% of 5 TB cap)";
+                  })
+                  (mkAlert {
+                    uid = "lex6wan75pct0n6dcj";
+                    title = "WAN Monthly Usage 75%";
+                    expr = ''wan_billing_month_rx_bytes / 1e12'';
+                    threshold = 3.75;
+                    thresholdType = "gt";
+                    duration = "10m";
+                    muteAtNight = true;
+                    summary = "WAN download at {{ $value | printf \"%.2f\" }} TB this month (>75% of 5 TB cap)";
+                  })
+                  (mkAlert {
+                    uid = "lex6wan80pct0n6dck";
+                    title = "WAN Monthly Usage 80%";
+                    expr = ''wan_billing_month_rx_bytes / 1e12'';
+                    threshold = 4.0;
+                    thresholdType = "gt";
+                    duration = "10m";
+                    muteAtNight = true;
+                    summary = "WAN download at {{ $value | printf \"%.2f\" }} TB this month (>80% of 5 TB cap)";
+                  })
+                  (mkAlert {
+                    uid = "lex6wan95pct0n6dcl";
+                    title = "WAN Monthly Usage 95%";
+                    expr = ''wan_billing_month_rx_bytes / 1e12'';
+                    threshold = 4.75;
+                    thresholdType = "gt";
+                    duration = "5m";
+                    summary = "WAN download at {{ $value | printf \"%.2f\" }} TB this month (>95% of 5 TB cap)";
+                  })
+                  (mkAlert {
+                    uid = "lex6wanstale0n6dcm";
+                    title = "WAN Billing Counter Stale";
+                    expr = ''time() - wan_billing_last_update_timestamp_seconds'';
+                    threshold = 600;
+                    thresholdType = "gt";
+                    duration = "10m";
+                    noData = "OK";
+                    muteAtNight = true;
+                    summary = "wan-billing.sh on atlantis hasn't updated in {{ $value | printf \"%.0f\" }}s — monthly cap tracking is blind";
+                  })
                 ];
               }
             ];

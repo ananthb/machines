@@ -150,7 +150,7 @@ in {
     };
 
     mithril = {
-      enable = true;
+      enable = false;
       storage.singleDisk = {
         enable = true;
         device = "/dev/nvme1n1";

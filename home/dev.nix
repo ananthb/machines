@@ -89,5 +89,9 @@ in {
         workspacePath = "/workspaces";
       };
     };
+
+    vscode = {
+      enable = true;
+    };
   };
 }
