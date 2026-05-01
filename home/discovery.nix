@@ -43,7 +43,11 @@
         "enterprise" = {
           forwardAgent = true;
         };
-        "*" = {
+        # Exclude codespace hosts (cs.* and cs-*) so the YubiKey
+        # IdentityFile doesn't block `gh codespace ssh` when the
+        # device isn't plugged in. cosmonaut's doctor flags a bare
+        # `Host *` here for exactly this reason.
+        "* !cs-* !cs.*" = {
           identityFile = "~/.ssh/yubikey_5c_nano";
         };
       };

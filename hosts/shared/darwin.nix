@@ -90,8 +90,10 @@ in {
 
   programs.fish.enable = true;
 
+  # Exclude codespace hosts (cs.* and cs-*) so cosmonaut's check
+  # against bare `Host *` rules in ~/.ssh/config stays green.
   programs.ssh.extraConfig = ''
-    Host *
+    Host * !cs-* !cs.*
       AddKeysToAgent yes
   '';
 

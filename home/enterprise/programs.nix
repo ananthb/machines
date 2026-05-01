@@ -49,7 +49,11 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."*" = {
+    # Exclude codespace hosts (cs.* and cs-*) so the YubiKey
+    # IdentityFile doesn't block `gh codespace ssh` when the
+    # device isn't plugged in. cosmonaut's doctor flags a bare
+    # `Host *` here for exactly this reason.
+    matchBlocks."* !cs-* !cs.*" = {
       identityFile = "~/.ssh/yubikey_5c";
     };
   };
