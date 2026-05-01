@@ -19,6 +19,7 @@
       "openmtp"
       "signal"
       "slack-cli"
+      "visual-studio-code"
     ];
     masApps = {
       "1Password for Safari" = 1569813296;

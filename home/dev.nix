@@ -62,7 +62,6 @@ in {
       nix-output-monitor
       ripgrep
       vault
-      vscode
       zed-editor
     ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [
@@ -72,6 +71,7 @@ in {
       jellyfin-media-player
       rpi-imager
       vlc
+      vscode
     ];
 
   programs = {
@@ -88,10 +88,6 @@ in {
         repository = "rpcpool/rpcpool";
         workspacePath = "/workspaces";
       };
-    };
-
-    vscode = {
-      enable = true;
     };
   };
 }
