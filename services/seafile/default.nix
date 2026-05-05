@@ -162,7 +162,7 @@ Configuration files and secrets are managed using vault-secrets.
       "seafile-md-server"
       "seafile-thumbnail-server"
       "seafile-ai"
-      "seadoc-server"
+      "seadoc"
     ];
     group = config.users.groups.seafile.name;
   };
