@@ -26,6 +26,7 @@
     extraComponents = [
       "broadlink"
       "luci"
+      "tuya"
     ];
 
     config = {
