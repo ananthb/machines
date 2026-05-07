@@ -124,6 +124,11 @@ in {
   ];
 
   programs = {
+    _1password-gui = {
+      enable = true;
+      polkitPolicyOwners = [username];
+    };
+
     steam = {
       enable = true;
       remotePlay.openFirewall = true;
