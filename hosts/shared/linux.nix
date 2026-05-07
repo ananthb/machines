@@ -62,8 +62,7 @@ in {
     defaultLocale = cfg.locale;
     # glibc's SUPPORTED has "en_IN UTF-8" but no "en_IN.UTF-8" entry; LANG
     # resolution still finds it via codeset stripping.
-    supportedLocales = [
-      "C.UTF-8/UTF-8"
+    extraLocales = [
       "en_US.UTF-8/UTF-8"
       "en_IN/UTF-8"
     ];

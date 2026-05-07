@@ -23,13 +23,12 @@
     gnome-shell = {
       enable = true;
       extensions = with pkgs.gnomeExtensions; [
-        {package = another-window-session-manager;}
         {package = appindicator;}
         {package = gsconnect;}
         {package = night-theme-switcher;}
+        {package = paperwm;}
         {package = system-monitor;}
         {package = tailscale-status;}
-        {package = forge;}
       ];
     };
 

@@ -171,6 +171,7 @@
         config = {
           allowUnfreePredicate = pkg:
             builtins.elem (nixpkgs.lib.getName pkg) [
+              "1password"
               "b43-firmware"
               "broadcom-bt-firmware"
               "claude-code"
@@ -417,6 +418,7 @@
       in {
         docs-serve = {
           type = "app";
+          meta.description = "Serve the machines documentation locally with live reload";
           program = let
             serve = pkgs.writeShellApplication {
               name = "docs-serve";

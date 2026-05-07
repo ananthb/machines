@@ -112,6 +112,10 @@ in {
   environment.systemPackages = [
     pkgs.ddcutil
     pkgs.gnome-tweaks
+    # GTop GIR typelib required by the GNOME system-monitor extension; placing
+    # it in systemPackages exposes it via /run/current-system/sw on the
+    # gnome-shell GI_TYPELIB_PATH.
+    pkgs.libgtop
     pkgs.libmbim
     pkgs.libqmi
     pkgs.logitech-udev-rules
