@@ -12,12 +12,11 @@
     ];
     casks = [
       "1password"
-      "discord"
+      "claude"
       "google-chrome"
       "jellyfin-media-player"
       "ledger-wallet"
       "openmtp"
-      "signal"
       "slack-cli"
       "visual-studio-code"
     ];

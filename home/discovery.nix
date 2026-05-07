@@ -8,6 +8,8 @@
   ];
 
   home = {
+    packages = [pkgs.codex];
+
     sessionVariables = lib.mkIf pkgs.stdenv.isDarwin {
       SSH_ASKPASS = "/opt/homebrew/bin/ssh-askpass";
       SSH_ASKPASS_REQUIRE = "force";
