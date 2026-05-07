@@ -61,8 +61,12 @@ in {
   i18n = {
     defaultLocale = cfg.locale;
     # glibc's SUPPORTED has "en_IN UTF-8" but no "en_IN.UTF-8" entry; LANG
-    # resolution still finds it via codeset stripping.
-    extraLocales = [
+    # resolution still finds it via codeset stripping. Override
+    # supportedLocales directly so the auto-derived "${defaultLocale}/UTF-8"
+    # (= "en_IN.UTF-8/UTF-8") doesn't get passed to localedef, which rejects
+    # it as of glibc 2.42.
+    supportedLocales = [
+      "C.UTF-8/UTF-8"
       "en_US.UTF-8/UTF-8"
       "en_IN/UTF-8"
     ];
