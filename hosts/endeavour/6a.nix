@@ -256,7 +256,7 @@
               condition = "template";
               value_template = ''
                 {% set hours = 4 if (states('person.ananth') == 'home' or states('person.arul_priya') == 'home') else 2 %}
-                {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=hours)) | list | count > 0 }}
+                {{ states.climate | rejectattr('state', 'in', ['off', 'unavailable', 'unknown']) | selectattr('last_changed', 'lt', now() - timedelta(hours=hours)) | list | count > 0 }}
               '';
             }
           ];
@@ -265,7 +265,7 @@
               service = "climate.turn_off";
               target.entity_id = ''
                 {% set hours = 4 if (states('person.ananth') == 'home' or states('person.arul_priya') == 'home') else 2 %}
-                {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=hours)) | map(attribute='entity_id') | list }}
+                {{ states.climate | rejectattr('state', 'in', ['off', 'unavailable', 'unknown']) | selectattr('last_changed', 'lt', now() - timedelta(hours=hours)) | map(attribute='entity_id') | list }}
               '';
             }
           ];
@@ -289,9 +289,9 @@
               value_template = ''
                 {% set anyone_home = states('person.ananth') == 'home' or states('person.arul_priya') == 'home' %}
                 {% if anyone_home %}
-                  {{ states('counter.ac_notify_tick') | int % 4 == 0 and (states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | list | count > 0) }}
+                  {{ states('counter.ac_notify_tick') | int % 4 == 0 and (states.climate | rejectattr('state', 'in', ['off', 'unavailable', 'unknown']) | selectattr('last_changed', 'lt', now() - timedelta(hours=2)) | list | count > 0) }}
                 {% else %}
-                  {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | list | count > 0 }}
+                  {{ states.climate | rejectattr('state', 'in', ['off', 'unavailable', 'unknown']) | selectattr('last_changed', 'lt', now() - timedelta(minutes=30)) | list | count > 0 }}
                 {% endif %}
               '';
             }
@@ -302,7 +302,7 @@
                 message = ''
                   {% set anyone_home = states('person.ananth') == 'home' or states('person.arul_priya') == 'home' %}
                   {% set threshold = timedelta(hours=2) if anyone_home else timedelta(minutes=30) %}
-                  {{ states.climate | selectattr('state', 'ne', 'off') | selectattr('last_changed', 'lt', now() - threshold) | map(attribute='name') | list | join(', ') }} has been running too long.
+                  {{ states.climate | rejectattr('state', 'in', ['off', 'unavailable', 'unknown']) | selectattr('last_changed', 'lt', now() - threshold) | map(attribute='name') | list | join(', ') }} has been running too long.
                 '';
               };
             }
