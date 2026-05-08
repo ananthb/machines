@@ -8,7 +8,7 @@
     };
 
     cosmonaut = {
-      url = "github:ananthb/cosmonaut";
+      url = "github:linuskendall/cosmonaut";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "ht32-panel/flake-utils";
