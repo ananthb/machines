@@ -13,6 +13,8 @@
     casks = [
       "1password"
       "claude"
+      "codex"
+      "codex-app"
       "google-chrome"
       "jellyfin-media-player"
       "ledger-wallet"
