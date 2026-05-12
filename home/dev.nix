@@ -65,7 +65,7 @@ in {
     ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [
       activitywatch
-      claude-code # darwin uses the Homebrew cask (nixpkgs derivation needs __noChroot, which garnix sandbox refuses)
+      claude-code
       ghostty
       gimp
       jellyfin-media-player
