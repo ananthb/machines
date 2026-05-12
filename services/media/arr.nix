@@ -178,8 +178,15 @@ in {
     bazarr = true;
     seerr = true;
     cross-seed = true;
+    unpackerr = true;
     flaresolverr = true;
     stacks = true;
+  };
+
+  users.users.unpackerr = {
+    isSystemUser = true;
+    group = "media";
+    description = "unpackerr";
   };
 
   systemd.services = {
@@ -267,6 +274,47 @@ in {
       serviceConfig.SupplementaryGroups = ["media"];
       partOf = ["kedi.target"];
       unitConfig.ConditionPathIsMountPoint = "/srv";
+    };
+
+    unpackerr = {
+      description = "unpackerr — extract packed downloads for Sonarr/Radarr";
+      after = [
+        "network-online.target"
+        "sonarr.service"
+        "radarr.service"
+      ];
+      wants = [
+        "network-online.target"
+        "sonarr.service"
+        "radarr.service"
+      ];
+      wantedBy = ["multi-user.target"];
+      partOf = ["kedi.target"];
+      unitConfig.ConditionPathIsMountPoint = "/srv";
+
+      environment = {
+        UN_SONARR_0_URL = "http://localhost:8989";
+        UN_SONARR_0_PATHS_0 = "/srv/media/Downloads";
+        UN_SONARR_0_PROTOCOLS = "torrent";
+        UN_RADARR_0_URL = "http://localhost:7878";
+        UN_RADARR_0_PATHS_0 = "/srv/media/Downloads";
+        UN_RADARR_0_PROTOCOLS = "torrent";
+        UN_FILE_MODE = "0664";
+        UN_DIR_MODE = "0775";
+        UN_INTERVAL = "2m";
+        UN_START_DELAY = "1m";
+      };
+
+      serviceConfig = {
+        Type = "simple";
+        User = "unpackerr";
+        Group = "media";
+        UMask = "0002";
+        ExecStart = "${pkgs.unpackerr}/bin/unpackerr";
+        EnvironmentFile = "${vs.arr}/unpackerr.env";
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
 
     flaresolverr.partOf = ["kedi.target"];
@@ -359,6 +407,7 @@ in {
       "sonarr"
       "prowlarr"
       "cross-seed"
+      "unpackerr"
       "prometheus-exportarr-radarr-exporter"
       "prometheus-exportarr-sonarr-exporter"
       "prometheus-exportarr-prowlarr-exporter"
@@ -370,6 +419,9 @@ in {
       printf '%s' "$RADARR_API_KEY" > "$secretsPath/radarr"
       printf '%s' "$SONARR_API_KEY" > "$secretsPath/sonarr"
       printf '%s' "$PROWLARR_API_KEY" > "$secretsPath/prowlarr"
+
+      printf 'UN_SONARR_0_API_KEY=%s\nUN_RADARR_0_API_KEY=%s\n' \
+        "$SONARR_API_KEY" "$RADARR_API_KEY" > "$secretsPath/unpackerr.env"
 
       mkdir -p "$secretsPath/cross-seed"
       cat > "$secretsPath/cross-seed/config.json" <<EOF
