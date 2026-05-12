@@ -46,7 +46,6 @@ in {
 
   home.packages = with pkgs;
     [
-      claude-code
       delta
       devenv
       flyctl
@@ -66,6 +65,7 @@ in {
     ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [
       activitywatch
+      claude-code # darwin uses the Homebrew cask (nixpkgs derivation needs __noChroot, which garnix sandbox refuses)
       ghostty
       gimp
       jellyfin-media-player
