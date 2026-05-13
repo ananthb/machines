@@ -83,6 +83,14 @@ in {
 
     cosmonaut = {
       enable = true;
+      package = inputs.cosmonaut.packages.${pkgs.system}.default.overrideAttrs (_: {
+        checkPhase = ''
+          runHook preCheck
+          export GOFLAGS=''${GOFLAGS//-trimpath/}
+          go test -v -failfast -tags=netgo ./...
+          runHook postCheck
+        '';
+      });
       defaultTarget = "rpcpool";
       targets.rpcpool = {
         repository = "rpcpool/rpcpool";
