@@ -1,15 +1,10 @@
 {
-  config,
-  inputs,
   pkgs,
   username,
   ...
-}: let
-  vs = config.vault-secrets.secrets;
-in {
+}: {
   imports = [
     ../../services/logiops.nix
-    inputs.mithril.nixosModules.mithril
 
     ../../services/frigate.nix
   ];
@@ -158,31 +153,6 @@ in {
       package = pkgs.gnome.gvfs;
     };
 
-    mithril = {
-      enable = false;
-      storage.singleDisk = {
-        enable = true;
-        device = "/dev/nvme1n1";
-        fsType = "f2fs";
-        format.enable = true;
-        format.force = true;
-      };
-
-      configSchema = {
-        networkCluster = "mainnet-beta";
-        networkRpc = ["https://api.mainnet-beta.solana.com"];
-        blockSource = "rpc";
-        logTarget = "journald";
-      };
-      config.settings = {
-        network.rpc = [
-          "$MITHRIL_RPC_PRIMARY"
-          "https://api.mainnet-beta.solana.com"
-        ];
-      };
-      environmentFile = "${vs.mithril}/environment";
-    };
-
     ollama = {
       enable = true;
       # See https://ollama.com/library
@@ -255,15 +225,6 @@ in {
     spice-webdavd.enable = true;
 
     udisks2.enable = true;
-  };
-
-  vault-secrets.secrets.mithril = {
-    services = ["mithril"];
-  };
-
-  systemd.services.mithril = {
-    after = ["mithril-secrets.service"];
-    requires = ["mithril-secrets.service"];
   };
 
   virtualisation = {

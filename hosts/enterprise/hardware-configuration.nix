@@ -44,10 +44,9 @@
       ];
     };
 
-    # NFS mount from endeavour
     "/srv" = {
-      device = "endeavour:/srv";
-      fsType = "nfs";
+      device = "/dev/disk/by-label/srv";
+      fsType = "f2fs";
     };
   };
 

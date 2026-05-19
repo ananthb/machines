@@ -410,27 +410,6 @@
         "type": "github"
       }
     },
-    "mithril": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1775945658,
-        "narHash": "sha256-WMVOET44Ze8feid182kHkZDw5N267wHoSjPKiXvt9+U=",
-        "owner": "ananthb",
-        "repo": "mithril",
-        "rev": "b7b6bd87f4c141ba613d227031076cf41fd17234",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ananthb",
-        "ref": "fix/vote-nil-root-and-slot-log",
-        "repo": "mithril",
-        "type": "github"
-      }
-    },
     "nix-appimage": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -603,7 +582,6 @@
         "homebrew-core": "homebrew-core",
         "ht32-panel": "ht32-panel",
         "lanzaboote": "lanzaboote",
-        "mithril": "mithril",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",

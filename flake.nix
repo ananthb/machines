@@ -69,11 +69,6 @@
       };
     };
 
-    mithril = {
-      url = "github:ananthb/mithril/fix/vote-nil-root-and-slot-log";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
