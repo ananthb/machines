@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  username,
   ...
 }: let
   vs = config.vault-secrets.secrets;
@@ -69,6 +70,8 @@ in {
       "d /srv/frigate/recordings 0755 root root - -"
       "d /srv/frigate/clips 0755 root root - -"
       "d /srv/frigate/exports 0755 root root - -"
+      # Steam library on /srv (4TB SSD)
+      "d /srv/steam 0755 ${username} users - -"
     ];
 
     # TODO: https://github.com/NixOS/nixpkgs/issues/361163#issuecomment-2567342119

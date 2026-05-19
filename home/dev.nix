@@ -87,7 +87,9 @@ in {
         checkPhase = ''
           runHook preCheck
           export GOFLAGS=''${GOFLAGS//-trimpath/}
-          go test -v -failfast -tags=netgo ./...
+          # internal/daemon imports golang.design/x/hotkey, which panics on
+          # init when no X11 display is available (i.e. always in nix sandbox).
+          go test -v -failfast -tags=netgo $(go list ./... | grep -v /internal/daemon)
           runHook postCheck
         '';
       });
